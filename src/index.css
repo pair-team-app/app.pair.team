@@ -107,7 +107,7 @@
 	--orthodox-font-weight: 400;
 
 
-	--border-radius: 20px;
+	--border-radius: 4px;
 
 	--expander-arrow-transition: all 250ms cubic-bezier(0.4, 1, 0.2, 1);
 	--expander-content-mask-transition: height 250ms cubic-bezier(0.2, 0.9, 0.3, 1.0);
@@ -141,7 +141,7 @@ html, body {
   -webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
   /* font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Ubuntu, Arial, sans-serif; */
-  font-family: 'Helvetica Neue', Ubuntu, Arial, sans-serif;
+  font-family: 'SF Pro Display', system-ui, -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Ubuntu, Arial, sans-serif;
   font-weight: var(--orthodox-font-weight);
   font-size: var(--orthodox-font-size);
 	color: rgba(var(--site-fg-color), 1.0);
@@ -170,11 +170,12 @@ a:active {
 
 button {
   width: 100%;
-	padding: var(--spacing-20) var(--spacing-35);
+	padding: 14px 24px;
   background-color: rgba(var(--btn-bg-color), 1.0);
   border: 1px solid rgba(var(--btn-bg-color), 1.0);
-  border-radius: 30px;
-  font-size: var(--orthodox-font-size);
+  border-radius: var(--border-radius);
+	font-size: 18px;
+	font-weight: 700;
   color: rgba(var(--btn-fg-color), 1.0);
 	transition: background-color 0.1s ease-out;
 }
@@ -353,13 +354,14 @@ h6::before {
 
 input[type="email"], input[type="password"], input[type="text"], select, textarea {
 	width: 100%;
-	padding: var(--spacing-20);
+	padding: 16px;
 	background-color: rgba(var(--txtfield-bg-color), 1.0);
 	border: 1px solid rgba(var(--border-color), 1.0);
-	border-radius: 30px;
-	color: rgba(var(--txtfield-fg-color), 1.0);
+	border-radius: var(--border-radius);
+	color: #999999;
 	/*text-align: center;*/
-	font-size: var(--orthodox-font-size);
+	font-size: 16px;
+	font-weight: 700;
 	cursor: text;
 	-webkit-appearance: none;
 	transition: background-color 0.125s ease-out;
@@ -452,8 +454,9 @@ sup {
 textarea, textarea:hover, textarea:active, textarea:focus, textarea:disabled, textarea:valid {
   resize: none;
 	padding: var(--spacing-05) 0;
+	font-family: 'SF Pro Display', system-ui, -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Ubuntu, Arial, sans-serif;
 	border: 1px solid rgba(var(--border-color), 0.0);
-	border-radius: 4px;
+	border-radius: var(--border-radius);
 }
 
 ul {

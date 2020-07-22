@@ -18,7 +18,6 @@ import { ENTER_KEY } from '../../../consts/key-codes';
 import { API_ENDPT_URL } from '../../../consts/uris';
 import { fetchTeamComments, makeComment, makeTeam, makeTeamRule, modifyTeam, setComment, setPlayground, setTypeGroup, toggleCreateTeam } from '../../../redux/actions';
 import { trackEvent } from '../../../utils/tracking';
-import btnClear from '../../../assets/images/ui/btn-clear.svg';
 import btnCode from '../../../assets/images/ui/btn-code.svg';
 
 class TeamPage extends Component {
@@ -314,7 +313,7 @@ class TeamPage extends Component {
         </div>) : (<div>
           <CreateTeamForm onCancel={()=> this.props.toggleCreateTeam(false)} onSubmit={this.handleCreateTeamSubmit} />
         </div>)}
-        {/* {(dragOver) && (<TeamPageFileDrop />)} */}
+        {/* <TeamPageFileDrop hidden={false} onClose={()=> this.setState({ dragOver : false })} />) */}
         <TeamPageFileDrop hidden={(!dragOver)} onClose={()=> this.setState({ dragOver : false })} />
       </>)}
     </BasePage>);
@@ -330,15 +329,14 @@ const TeamPageAddComment = (props)=> {
   return (<div className="team-page-add-comment" data-loading={loading}><form>
     <div className="content-wrapper">
       {(commentContent.length > 0) && (<div>
-        <img src={btnClear} className="clear-btn" onClick={props.onClear} alt="Clear" />
         <img src={btnCode} className="code-btn" onClick={props.onCode} alt="Code" />
       </div>)}
       {(isURL)
       ? (<div className="rich-content">
           <div className="image-wrapper"><img src={imageComment} alt="" /></div>
-          <TextareaAutosize className="comment-txt" placeholder="Add a comment to this image…" value={commentContent} onChange={props.onTextChange} data-code={codeComment} />
+          <TextareaAutosize className="comment-txt" placeholder="Start Typing or Pasting…" value={commentContent} onChange={props.onTextChange} data-code={codeComment} />
         </div>)
-      : (<TextareaAutosize className="comment-txt" placeholder="Text, Paste or Drag to ask you team anything…" value={commentContent} onChange={props.onTextChange} data-code={codeComment} />)
+      : (<TextareaAutosize className="comment-txt" placeholder="Start Typing or Pasting…" value={commentContent} onChange={props.onTextChange} data-code={codeComment} />)
     }</div>
     <button type="submit" disabled={commentContent.length === 0} onClick={props.onSubmit}>Submit</button>
   </form></div>);

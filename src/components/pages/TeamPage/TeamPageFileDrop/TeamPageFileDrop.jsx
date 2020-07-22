@@ -4,6 +4,7 @@ import './TeamPageFileDrop.css';
 
 import FilePondPluginImageExifOrientation from 'filepond-plugin-image-exif-orientation'
 import FilePondPluginImagePreview from 'filepond-plugin-image-preview'
+import TextareaAutosize from 'react-autosize-textarea';
 import { FilePond, registerPlugin } from 'react-filepond';
 import { connect } from 'react-redux';
 
@@ -12,6 +13,7 @@ import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css';
 import './post-styles.css';
 
 import { CDN_UPLOAD_URL } from '../../../../consts/uris';
+import btnClear from '../../../../assets/images/ui/btn-clear.svg';
 
 registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview);
 
@@ -20,14 +22,14 @@ class TeamPageFileDrop extends Component {
 		super(props);
 
 		this.state = {
-      commentContent : '',
-      loading        : false,
-      codeComment    : false,
-      richComment    : false,
-      imageComment   : null,
-      imageComment    : null,
-      url             : null,
-      files          : []
+      content : {
+        text  : '',
+        image : null,
+      },
+      loading : false,
+      url     : false,
+      code    : false,
+      files   : []
 		};
 	}
 
@@ -132,83 +134,105 @@ class TeamPageFileDrop extends Component {
 
 
     const { team, profile, hidden } = this.props;
-    const { files } = this.state;
+    const { content, files } = this.state;
 
-		return (<div className="team-page-file-drop" data-hidden={(hidden && files.length === 0)}><div onClick={this.handleFilesCleared}>
-      <FilePond
-        server={{
-          url : `${CDN_UPLOAD_URL}/${profile.id}/${team.id}`,
-          process: (fieldName, file, metadata, load) => {
-            console.log('%s.server.process(fieldName, file, metadata, load)', this.constructor.name, { fieldName, file, metadata, load, url : `${CDN_UPLOAD_URL}/${profile.id}/${team.id}` });
+		return (<div className="team-page-file-drop" data-hidden={(hidden && files.length === 0)}>
+      <AddContentCloseButton onCloseClick={this.handleFilesCleared} />
+      <div>
+        <TeamPageAddContent files={files} content={content} onSubmit={this.handleSubmit} />
+        <FilePond
+          server={{
+            url : `${CDN_UPLOAD_URL}/${profile.id}/${team.id}`,
+            process: (fieldName, file, metadata, load) => {
+              console.log('%s.server.process(fieldName, file, metadata, load)', this.constructor.name, { fieldName, file, metadata, load, url : `${CDN_UPLOAD_URL}/${profile.id}/${team.id}` });
 
-            // simulates uploading a file
-            setTimeout(() => {
-                load(Date.now())
-            }, 1500);
+              // simulates uploading a file
+              setTimeout(() => {
+                  load(Date.now())
+              }, 1500);
 
-            /*
-            url : './process',
-            method: 'POST',
+              /*
+              url : './process',
+              method: 'POST',
 
-            headers: { 'Content-Type' : 'application/json', },
-            */
-        },
-        load: (source, load) => {
-          console.log('%s.server.load(source, load)', this.constructor.name, { source, load });
+              headers: { 'Content-Type' : 'application/json', },
+              */
+          },
+          load: (source, load) => {
+            console.log('%s.server.load(source, load)', this.constructor.name, { source, load });
 
-            // simulates loading a file from the server
-            fetch(source).then(res => res.blob()).then(load);
-        }
-        }}
-        // ref={ref => (this.pond = ref)}
-        files={files}
-        className="file-pond-wrapper"
-        allowMultiple={true}
-        maxFiles={3}
-        // allowImagePreview={true}
-        // allowBrowse={true}
-        // allowDrop={true}
-        // allowPaste={true}
-        // allowReorder={false}
-        // allowReplace={true}
-        // allowRevert={true}
-        // appendTo={filePondAttach}
-        // itemInsertLocation="after"
-        instantUpload={true}
-        labelIdle={(files.length === 0) ? 'Drag &amp; Drop your files or <span class="filepond--label-action">Browse</span>' : ''}
-        // iconRemove={btnClear}
-        labelFileProcessingComplete="Add comment to this…"
-        labelTapToUndo=""
-        oninit={this.handleInit}
-        onwarning={this.handleFileWarning}
-        onerror={this.handleFileError}
-        oninitfile={this.handleFileInit}
-        onaddfile={this.handleFileAdd}
-        onaddfileprogress={this.handleFileProgress}
-        onprocessfilestart={this.handleFileProcessStart}
-        onprocessfileprogress={this.handleFileProcessProgress}
-        onprocessfile={this.handleProcessedFile}
-        onprocessfiles={this.handleProcessedFiles}
-        onremovefile={this.handleFileRemoved}
-        onupdatefiles={this.handleFilesUpdated}
+              // simulates loading a file from the server
+              fetch(source).then(res => res.blob()).then(load);
+          }
+          }}
+          // ref={ref => (this.pond = ref)}
+          files={files}
+          className="file-pond-wrapper"
+          allowMultiple={true}
+          maxFiles={3}
+          allowReorder={false}
+          allowReplace={true}
+          allowRevert={true}
+          // appendTo={filePondAttach}
+          itemInsertLocation="after"
+          instantUpload={true}
+          labelIdle=""
+          // iconRemove={null}
+          labelFileProcessingComplete=""
+          labelTapToUndo=""
+          oninit={this.handleInit}
+          onwarning={this.handleFileWarning}
+          onerror={this.handleFileError}
+          oninitfile={this.handleFileInit}
+          onaddfile={this.handleFileAdd}
+          onaddfileprogress={this.handleFileProgress}
+          onprocessfilestart={this.handleFileProcessStart}
+          onprocessfileprogress={this.handleFileProcessProgress}
+          onprocessfile={this.handleProcessedFile}
+          onprocessfiles={this.handleProcessedFiles}
+          onremovefile={this.handleFileRemoved}
+          onupdatefiles={this.handleFilesUpdated}
 
-        // onupdatefiles={(fileItems)=> {
-        //   console.log('%s.onupdatefiles()', this.constructor.name, { fileItems });
-        //   this.setState({ files: fileItems.map(fileItem => fileItem.file) });
-        // }}
-      />
-
-
-      {/* <FilePond
-        files={files}
-        allowMultiple={true}
-        allowImagePreview={true}
-        onupdatefiles={this.handleFilesUpdated}
-        labelIdle={(files.length === 0) ? 'Drag &amp; Drop your files or <span class="filepond--label-action">Browse</span>' : ''}
-      /> */}
-    </div></div>);
+          // onupdatefiles={(fileItems)=> {
+          //   console.log('%s.onupdatefiles()', this.constructor.name, { fileItems });
+          //   this.setState({ files: fileItems.map(fileItem => fileItem.file) });
+          // }}
+        />
+      </div>
+    </div>);
 	}
 }
+
+
+const AddContentCloseButton = (props)=> {
+  console.log('AddContentCloseButton()', props);
+
+  return (<button className="quiet-button glyph-button" onClick={props.onCloseClick}>
+    <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="32" height="32" rx="16" fill="#EAEAEA"/>
+      <rect x="9.63623" y="11.0503" width="2" height="16" transform="rotate(-45 9.63623 11.0503)" fill="white"/>
+      <rect x="20.9502" y="9.63599" width="2" height="16" transform="rotate(45 20.9502 9.63599)" fill="white"/>
+    </svg>
+  </button>);
+};
+
+
+const TeamPageAddContent = (props)=> {
+  console.log('TeamPageAddContent()', props);
+
+  const { files, content } = props;
+  const { text, url, image, code } = content;
+
+  return (<div className="team-page-add-content"><form>
+    <div className="content-wrapper">
+      {(url || image) && (<div className="rich-content">
+        {(image) && (<div className="image-wrapper"><img src={image} alt="" /></div>)}
+      </div>)}
+      <TextareaAutosize className="comment-txt" placeholder={`Add a comment to this${(url) ? ' url' : (image || files.length > 0) ? ' image' : ''}…`} value={text} onChange={props.onTextChange} data-code={code} />
+    </div>
+    <button type="submit" disabled={files.length === 0} onClick={props.onSubmit}>Submit</button>
+  </form></div>);
+};
 
 const mapDispatchToProps = (dispatch)=> {
   return ({

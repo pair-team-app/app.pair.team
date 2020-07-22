@@ -1,12 +1,8 @@
 
 .filepond--root, .filepond--root > * {
-  background: none;
+  background-color: rgba(var(--site-bg-color), 1.0);
 }
 
-.filepond--root.file-pond-wrapper {
-  /* display: flex;
-  width: 100%;
-  height: 280px; */
-  /* height: 100%; */
-  /* border: 1px dotted #ff00ff; */
+.filepond--root.filepond-wrapper, .filepond--root.filepond-wrapper > * {
+  background-color: rgba(var(--site-bg-color), 1.0);
 }
