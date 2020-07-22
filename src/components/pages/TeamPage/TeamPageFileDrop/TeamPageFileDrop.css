@@ -6,7 +6,8 @@
   width: 100vw;
   height: 100vh;
   z-index: 101;
-  background-color: rgba(var(--site-bg-color), 1.0);
+  /* background-color: rgba(var(--site-bg-color), 1.0); */
+  background-color: rgba(0, 0, 0, 0.33);
 }
 
 
@@ -23,7 +24,7 @@
 	width: 50%;
   height: 50%;
   border-radius: var(--border-radius);
-  /* background-color: rgba(var(--site-bg-color), 1.0); */
+  background-color: rgba(var(--site-bg-color), 1.0);
 }
 
 .team-page-file-drop button.glyph-button {
@@ -48,6 +49,10 @@
 
 .team-page-file-drop .filepond--wrapper {
   height: 100%;
+}
+
+.file-pond-wrapper {
+  border: 1px dotted #ff00ff;
 }
 
 .filepond--wrapper > * {

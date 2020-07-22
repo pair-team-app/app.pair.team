@@ -137,7 +137,6 @@ class TeamPageFileDrop extends Component {
     const { content, files } = this.state;
 
 		return (<div className="team-page-file-drop" data-hidden={(hidden && files.length === 0)}>
-      <AddContentCloseButton onCloseClick={this.handleFilesCleared} />
       <div>
         <TeamPageAddContent files={files} content={content} onSubmit={this.handleSubmit} />
         <FilePond
@@ -199,6 +198,7 @@ class TeamPageFileDrop extends Component {
           // }}
         />
       </div>
+      <AddContentCloseButton onCloseClick={this.handleFilesCleared} />
     </div>);
 	}
 }
