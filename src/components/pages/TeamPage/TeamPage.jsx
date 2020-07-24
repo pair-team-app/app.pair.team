@@ -267,7 +267,6 @@ class TeamPage extends Component {
                 loading={loading}
                 codeComment={codeComment}
                 commentContent={commentContent}
-                imageComment={imageComment}
                 onClear={this.handleClearComment}
                 onCode={this.handleCode}
                 onTextChange={this.handleTextChange}
@@ -314,7 +313,7 @@ class TeamPage extends Component {
           <CreateTeamForm onCancel={()=> this.props.toggleCreateTeam(false)} onSubmit={this.handleCreateTeamSubmit} />
         </div>)}
         {/* <TeamPageFileDrop hidden={false} onClose={()=> this.setState({ dragOver : false })} />) */}
-        <TeamPageFileDrop hidden={(!dragOver)} onClose={()=> this.setState({ dragOver : false })} />
+        <TeamPageFileDrop hidden={(!dragOver)} urlImage={imageComment} onClose={()=> this.setState({ dragOver : false })} />
       </>)}
     </BasePage>);
   }
@@ -323,21 +322,15 @@ class TeamPage extends Component {
 const TeamPageAddComment = (props)=> {
   // console.log('TeamPageAddComment()', { props });
 
-  const { loading, codeComment, commentContent, imageComment } = props;
-  const isURL = (/https?:\/\//i.test(props.commentContent));
+  const { loading, codeComment, commentContent } = props;
 
   return (<div className="team-page-add-comment" data-loading={loading}><form>
     <div className="content-wrapper">
       {(commentContent.length > 0) && (<div>
         <img src={btnCode} className="code-btn" onClick={props.onCode} alt="Code" />
       </div>)}
-      {(isURL)
-      ? (<div className="rich-content">
-          <div className="image-wrapper"><img src={imageComment} alt="" /></div>
-          <TextareaAutosize className="comment-txt" placeholder="Start Typing or Pasting…" value={commentContent} onChange={props.onTextChange} data-code={codeComment} />
-        </div>)
-      : (<TextareaAutosize className="comment-txt" placeholder="Start Typing or Pasting…" value={commentContent} onChange={props.onTextChange} data-code={codeComment} />)
-    }</div>
+      <TextareaAutosize className="comment-txt" placeholder="Start Typing or Pasting…" value={commentContent} onChange={props.onTextChange} data-code={codeComment} />
+    </div>
     <button type="submit" disabled={commentContent.length === 0} onClick={props.onSubmit}>Submit</button>
   </form></div>);
 };

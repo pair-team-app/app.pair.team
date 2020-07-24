@@ -37,11 +37,14 @@ const API_VER = 'v6';
 export const API_GATEWAY = 'gateway.php'
 export const API_ENDPT_URL = `${API_PROTOCOL}://${API_HOSTNAME}/${API_VER}/${API_GATEWAY}`;
 
-const CDN_PROTOCOL = 'https';
-export const CDN_HOSTNAME = 'cdn.pairurl.com';
+// const CDN_PROTOCOL = 'https';
+const CDN_PROTOCOL = 'http';
+// export const CDN_HOSTNAME = 'cdn.pairurl.com';
+export const CDN_HOSTNAME = 'cdn.pairurl.devlocal';
 const CDN_VER = 'v1';
-export const CDN_UPLOAD = 'upload'
+export const CDN_UPLOAD = 'upload.php';
 export const CDN_UPLOAD_URL = `${CDN_PROTOCOL}://${CDN_HOSTNAME}/${CDN_VER}/${CDN_UPLOAD}`;
+export const CDN_FILEPOND_URL = `${CDN_PROTOCOL}://${CDN_HOSTNAME}/vendor/filepond-php/`;
 
 
 // export const TEAM_DEFAULT_AVATAR = `${CDN_HOSTNAME}/site-assets/avatars/team-default.png`;

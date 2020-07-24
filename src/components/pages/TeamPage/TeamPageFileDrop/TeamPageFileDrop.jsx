@@ -12,8 +12,7 @@ import 'filepond/dist/filepond.min.css';
 import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css';
 import './post-styles.css';
 
-import { CDN_UPLOAD_URL } from '../../../../consts/uris';
-import btnClear from '../../../../assets/images/ui/btn-clear.svg';
+import { CDN_FILEPOND_URL } from '../../../../consts/uris';
 
 registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview);
 
@@ -22,10 +21,8 @@ class TeamPageFileDrop extends Component {
 		super(props);
 
 		this.state = {
-      content : {
-        text  : '',
-        image : null,
-      },
+      text    : '',
+      image   : null,
       loading : false,
       url     : false,
       code    : false,
@@ -39,21 +36,19 @@ class TeamPageFileDrop extends Component {
 
 	componentDidUpdate(prevProps, prevState, snapshot) {
     console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : this.props, prevState, state : this.state });
+
+    const { urlImage } = this.props;
+    if (urlImage && !this.state.image) {
+      this.setState({
+        url   : true,
+        image : urlImage
+      });
+    }
   }
 
 
   handleInit() {
     console.log('FilePond instance has initialised');
-  };
-
-  handleClearComment = (event)=> {
-    console.log('%s.handleClearComment()', this.constructor.name, { event });
-    this.setState({
-      commentContent : '',
-      loading        : false,
-      richComment    : false,
-      imageComment   : null
-    });
   };
 
   handleCode = (event)=> {
@@ -64,7 +59,13 @@ class TeamPageFileDrop extends Component {
 
   handleFilesCleared = (event)=> {
     console.log('%s.handleFilesCleared(event)', this.constructor.name, { event });
-    this.setState({ files : [] });
+    this.setState({
+      text    : '',
+      url     : false,
+      code    : false,
+      image   : null,
+      files   : []
+    });
   }
 
   handleFileInit = (file)=> {
@@ -95,7 +96,7 @@ class TeamPageFileDrop extends Component {
   };
 
   handleProcessedFiles = ()=> {
-    console.log('%shandleProcessedFiles()', this.constructor.name, {  });
+    console.log('%s.handleProcessedFiles()', this.constructor.name);
   };
 
   handleFileRemoved = (error, output)=> {
@@ -134,35 +135,20 @@ class TeamPageFileDrop extends Component {
 
 
     const { team, profile, hidden } = this.props;
-    const { content, files } = this.state;
+    const { image, url, files } = this.state;
 
-		return (<div className="team-page-file-drop" data-hidden={(hidden && files.length === 0)}>
+		return (<div className="team-page-file-drop" data-hidden={(hidden && files.length === 0 && image === null)}>
       <div>
-        <TeamPageAddContent files={files} content={content} onSubmit={this.handleSubmit} />
-        <FilePond
+        <TeamPageAddContent files={files} { ...this.state} onSubmit={this.handleSubmit} />
+        {(url && image) && (<div className="rich-content">
+          <div className="image-wrapper"><img src={image} alt="" /></div>
+        </div>)}
+        {(!url) && (<FilePond
           server={{
-            url : `${CDN_UPLOAD_URL}/${profile.id}/${team.id}`,
-            process: (fieldName, file, metadata, load) => {
-              console.log('%s.server.process(fieldName, file, metadata, load)', this.constructor.name, { fieldName, file, metadata, load, url : `${CDN_UPLOAD_URL}/${profile.id}/${team.id}` });
-
-              // simulates uploading a file
-              setTimeout(() => {
-                  load(Date.now())
-              }, 1500);
-
-              /*
-              url : './process',
-              method: 'POST',
-
-              headers: { 'Content-Type' : 'application/json', },
-              */
-          },
-          load: (source, load) => {
-            console.log('%s.server.load(source, load)', this.constructor.name, { source, load });
-
-              // simulates loading a file from the server
-              fetch(source).then(res => res.blob()).then(load);
-          }
+            url     : CDN_FILEPOND_URL,
+            process : {
+              url : './index.php'
+            }
           }}
           // ref={ref => (this.pond = ref)}
           files={files}
@@ -191,12 +177,13 @@ class TeamPageFileDrop extends Component {
           onprocessfiles={this.handleProcessedFiles}
           onremovefile={this.handleFileRemoved}
           onupdatefiles={this.handleFilesUpdated}
+          on
 
           // onupdatefiles={(fileItems)=> {
           //   console.log('%s.onupdatefiles()', this.constructor.name, { fileItems });
           //   this.setState({ files: fileItems.map(fileItem => fileItem.file) });
           // }}
-        />
+        />)}
       </div>
       <AddContentCloseButton onCloseClick={this.handleFilesCleared} />
     </div>);
@@ -220,14 +207,9 @@ const AddContentCloseButton = (props)=> {
 const TeamPageAddContent = (props)=> {
   console.log('TeamPageAddContent()', props);
 
-  const { files, content } = props;
-  const { text, url, image, code } = content;
-
+  const { files, text, image, url, code } = props;
   return (<div className="team-page-add-content"><form>
     <div className="content-wrapper">
-      {(url || image) && (<div className="rich-content">
-        {(image) && (<div className="image-wrapper"><img src={image} alt="" /></div>)}
-      </div>)}
       <TextareaAutosize className="comment-txt" placeholder={`Add a comment to this${(url) ? ' url' : (image || files.length > 0) ? ' image' : ''}…`} value={text} onChange={props.onTextChange} data-code={code} />
     </div>
     <button type="submit" disabled={files.length === 0} onClick={props.onSubmit}>Submit</button>
