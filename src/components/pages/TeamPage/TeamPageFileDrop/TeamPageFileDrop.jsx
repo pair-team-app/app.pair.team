@@ -54,7 +54,7 @@ class TeamPageFileDrop extends Component {
         url   : true,
         image : dataImage,
       }, ()=> {
-        this.dataURIFile(dataImage, URIs.lastComponent(imageURL));
+        this.dataURIFile(dataImage, `${URIs.lastComponent(imageURL)}.png`);
       });
     }
   }
