@@ -6,8 +6,8 @@
   width: 100vw;
   height: 100vh;
   z-index: 101;
-  /* background-color: rgba(var(--site-bg-color), 1.0); */
-  background-color: rgba(0, 0, 0, 0.33);
+  background-color: rgba(var(--site-bg-color), 1.0);
+  /* background-color: rgba(0, 0, 0, 0.33); */
 }
 
 
@@ -17,14 +17,22 @@
 
 .team-page-file-drop > div {
   position: absolute;
+  top: 0;
+  left: 0;
+  transform: translate(0%, 0%);
+	-webkit-transform: translate(0%, 0%);
+	width: 100%;
+  height: 100%;
+  transition: all 0.875s cubic-bezier(0.1, 0.9, 0.3, 1.0);
+}
+
+.team-page-file-drop > div[data-file="true"] {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
 	-webkit-transform: translate(-50%, -50%);
 	width: 50%;
   height: 50%;
-  border-radius: var(--border-radius);
-  background-color: rgba(var(--site-bg-color), 1.0);
 }
 
 .team-page-file-drop button.glyph-button {
@@ -52,7 +60,7 @@
 }
 
 .file-pond-wrapper {
-  border: 1px dotted #ff00ff;
+  /* border: 1px dotted #ff00ff; */
 }
 
 .filepond--wrapper > * {

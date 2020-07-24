@@ -35,9 +35,9 @@ class TeamPage extends Component {
       fetching        : false,
       loading         : false,
       share           : false,
-      richComment     : false,
-      url             : null,
+      urlComment      : false,
       imageComment    : null,
+      dataComment     : null,
       dragOver        : false,
     };
   }
@@ -121,6 +121,11 @@ class TeamPage extends Component {
     });
   }
 
+  handleCode = (event)=> {
+    console.log('%s.handleCode()', this.constructor.name, { event });
+    this.setState({ codeComment : !this.state.codeComment });
+  };
+
   handleDragEnter = (event)=> {
     console.log('%s.handleDragEnter()', this.constructor.name, { event });
     event.preventDefault();
@@ -141,10 +146,22 @@ class TeamPage extends Component {
     if (dragOver && (clientX + clientY === 0)) {
       this.setState({ dragOver : false });
     }
-  }
+  };
+
+  handleFileDropClose = ()=> {
+    console.log('%s.handleFileDropClose()', this.constructor.name);
+    this.setState({
+      dragOver       : false,
+      commentContent : '',
+      imageComment   : null,
+      dataComment    : null,
+      codeComment    : false,
+      urlComment     : false
+    });
+  };
 
   handleKeyDown = (event)=> {
-    // console.log('%s.handleKeyDown()', this.constructor.name, event);
+    // console.log('%s.handleKeyDown()', this.constructor.name, { event });
 
     const { ruleInput, commentContent, teamDescription, ruleContent } = this.state;
     if (event.keyCode === ENTER_KEY) {
@@ -186,29 +203,26 @@ class TeamPage extends Component {
     // console.log('%s.handleTextChange()', this.constructor.name, event);
 
     const commentContent = event.target.value;
-    const richComment = (/https?:\/\//i.test(commentContent));
+    const urlComment = (/https?:\/\//i.test(commentContent));
 
-    this.setState({ commentContent, richComment,
-      parsing      : richComment,
+    this.setState({ commentContent, urlComment,
+      parsing      : urlComment,
       imageComment : null
     }, ()=> {
-      if (richComment) {
+      if (urlComment) {
         const url = commentContent.match(/https?:\/\/.+ ?/i).shift().split(' ').shift();
-        // if (url !== this.state.url) {
-          this.setState({ url }, ()=> {
-            axios.post(API_ENDPT_URL, {
-              action  : 'SCREENSHOT_URL',
-              payload : { url }
-            }).then((response)=> {
-              const { image } = response.data;
-              console.log('SCREENSHOT_URL', { data : response.data });
-              this.setState({
-                parsing      : false,
-                imageComment : image.cdn
-               });
+        axios.post(API_ENDPT_URL, {
+          action  : 'SCREENSHOT_URL',
+          payload : { url }
+        }).then((response)=> {
+          const { image } = response.data;
+          console.log('SCREENSHOT_URL', { data : response.data });
+          this.setState({
+            parsing      : false,
+            imageComment : image.cdn,
+            dataComment  : image.data
             });
-          });
-        // }
+        });
       }
     });
   };
@@ -250,7 +264,7 @@ class TeamPage extends Component {
     console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
 
     const { profile, team, comments, createTeam } = this.props;
-    const { commentContent, teamDescription, ruleContent, ruleInput, fetching, loading, share, sort, topSort, files, richComment, imageComment, codeComment, dragOver } = this.state;
+    const { commentContent, teamDescription, ruleContent, ruleInput, fetching, loading, share, sort, topSort, files, urlComment, imageComment, dataComment, codeComment, dragOver } = this.state;
 
 
     const cdnHeaders = {
@@ -313,7 +327,7 @@ class TeamPage extends Component {
           <CreateTeamForm onCancel={()=> this.props.toggleCreateTeam(false)} onSubmit={this.handleCreateTeamSubmit} />
         </div>)}
         {/* <TeamPageFileDrop hidden={false} onClose={()=> this.setState({ dragOver : false })} />) */}
-        <TeamPageFileDrop hidden={(!dragOver)} urlImage={imageComment} onClose={()=> this.setState({ dragOver : false })} />
+        <TeamPageFileDrop hidden={(!dragOver)} dataImage={dataComment} urlImage={imageComment} onClose={this.handleFileDropClose} />
       </>)}
     </BasePage>);
   }
@@ -323,10 +337,11 @@ const TeamPageAddComment = (props)=> {
   // console.log('TeamPageAddComment()', { props });
 
   const { loading, codeComment, commentContent } = props;
+  const urlComment = (/https?:\/\//i.test(commentContent));
 
   return (<div className="team-page-add-comment" data-loading={loading}><form>
     <div className="content-wrapper">
-      {(commentContent.length > 0) && (<div>
+      {(commentContent.length > 0 && !urlComment) && (<div>
         <img src={btnCode} className="code-btn" onClick={props.onCode} alt="Code" />
       </div>)}
       <TextareaAutosize className="comment-txt" placeholder="Start Typing or Pasting…" value={commentContent} onChange={props.onTextChange} data-code={codeComment} />

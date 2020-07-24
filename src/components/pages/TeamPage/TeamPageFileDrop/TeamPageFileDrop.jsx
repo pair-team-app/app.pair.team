@@ -2,8 +2,9 @@
 import React, { Component } from 'react';
 import './TeamPageFileDrop.css';
 
-import FilePondPluginImageExifOrientation from 'filepond-plugin-image-exif-orientation'
-import FilePondPluginImagePreview from 'filepond-plugin-image-preview'
+import FilePondPluginImageExifOrientation from 'filepond-plugin-image-exif-orientation';
+import FilePondPluginImagePreview from 'filepond-plugin-image-preview';
+import { URIs } from 'lang-js-utils';
 import TextareaAutosize from 'react-autosize-textarea';
 import { FilePond, registerPlugin } from 'react-filepond';
 import { connect } from 'react-redux';
@@ -13,22 +14,32 @@ import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css';
 import './post-styles.css';
 
 import { CDN_FILEPOND_URL } from '../../../../consts/uris';
+import files from 'lang-js-utils/lang/files';
 
 registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview);
+
 
 class TeamPageFileDrop extends Component {
 	constructor(props) {
 		super(props);
 
 		this.state = {
-      text    : '',
-      image   : null,
-      loading : false,
-      url     : false,
-      code    : false,
-      files   : []
+      text     : '',
+      image    : null,
+      loading  : false,
+      uploaded : false,
+      url      : false,
+      code     : false,
+      files    : []
 		};
-	}
+  }
+
+  dataURIFile = (dataURI, filename)=> {
+    fetch(dataURI).then((res)=>(res.arrayBuffer())).then((res)=> {
+      const file = new File([res], filename, { type : 'image/png' });
+      this.setState({ files : [ ...this.state.files, file] });
+    });
+  };
 
   componentDidMount() {
     // console.log('%s.componentDidMount()', this.constructor.name, { props : this.props, state : this.state });
@@ -37,11 +48,13 @@ class TeamPageFileDrop extends Component {
 	componentDidUpdate(prevProps, prevState, snapshot) {
     console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : this.props, prevState, state : this.state });
 
-    const { urlImage } = this.props;
-    if (urlImage && !this.state.image) {
+    const { imageURL, dataImage } = this.props;
+    if (dataImage && !this.state.image && !prevState.image) {
       this.setState({
         url   : true,
-        image : urlImage
+        image : dataImage,
+      }, ()=> {
+        this.dataURIFile(dataImage, URIs.lastComponent(imageURL));
       });
     }
   }
@@ -54,17 +67,20 @@ class TeamPageFileDrop extends Component {
   handleCode = (event)=> {
     console.log('%s.handleCode()', this.constructor.name, { event });
     this.setState({ codeComment : !this.state.codeComment });
-
   };
 
-  handleFilesCleared = (event)=> {
-    console.log('%s.handleFilesCleared(event)', this.constructor.name, { event });
+  handleResetFiles = (event)=> {
+    console.log('%s.handleResetFiles(event)', this.constructor.name, { event });
     this.setState({
-      text    : '',
-      url     : false,
-      code    : false,
-      image   : null,
-      files   : []
+      text     : '',
+      image    : null,
+      loading  : false,
+      uploaded : false,
+      url      : false,
+      code     : false,
+      files    : []
+    }, ()=> {
+      this.props.onClose();
     });
   }
 
@@ -85,6 +101,10 @@ class TeamPageFileDrop extends Component {
 
   handleFileProcessStart = (file)=> {
     console.log('%s.handleFileProcessStart(file)', this.constructor.name, { file });
+    this.setState({
+      loading  : true,
+      uploaded : false
+    });
   };
 
   handleFileProcessProgress = (file, progress)=> {
@@ -93,6 +113,10 @@ class TeamPageFileDrop extends Component {
 
   handleProcessedFile = (error, file)=> {
     console.log('%s.handleProcessedFile(error, output)', this.constructor.name, { error, file });
+    this.setState({
+      loading  : false,
+      uploaded : true
+    });
   };
 
   handleProcessedFiles = ()=> {
@@ -118,7 +142,7 @@ class TeamPageFileDrop extends Component {
   handleFilesUpdated = (fileItems)=> {
     console.log('%s.handleFilesUpdated(fileItems)', this.constructor.name, { fileItems });
     this.setState({ files : fileItems.map(({ file })=> (file)) }, ()=> {
-      this.props.onClose();
+      // this.props.onClose();
     });
   }
 
@@ -135,15 +159,12 @@ class TeamPageFileDrop extends Component {
 
 
     const { team, profile, hidden } = this.props;
-    const { image, url, files } = this.state;
+    const { image, files } = this.state;
 
 		return (<div className="team-page-file-drop" data-hidden={(hidden && files.length === 0 && image === null)}>
-      <div>
-        <TeamPageAddContent files={files} { ...this.state} onSubmit={this.handleSubmit} />
-        {(url && image) && (<div className="rich-content">
-          <div className="image-wrapper"><img src={image} alt="" /></div>
-        </div>)}
-        {(!url) && (<FilePond
+      <div data-file={files.length > 0 || (image !== null)}>
+        {(files.length > 0) && (<TeamPageAddContent files={files} { ...this.state} onSubmit={this.handleSubmit} />)}
+        <FilePond
           server={{
             url     : CDN_FILEPOND_URL,
             process : {
@@ -177,15 +198,14 @@ class TeamPageFileDrop extends Component {
           onprocessfiles={this.handleProcessedFiles}
           onremovefile={this.handleFileRemoved}
           onupdatefiles={this.handleFilesUpdated}
-          on
 
           // onupdatefiles={(fileItems)=> {
           //   console.log('%s.onupdatefiles()', this.constructor.name, { fileItems });
           //   this.setState({ files: fileItems.map(fileItem => fileItem.file) });
           // }}
-        />)}
+        />
       </div>
-      <AddContentCloseButton onCloseClick={this.handleFilesCleared} />
+      <AddContentCloseButton onCloseClick={this.handleResetFiles} />
     </div>);
 	}
 }
@@ -207,12 +227,12 @@ const AddContentCloseButton = (props)=> {
 const TeamPageAddContent = (props)=> {
   console.log('TeamPageAddContent()', props);
 
-  const { files, text, image, url, code } = props;
+  const { files, text, image, url, code, uploaded } = props;
   return (<div className="team-page-add-content"><form>
     <div className="content-wrapper">
-      <TextareaAutosize className="comment-txt" placeholder={`Add a comment to this${(url) ? ' url' : (image || files.length > 0) ? ' image' : ''}…`} value={text} onChange={props.onTextChange} data-code={code} />
+      <TextareaAutosize className="comment-txt" placeholder={`Add a comment to this${(url) ? ' url' : (image || files.length > 0) ? ' image' : ''}…`} value={text} onChange={props.onTextChange} data-code={(code)} />
     </div>
-    <button type="submit" disabled={files.length === 0} onClick={props.onSubmit}>Submit</button>
+    <button type="submit" disabled={!uploaded} onClick={props.onSubmit}>Submit</button>
   </form></div>);
 };
 
