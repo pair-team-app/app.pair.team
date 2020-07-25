@@ -125,6 +125,8 @@ class TeamPageFileDrop extends Component {
 
   handleFileRemoved = (error, output)=> {
     console.log('%s.handleFileRemoved(error, output)', this.constructor.name, { error, output });
+
+    this.handleResetFiles();
   };
 
   // // processes the first file
@@ -161,7 +163,7 @@ class TeamPageFileDrop extends Component {
     const { team, profile, hidden } = this.props;
     const { image, files } = this.state;
 
-		return (<div className="team-page-file-drop" data-hidden={(hidden && files.length === 0 && image === null)}>
+		return (<div className="team-page-file-drop" data-hidden={(hidden && files.length === 0)}>
       <div data-file={files.length > 0 || (image !== null)}>
         {(files.length > 0) && (<TeamPageAddContent files={files} { ...this.state} onSubmit={this.handleSubmit} />)}
         <FilePond
