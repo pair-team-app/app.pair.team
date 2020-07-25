@@ -48,13 +48,19 @@ class TeamPageFileDrop extends Component {
 	componentDidUpdate(prevProps, prevState, snapshot) {
     console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : this.props, prevState, state : this.state });
 
-    const { imageURL, dataImage } = this.props;
-    if (dataImage && !this.state.image && !prevState.image) {
+    const { imageURL, dataURI, textComment } = this.props;
+    if (dataURI && !this.state.image && !prevState.image) {
       this.setState({
         url   : true,
-        image : dataImage,
+        image : dataURI,
       }, ()=> {
-        this.dataURIFile(dataImage, `${URIs.lastComponent(imageURL)}.png`);
+        this.dataURIFile(dataURI, `${URIs.lastComponent(imageURL)}.png`);
+      });
+    }
+
+    if (textComment !== this.state.text) {
+      this.setState({
+        text : textComment
       });
     }
   }
@@ -160,12 +166,12 @@ class TeamPageFileDrop extends Component {
     console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state, files : this.state.files.length });
 
 
-    const { team, profile, hidden } = this.props;
-    const { image, files } = this.state;
+    const { team, profile, dragging } = this.props;
+    const { text, image, files } = this.state;
 
-		return (<div className="team-page-file-drop" data-hidden={(hidden && files.length === 0)}>
-      <div data-file={files.length > 0 || (image !== null)}>
-        {(files.length > 0) && (<TeamPageAddContent files={files} { ...this.state} onSubmit={this.handleSubmit} />)}
+		return (<div className="team-page-file-drop" data-hidden={(!dragging && files.length === 0 && !text)}>
+      <div data-file={files.length > 0 || image !== null || text.length > 0}>
+        {(files.length > 0 || text.length > 0) && (<TeamPageAddContent files={files} { ...this.state} onSubmit={this.handleSubmit} />)}
         <FilePond
           server={{
             url     : CDN_FILEPOND_URL,
@@ -234,7 +240,7 @@ const TeamPageAddContent = (props)=> {
     <div className="content-wrapper">
       <TextareaAutosize className="comment-txt" placeholder={`Add a comment to this${(url) ? ' url' : ' image'}…`} value={text} onChange={props.onTextChange} data-code={(code)} />
     </div>
-    <button type="submit" disabled={!uploaded} onClick={props.onSubmit}>Submit</button>
+    <button type="submit" disabled={false} onClick={props.onSubmit}>Submit</button>
   </form></div>);
 };
 

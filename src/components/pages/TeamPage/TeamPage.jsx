@@ -36,8 +36,7 @@ class TeamPage extends Component {
       loading         : false,
       share           : false,
       urlComment      : false,
-      imageComment    : null,
-      dataComment     : null,
+      dataURI         : null,
       dragOver        : false,
     };
   }
@@ -52,6 +51,16 @@ class TeamPage extends Component {
 
     window.ondragenter = this.handleDragEnter;
     window.ondragleave = this.handleDragLeave;
+
+    window.addEventListener('paste', this.handleClipboardPaste);
+    // window.addEventListener('paste', (event)=> {
+    //   console.log('%s.componentDidUpdate()', this.constructor.name, { event, data : event.clipboardData.getData('Text') });
+
+    //   const clipboardText = event.clipboardData.getData('Text');
+    //   if (clipboardText) {
+
+    //   }
+    // });
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
@@ -87,6 +96,7 @@ class TeamPage extends Component {
     window.ondragenter = null;
     window.ondragleave = null;
 		document.removeEventListener('keydown', this.handleKeyDown);
+		document.removeEventListener('paste', this.handleClipboardPaste);
 	}
 
   handleAddComment = (event)=> {
@@ -121,6 +131,34 @@ class TeamPage extends Component {
     });
   }
 
+  handleClipboardPaste = (event)=> {
+    console.log('%s.handleClipboardPaste()', this.constructor.name, { event, data : event.clipboardData.getData('Text') });
+
+    const commentContent = event.clipboardData.getData('Text');
+    if (commentContent) {
+      const urlComment = (/https?:\/\//i.test(commentContent));
+
+      this.setState({ commentContent, urlComment,
+        parsing      : urlComment,
+      }, ()=> {
+        if (urlComment) {
+          const url = commentContent.match(/https?:\/\/.+ ?/i).shift().split(' ').shift();
+          axios.post(API_ENDPT_URL, {
+            action  : 'SCREENSHOT_URL',
+            payload : { url }
+          }).then((response)=> {
+            const { image } = response.data;
+            console.log('SCREENSHOT_URL', { data : response.data });
+            this.setState({
+              parsing : false,
+              dataURI : image.data
+              });
+          });
+        }
+      });
+    }
+  }
+
   handleCode = (event)=> {
     console.log('%s.handleCode()', this.constructor.name, { event });
     this.setState({ codeComment : !this.state.codeComment });
@@ -153,8 +191,7 @@ class TeamPage extends Component {
     this.setState({
       dragOver       : false,
       commentContent : '',
-      imageComment   : null,
-      dataComment    : null,
+      dataURI        : null,
       codeComment    : false,
       urlComment     : false
     });
@@ -207,7 +244,6 @@ class TeamPage extends Component {
 
     this.setState({ commentContent, urlComment,
       parsing      : urlComment,
-      imageComment : null
     }, ()=> {
       if (urlComment) {
         const url = commentContent.match(/https?:\/\/.+ ?/i).shift().split(' ').shift();
@@ -218,9 +254,8 @@ class TeamPage extends Component {
           const { image } = response.data;
           console.log('SCREENSHOT_URL', { data : response.data });
           this.setState({
-            parsing      : false,
-            imageComment : image.cdn,
-            dataComment  : image.data
+            parsing : false,
+            dataURI : image.data
             });
         });
       }
@@ -264,7 +299,7 @@ class TeamPage extends Component {
     console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
 
     const { profile, team, comments, createTeam } = this.props;
-    const { commentContent, teamDescription, ruleContent, ruleInput, fetching, loading, share, sort, topSort, files, urlComment, imageComment, dataComment, codeComment, dragOver } = this.state;
+    const { commentContent, teamDescription, ruleContent, ruleInput, fetching, loading, sort, topSort, dataURI, codeComment, dragOver } = this.state;
 
 
     const cdnHeaders = {
@@ -327,7 +362,7 @@ class TeamPage extends Component {
           <CreateTeamForm onCancel={()=> this.props.toggleCreateTeam(false)} onSubmit={this.handleCreateTeamSubmit} />
         </div>)}
         {/* <TeamPageFileDrop hidden={false} onClose={()=> this.setState({ dragOver : false })} />) */}
-        <TeamPageFileDrop hidden={(!dragOver)} dataImage={dataComment} urlImage={imageComment} onClose={this.handleFileDropClose} />
+        <TeamPageFileDrop dragging={(dragOver)} dataURI={dataURI} textComment={commentContent} onClose={this.handleFileDropClose} />
       </>)}
     </BasePage>);
   }
