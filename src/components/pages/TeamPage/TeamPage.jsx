@@ -14,7 +14,7 @@ import BaseComment from '../../iterables/BaseComment';
 import CreateTeamForm from '../../forms/CreateTeamForm';
 import { SORT_BY_DATE, SORT_BY_SCORE } from '../../sections/TopNav/TeamPageHeader';
 import { TEAM_TIMESTAMP } from '../../../consts/formats';
-import { ENTER_KEY } from '../../../consts/key-codes';
+import { BASKSPACE_KEY, TAB_KEY, ALT_KEY, CTRL_KEY, CAP_KEY, SHIFT_KEY, ENTER_KEY, META_LT_KEY } from '../../../consts/key-codes';
 import { API_ENDPT_URL } from '../../../consts/uris';
 import { fetchTeamComments, makeComment, makeTeam, makeTeamRule, modifyTeam, setComment, setPlayground, setTypeGroup, toggleCreateTeam } from '../../../redux/actions';
 import { trackEvent } from '../../../utils/tracking';
@@ -38,6 +38,7 @@ class TeamPage extends Component {
       urlComment      : false,
       dataURI         : null,
       dragOver        : false,
+      keyPress        : false
     };
   }
 
@@ -53,6 +54,7 @@ class TeamPage extends Component {
     window.ondragleave = this.handleDragLeave;
 
     window.addEventListener('paste', this.handleClipboardPaste);
+    document.addEventListener('keydown', this.handleKeyDown);
     // window.addEventListener('paste', (event)=> {
     //   console.log('%s.componentDidUpdate()', this.constructor.name, { event, data : event.clipboardData.getData('Text') });
 
@@ -96,7 +98,7 @@ class TeamPage extends Component {
     window.ondragenter = null;
     window.ondragleave = null;
 		document.removeEventListener('keydown', this.handleKeyDown);
-		document.removeEventListener('paste', this.handleClipboardPaste);
+		window.removeEventListener('paste', this.handleClipboardPaste);
 	}
 
   handleAddComment = (event)=> {
@@ -198,10 +200,10 @@ class TeamPage extends Component {
   };
 
   handleKeyDown = (event)=> {
-    // console.log('%s.handleKeyDown()', this.constructor.name, { event });
+    console.log('%s.handleKeyDown()', this.constructor.name, { event });
 
-    const { ruleInput, commentContent, teamDescription, ruleContent } = this.state;
     if (event.keyCode === ENTER_KEY) {
+      const { ruleInput, commentContent, teamDescription, ruleContent } = this.state;
       if (commentContent.length > 0) {
         this.handleAddComment(event);
       }
@@ -214,6 +216,16 @@ class TeamPage extends Component {
         this.handleAddRule(event);
       }
     }
+
+    // } else if (event.keyCode !== META_LT_KEY && event.keyCode !== BASKSPACE_KEY && event.keyCode !== TAB_KEY && event.keyCode !== ALT_KEY && event.keyCode !== CTRL_KEY && event.keyCode !== CAP_KEY && event.keyCode !== SHIFT_KEY) {
+    //   const { keyPress, commentContent } = this.state;
+    //   // if (!keyPress) {
+    //     this.setState({
+    //       keyPress       : true,
+    //       commentContent : `${commentContent}${event.key}`
+    //     });
+    //   // }
+    // }
   }
 
   handleRuleInput = (event)=> {
