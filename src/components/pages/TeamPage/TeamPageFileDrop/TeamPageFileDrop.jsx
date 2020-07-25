@@ -228,9 +228,9 @@ const TeamPageAddContent = (props)=> {
   console.log('TeamPageAddContent()', props);
 
   const { files, text, image, url, code, uploaded } = props;
-  return (<div className="team-page-add-content"><form>
+  return (<div className="team-page-add-content" data-uploaded={uploaded}><form>
     <div className="content-wrapper">
-      <TextareaAutosize className="comment-txt" placeholder={`Add a comment to this${(url) ? ' url' : (image || files.length > 0) ? ' image' : ''}…`} value={text} onChange={props.onTextChange} data-code={(code)} />
+      <TextareaAutosize className="comment-txt" placeholder={`Add a comment to this${(url) ? ' url' : ' image'}…`} value={text} onChange={props.onTextChange} data-code={(code)} />
     </div>
     <button type="submit" disabled={!uploaded} onClick={props.onSubmit}>Submit</button>
   </form></div>);

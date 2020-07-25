@@ -72,6 +72,10 @@
   height: 100%;
 }
 
+.team-page-add-content {
+  margin: 0 10px;
+  transition: height 0.125s ease-out;
+}
 
 .team-page-add-content form {
   display: flex;
