@@ -69,7 +69,7 @@ class RegisterForm extends Component {
 				action  : 'REGISTER',
 				payload : { email, password,
 					username  : email,
-					types     : ['user', 'invite'],
+					types     : ['user', (inviteID) ? 'invite' : 'signup'],
 					avatar    : makeAvatar(email),
 					invite_id : inviteID
 				}

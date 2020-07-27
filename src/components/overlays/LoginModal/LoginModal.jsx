@@ -36,16 +36,14 @@ class LoginModal extends Component {
 	}
 
 	handleComplete = ()=> {
-// console.log('%s.handleComplete()', this.constructor.name);
+		console.log('%s.handleComplete()', this.constructor.name);
 
 		const { outroURI } = this.state;
 		this.setState({ outro : false }, ()=> {
 			this.props.onComplete();
 
 			if (outroURI) {
-				if (outroURI.startsWith('/modal')) {
-					this.props.onModal(`/${URIs.lastComponent(outroURI)}`);
-				}
+				this.props.onModal(outroURI);
 			}
 		});
 	};
@@ -71,10 +69,10 @@ class LoginModal extends Component {
 	};
 
 	handleModal = (uri)=> {
-// console.log('%s.handleModal()', this.constructor.name, uri);
+		console.log('%s.handleModal()', this.constructor.name, { uri });
 		this.setState({
 			outro    : true,
-			outroURI : `/modal${uri}`
+			outroURI : uri
 		});
 	};
 
@@ -106,9 +104,8 @@ class LoginModal extends Component {
 					</div>
 
 					<div className="footer-wrapper form-disclaimer">
-						{/*<div onClick={()=> this.handleModal(Modals.RECOVER)}>Forgot Password</div>*/}
 						<div onClick={()=> this.handleModal(Modals.REGISTER)}>Don't have an account? Sign Up</div>
-						<div onClick={()=> this.handleModal(Modals.LOGIN)}>Forgot Password</div>
+						<div onClick={()=> this.handleModal(Modals.RECOVER)}>Forgot Password</div>
 					</div>
 				</div>
 			</BaseOverlay>);

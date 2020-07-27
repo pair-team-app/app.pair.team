@@ -29,7 +29,7 @@
 	height: 100%;
 	padding: var(--spacing-20);
 	border: 1px solid rgba(var(--border-color), 1.0);
-	border-radius: 30px;
+	border-radius: var(--border-radius);
 	text-align: center;
 	vertical-align: middle;
 	/*box-shadow:*/

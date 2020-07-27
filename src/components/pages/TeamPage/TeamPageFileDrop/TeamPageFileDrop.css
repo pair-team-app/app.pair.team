@@ -96,7 +96,7 @@
 	padding: 8px;
 	background-color: #f8f8f8;
 	border: 1px solid #e6e6e6;
-	border-radius: 4px;
+	border-radius: var(--border-radius);
 }
 
 .team-page-add-content .content-wrapper textarea.comment-txt {
