@@ -215,7 +215,7 @@ class TeamPage extends Component {
       if (ruleContent.length > 0 && ruleInput) {
         this.handleAddRule(event);
       }
-    }
+    } 
 
     // } else if (event.keyCode !== META_LT_KEY && event.keyCode !== BASKSPACE_KEY && event.keyCode !== TAB_KEY && event.keyCode !== ALT_KEY && event.keyCode !== CTRL_KEY && event.keyCode !== CAP_KEY && event.keyCode !== SHIFT_KEY) {
     //   const { keyPress, commentContent } = this.state;
