@@ -88,7 +88,7 @@ class BaseComment extends Component {
   };
 
 	handleVote = ({ comment, action })=> {
-		console.log('BaseCommentContent.handleReplySubmit()', this.constructor.name, { comment, action });
+		console.log('BaseComment.handleVote()', this.constructor.name, { comment, action });
 
 		// trackEvent('button', (action === VOTE_ACTION_UP) ? 'upvote-comment' : (action === VOTE_ACTION_DOWN) ? 'downvote-comment' : 'retract-vote');
     this.props.makeVote({ comment, action });
