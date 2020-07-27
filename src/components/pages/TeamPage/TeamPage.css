@@ -101,6 +101,10 @@ empty-comments
 	padding: var(--spacing-15) 0;
 }
 
+.team-page > div .team-wrapper .header:hover {
+	cursor: crosshair;
+}
+
 .team-page > div .team-wrapper .content {
 	padding: var(--spacing-10) var(--spacing-15);
 }

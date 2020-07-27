@@ -4,6 +4,7 @@ import './TeamPage.css';
 
 import axios from 'axios';
 import { Strings } from 'lang-js-utils';
+import { Menu, Item, Separator, Submenu, MenuProvider } from 'react-contexify';
 import TextareaAutosize from 'react-autosize-textarea';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
@@ -19,6 +20,9 @@ import { API_ENDPT_URL } from '../../../consts/uris';
 import { fetchTeamComments, makeComment, makeTeam, makeTeamRule, modifyTeam, setComment, setPlayground, setTypeGroup, toggleCreateTeam } from '../../../redux/actions';
 import { trackEvent } from '../../../utils/tracking';
 import btnCode from '../../../assets/images/ui/btn-code.svg';
+
+import 'react-contexify/dist/ReactContexify.min.css';
+
 
 class TeamPage extends Component {
   constructor(props) {
@@ -215,7 +219,7 @@ class TeamPage extends Component {
       if (ruleContent.length > 0 && ruleInput) {
         this.handleAddRule(event);
       }
-    } 
+    }
 
     // } else if (event.keyCode !== META_LT_KEY && event.keyCode !== BASKSPACE_KEY && event.keyCode !== TAB_KEY && event.keyCode !== ALT_KEY && event.keyCode !== CTRL_KEY && event.keyCode !== CAP_KEY && event.keyCode !== SHIFT_KEY) {
     //   const { keyPress, commentContent } = this.state;
@@ -346,7 +350,12 @@ class TeamPage extends Component {
           </div>
           <div className="team-wrapper" data-fetching={fetching}>
             <div className="about-wrapper">
-              <div className="header">About</div>
+              <div>
+                <MenuProvider id="menu_id">
+                  <div className="header">About</div>
+                </MenuProvider>
+                <MyAwesomeMenu onClick={({ event, props }) => console.log('MenuClick', { event, props })} />
+              </div>
               <div className="content"><textarea placeholder="Enter Text to Describe you team" value={teamDescription} onChange={(event)=> this.setState({ teamDescription : event.target.value })}></textarea></div>
               <div className="footer">
                 <div>{team.members.length} {Strings.pluralize('member', team.members.length)}</div>
@@ -428,6 +437,25 @@ const TeamPageRule = (props)=> {
   return (<div className="team-page-rule">
     {ind}. {rule.title} {rule.content}
   </div>);
+};
+
+
+
+
+const MyAwesomeMenu = (props)=> {
+  console.log('MyAwesomeMenu()', { props });
+
+  return (<Menu id="menu_id">
+     <Item onClick={props.onClick}>Lorem</Item>
+     <Item onClick={props.onClick}>Ipsum</Item>
+     <Separator />
+     <Item disabled>Dolor</Item>
+     <Separator />
+     <Submenu label="Foobar">
+      <Item onClick={props.onClick}>Foo</Item>
+      <Item onClick={props.onClick}>Bar</Item>
+     </Submenu>
+  </Menu>);
 };
 
 
