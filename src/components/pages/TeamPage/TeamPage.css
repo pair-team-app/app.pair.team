@@ -35,9 +35,6 @@
 	padding: 0 var(--spacing-20);
 }
 
-.team-page > .content-wrapper > * {
-	/* height: calc(100vh - 58px); */
-}
 
 /* .team-page > div .filepond--root.file-pond-wrapper {
 	width: 100%;

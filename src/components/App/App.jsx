@@ -103,9 +103,7 @@ class App extends Component {
     if (Browsers.isOnline()) {
       if (location.pathname.startsWith(Pages.INVITE) && !this.state.inviteID && !modals.register) {
         const inviteID = location.pathname.split('/')[3] << 0;
-        this.setState({ inviteID }, ()=> {
-          //
-        });
+        this.setState({ inviteID });
       }
 
       if (!prevState.inviteID && this.state.inviteID) {

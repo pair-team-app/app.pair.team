@@ -25,6 +25,7 @@ export const Pages = {
 	PROJECT    : '/project',
 	TEAM       : '/team',
 	TERMS      : '/terms',
+	VERIFY      : '/verify',
 	WILDCARD   : '*'
 };
 
