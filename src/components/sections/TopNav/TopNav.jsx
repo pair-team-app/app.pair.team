@@ -162,7 +162,7 @@ class TopNav extends Component {
 
 
 const TopNavBreadcrumb = (props)=> {
-//   console.log('TopNavBreadcrumb()', props);
+//   console.log('TopNavBreadcrumb()', { props });
 
   const { ind, tot, segment } = props;
   const { type, title, payload } = segment;
@@ -175,7 +175,7 @@ const TopNavBreadcrumb = (props)=> {
 
 
 const TopNavShareLink = (props)=> {
-//   console.log('TopNavShareLink()', props);
+//   console.log('TopNavShareLink()', { props });
 
   const { popover, playground } = props;
 	return (<div className="top-nav-share-link">

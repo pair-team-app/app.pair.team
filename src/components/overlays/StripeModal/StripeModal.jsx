@@ -25,7 +25,7 @@ const stripePromise = loadStripe(STRIPE_PUBLIC_TOKEN);
 
 class StripeModal extends Component {
 	constructor(props) {
-		// console.log('%s.CONSTRUCTOR()', 'StripeModal', props);
+		// console.log('%s.CONSTRUCTOR()', 'StripeModal', { props });
 
 		super(props);
 

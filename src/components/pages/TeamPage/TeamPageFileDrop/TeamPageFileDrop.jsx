@@ -220,7 +220,7 @@ class TeamPageFileDrop extends Component {
 
 
 const AddContentCloseButton = (props)=> {
-  console.log('AddContentCloseButton()', props);
+  console.log('AddContentCloseButton()', { props });
 
   return (<button className="quiet-button glyph-button" onClick={props.onCloseClick}>
     <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -233,7 +233,7 @@ const AddContentCloseButton = (props)=> {
 
 
 const TeamPageAddContent = (props)=> {
-  console.log('TeamPageAddContent()', props);
+  console.log('TeamPageAddContent()', { props });
 
   const { files, text, image, url, code, uploaded } = props;
   return (<div className="team-page-add-content" data-uploaded={uploaded}><form>

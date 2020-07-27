@@ -62,7 +62,7 @@ class AccessibilityPopover extends Component {
 
 
 const AccessibilityReportItem = (props)=> {
-	// console.log('AccessibilityReportItem()', props);
+	// console.log('AccessibilityReportItem()', { props });
 
 	const { ind, report } = props;
 	const { help, description, impact, helpUrl } = report;

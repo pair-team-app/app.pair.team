@@ -229,7 +229,7 @@ export default function onClickOutsideHOC(WrappedComponent, config) {
       props.disableOnClickOutside = this.disableOnClickOutside;
       props.enableOnClickOutside = this.enableOnClickOutside;
 
-      return createElement(WrappedComponent, props);
+      return createElement(WrappedComponent, { props });
     }
   };
 }

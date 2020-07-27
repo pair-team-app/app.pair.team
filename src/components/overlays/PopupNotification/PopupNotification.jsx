@@ -18,7 +18,7 @@ const OUTRO_DURATION = 1000 * (2/3);
 
 class PopupNotification extends Component {
 	constructor(props) {
-// console.log('%s.constructor()', this.constructor.name, props);
+// console.log('%s.constructor()', this.constructor.name, { props });
 
 		super(props);
 		this.state = {

@@ -73,7 +73,7 @@ class ProjectPage extends Component {
 
 
 const ProjectPageFooter = (props)=> {
-  console.log('ProjectPageFooter()', props);
+  console.log('ProjectPageFooter()', { props });
 
   const { component } = props;
   return (<div className="project-page-footer">
@@ -83,7 +83,7 @@ const ProjectPageFooter = (props)=> {
 
 
 const ProjectViewsGrid = (props)=> {
-  console.log('ProjectViewsGrid()', props);
+  console.log('ProjectViewsGrid()', { props });
 
   const { components } = props;
   return (<div className="project-views-grid">
@@ -95,7 +95,7 @@ const ProjectViewsGrid = (props)=> {
 
 
 const ProjectPageCommentsList = (props)=> {
-  console.log('ProjectPageCommentsList()', props);
+  console.log('ProjectPageCommentsList()', { props });
 
   const { comments } = props;
   return (<div className="project-page-comments-list" data-collapsed={(!window.location.href.includes('/comments'))}>
@@ -106,7 +106,7 @@ const ProjectPageCommentsList = (props)=> {
 }
 
 const ProjectPageCommentsListComment = (props)=> {
-  console.log('ProjectPageCommentsListComment()', props);
+  console.log('ProjectPageCommentsListComment()', { props });
 
   const { comment } = props;
   return (<div className="project-page-comments-list-comment">
@@ -116,7 +116,7 @@ const ProjectPageCommentsListComment = (props)=> {
 
 
 const ProjectViewItem = (props)=> {
-  console.log('ProjectViewItem()', props);
+  console.log('ProjectViewItem()', { props });
 
   const { components } = props;
   return (<div className="project-view-item" onClick={props.onClick}>
@@ -125,7 +125,7 @@ const ProjectViewItem = (props)=> {
 }
 
 const ProjectViewCommentMarker = (props)=> {
-  console.log('ProjectViewCommentMarker()', props);
+  console.log('ProjectViewCommentMarker()', { props });
 
   const { comment, ind } = props;
   return (<div className="project-view-comment-marker" onClick={()=> props.onClick(comment)} style={{

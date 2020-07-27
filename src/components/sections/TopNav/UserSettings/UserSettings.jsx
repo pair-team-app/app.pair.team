@@ -115,7 +115,7 @@ class UserSettings extends Component {
 
 
 const UserSettingsPopover = (props)=> {
-console.log('UserSettingsPopover()', props);
+console.log('UserSettingsPopover()', { props });
 
 	const { position, outro } = props;
 	const payload = {

@@ -5,7 +5,7 @@ import './TeamPageHeader.css';
 import { SORT_BY_DATE, SORT_BY_SCORE } from './index';
 
 function TeamPageHeader(props) {
-// console.log('TeamPageHeader()', props);
+// console.log('TeamPageHeader()', { props });
 
   const { sort } = props;
   return (<div className="team-page-header">
