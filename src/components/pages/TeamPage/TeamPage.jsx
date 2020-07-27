@@ -22,6 +22,7 @@ import { trackEvent } from '../../../utils/tracking';
 import btnCode from '../../../assets/images/ui/btn-code.svg';
 
 import 'react-contexify/dist/ReactContexify.min.css';
+import { POPUP_TYPE_OK } from '../../overlays/PopupNotification';
 
 
 class TeamPage extends Component {
@@ -354,7 +355,11 @@ class TeamPage extends Component {
                 <MenuProvider id="menu_id">
                   <div className="header">About</div>
                 </MenuProvider>
-                <MyAwesomeMenu onClick={({ event, props }) => console.log('MenuClick', { event, props })} />
+                <MyAwesomeMenu onClick={({ event, props })=> { console.log('MenuClick', { event, props }); this.props.onPopup({
+        type    : POPUP_TYPE_OK,
+        content : 'Menu Clicked.',
+        delay   : 0
+      });}} />
               </div>
               <div className="content"><textarea placeholder="Enter Text to Describe you team" value={teamDescription} onChange={(event)=> this.setState({ teamDescription : event.target.value })}></textarea></div>
               <div className="footer">
