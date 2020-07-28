@@ -61,6 +61,15 @@ class Routes extends Component {
       } />
 
       <Route
+        path={RoutePaths.CREATE}
+        render={({ props })=> <BasePage
+          onLogout={this.props.onLogout}
+          onModal={(uri, payload)=> this.props.onModal(uri, true, payload)}
+          onPopup={this.props.onPopup} { ...props}
+          />
+      } />
+
+      <Route
         path={RoutePaths.PROJECT}
         render={({ props })=> <ProjectPage
           onLogout={this.props.onLogout}

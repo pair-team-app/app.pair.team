@@ -17,9 +17,9 @@ export const Modals = {
 
 export const Pages = {
 	HOME       : '/',
+	CREATE     : '/create-pair',
 	INVITE     : '/invite',
 	LEGAL      : '/legal',
-	PLAYGROUND : '/app',
 	PAYMENT    : '/payment',
 	PRIVACY    : '/privacy',
 	PROJECT    : '/project',
