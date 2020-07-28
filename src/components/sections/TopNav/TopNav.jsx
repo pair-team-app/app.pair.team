@@ -143,7 +143,7 @@ class TopNav extends Component {
 
 		return (<div className="top-nav">
 			{/* <div className="col breadcrumb-wrapper">{this.buildBreadcrumbs().map((breadcrumb)=> (breadcrumb))}</div> */}
-			{(team && !playground) && (<div className="col col-left">
+			{(window.location.pathname.includes('/team') && !playground) && (<div className="col col-left">
 				<TeamPageHeader sort={teamSort} onSortClick={this.handleTeamCommentsSort} />
 			</div>)}
 			<div className="col col-middle">
