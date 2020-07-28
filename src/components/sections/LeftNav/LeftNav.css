@@ -40,7 +40,13 @@
 	margin-right: var(--spacing-10);
 }
 
+.left-nav .left-nav-header .title {
+	color: rgba(var(--link-color), 1.0);
+	transition: color 0.125s ease-out;
+}
+
 .left-nav .left-nav-header .title:hover {
+	color: rgba(var(--link-hover-color), 1.0);
 	cursor: pointer;
 }
 

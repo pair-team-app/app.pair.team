@@ -11,7 +11,7 @@ import ContentExpander from '../../iterables/ContentExpander';
 import { Pages, TEAM_DEFAULT_AVATAR} from '../../../consts/uris';
 import { fetchBuildPlaygrounds, setComponent, setPlayground, setTeam, toggleCreateTeam } from '../../../redux/actions';
 import { trackEvent } from '../../../utils/tracking';
-
+import pairLogo from '../../../assets/images/logos/logo-pairurl-310.png';
 
 class LeftNav extends Component {
   constructor(props) {
@@ -165,15 +165,13 @@ const LeftNavBuild = (props)=> {
 
 
 const LeftNavHeader = (props)=> {
-  // console.log('LeftNavHeader()', { props });
+  console.log('LeftNavHeader()', { props });
 
-  const { team } = props;
-  const { logo, title } = team || { logo : null, title : '' };
+  const { teams } = props
   return (<div className="left-nav-header">
-    {(team) && (<NavLink to={`${Pages.TEAM}/${team.slug}`} className="title">
-      <img src={TEAM_DEFAULT_AVATAR} alt="Logo" />
-      {title}
-    </NavLink>)}
+    {(teams.length > 0) && (<div className="title" onClick={()=> props.setTeam(teams[0])}>
+      <img src={pairLogo} alt="Logo" />Pair
+    </div>)}
   </div>);
 };
 
