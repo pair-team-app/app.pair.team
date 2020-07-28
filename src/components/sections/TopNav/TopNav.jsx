@@ -151,7 +151,6 @@ class TopNav extends Component {
 			</div>
 			<div className="col col-right">
 				<NavLink to="https://www.notion.so/pairurl/Blog-f8fd5939357442bca1ff97c3117d1ecb" className="top-nav-link" target="_blank" onClick={(event)=> handleURL(event, 'https://www.notion.so/pairurl/Blog-f8fd5939357442bca1ff97c3117d1ecb')}>Blog</NavLink>
-        <NavLink to="https://spectrum.chat/pair" className="top-nav-link" target="_blank" onClick={(event)=> handleURL(event, 'https://spectrum.chat/pair')}>Support</NavLink>
 				<TopNavShareLink popover={popover} playground={playground} onClick={this.handlePopoverToggle} onPopup={this.props.onPopup} onPopoverClose={this.handlePopoverClose} />
 				{(profile && !invite) && (<UserSettings onMenuItem={this.handleSettingsItem} onLogout={this.props.onLogout} />)}
 				{(profile && !invite) && (<div className="" onClick={()=> this.props.onModal(Modals.INVITE)}>invite</div>)}
