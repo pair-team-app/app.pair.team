@@ -98,12 +98,12 @@ class LeftNav extends Component {
   };
 
   render() {
-    // console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
+    console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
 
     const { teams, team, invite, profile } = this.props;
     const { builds } = this.state;
 
-    return (<div className="left-nav">
+    return ((profile) && (<div className="left-nav">
       <LeftNavHeader { ...this.props } />
       {(profile && !teams && !invite) && (<div className="loading">Loading…</div>)}
       {(teams) && (<div className="tree-wrapper">
@@ -134,7 +134,7 @@ class LeftNav extends Component {
           </div>
         </div>)}
       </div>)}
-    </div>);
+    </div>));
   }
 }
 
