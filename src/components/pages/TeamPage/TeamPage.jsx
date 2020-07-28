@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import './TeamPage.css';
 
 import axios from 'axios';
-import { Strings } from 'lang-js-utils';
+import { Arrays, Strings } from 'lang-js-utils';
 import { Menu, Item, Separator, Submenu, MenuProvider } from 'react-contexify';
 import TextareaAutosize from 'react-autosize-textarea';
 import { connect } from 'react-redux';
@@ -73,24 +73,8 @@ class TeamPage extends Component {
   componentDidUpdate(prevProps, prevState, snapshot) {
     console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : this.props, prevState, state : this.state });
 
-    const { team, comments } = this.props;
-    const { teamDescription, fetching, topSort } = this.state;
-
-
-    if (fetching) {
-      if ((comments.filter(({ content })=> (content === null)).length === 0)) {
-        this.setState({ fetching : false });
-      }
-
-    } else {
-      if (comments.filter(({ content })=> (content === null)).length > 0) {
-        this.setState({ fetching : true });
-      }
-    }
-
-    if (topSort.length !== comments.length) {
-      this.setState({ topSort : comments.sort((i, ii)=> ((i.score > ii.score) ? -1 : (i.score < ii.score) ? 1 : 0)).map(({ id })=> (id)) });
-    }
+    const { team } = this.props;
+    const { teamDescription } = this.state;
 
     if (prevProps.team !== team && team && teamDescription !== team.description) {
       this.setState({ teamDescription : team.description });
@@ -243,16 +227,6 @@ class TeamPage extends Component {
     });
   }
 
-  handleSortClick = (sort)=> {
-    // console.log('%s.handleSortClick()', this.constructor.name, sort);
-
-    this.setState({ sort }, ()=> {
-      if (sort === SORT_BY_SCORE) {
-        this.onReloadComments();
-      }
-    });
-  }
-
   handleTextChange = (event)=> {
     // console.log('%s.handleTextChange()', this.constructor.name, event);
 
@@ -296,27 +270,11 @@ class TeamPage extends Component {
     this.props.toggleCreateTeam(false);
   };
 
-  onReloadComments = (refresh=true)=> {
-    // console.log('%s.onReloadComments()', this.constructor.name, { refresh });
-
-    const { team } = this.props;
-    const { topSort } = this.state;
-
-    this.setState({
-      fetching : true,
-      topSort  : (refresh) ? [] : topSort
-    }, ()=> {
-      // this.props.fetchTeamComments({ team });
-    });
-  };
-
-
-
   render() {
     console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
 
-    const { profile, team, comments, createTeam } = this.props;
-    const { commentContent, teamDescription, ruleContent, ruleInput, fetching, loading, sort, topSort, dataURI, codeComment, dragOver } = this.state;
+    const { profile, team, createTeam, sort } = this.props;
+    const { commentContent, teamDescription, ruleContent, ruleInput, fetching, loading, dataURI, codeComment, dragOver } = this.state;
 
 
     const cdnHeaders = {
@@ -327,7 +285,7 @@ class TeamPage extends Component {
     return (<BasePage { ...this.props } className="team-page">
       {(profile && team) && (<>
         {(!createTeam) ? (<div className="content-wrapper">
-          <div className="comments-wrapper" data-fetching={fetching} data-empty={comments.length === 0}>
+          <div className="comments-wrapper" data-fetching={fetching} data-empty={team && team.comments.length === 0}>
             <div>
               <TeamPageAddComment
                 loading={loading}
@@ -341,12 +299,13 @@ class TeamPage extends Component {
 
               <div className="empty-comments">No Activity</div>
 
-              <TeamPageCommentsPanel
+              {(team) && (<TeamPageCommentsPanel
                 profile={profile}
-                comments={(sort === SORT_BY_DATE) ? comments.sort((i, ii)=> ((i.epoch > ii.epoch) ? -1 : (i.epoch < ii.epoch) ? 1 : 0)) : topSort.map((commentID)=> (comments.find(({ id })=> (id === commentID)) || null)).filter((comment)=> (comment !== null))}
+                // comments={(sort === SORT_BY_DATE) ? team.comments.sort((i, ii)=> ((i.epoch > ii.epoch) ? -1 : (i.epoch < ii.epoch) ? 1 : 0)) : team.comments.sort((i, ii)=> ((i.score > ii.score) ? -1 : (i.score < ii.score) ? 1 : 0)).filter((comment)=> (comment !== null))}
+                comments={(sort === SORT_BY_DATE) ? Arrays.shuffle(team.comments) : team.comments.sort((i, ii)=> ((i.score > ii.score) ? -1 : (i.score < ii.score) ? 1 : 0)).filter((comment)=> (comment !== null))}
                 fetching={fetching}
                 sort={sort}
-              />
+              />)}
             </div>
           </div>
           <div className="team-wrapper" data-fetching={fetching}>
@@ -484,7 +443,7 @@ const mapStateToProps = (state, ownProps)=> {
     createTeam : state.teams.createTeam,
     profile    : state.user.profile,
     team       : state.teams.team,
-    comments   : state.comments.comments,
+    sort       : state.teams.sort,
     playground : state.playground
   };
 };
