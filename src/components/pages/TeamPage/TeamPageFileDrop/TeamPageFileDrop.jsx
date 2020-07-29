@@ -14,7 +14,6 @@ import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css';
 import './post-styles.css';
 
 import { CDN_FILEPOND_URL } from '../../../../consts/uris';
-import files from 'lang-js-utils/lang/files';
 
 registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview);
 
