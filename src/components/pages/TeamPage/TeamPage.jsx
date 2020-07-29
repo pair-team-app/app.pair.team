@@ -19,7 +19,6 @@ import { BASKSPACE_KEY, TAB_KEY, ALT_KEY, CTRL_KEY, CAP_KEY, SHIFT_KEY, ENTER_KE
 import { API_ENDPT_URL } from '../../../consts/uris';
 import { fetchTeamComments, makeComment, makeTeamRule, modifyTeam, setComment, setPlayground, setTypeGroup } from '../../../redux/actions';
 import { trackEvent } from '../../../utils/tracking';
-import btnCode from '../../../assets/images/ui/btn-code.svg';
 
 import 'react-contexify/dist/ReactContexify.min.css';
 import { POPUP_TYPE_OK } from '../../overlays/PopupNotification';
@@ -58,16 +57,8 @@ class TeamPage extends Component {
     window.ondragenter = this.handleDragEnter;
     window.ondragleave = this.handleDragLeave;
 
-    window.addEventListener('paste', this.handleClipboardPaste);
-    document.addEventListener('keydown', this.handleKeyDown);
-    // window.addEventListener('paste', (event)=> {
-    //   console.log('%s.componentDidUpdate()', this.constructor.name, { event, data : event.clipboardData.getData('Text') });
-
-    //   const clipboardText = event.clipboardData.getData('Text');
-    //   if (clipboardText) {
-
-    //   }
-    // });
+    // window.addEventListener('paste', this.handleClipboardPaste);
+    // document.addEventListener('keydown', this.handleKeyDown);
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
@@ -150,11 +141,6 @@ class TeamPage extends Component {
     }
   }
 
-  handleCode = (event)=> {
-    console.log('%s.handleCode()', this.constructor.name, { event });
-    this.setState({ codeComment : !this.state.codeComment });
-  };
-
   handleDragEnter = (event)=> {
     console.log('%s.handleDragEnter()', this.constructor.name, { event });
     event.preventDefault();
@@ -231,26 +217,31 @@ class TeamPage extends Component {
     // console.log('%s.handleTextChange()', this.constructor.name, event);
 
     const commentContent = event.target.value;
-    const urlComment = (/https?:\/\//i.test(commentContent));
-
-    this.setState({ commentContent, urlComment,
-      parsing      : urlComment,
-    }, ()=> {
-      if (urlComment) {
-        const url = commentContent.match(/https?:\/\/.+ ?/i).shift().split(' ').shift();
-        axios.post(API_ENDPT_URL, {
-          action  : 'SCREENSHOT_URL',
-          payload : { url }
-        }).then((response)=> {
-          const { image } = response.data;
-          console.log('SCREENSHOT_URL', { data : response.data });
-          this.setState({
-            parsing : false,
-            dataURI : image.data
-            });
-        });
-      }
+    this.setState({ commentContent }, ()=> {
+      this.setState({ commentContent : '' });
     });
+
+    // const commentContent = event.target.value;
+    // const urlComment = (/https?:\/\//i.test(commentContent));
+
+    // this.setState({ commentContent, urlComment,
+    //   parsing      : urlComment,
+    // }, ()=> {
+    //   if (urlComment) {
+    //     const url = commentContent.match(/https?:\/\/.+ ?/i).shift().split(' ').shift();
+    //     axios.post(API_ENDPT_URL, {
+    //       action  : 'SCREENSHOT_URL',
+    //       payload : { url }
+    //     }).then((response)=> {
+    //       const { image } = response.data;
+    //       console.log('SCREENSHOT_URL', { data : response.data });
+    //       this.setState({
+    //         parsing : false,
+    //         dataURI : image.data
+    //         });
+    //     });
+    //   }
+    // });
   };
 
   handleUpdateTeamDescription = (event)=> {
@@ -280,27 +271,19 @@ class TeamPage extends Component {
       {(profile && team) && (<>
         <div className="content-wrapper">
           <div className="comments-wrapper" data-fetching={fetching} data-empty={team && team.comments.length === 0}>
-            <div>
-              <TeamPageAddComment
-                loading={loading}
-                codeComment={codeComment}
-                commentContent={commentContent}
-                onClear={this.handleClearComment}
-                onCode={this.handleCode}
-                onTextChange={this.handleTextChange}
-                onSubmit={this.handleAddComment}
-              />
-
-              <div className="empty-comments">No Activity</div>
-
-              {(team) && (<TeamPageCommentsPanel
-                profile={profile}
-                comments={(sort === SORT_BY_DATE) ? team.comments.sort((i, ii)=> ((i.epoch > ii.epoch) ? -1 : (i.epoch < ii.epoch) ? 1 : 0)) : team.comments.sort((i, ii)=> ((i.score > ii.score) ? -1 : (i.score < ii.score) ? 1 : 0)).filter((comment)=> (comment !== null))}
-                // comments={(sort === SORT_BY_DATE) ? Arrays.shuffle(team.comments) : team.comments.sort((i, ii)=> ((i.score > ii.score) ? -1 : (i.score < ii.score) ? 1 : 0)).filter((comment)=> (comment !== null))}
-                fetching={fetching}
-                sort={sort}
-              />)}
+            <div className="header" data-loading={loading}>
+              <input type="text" className="comment-txt" placeholder="Start Typing or Pasting…" value={commentContent} onChange={this.handleTextChange} />
+              <button disabled={true}>Submit</button>
             </div>
+
+            <div className="empty-comments">No Activity</div>
+
+            {(team) && (<TeamPageCommentsPanel
+              profile={profile}
+              comments={(sort === SORT_BY_DATE) ? team.comments.sort((i, ii)=> ((i.epoch > ii.epoch) ? -1 : (i.epoch < ii.epoch) ? 1 : 0)) : team.comments.sort((i, ii)=> ((i.score > ii.score) ? -1 : (i.score < ii.score) ? 1 : 0)).filter((comment)=> (comment !== null))}
+              fetching={fetching}
+              sort={sort}
+            />)}
           </div>
           <div className="team-wrapper" data-fetching={fetching}>
             <div className="about-wrapper">
@@ -339,30 +322,11 @@ class TeamPage extends Component {
           </div>
         </div>
         {/* <TeamPageFileDrop hidden={false} onClose={()=> this.setState({ dragOver : false })} />) */}
-        <TeamPageFileDrop dragging={(dragOver)} dataURI={dataURI} textComment={commentContent} onClose={this.handleFileDropClose} />
+        <TeamPageFileDrop dragging={(dragOver)} textContent={commentContent} onClose={this.handleFileDropClose} />
       </>)}
     </BasePage>);
   }
 }
-
-const TeamPageAddComment = (props)=> {
-  // console.log('TeamPageAddComment()', { props });
-
-  const { loading, codeComment, commentContent } = props;
-  const urlComment = (/https?:\/\//i.test(commentContent));
-
-  return (<div className="team-page-add-comment" data-loading={loading}><form>
-    <div className="content-wrapper">
-      {(commentContent.length > 0 && !urlComment) && (<div>
-        <img src={btnCode} className="code-btn" onClick={props.onCode} alt="Code" />
-      </div>)}
-      <TextareaAutosize className="comment-txt" placeholder="Start Typing or Pasting…" value={commentContent} onChange={props.onTextChange} data-code={codeComment} />
-    </div>
-    <button type="submit" disabled={commentContent.length === 0} onClick={props.onSubmit}>Submit</button>
-  </form></div>);
-};
-
-
 
 const TeamPageCommentsPanel = (props)=> {
 	// console.log('TeamPageCommentsPanel()', { ...props });

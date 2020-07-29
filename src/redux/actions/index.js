@@ -263,11 +263,12 @@ export function makeComment(payload) {
     const { profile } = getState().user;
     const { team } = getState().teams;
     const { component } = getState().builds;
-    const { comment, content, position } = payload;
+    const { comment, content, format, position, image } = payload;
 
     axios.post(API_ENDPT_URL, {
       action  : 'ADD_COMMENT',
-      payload : { content,
+      payload : { content, format,
+        image_url    : (image || null),
         position     : (position || ((comment) ? comment.position : { x : 0, y : 0 })),
         user_id      : profile.id,
         team_id      : (component) ? 0 : team.id,
@@ -277,10 +278,10 @@ export function makeComment(payload) {
     }).then((response)=> {
       console.log(API_RESPONSE_PREFIX, 'ADD_COMMENT', response.data, response.data.comment);
 
-      dispatch({
-        type    : (!comment) ? COMMENT_ADDED : COMMENT_UPDATED,
-        payload : { comment : response.data.comment }
-      });
+      // dispatch({
+      //   type    : (!comment) ? COMMENT_ADDED : COMMENT_UPDATED,
+      //   payload : { comment : response.data.comment }
+      // });
     }).catch((error)=> {
       console.log(API_RESPONSE_PREFIX, 'ADD_COMMENT >> ERROR', { error, payload : { content,
         position     : (position || ((comment) ? comment.position : { x : 0, y : 0 })),

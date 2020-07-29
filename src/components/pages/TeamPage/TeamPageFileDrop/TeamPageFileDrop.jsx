@@ -2,6 +2,7 @@
 import React, { Component } from 'react';
 import './TeamPageFileDrop.css';
 
+import axios from 'axios';
 import FilePondPluginImageExifOrientation from 'filepond-plugin-image-exif-orientation';
 import FilePondPluginImagePreview from 'filepond-plugin-image-preview';
 import { URIs } from 'lang-js-utils';
@@ -9,12 +10,13 @@ import TextareaAutosize from 'react-autosize-textarea';
 import { FilePond, registerPlugin } from 'react-filepond';
 import { connect } from 'react-redux';
 import { makeComment } from '../../../../redux/actions';
+import btnCode from '../../../../assets/images/ui/btn-code.svg';
 
 import 'filepond/dist/filepond.min.css';
 import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css';
 import './post-styles.css';
 
-import { CDN_FILEPOND_URL } from '../../../../consts/uris';
+import { API_ENDPT_URL, CDN_FILEPOND_URL } from '../../../../consts/uris';
 
 registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview);
 
@@ -35,6 +37,8 @@ class TeamPageFileDrop extends Component {
   }
 
   dataURIFile = (dataURI, filename)=> {
+    console.log('%s.dataURIFile()', this.constructor.name, {dataURI, filename });
+
     fetch(dataURI).then((res)=>(res.arrayBuffer())).then((res)=> {
       const file = new File([res], filename, { type : 'image/png' });
       this.setState({ files : [ ...this.state.files, file] });
@@ -46,22 +50,34 @@ class TeamPageFileDrop extends Component {
   }
 
 	componentDidUpdate(prevProps, prevState, snapshot) {
-    // console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : this.props, prevState, state : this.state });
+    console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : this.props, prevState, state : this.state });
 
-    const { imageURL, dataURI, textComment } = this.props;
-    if (dataURI && !this.state.image && !prevState.image) {
+    const { imageURL, dataURI, textContent } = this.props;
+    // if (dataURI && !this.state.image && !prevState.image) {
+    //   this.setState({
+    //     url   : true,
+    //     image : dataURI,
+    //   }, ()=> {
+    //     this.dataURIFile(dataURI, `${URIs.lastComponent(imageURL)}.png`);
+    //   });
+    // }
+
+    if (textContent !== '' && textContent !== this.state.text && this.state.text === '') {
+      const urlComment = (/https?:\/\//i.test(textContent));
+
       this.setState({
-        url   : true,
-        image : dataURI,
+        text : textContent,
+        url  : urlComment
       }, ()=> {
-        this.dataURIFile(dataURI, `${URIs.lastComponent(imageURL)}.png`);
+        if (urlComment) {
+          this.onFetchScreenshot(textContent);
+        }
       });
     }
 
-    if (textComment !== this.state.text) {
-      this.setState({
-        text : textComment
-      });
+    const { text } = this.state;
+    if (prevState.text !== text) {
+
     }
   }
 
@@ -72,7 +88,7 @@ class TeamPageFileDrop extends Component {
 
   handleCode = (event)=> {
     console.log('%s.handleCode()', this.constructor.name, { event });
-    this.setState({ codeComment : !this.state.codeComment });
+    this.setState({ code : !this.state.code });
   };
 
   handleResetFiles = (event)=> {
@@ -158,36 +174,70 @@ class TeamPageFileDrop extends Component {
     console.log('%s.()', this.constructor.name, { ,  });
   }; */
 
+  handleTextChange = (event)=> {
+    console.log('%s.handleTextChange()', this.constructor.name, { event, state : this.state });
+
+    const text = event.target.value;
+    const urlComment = (/https?:\/\//i.test(text));
+
+    this.setState({ text,
+      url : urlComment,
+    }, ()=> {
+      if (urlComment) {
+        this.onFetchScreenshot(text);
+      }
+    });
+  };
+
   handleSubmit = (event)=> {
     console.log('%s.handleSubmit(event)', this.constructor.name, { event });
     event.preventDefault();
     event.stopPropagation();
 
-    const { text } = this.state;
-    this.props.makeComment({
+    const { text, image, code } = this.state;
+    this.props.makeComment({ image,
       comment  : null,
 			content  : text,
-      position : null
+      position : null,
+      format   : (code) ? 'code' : 'text'
 		});
+  };
+
+  onFetchScreenshot = (text)=> {
+    console.log('%s.onFetchScreenshot(text)', this.constructor.name, { text });
+
+    const url = text.match(/https?:\/\/.+ ?/i).shift().split(' ').shift();
+    axios.post(API_ENDPT_URL, {
+      action  : 'SCREENSHOT_URL',
+      payload : { url }
+    }).then((response)=> {
+      const { image } = response.data;
+      console.log('SCREENSHOT_URL', { data : response.data });
+      this.setState({
+        image : image.cdn
+      }, ()=> {
+        this.dataURIFile(image.data, URIs.lastComponent(image.src));
+      });
+    });
   };
 
 
 	render() {
-    // console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state, files : this.state.files.length });
+    console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
 
 
     const { team, profile, dragging } = this.props;
     const { text, url, code, uploaded, image, files } = this.state;
 
-		return (<div className="team-page-file-drop" data-hidden={(!dragging && files.length === 0 && !text)}>
+		return (<div className="team-page-file-drop" data-hidden={(!dragging && files.length === 0 && text.length === 0)}>
       <div data-file={files.length > 0 || image !== null || text.length > 0}>
-        {/* {(files.length > 0 || text.length > 0) && (<TeamPageAddContent files={files} { ...this.state} onSubmit={this.handleSubmit} />)} */}
-        {(files.length > 0 || text.length > 0) && (<div className="team-page-add-content" data-uploaded={uploaded}><form>
-          <div className="content-wrapper">
-            <TextareaAutosize className="comment-txt" placeholder={`Add a comment to this${(url) ? ' url' : ' image'}…`} value={text} onChange={this.props.onTextChange} data-code={(code)} />
+        {(files.length > 0 || text.length > 0) && (<div className="input-wrapper" data-uploaded={uploaded}>
+          <div>
+            {(text.length > 0 && !url) && (<img src={btnCode} className="code-btn" onClick={this.handleCode} alt="Code" />)}
+            <TextareaAutosize className="comment-txt" placeholder={`Add a comment to this${(url) ? ' url' : ' image'}…`} value={text} onChange={this.handleTextChange} data-code={(code)} />
           </div>
           <button type="submit" disabled={false} onClick={this.handleSubmit}>Submit</button>
-        </form></div>)}
+        </div>)}
 
         <FilePond
           server={{
