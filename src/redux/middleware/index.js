@@ -283,15 +283,18 @@ export function onMiddleware(store) {
     } else if (type === SET_TEAM) {
       const { teams } = prevState.teams;
       payload.teams = teams.map((team)=> ({ ...team,
-        selected : (team.id === payload.team.id)
+        selected : (payload.team && team.id === payload.team.id)
       }));
-      payload.team = payload.teams.find(({ id })=> (id === payload.team.id));
+      payload.team = (payload.team) ? payload.teams.find(({ id })=> (id === payload.team.id)) : null;
 
       const buildID = 0;
       const deviceSlug = "";
-      dispatch(fetchTeamBuilds({ team : payload.team, buildID, deviceSlug }));
-      dispatch(fetchTeamComments({ team : payload.team, verbose : true }));
-      dispatch(push(`/team/${payload.team.id}--${payload.team.slug}`));
+
+      if (payload.team) {
+        dispatch(fetchTeamBuilds({ team : payload.team, buildID, deviceSlug }));
+        dispatch(fetchTeamComments({ team : payload.team, verbose : true }));
+        dispatch(push(`/team/${payload.team.id}--${payload.team.slug}`));
+      }
 
     } else if (type === SET_PLAYGROUND) {
       const { playground } = payload;

@@ -2,13 +2,14 @@
 import React, { Component } from 'react';
 import './LeftNav.css';
 
+import { push } from 'connected-react-router';
 import { Strings } from 'lang-js-utils';
 import FontAwesome from 'react-fontawesome';
 import { connect } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 
 import ContentExpander from '../../iterables/ContentExpander';
-import { Pages, TEAM_DEFAULT_AVATAR} from '../../../consts/uris';
+import { Pages } from '../../../consts/uris';
 import { fetchBuildPlaygrounds, setComponent, setPlayground, setTeam, toggleCreateTeam } from '../../../redux/actions';
 import { trackEvent } from '../../../utils/tracking';
 import pairLogo from '../../../assets/images/logos/logo-pairurl-310.png';
@@ -53,8 +54,11 @@ class LeftNav extends Component {
   };
 
   handleCreateTeam = ()=> {
-    // console.log('%s.handleCreateTeam()', this.constructor.name);
-    this.props.toggleCreateTeam(true);
+    console.log('%s.handleCreateTeam()', this.constructor.name, { props : this.props });
+
+    const { team } = this.props;
+    this.props.setTeam(null);
+    this.props.push(Pages.CREATE);
   }
 
   handleDeviceRenderClick = (deviceRender)=> {
@@ -202,7 +206,8 @@ const mapDispatchToProps = (dispatch)=> {
     setComponent          : (payload)=> dispatch(setComponent(payload)),
     setPlayground         : (payload)=> dispatch(setPlayground(payload)),
     setTeam               : (payload)=> dispatch(setTeam(payload)),
-    toggleCreateTeam      : (payload)=> dispatch(toggleCreateTeam(payload))
+    toggleCreateTeam      : (payload)=> dispatch(toggleCreateTeam(payload)),
+    push                  : (payload)=> dispatch(push(payload))
   };
 };
 

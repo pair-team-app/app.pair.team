@@ -273,7 +273,7 @@ class TeamPage extends Component {
   render() {
     console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
 
-    const { profile, team, createTeam, sort } = this.props;
+    const { profile, team, sort } = this.props;
     const { commentContent, teamDescription, ruleContent, ruleInput, fetching, loading, dataURI, codeComment, dragOver } = this.state;
 
 
@@ -284,7 +284,7 @@ class TeamPage extends Component {
 
     return (<BasePage { ...this.props } className="team-page">
       {(profile && team) && (<>
-        {(!createTeam) ? (<div className="content-wrapper">
+        <div className="content-wrapper">
           <div className="comments-wrapper" data-fetching={fetching} data-empty={team && team.comments.length === 0}>
             <div>
               <TeamPageAddComment
@@ -343,9 +343,7 @@ class TeamPage extends Component {
               </div>
             </div>
           </div>
-        </div>) : (<div>
-          <CreateTeamForm onCancel={()=> this.props.toggleCreateTeam(false)} onSubmit={this.handleCreateTeamSubmit} />
-        </div>)}
+        </div>)
         {/* <TeamPageFileDrop hidden={false} onClose={()=> this.setState({ dragOver : false })} />) */}
         <TeamPageFileDrop dragging={(dragOver)} dataURI={dataURI} textComment={commentContent} onClose={this.handleFileDropClose} />
       </>)}
@@ -440,7 +438,6 @@ const mapDispatchToProps = (dispatch)=> {
 const mapStateToProps = (state, ownProps)=> {
   return {
     comment    : state.comments.comment,
-    createTeam : state.teams.createTeam,
     profile    : state.user.profile,
     team       : state.teams.team,
     sort       : state.teams.sort,
