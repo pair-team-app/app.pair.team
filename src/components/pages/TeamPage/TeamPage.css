@@ -135,6 +135,13 @@ empty-comments
 	padding-right: var(--spacing-15);
 }
 
+.team-page > div .team-wrapper .about-wrapper textarea {
+	font-size: var(--orthodox-font-size);
+	font-weight: 500;
+	padding: var(--spacing-05);
+	border: none;
+}
+
 .team-page > div .team-wrapper .rules-wrapper .header {
 	border-bottom: 1px solid rgba(var(--border-alt-color), 1.0);
 }

@@ -9,17 +9,10 @@ import CreateTeamForm from '../../forms/CreateTeamForm';
 import { makeTeam } from '../../../redux/actions';
 
 function CreateTeamPage(props) {
-  console.log('CreateTeamPage()', { props });
-
-
-  const handleCancel = (event)=> {
-    console.log('CreateTeamPage().handleCancel()', { event });
-    props.history.goBack();
-  };
 
   const { profile } = props;
   return (<BasePage { ...props } className="create-team-page">
-		{(profile) && (<CreateTeamForm onSubmit={props.makeTeam} onCancel={handleCancel} />)}
+		{(profile) && (<CreateTeamForm onSubmit={props.makeTeam} onCancel={props.history.goBack} />)}
 	</BasePage>);
 }
 

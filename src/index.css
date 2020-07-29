@@ -360,6 +360,7 @@ input[type="email"], input[type="password"], input[type="text"], select, textare
 	border-radius: var(--border-radius);
 	color: #999999;
 	/*text-align: center;*/
+	font-family: 'SF Pro Display', system-ui, -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Ubuntu, Arial, sans-serif;
 	font-size: 16px;
 	font-weight: 700;
 	cursor: text;
@@ -452,11 +453,11 @@ sup {
 }
 
 textarea, textarea:hover, textarea:active, textarea:focus, textarea:disabled, textarea:valid {
-  resize: none;
-	padding: var(--spacing-05) 0;
+  /* resize: none;
+	padding: var(--spacing-20);
 	font-family: 'SF Pro Display', system-ui, -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Ubuntu, Arial, sans-serif;
-	border: 1px solid rgba(var(--border-color), 0.0);
-	border-radius: var(--border-radius);
+	border: 1px solid rgba(var(--border-color), 1.0);
+	border-radius: var(--border-radius); */
 }
 
 ul {
