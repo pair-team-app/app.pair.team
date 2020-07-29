@@ -43,6 +43,10 @@ export default function comments(state=initialState, action) {
     const { team } = payload;
     return (Object.assign({}, state, { team }));
 
+  } else if (type === COMMENT_UPDATED) {
+    const { team } = payload;
+    return (Object.assign({}, state, { team }));
+
   } else if (type === TEAM_LOGO_LOADED) {
     const { team } = payload;
     return (Object.assign({}, state, { team }));

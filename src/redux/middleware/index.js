@@ -205,21 +205,36 @@ export function onMiddleware(store) {
       const { component } = prevState.builds;
       const { comment } = prevState.comments;
 
-      const prevComment = prevState.comments.comments.find(({ id })=> (id === (payload.comment.id << 0)));
+      const { team } = prevState.teams;
+      payload.team = { ...team,
+        comments : [ ...team.comments, reformComment(payload.comment, `${Pages.TEAM}/${team.slug}/comments`)]
+      };
+
+
+
+      const prevComment = team.comments.find(({ id })=> (id === (payload.comment.id << 0)));
+      payload.team = { ...team,
+        comments : team.comments.map((comment)=> ((comment.id === prevComment.id) ? reformComment(payload.comment, prevComment.uri) : comment))
+      };
+
+      payload.team = { ...team,
+        comments : team.comments.filter(({ id })=> (id !== prevComment.id))
+      };
+
       payload.comment = reformComment(payload.comment, prevComment.uri);
 
-      if (payload.comment.state === 'deleted') {
-        payload.comments = prevState.comments.comments.filter(({ id })=> (id !== payload.comment.id));
+      // if (payload.comment.state === 'deleted') {
+      //   payload.comments = prevState.comments.comments.filter(({ id })=> (id !== payload.comment.id));
 
-      } else {
-        payload.comments = prevState.comments.comments.map((comment)=> ((comment.id === payload.comment.id) ? payload.comment : comment));
-      }
+      // } else {
+      //   payload.comments = prevState.comments.comments.map((comment)=> ((comment.id === payload.comment.id) ? payload.comment : comment));
+      // }
 
-      payload.component = (component) ? { ...component,
-        comments : (payload.comment.state === 'deleted') ? component.comments.filter(({ id })=> (id !== payload.comment.id)) : component.comments.map((comment)=> ((comment.id === prevState.comments.comment.id) ? payload.comment : comment)).sort((i, ii)=> ((i.epoch > ii.epoch) ? -1 : (i.epoch < ii.epoch) ? 1 : ((i.type === 'bot') ? -1 : (ii.type === 'bot') ? 1 : 0)))
-      } : null;
+      // payload.component = (component) ? { ...component,
+      //   comments : (payload.comment.state === 'deleted') ? component.comments.filter(({ id })=> (id !== payload.comment.id)) : component.comments.map((comment)=> ((comment.id === prevState.comments.comment.id) ? payload.comment : comment)).sort((i, ii)=> ((i.epoch > ii.epoch) ? -1 : (i.epoch < ii.epoch) ? 1 : ((i.type === 'bot') ? -1 : (ii.type === 'bot') ? 1 : 0)))
+      // } : null;
 
-      payload.comment = (comment) ? payload.comment : null;
+      // payload.comment = (comment) ? payload.comment : null;
 
     } else if (type === STRIPE_SESSION_PAID) {
       payload.team = reformTeam(payload.team);

@@ -152,7 +152,7 @@ const BaseCommentHeader = (props)=> {
 
 
 const BaseCommentContent = (props)=> {
-	// console.log('BaseComment.BaseCommentContent()', { props });
+	console.log('BaseComment.BaseCommentContent()', { props });
 
 	const { comment, replyContent } = props;
 	const { author, types, content, uri, timestamp } = comment;
