@@ -20,21 +20,12 @@ class CreateTeamForm extends Component {
   }
 
   componentDidMount() {
-    // console.log('%s.componentDidMount()', this.constructor.name, { props : this.props, state : this.state });
+    console.log('%s.componentDidMount()', this.constructor.name, { props : this.props, state : this.state });
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
     // console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : this.props, prevState, state : this.state });
   }
-
-  /* handleFilePond = ()=> {
-    console.log('%s.()', this.constructor.name, {  });
-  }; */
-
-  handleCancel = (event)=> {
-    console.log('%s.handleCancel()', this.constructor.name, { event });
-    this.props.onCancel();
-  };
 
   handleTitleChange = (event)=> {
     // console.log('%s.handleTitleChange()', this.constructor.name, { event });
@@ -78,8 +69,8 @@ class CreateTeamForm extends Component {
         <TextareaAutosize className="rules-txt" placeholder="Team rules (one per line)" value={rules.join('\n')} onChange={this.handleRulesChange} />
         <TextareaAutosize className="invites-txt" placeholder="Invite (space separated emails)" value={invites.join(' ')} onChange={this.handleInvitesChange} />
 				{/* <button disabled={(emails.filter((email)=> (email.length === 0)).length === emails.length || emailsValid.filter((valid)=> (!valid)).length === emailsValid.length)} type="submit" onClick={(event)=> this.handleSubmit(event)}>Invite Team</button> */}
-				<button type="button" className="quiet-button" onClick={this.handleCancel}>Cancel</button>
-				<button type="submit" disabled={(title.length === 0)} onClick={(event)=> this.handleSubmit(event)}>Create Pair</button>
+				<button type="button" className="quiet-button" onClick={this.props.onCancel}>Cancel</button>
+				<button type="submit" disabled={(title.length === 0)} onClick={this.handleSubmit}>Create Pair</button>
 			</form>
     </div>);
   }

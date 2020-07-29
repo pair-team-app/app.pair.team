@@ -10,7 +10,7 @@ import { NavLink } from 'react-router-dom';
 
 import ContentExpander from '../../iterables/ContentExpander';
 import { Pages } from '../../../consts/uris';
-import { fetchBuildPlaygrounds, setComponent, setPlayground, setTeam, toggleCreateTeam } from '../../../redux/actions';
+import { fetchBuildPlaygrounds, setComponent, setPlayground, setTeam } from '../../../redux/actions';
 import { trackEvent } from '../../../utils/tracking';
 import pairLogo from '../../../assets/images/logos/logo-pairurl-310.png';
 
@@ -102,7 +102,7 @@ class LeftNav extends Component {
   };
 
   render() {
-    console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
+    // console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
 
     const { teams, team, invite, profile } = this.props;
     const { builds } = this.state;
@@ -169,7 +169,7 @@ const LeftNavBuild = (props)=> {
 
 
 const LeftNavHeader = (props)=> {
-  console.log('LeftNavHeader()', { props });
+  // console.log('LeftNavHeader()', { props });
 
   const { teams } = props
   return (<div className="left-nav-header">
@@ -206,7 +206,6 @@ const mapDispatchToProps = (dispatch)=> {
     setComponent          : (payload)=> dispatch(setComponent(payload)),
     setPlayground         : (payload)=> dispatch(setPlayground(payload)),
     setTeam               : (payload)=> dispatch(setTeam(payload)),
-    toggleCreateTeam      : (payload)=> dispatch(toggleCreateTeam(payload)),
     push                  : (payload)=> dispatch(push(payload))
   };
 };

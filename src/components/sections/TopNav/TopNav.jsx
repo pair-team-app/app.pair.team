@@ -34,7 +34,7 @@ class TopNav extends Component {
 	}
 
 	componentDidUpdate(prevProps, prevState, snapshot) {
-		console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : this.props, prevState, state : this.state });
+		// console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : this.props, prevState, state : this.state });
 // console.log('%s.componentDidUpdate()', this.constructor.name, { left : shareLink.offsetLeft, top : shareLink.offsetTop });
 
 		 const { hash } = this.props;
@@ -126,7 +126,7 @@ class TopNav extends Component {
 
 
 	render() {
-		console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
+		// console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
 
 		const { darkThemed, playground, profile, invite, team, teamSort } = this.props;
 		const { popover } = this.state;

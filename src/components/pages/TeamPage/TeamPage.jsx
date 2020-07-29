@@ -17,7 +17,7 @@ import { SORT_BY_DATE, SORT_BY_SCORE } from '../../sections/TopNav/TeamPageHeade
 import { TEAM_TIMESTAMP } from '../../../consts/formats';
 import { BASKSPACE_KEY, TAB_KEY, ALT_KEY, CTRL_KEY, CAP_KEY, SHIFT_KEY, ENTER_KEY, META_LT_KEY } from '../../../consts/key-codes';
 import { API_ENDPT_URL } from '../../../consts/uris';
-import { fetchTeamComments, makeComment, makeTeam, makeTeamRule, modifyTeam, setComment, setPlayground, setTypeGroup, toggleCreateTeam } from '../../../redux/actions';
+import { fetchTeamComments, makeComment, makeTeamRule, modifyTeam, setComment, setPlayground, setTypeGroup } from '../../../redux/actions';
 import { trackEvent } from '../../../utils/tracking';
 import btnCode from '../../../assets/images/ui/btn-code.svg';
 
@@ -264,12 +264,6 @@ class TeamPage extends Component {
     this.props.modifyTeam({ description : teamDescription });
   }
 
-  handleCreateTeamSubmit = ({ title, description, rules, invites })=> {
-    console.log('%s.handleCreateTeamSubmit()', this.constructor.name, { title, description, rules, invites });
-    this.props.makeTeam({ title, description, rules, invites });
-    this.props.toggleCreateTeam(false);
-  };
-
   render() {
     console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
 
@@ -422,27 +416,25 @@ const MyAwesomeMenu = (props)=> {
 
 
 const mapDispatchToProps = (dispatch)=> {
-  return {
+  return ({
     fetchTeamComments : (payload)=> dispatch(fetchTeamComments(payload)),
     makeComment       : (payload)=> dispatch(makeComment(payload)),
-    makeTeam          : (payload)=> dispatch(makeTeam(payload)),
     makeTeamRule      : (payload)=> dispatch(makeTeamRule(payload)),
     modifyTeam        : (payload)=> dispatch(modifyTeam(payload)),
     setPlayground     : (payload)=> dispatch(setPlayground(payload)),
     setTypeGroup      : (payload)=> dispatch(setTypeGroup(payload)),
-    setComment        : (payload)=> dispatch(setComment(payload)),
-    toggleCreateTeam  : (payload)=> dispatch(toggleCreateTeam(payload))
-  };
+    setComment        : (payload)=> dispatch(setComment(payload))
+  });
 };
 
 const mapStateToProps = (state, ownProps)=> {
-  return {
+  return ({
     comment    : state.comments.comment,
     profile    : state.user.profile,
     team       : state.teams.team,
     sort       : state.teams.sort,
     playground : state.playground
-  };
+  });
 };
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(TeamPage));

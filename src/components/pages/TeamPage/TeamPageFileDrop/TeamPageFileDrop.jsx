@@ -157,6 +157,13 @@ class TeamPageFileDrop extends Component {
     console.log('%s.()', this.constructor.name, { ,  });
   }; */
 
+  handleSubmit = (event)=> {
+    console.log('%s.handleSubmit(event)', this.constructor.name, { event });
+    event.preventDefault();
+    event.stopPropagation();
+
+
+  };
 
 
 
@@ -243,10 +250,6 @@ const TeamPageAddContent = (props)=> {
   </form></div>);
 };
 
-const mapDispatchToProps = (dispatch)=> {
-  return ({
-  });
-};
 
 const mapStateToProps = (state, ownProps)=> {
 	return ({
@@ -256,4 +259,4 @@ const mapStateToProps = (state, ownProps)=> {
 };
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(TeamPageFileDrop);
+export default connect(mapStateToProps)(TeamPageFileDrop);
