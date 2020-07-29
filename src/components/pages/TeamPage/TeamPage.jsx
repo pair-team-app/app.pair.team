@@ -193,9 +193,9 @@ class TeamPage extends Component {
 
     if (event.keyCode === ENTER_KEY) {
       const { ruleInput, commentContent, teamDescription, ruleContent } = this.state;
-      if (commentContent.length > 0) {
-        this.handleAddComment(event);
-      }
+      // if (commentContent.length > 0) {
+      //   this.handleAddComment(event);
+      // }
 
       if (teamDescription.length > 0) {
         this.handleUpdateTeamDescription(event);
@@ -295,8 +295,8 @@ class TeamPage extends Component {
 
               {(team) && (<TeamPageCommentsPanel
                 profile={profile}
-                // comments={(sort === SORT_BY_DATE) ? team.comments.sort((i, ii)=> ((i.epoch > ii.epoch) ? -1 : (i.epoch < ii.epoch) ? 1 : 0)) : team.comments.sort((i, ii)=> ((i.score > ii.score) ? -1 : (i.score < ii.score) ? 1 : 0)).filter((comment)=> (comment !== null))}
-                comments={(sort === SORT_BY_DATE) ? Arrays.shuffle(team.comments) : team.comments.sort((i, ii)=> ((i.score > ii.score) ? -1 : (i.score < ii.score) ? 1 : 0)).filter((comment)=> (comment !== null))}
+                comments={(sort === SORT_BY_DATE) ? team.comments.sort((i, ii)=> ((i.epoch > ii.epoch) ? -1 : (i.epoch < ii.epoch) ? 1 : 0)) : team.comments.sort((i, ii)=> ((i.score > ii.score) ? -1 : (i.score < ii.score) ? 1 : 0)).filter((comment)=> (comment !== null))}
+                // comments={(sort === SORT_BY_DATE) ? Arrays.shuffle(team.comments) : team.comments.sort((i, ii)=> ((i.score > ii.score) ? -1 : (i.score < ii.score) ? 1 : 0)).filter((comment)=> (comment !== null))}
                 fetching={fetching}
                 sort={sort}
               />)}
@@ -337,7 +337,7 @@ class TeamPage extends Component {
               </div>
             </div>
           </div>
-        </div>)
+        </div>
         {/* <TeamPageFileDrop hidden={false} onClose={()=> this.setState({ dragOver : false })} />) */}
         <TeamPageFileDrop dragging={(dragOver)} dataURI={dataURI} textComment={commentContent} onClose={this.handleFileDropClose} />
       </>)}

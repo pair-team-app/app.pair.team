@@ -8,6 +8,7 @@ import { URIs } from 'lang-js-utils';
 import TextareaAutosize from 'react-autosize-textarea';
 import { FilePond, registerPlugin } from 'react-filepond';
 import { connect } from 'react-redux';
+import { makeComment } from '../../../../redux/actions';
 
 import 'filepond/dist/filepond.min.css';
 import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css';
@@ -45,7 +46,7 @@ class TeamPageFileDrop extends Component {
   }
 
 	componentDidUpdate(prevProps, prevState, snapshot) {
-    console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : this.props, prevState, state : this.state });
+    // console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : this.props, prevState, state : this.state });
 
     const { imageURL, dataURI, textComment } = this.props;
     if (dataURI && !this.state.image && !prevState.image) {
@@ -162,22 +163,32 @@ class TeamPageFileDrop extends Component {
     event.preventDefault();
     event.stopPropagation();
 
-
+    const { text } = this.state;
+    this.props.makeComment({
+      comment  : null,
+			content  : text,
+      position : null
+		});
   };
 
 
-
-
 	render() {
-    console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state, files : this.state.files.length });
+    // console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state, files : this.state.files.length });
 
 
     const { team, profile, dragging } = this.props;
-    const { text, image, files } = this.state;
+    const { text, url, code, uploaded, image, files } = this.state;
 
 		return (<div className="team-page-file-drop" data-hidden={(!dragging && files.length === 0 && !text)}>
       <div data-file={files.length > 0 || image !== null || text.length > 0}>
-        {(files.length > 0 || text.length > 0) && (<TeamPageAddContent files={files} { ...this.state} onSubmit={this.handleSubmit} />)}
+        {/* {(files.length > 0 || text.length > 0) && (<TeamPageAddContent files={files} { ...this.state} onSubmit={this.handleSubmit} />)} */}
+        {(files.length > 0 || text.length > 0) && (<div className="team-page-add-content" data-uploaded={uploaded}><form>
+          <div className="content-wrapper">
+            <TextareaAutosize className="comment-txt" placeholder={`Add a comment to this${(url) ? ' url' : ' image'}…`} value={text} onChange={this.props.onTextChange} data-code={(code)} />
+          </div>
+          <button type="submit" disabled={false} onClick={this.handleSubmit}>Submit</button>
+        </form></div>)}
+
         <FilePond
           server={{
             url     : CDN_FILEPOND_URL,
@@ -226,7 +237,7 @@ class TeamPageFileDrop extends Component {
 
 
 const AddContentCloseButton = (props)=> {
-  console.log('AddContentCloseButton()', { props });
+  // console.log('AddContentCloseButton()', { props });
 
   return (<button className="quiet-button glyph-button" onClick={props.onCloseClick}>
     <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -237,19 +248,11 @@ const AddContentCloseButton = (props)=> {
   </button>);
 };
 
-
-const TeamPageAddContent = (props)=> {
-  console.log('TeamPageAddContent()', { props });
-
-  const { files, text, image, url, code, uploaded } = props;
-  return (<div className="team-page-add-content" data-uploaded={uploaded}><form>
-    <div className="content-wrapper">
-      <TextareaAutosize className="comment-txt" placeholder={`Add a comment to this${(url) ? ' url' : ' image'}…`} value={text} onChange={props.onTextChange} data-code={(code)} />
-    </div>
-    <button type="submit" disabled={false} onClick={props.onSubmit}>Submit</button>
-  </form></div>);
+const mapDispatchToProps = (dispatch)=> {
+  return ({
+    makeComment : (payload)=> dispatch(makeComment(payload)),
+  });
 };
-
 
 const mapStateToProps = (state, ownProps)=> {
 	return ({
@@ -259,4 +262,4 @@ const mapStateToProps = (state, ownProps)=> {
 };
 
 
-export default connect(mapStateToProps)(TeamPageFileDrop);
+export default connect(mapStateToProps, mapDispatchToProps)(TeamPageFileDrop);

@@ -281,7 +281,15 @@ export function makeComment(payload) {
         type    : (!comment) ? COMMENT_ADDED : COMMENT_UPDATED,
         payload : { comment : response.data.comment }
       });
-    }).catch((error)=> {});
+    }).catch((error)=> {
+      console.log(API_RESPONSE_PREFIX, 'ADD_COMMENT >> ERROR', { error, payload : { content,
+        position     : (position || ((comment) ? comment.position : { x : 0, y : 0 })),
+        user_id      : profile.id,
+        team_id      : (component) ? 0 : team.id,
+        component_id : (component) ? component.id : 0,
+        comment_id   : (comment) ? comment.id : 0
+      } });
+    });
   });
 }
 
@@ -310,7 +318,14 @@ export function makeStripeSession(payload) {
         type    : STRIPE_SESSION_CREATED,
         payload : { session }
       });
-    }).catch((error)=> {});
+    }).catch((error)=> {
+      console.log(API_RESPONSE_PREFIX, 'STRIPE_SESSION >> ERROR', { error, payload : {
+        team_id    : team.id,
+        user_id    : profile.id,
+        product_id : product.id,
+        quantity   : team.members.length
+      } });
+    });
   });
 }
 

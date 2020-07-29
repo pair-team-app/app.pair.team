@@ -101,6 +101,7 @@
 
 .team-page-add-content .content-wrapper textarea.comment-txt {
   padding: 6px;
+  border: none;
 }
 
 .team-page-add-content .content-wrapper .rich-content {

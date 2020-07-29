@@ -453,8 +453,8 @@ sup {
 }
 
 textarea, textarea:hover, textarea:active, textarea:focus, textarea:disabled, textarea:valid {
-  /* resize: none;
-	padding: var(--spacing-20);
+  resize: none;
+	/* padding: var(--spacing-20);
 	font-family: 'SF Pro Display', system-ui, -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Ubuntu, Arial, sans-serif;
 	border: 1px solid rgba(var(--border-color), 1.0);
 	border-radius: var(--border-radius); */
