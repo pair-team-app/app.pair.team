@@ -278,10 +278,10 @@ export function makeComment(payload) {
     }).then((response)=> {
       console.log(API_RESPONSE_PREFIX, 'ADD_COMMENT', response.data, response.data.comment);
 
-      // dispatch({
-      //   type    : (!comment) ? COMMENT_ADDED : COMMENT_UPDATED,
-      //   payload : { comment : response.data.comment }
-      // });
+      dispatch({
+        type    : (!comment) ? COMMENT_ADDED : COMMENT_UPDATED,
+        payload : { comment : response.data.comment }
+      });
     }).catch((error)=> {
       console.log(API_RESPONSE_PREFIX, 'ADD_COMMENT >> ERROR', { error, payload : { content,
         position     : (position || ((comment) ? comment.position : { x : 0, y : 0 })),

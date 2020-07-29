@@ -200,7 +200,9 @@ class TeamPageFileDrop extends Component {
 			content  : text,
       position : null,
       format   : (code) ? 'code' : 'text'
-		});
+    });
+
+    this.handleResetFiles();
   };
 
   onFetchScreenshot = (text)=> {

@@ -35,7 +35,7 @@ class TeamPage extends Component {
       teamDescription : '',
       ruleContent     : '',
       ruleInput       : false,
-      sort            : SORT_BY_SCORE,
+      sort            : SORT_BY_DATE,
       fetching        : false,
       loading         : false,
       share           : false,
@@ -220,28 +220,6 @@ class TeamPage extends Component {
     this.setState({ commentContent }, ()=> {
       this.setState({ commentContent : '' });
     });
-
-    // const commentContent = event.target.value;
-    // const urlComment = (/https?:\/\//i.test(commentContent));
-
-    // this.setState({ commentContent, urlComment,
-    //   parsing      : urlComment,
-    // }, ()=> {
-    //   if (urlComment) {
-    //     const url = commentContent.match(/https?:\/\/.+ ?/i).shift().split(' ').shift();
-    //     axios.post(API_ENDPT_URL, {
-    //       action  : 'SCREENSHOT_URL',
-    //       payload : { url }
-    //     }).then((response)=> {
-    //       const { image } = response.data;
-    //       console.log('SCREENSHOT_URL', { data : response.data });
-    //       this.setState({
-    //         parsing : false,
-    //         dataURI : image.data
-    //         });
-    //     });
-    //   }
-    // });
   };
 
   handleUpdateTeamDescription = (event)=> {

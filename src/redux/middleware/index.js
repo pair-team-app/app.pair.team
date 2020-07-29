@@ -188,14 +188,17 @@ export function onMiddleware(store) {
 
     } else if (type === COMMENT_ADDED) {
       const { team } = prevState.teams;
-      const { component } = prevState.builds;
 
-      const prevComment = prevState.comments.comments.comments.find(({ id })=> (id === (payload.comment.id << 0)));
-      payload.comment = (prevComment) ? reformComment(payload.comment, prevComment.uri) : reformComment(payload.comment, `${Pages.TEAM}/${team.slug}/comments`);
-      payload.comments = (prevComment) ? prevState.comments.comments.map((comment)=> ((comment.id === payload.comment.id) ? payload.comment : comment)) : [ ...prevState.comments, payload.comment];
-      payload.component = (component) ? { ...component,
-        comments : [ ...component.comments, payload.comment].sort((i, ii)=> ((i.epoch > ii.epoch) ? -1 : (i.epoch < ii.epoch) ? 1 : ((i.type === 'bot') ? -1 : (ii.type === 'bot') ? 1 : 0)))
-      } : null;
+      payload.team = { ...team,
+        comments : [ ...team.comments, reformComment(payload.comment, `${Pages.TEAM}/${team.slug}/comments`)]
+      };
+
+      // const prevComment = prevState.comments.comments.comments.find(({ id })=> (id === (payload.comment.id << 0)));
+      // payload.comment = (prevComment) ? reformComment(payload.comment, prevComment.uri) : reformComment(payload.comment, `${Pages.TEAM}/${team.slug}/comments`);
+      // payload.comments = (prevComment) ? prevState.comments.comments.map((comment)=> ((comment.id === payload.comment.id) ? payload.comment : comment)) : [ ...prevState.comments, payload.comment];
+      // payload.component = (component) ? { ...component,
+      //   comments : [ ...component.comments, payload.comment].sort((i, ii)=> ((i.epoch > ii.epoch) ? -1 : (i.epoch < ii.epoch) ? 1 : ((i.type === 'bot') ? -1 : (ii.type === 'bot') ? 1 : 0)))
+      // } : null;
 
 
     } else if (type === COMMENT_UPDATED) {
