@@ -30,10 +30,10 @@ export const Pages = {
 };
 
 
-// const API_PROTOCOL = 'https'
-const API_PROTOCOL = 'http';
-// export const API_HOSTNAME = 'api.pairurl.com';
-export const API_HOSTNAME = '192.168.1.50:1215';
+const API_PROTOCOL = 'https'
+// const API_PROTOCOL = 'http';
+export const API_HOSTNAME = 'api.pairurl.com';
+// export const API_HOSTNAME = '192.168.1.50:1215';
 const API_VER = 'v6';
 export const API_GATEWAY = 'gateway.php'
 export const API_ENDPT_URL = `${API_PROTOCOL}://${API_HOSTNAME}/${API_VER}/${API_GATEWAY}`;
