@@ -130,14 +130,14 @@ class BaseOverlay extends Component {
 
     // console.log('%s.render()', this.constructor.name, { ...this.props });
 
-    const { type, filled, offset, title, closeable, bare, children } = this.props;
+    const { type, filled, offset, title, closeable, bordered, children } = this.props;
     const wrapperStyle = {
       height    : 'auto',
       transform : (type === OVERLAY_TYPE_POSITION_OFFSET) ? `translate(${offset.x || 0}px, ${offset.y || 0}px)` : null
     };
 
     return (<div className="base-overlay" data-filled={filled} data-closeable={closeable} onClick={closeable ? this.handleClose : null}>
-      <div className="content-wrapper" data-percent={type === OVERLAY_TYPE_PERCENT_SIZE} data-auto-size={type === OVERLAY_TYPE_AUTO_SIZE} data-auto-scroll={(type !== OVERLAY_TYPE_PERCENT_SIZE && type !== OVERLAY_TYPE_AUTO_SIZE)} style={wrapperStyle} onClick={(event)=> event.stopPropagation()} data-bare={bare} ref={(element)=> {this.wrapper = element;}}>
+      <div className="content-wrapper" data-percent={type === OVERLAY_TYPE_PERCENT_SIZE} data-auto-size={type === OVERLAY_TYPE_AUTO_SIZE} data-auto-scroll={(type !== OVERLAY_TYPE_PERCENT_SIZE && type !== OVERLAY_TYPE_AUTO_SIZE)} style={wrapperStyle} onClick={(event)=> event.stopPropagation()} data-bordered={bordered} ref={(element)=> {this.wrapper = element;}}>
         {title && (<div className="header-wrapper">
           <div className="header-title">{title}</div>
         </div>)}

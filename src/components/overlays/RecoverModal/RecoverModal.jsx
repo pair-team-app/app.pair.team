@@ -1,8 +1,9 @@
 
 import React, { Component } from 'react';
-import './LoginModal.css';
+import './RecoverModal.css';
 
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 
 import BaseOverlay from '../BaseOverlay';
 import LoginForm from '../../forms/LoginForm';
@@ -12,7 +13,7 @@ import { updateUserProfile } from '../../../redux/actions';
 import { trackEvent } from '../../../utils/tracking';
 
 
-class LoginModal extends Component {
+class RecoverModal extends Component {
 	constructor(props) {
 		super(props);
 
@@ -115,8 +116,8 @@ const mapDispatchToProps = (dispatch)=> {
 
 const mapStateToProps = (state, ownProps)=> {
 	return ({
-		invite : state.invite
+		profile : state.user.profile,
 	});
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(LoginModal);
+export default connect(mapStateToProps, mapDispatchToProps)(RecoverModal);

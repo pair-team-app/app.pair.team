@@ -98,13 +98,10 @@ class RegisterModal extends Component {
 			tracking={Modals.REGISTER}
 			outro={outro}
 			closeable={false}
+			filled={true}
 			onComplete={this.handleComplete}>
 
 			<div className="register-modal">
-				<div className="header-wrapper">
-					<img className="header-logo" src={pairLogo} alt="Logo" />
-				</div>
-
 				{(invite) && (<div className="title-wrapper">{invite.team_title}</div>)}
 				<div className="form-wrapper">
 					<RegisterForm
@@ -115,7 +112,7 @@ class RegisterModal extends Component {
 				</div>
 
 				<div className="footer-wrapper form-disclaimer">
-					<div onClick={()=> this.handleModal(Modals.LOGIN)}>Have an account? Login</div>
+					<div onClick={()=> this.handleModal(Modals.LOGIN)}>Already have an account? Login</div>
 				</div>
 			</div>
 		</BaseOverlay>);

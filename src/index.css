@@ -19,9 +19,7 @@
 }
 
 :root {
-	--full-white: 255, 255, 255; /* #ffffff */
-	--site-bg-color: 255, 255, 255; /* #ffffff */
-	/* --site-bg-color: 80, 80, 80; #fcfcfc */
+	--site-bg-color: 251, 251, 251; /* #fbfbfb */
 	--site-fg-color: 35, 35, 35; /* #232323 */
 	--site-fg-lite-color: 153, 153, 153; /* #232323 */
 	--site-hilite-color: 0, 90, 217; /* #0067ff */
@@ -30,16 +28,16 @@
 	--invalid-fg-color: 255, 101, 101; /* #ff6565 */
 	--invalid-border-color: var(--invalid-fg-color); /* #ff4646 */
 	--btn-bg-color: 32, 96, 255; /* #2060ff */
-	--btn-fg-color: var(--full-white); /* #ffffff */
+	--btn-fg-color: 255, 255, 255; /* #ffffff */
 	--btn-hover-bg-color: 0, 92, 229; /* #005ce5 */
 	--btn-disabled-bg-color: var(--disabled-fg-color); /* #cccccc */
 	--btn-disabled-fg-color: 247, 247, 247; /* #f7f7f7 */
 	--quiet-btn-bg-color: 247, 247, 247; /* #f7f7f7 */
-	--modal-bg-color: var(--full-white); /* #ffffff */
+	--modal-bg-color: 255, 255, 255; /* #ffffff */
 	--quiet-btn-fg-color: var(--site-fg-color); /* #232323 */
 	--quiet-btn-hover-bg-color: 237, 237, 237; /* #ededed */
 	--quiet-btn-selected-bg-color: var(--site-fg-color); /* #232323 */
-	--quiet-btn-selected-fg-color: var(--full-white); /* #ffffff */
+	--quiet-btn-selected-fg-color: 255, 255, 255; /* #ffffff */
 	--quiet-btn-border-color: 206, 206, 206; /* cecece */
 	--img-bg-color: 240, 240, 240; /* #f0f0f0 */
 	--overlay-hover-color: 153, 153, 153; /* #999999 */
@@ -52,8 +50,7 @@
 	--txtfield-focused-fg-color: var(--site-fg-color); /* #232323 */
 	--txtfield-hover-bg-color: 247, 247, 247; /* #f7f7f7 */
 	--txtfield-hover-fg-color: 153, 153, 153; /* #999999 */
-	--txtfield-invalid-bg-color: 247, 247, 247; /* #f7f7f7 */
-	--txtfield-invalid-fg-color: var(--invalid-fg-color); /* #ff6565 */
+	--txtfield-invalid-fg-color: 255, 111, 111; /* #ff6f6f */
 	--txtfield-disabled-bg-color: var(--disabled-fg-color); /* #cccccc */
 	--txtfield-disabled-fg-color: 153, 153, 153; /* #999999 */
 	--border-color: 112, 112, 112; /* 707070 */
@@ -107,7 +104,7 @@
 	--orthodox-font-weight: 400;
 
 
-	--border-radius: 4px;
+	--border-radius: 6px;
 
 	--expander-arrow-transition: all 250ms cubic-bezier(0.4, 1, 0.2, 1);
 	--expander-content-mask-transition: height 250ms cubic-bezier(0.2, 0.9, 0.3, 1.0);
@@ -355,8 +352,9 @@ h6::before {
 input[type="email"], input[type="password"], input[type="text"], select, textarea {
 	width: 100%;
 	padding: 16px;
-	background-color: rgba(var(--txtfield-bg-color), 1.0);
-	border: 1px solid rgba(var(--border-color), 1.0);
+	background-color: #ffffff;
+	/* border: 1px solid #ffffff; */
+	border: none;
 	border-radius: var(--border-radius);
 	color: #999999;
 	/*text-align: center;*/
@@ -369,6 +367,7 @@ input[type="email"], input[type="password"], input[type="text"], select, textare
 }
 
 input[type="email"]:hover, input[type="password"]:hover, input[type="text"]:hover, textarea:hover {
+	/* border: 1px solid rbga(var(--txtfield-focused-bg-color), 1.0); */
 	background-color: rgba(var(--txtfield-hover-bg-color), 1.0);
 	color: rgba(var(--txtfield-hover-fg-color), 1.0);
 }
@@ -380,18 +379,18 @@ input[type="email"]:invalid, input[type="email"]:invalid:hover, input[type="pass
 }
 
 input[type="email"]:valid, input[type="password"]:valid, input[type="text"]:valid, select:valid, textarea:valid {
-	border: 1px solid rgba(var(--border-color), 1.0);
-	background-color: rgba(var(--txtfield-bg-color), 1.0);
+	border: none;
 	color: rgba(var(--txtfield-fg-color), 1.0);
 }
 
 input[type="email"]:valid:hover, input[type="password"]:valid:hover, input[type="text"]:valid:hover, textarea:valid:hover {
 	background-color: rgba(var(--txtfield-hover-bg-color), 1.0);
 	color: rgba(var(--txtfield-hover-fg-color), 1.0);
-}
+} */
 
 input[type="email"]:disabled, input[type="password"]:disabled, input[type="text"]:disabled, select:disabled, textarea:disabled {
-  cursor: not-allowed;
+	cursor: not-allowed;
+	/* border: 1px solid rbga(var(--txtfield-focused-bg-color), 1.0); */
 	background-color: rgba(var(--txtfield-disabled-bg-color), 1.0);
 	color: rgba(var(--txtfield-disabled-fg-color), 1.0);
 }
@@ -409,6 +408,7 @@ input:-webkit-autofill:focus, input:-webkit-autofill:hover:focus, input:-webkit-
 }
 
 input[type="email"]:focus, input[type="password"]:focus, input[type="text"]:focus, textarea:focus {
+	/* border: 1px solid rbga(var(--txtfield-focused-bg-color), 1.0); */
 	background-color: rgba(var(--txtfield-focused-bg-color), 1.0);
 	color: rgba(var(--txtfield-focused-fg-color), 1.0);
 }

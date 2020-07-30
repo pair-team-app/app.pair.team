@@ -78,12 +78,13 @@
 
 
 .form-disclaimer {
-	font-size: 14px;
+	/* font-size: 14px; */
 	line-height: 18px;
+	color: #cccccc;
 }
 
 .form-disclaimer > div, .form-disclaimer a:not(:hover) {
-	text-decoration: underline;
+	text-decoration: none;
 	transition: color 0.125s ease-out;
 }
 

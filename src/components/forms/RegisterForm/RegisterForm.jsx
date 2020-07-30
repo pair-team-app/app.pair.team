@@ -127,7 +127,7 @@ class RegisterForm extends Component {
 						: (<input type="password" placeholder="Confirm Password" value={password2} onChange={(event)=> this.setState({ password2 : event.target.value })} autoComplete="off" />)
 					}
 
-					<button disabled={(email.length === 0 || password.length === 0 || password2.length === 0 || !emailValid || !passwordValid || password !== password2)} type="submit" onClick={(event)=> this.handleSubmit(event)}>Sign Up</button>
+					<button disabled={(email.length === 0 || password.length === 0 || password2.length === 0 || !emailValid || !passwordValid || password !== password2)} type="submit" onClick={(event)=> this.handleSubmit(event)}>Submit</button>
 				</form>
 			</div>
 		);
