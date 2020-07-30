@@ -338,27 +338,27 @@ export function makeTeam(payload) {
     const { profile } = getState().user;
     const { title, description, rules, invites } = payload;
 
-    axios.post(API_ENDPT_URL, {
-      action  : 'CREATE_TEAM',
-      payload : { title, description, rules, invites,
-        user_id : profile.id,
-        image   : null
-      }
-    }).then((response)=> {
-      console.log(API_RESPONSE_PREFIX, 'CREATE_TEAM', response.data, response.data.team);
-      const { team } = response.data;
+    // axios.post(API_ENDPT_URL, {
+    //   action  : 'CREATE_TEAM',
+    //   payload : { title, description, rules, invites,
+    //     user_id : profile.id,
+    //     image   : null
+    //   }
+    // }).then((response)=> {
+    //   console.log(API_RESPONSE_PREFIX, 'CREATE_TEAM', response.data, response.data.team);
+    //   const { team } = response.data;
 
-      dispatch({
-        type    : TEAM_CREATED,
-        payload : { profile, team }
-      });
-    }).catch((error)=> {
-      console.log(API_RESPONSE_PREFIX, 'CREATE_TEAM >> ERROR', { error, payload : {
-        title, description, rules, invites,
-        user_id : profile.id,
-        image   : null
-      } });
-    });
+    //   dispatch({
+    //     type    : TEAM_CREATED,
+    //     payload : { profile, team }
+    //   });
+    // }).catch((error)=> {
+    //   console.log(API_RESPONSE_PREFIX, 'CREATE_TEAM >> ERROR', { error, payload : {
+    //     title, description, rules, invites,
+    //     user_id : profile.id,
+    //     image   : null
+    //   } });
+    // });
   });
 }
 

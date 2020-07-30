@@ -1,9 +1,28 @@
 
 .create-team-form {
   display: flex;
+  text-align: left;
+}
+
+.create-team-form form {
+  width: 50%;
 }
 
 .create-team-form form > *:not(:last-child) {
+  margin-bottom: 10px;
+}
+
+.create-team-form form .rules-wrapper .add-rule, .create-team-form form .invites-wrapper .add-invite {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.create-team-form form .rules-wrapper .add-rule > *, .create-team-form form .invites-wrapper .add-invite > * {
+  flex: 1 0 0;
+}
+
+.create-team-form form .rules-wrapper > *:not(last-child), .create-team-form form .invites-wrapper > *:not(last-child) {
   margin-bottom: 10px;
 }
 
