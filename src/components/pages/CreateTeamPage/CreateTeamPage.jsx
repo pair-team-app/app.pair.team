@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
 import BasePage from '../BasePage';
-import CreateTeamForm from '../../forms/CreateTeamForm';
+import CreateTeamForm from './CreateTeamForm';
 import { makeTeam } from '../../../redux/actions';
 
 function CreateTeamPage(props) {

@@ -12,7 +12,6 @@ import { withRouter } from 'react-router-dom';
 import TeamPageFileDrop from './TeamPageFileDrop';
 import BasePage from '../BasePage';
 import BaseComment from '../../iterables/BaseComment';
-import CreateTeamForm from '../../forms/CreateTeamForm';
 import { SORT_BY_DATE, SORT_BY_SCORE } from '../../sections/TopNav/TeamPageHeader';
 import { TEAM_TIMESTAMP } from '../../../consts/formats';
 import { BASKSPACE_KEY, TAB_KEY, ALT_KEY, CTRL_KEY, CAP_KEY, SHIFT_KEY, ENTER_KEY, META_LT_KEY } from '../../../consts/key-codes';

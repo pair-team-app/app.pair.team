@@ -362,15 +362,9 @@ class App extends Component {
 	    </div>
 
 		  <div className='modal-wrapper'>
-        <ModalRoutes modals={modals} onComplete={this.handeModalComplete} />
+        {/* <ModalRoutes modals={modals} onComplete={this.handeModalComplete} /> */}
 
-
-			  {(modals.cookies) && (<CookiesOverlay
-				  onConfirmed={this.handleCookies}
-				  onComplete={()=> this.onToggleModal(Modals.COOKIES, false)}
-			  />)}
-
-			  {(modals.profile) && (<ProfileModal
+        {(modals.profile) && (<ProfileModal
 				  onModal={(uri)=> this.onToggleModal(uri, true)}
 				  onPopup={this.handlePopup}
 				  onComplete={()=> this.onToggleModal(Modals.PROFILE, false)}

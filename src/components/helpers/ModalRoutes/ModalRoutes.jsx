@@ -89,11 +89,6 @@ class ModalRoutes extends Component {
     const { cookies, profile, login, register, stripe, invite, expired, disable, noAccess, payment } = this.state;
 
     return (<Switch>
-      {(cookies) && (<CookiesOverlay
-        onConfirmed={this.handleCookies}
-        onComplete={()=> this.props.onComplete(Modals.COOKIES)}
-      />)}
-
       {(profile) && (<ProfileModal
         onModal={(uri)=> this.onToggleModal(uri, true)}
         onPopup={this.handlePopup}
