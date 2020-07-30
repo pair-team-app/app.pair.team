@@ -210,31 +210,14 @@ export function onMiddleware(store) {
         comments : [ ...team.comments, reformComment(payload.comment, `${Pages.TEAM}/${team.slug}/comments`)]
       };
 
-
-
       const prevComment = team.comments.find(({ id })=> (id === (payload.comment.id << 0)));
-      payload.team = { ...team,
-        comments : team.comments.map((comment)=> ((comment.id === prevComment.id) ? reformComment(payload.comment, prevComment.uri) : comment))
-      };
+      // payload.team = { ...team,
+      //   comments : team.comments.map((comment)=> ((comment.id === prevComment.id) ? reformComment(payload.comment, prevComment.uri) : comment))
+      // };
 
       payload.team = { ...team,
         comments : team.comments.filter(({ id })=> (id !== prevComment.id))
       };
-
-      payload.comment = reformComment(payload.comment, prevComment.uri);
-
-      // if (payload.comment.state === 'deleted') {
-      //   payload.comments = prevState.comments.comments.filter(({ id })=> (id !== payload.comment.id));
-
-      // } else {
-      //   payload.comments = prevState.comments.comments.map((comment)=> ((comment.id === payload.comment.id) ? payload.comment : comment));
-      // }
-
-      // payload.component = (component) ? { ...component,
-      //   comments : (payload.comment.state === 'deleted') ? component.comments.filter(({ id })=> (id !== payload.comment.id)) : component.comments.map((comment)=> ((comment.id === prevState.comments.comment.id) ? payload.comment : comment)).sort((i, ii)=> ((i.epoch > ii.epoch) ? -1 : (i.epoch < ii.epoch) ? 1 : ((i.type === 'bot') ? -1 : (ii.type === 'bot') ? 1 : 0)))
-      // } : null;
-
-      // payload.comment = (comment) ? payload.comment : null;
 
     } else if (type === STRIPE_SESSION_PAID) {
       payload.team = reformTeam(payload.team);
@@ -255,48 +238,11 @@ export function onMiddleware(store) {
 
     } else if (type === COMMENT_VOTED) {
       const { team } = prevState.teams;
-      const { playgrounds, playground, typeGroup, component } = prevState.builds;
 
-      let { comment } = payload
-      if (comment.type === 'team') {
-        comment = reformComment(comment, `${Pages.TEAM}/${team.slug}/comments`);
-
-      } else if (comment.type === 'component') {
-        let projectSlug = null;
-        let buildID = null;
-        let deviceSlug = null;
-        let typeGroupSlug = null;
-        let componentID = null;
-
-
-        if (!component) {
-          const components = playgrounds.map(({ components })=> (components)).flat();
-          const comm = components.map(({ id, comments })=> ({ comments,
-            componentID : id
-          })).flat();//.find(({ id })=> (id === comment.id));
-
-        } else {
-          componentID = component.id;
-        }
-
-        if (playground) {
-          projectSlug = playground.slug;
-          buildID = playground.buildID;
-          deviceSlug = playground.device.slug;
-
-        } else {
-          //componentID = playgrounds.
-        }
-
-        if (typeGroup) {
-          typeGroupSlug = typeGroup.slug;
-        }
-
-        comment = reformComment(comment, `${Pages.PROJECT}/${playground.slug}/${playground.buildID}/${playground.device.slug}/${typeGroup.slug}/${component.id}/comments`);
-      }
-
-
-      payload.comment = comment;
+      const prevComment = team.comments.find(({ id })=> (id === (payload.comment.id << 0)));
+      payload.team = { ...team,
+        comments : team.comments.map((comment)=> ((comment.id === prevComment.id) ? reformComment(payload.comment, prevComment.uri) : comment))
+      };
 
     } else if (type === SET_TEAM) {
       const { teams } = prevState.teams;
