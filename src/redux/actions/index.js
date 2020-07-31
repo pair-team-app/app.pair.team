@@ -597,7 +597,7 @@ export function updateResizeBounds(payload) {
   return { payload : resizeBounds, type : UPDATE_RESIZE_BOUNDS };
 }
 
-export function updateUserProfile(payload, force=true) {
+export function updateUserProfile(payload, force=false) {
   logFormat('updateUserProfile()', null, payload, force);
 
   if (payload) {

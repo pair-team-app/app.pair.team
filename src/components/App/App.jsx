@@ -250,18 +250,18 @@ class App extends Component {
     }).catch((error)=> {});
   };
 
-  handleLogout = (page = null, modal = null)=> {
-    // console.log('%s.handleLogout()', this.constructor.name, this.constructor.name, page, modal);
+  handleLogout = (page=Pages.TEAM, modal=Modals.LOGIN)=> {
+    console.log('%s.handleLogout()', this.constructor.name, this.constructor.name, { page, modal });
     trackEvent('user', 'sign-out');
 
     this.props.updateUserProfile(null);
 
-    if (modal) {
-      this.onToggleModal(modal);
-    }
-
     if (page) {
       this.props.history.push(page);
+    }
+
+    if (modal) {
+      this.onToggleModal(modal);
     }
   };
 
@@ -352,9 +352,9 @@ class App extends Component {
 
 
 
-      	// console.log('%s.render()', this.constructor.name, { props : this.props, matchPlaygrounds });
-      	console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
-      	// console.log('%s.render()', this.constructor.name, this.state.modals);
+    // console.log('%s.render()', this.constructor.name, { props : this.props, matchPlaygrounds });
+    console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
+    // console.log('%s.render()', this.constructor.name, this.state.modals);
 
     const { darkThemed, profile, location, team, purchase } = this.props;
     const { popup, inviteID, modals } = this.state;
@@ -369,7 +369,7 @@ class App extends Component {
 	    {/* <div className={`page-wrapper${(location.pathname.startsWith(Pages.PROJECT) && !location.pathname.includes(Pages.TEAM)) ? ' playground-page-wrapper' : ''}`}> */}
 	    {/* <div className="page-wrapper"> */}
 	    <div className="page-wrapper">
-        <TopNav darkTheme={darkThemed} onToggleTheme={this.handleThemeToggle} onModal={this.onToggleModal} />
+        <TopNav darkTheme={darkThemed} onToggleTheme={this.handleThemeToggle} onLogout={this.handleLogout} onModal={this.onToggleModal} />
 		    <Routes onLogout={this.handleLogout} onModal={this.onToggleModal} onPopup={this.handlePopup} { ...this.props } />
 	    </div>
 
@@ -443,7 +443,7 @@ class App extends Component {
 					closeable={true}
 					buttons={['OK']}
           onConfirmed={null}
-				  onComplete={(ok)=> { this.onToggleModal(Modals.NO_ACCESS, false); (ok) ? this.handleLogout(null, Modals.LOGIN) : this.handleLogout(Pages.HOME) }}>
+				  onComplete={(ok)=> { this.onToggleModal(Modals.NO_ACCESS, false); (ok) ? this.handleLogout() : this.handleLogout() }}>
 				  Project has been deleted or permissions have been denied.
 			  </ConfirmDialog>)}
 

@@ -104,7 +104,7 @@ class LeftNav extends Component {
     const { teams, team, invite, profile } = this.props;
     const { builds } = this.state;
 
-    return ((profile) && (<div className="left-nav">
+    return (<div className="left-nav">
       <LeftNavHeader { ...this.props } />
       {(profile && !teams && !invite) && (<div className="loading">Loading…</div>)}
       {(teams) && (<div className="teams-wrapper">
@@ -133,7 +133,7 @@ class LeftNav extends Component {
           ))}
         </div>
       </div>)}
-    </div>));
+    </div>);
   }
 }
 
