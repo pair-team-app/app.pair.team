@@ -66,7 +66,7 @@
     "start:debug": "react-scripts start -inspect-brk=5858 ./src/index.js",
     "debug:5858": "react-scripts start -inspect-brk=5858 ./src/index.js",
     "build": "react-scripts build",
-    "build:deploy": "react-scripts build && ./bin/deploy",
+    "build:deploy:dev": "react-scripts build && ./scripts/deploy-dev.js",
     "backup": "tar -cf ./tmp/tar/node_modules.tar node_modules/",
     "test": "react-scripts test --env=jsdom",
     "audit": "yarn audit",
