@@ -78,6 +78,7 @@
   },
   "devDependencies": {
     "babel-plugin-transform-decorators-legacy": "^1.3.5",
+    "easy-ftp": "^0.4.1",
     "webpack-manifest-plugin": "^2.2.0"
   },
   "browserslist": [
