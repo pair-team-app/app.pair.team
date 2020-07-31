@@ -69,6 +69,7 @@ export function onMiddleware(store) {
 
     } else if (type === TEAMS_LOADED) {
       const { params } = prevState.path;
+      const { pathname } = prevState.router.location;
 
       const buildID = 0;
       const deviceSlug = "";
@@ -76,15 +77,22 @@ export function onMiddleware(store) {
       const { teams } = payload;
       payload.teams = teams.map((team)=> (reformTeam(team))).sort((i, ii)=> ((i.epoch > ii.epoch) ? -1 : (i.epoch < ii.epoch) ? 1 : 0)).map((team, i)=> ({ ...team, selected : (i === 0)}));
 
-      const team = (params) ? payload.teams.find(({ id })=> (id === params.teamID)) : (payload.teams.length > 0) ? [ ...payload.teams ].shift() : null;
+      const createMatch = matchPath(pathname, {
+        path   : RoutePaths.CREATE,
+        exact  : false,
+        strict : false
+      });
 
+      const team = (params) ? payload.teams.find(({ id })=> (id === params.teamID)) : (payload.teams.length > 0 && !createMatch) ? [ ...payload.teams ].shift() : null;
       payload.teams = payload.teams.map((item)=> ({ ...item,
-        selected : item.id === team.id
+        selected : (team && item.id === team.id)
       }));
       payload.team = team;
 
-      dispatch(fetchTeamBuilds({ team : payload.team, buildID, deviceSlug }));
-      dispatch(fetchTeamComments({ team : payload.team }));
+      if (team) {
+        dispatch(fetchTeamBuilds({ team : payload.team, buildID, deviceSlug }));
+        dispatch(fetchTeamComments({ team : payload.team }));
+      }
 
     } else if (type === TEAM_LOGO_LOADED) {
       const { logo } = payload;
