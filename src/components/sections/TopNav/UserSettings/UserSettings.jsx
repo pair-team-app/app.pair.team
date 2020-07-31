@@ -120,8 +120,8 @@ console.log('UserSettingsPopover()', { props });
 	const { position, outro } = props;
 	const payload = {
 		position : {
-			x : position.x - 100,
-			y : position.y + 20
+			x : position.x - 175,
+			y : position.y + 10
 		}
 	};
 
