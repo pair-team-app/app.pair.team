@@ -9,23 +9,37 @@
 }
 
 .create-team-form form > *:not(:last-child) {
-  margin-bottom: 10px;
+  margin-bottom: 20px;
 }
 
-.create-team-form form .rules-wrapper .add-rule, .create-team-form form .invites-wrapper .add-invite {
-  display: flex;
-  align-items: center;
+.create-team-form form .dummy-form {
+  margin: 0;
+}
+
+.create-team-form form .input-wrapper {
+  position: relative;
   width: 100%;
 }
 
-.create-team-form form .rules-wrapper .add-rule > *, .create-team-form form .invites-wrapper .add-invite > * {
-  flex: 1 0 0;
-}
-
 .create-team-form form .rules-wrapper > *:not(last-child), .create-team-form form .invites-wrapper > *:not(last-child) {
-  margin-bottom: 10px;
+  margin-bottom: 20px;
 }
 
-.create-team-form .button-wrapper {
-  display: flex;
+.create-team-form-acc {
+  position: absolute;
+  top: 12px;
+  right: 10px;
+  opacity: 0.5;
+  transition: opacity 0.125s ease-out;
+}
+
+.create-team-form-acc:hover {
+  opacity: 1;
+  cursor: pointer;
+}
+
+.create-team-form .button-wrapper > button {
+  min-width: unset;
+  max-width: unset;
+  width: 100%;
 }

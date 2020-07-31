@@ -68,6 +68,18 @@
 }
 
 
+.button-wrapper {
+	display: flex;
+}
+
+.button-wrapper-col {
+	flex-flow: row nowrap;
+}
+
+.button-wrapper-row {
+	flex-flow: column nowrap;
+}
+
 .button-wrapper-col > *:not(:last-child) {
 	margin-right: var(--spacing-20);
 }

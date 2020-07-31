@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import './CreateTeamForm.css';
 
-import TextareaAutosize from 'react-autosize-textarea';
+import DummyForm from '../../../forms/DummyForm';
 
 
 class CreateTeamForm extends Component {
@@ -12,8 +12,8 @@ class CreateTeamForm extends Component {
     this.state = {
       title       : '',
       description : '',
-      rules       : [],
-      invites     : [],
+      rules       : [''],
+      invites     : [''],
       changed     : false,
       validated   : false
     };
@@ -44,9 +44,17 @@ class CreateTeamForm extends Component {
     this.setState({ invites : [ ...invites, '']});
   };
 
-  handleInvitesChange = (event, ind)=> {
-    // console.log('%s.handleInvitesChange()', this.constructor.name, { event, ind });
+  handleInviteChange = (event, ind)=> {
+    console.log('%s.handleInviteChange()', this.constructor.name, { event, ind });
     this.setState({ invites : this.state.invites.map((invite, i)=> ((i === ind) ? event.target.value : invite)) });
+  };
+
+  handleInviteRemove = (event, i)=> {
+    console.log('%s.handleInviteRemove()', this.constructor.name, { event, i });
+
+    let { invites } = this.state;
+    invites.splice(i, 1);
+    this.setState({ invites });
   };
 
   handleRuleAppend = ()=> {
@@ -56,9 +64,17 @@ class CreateTeamForm extends Component {
     this.setState({ rules : [ ...rules, '']});
   };
 
-  handleRulesChange = (event, ind)=> {
-    // console.log('%s.handleRulesChange()', this.constructor.name, { event, ind });
+  handleRuleChange = (event, ind)=> {
+    // console.log('%s.handleRuleChange()', this.constructor.name, { event, ind });
     this.setState({ rules : this.state.rules.map((rule, i)=> ((i === ind) ? event.target.value : rule)) });
+  };
+
+  handleRuleRemove = (event, i)=> {
+    console.log('%s.handleRuleRemove()', this.constructor.name, { event, i });
+
+    let { rules } = this.state;
+    rules.splice(i, 1);
+    this.setState({ rules });
   };
 
   handleSubmit = (event)=> {
@@ -74,36 +90,65 @@ class CreateTeamForm extends Component {
 
 
   render() {
-    // console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
+    console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
 
     const { profile, team } = this.props;
     const { title, description, rules, invites, changed, validated } = this.state;
 
     return (<div className="create-team-form">
       <form onSubmit={this.handleSubmit}>
+        <DummyForm />
         <input type="text" placeholder="Enter Team Name" value={title} onChange={this.handleTitleChange} autoComplete="new-password" />
         <input type="text" placeholder="Enter Team Description" value={description} onChange={this.handleDescriptionChange} autoComplete="new-password" />
         <div className="rules-wrapper">
-          {(rules.map((rule, i)=> (<input key={i} type="text" placeholder="Enter a rule" value={rule} onChange={(event)=> this.handleRulesChange(event, i)} />)))}
-          <div className="add-rule">
-            <span>Add a team rule</span>
-            <button className="quiet-button" onClick={this.handleRuleAppend}>+</button>
+          {(rules.slice(0, -1).map((rule, i)=> (
+            <div key={i} className="input-wrapper">
+              <CreateTeamFormMinusAcc onClick={(event)=> this.handleRuleRemove(event, i)} />
+              <input type="text" placeholder="Enter a rule" value={rule} onChange={(event)=> this.handleRuleChange(event, i)} autoComplete="new-password" />
+            </div>
+          )))}
+          <div className="input-wrapper">
+            <input type="text" placeholder="Add Team Rule" value={[...rules].pop()} onChange={(event)=> this.handleRuleChange(event, rules.length - 1)} autoComplete="new-password" />
+            <CreateTeamFormPlusAcc onClick={this.handleRuleAppend} />
           </div>
         </div>
         <div className="invites-wrapper">
-          {(invites.map((invite, i)=> (<input key={i} type="text" placeholder="Enter a email address" value={invite} onChange={(event)=> this.handleInvitesChange(event, i)} />)))}
-          <div className="add-invite">
-            <span>Add a email to invite</span>
-            <button className="quiet-button" onClick={this.handleInviteAppend}>+</button>
+          {(invites.slice(0, -1).map((invite, i)=> (
+            <div key={i} className="input-wrapper">
+              <CreateTeamFormMinusAcc onClick={(event)=> this.handleInviteRemove(event, i)} />
+              <input type="text" name={`invite-${i}`} placeholder="Enter a email address" value={invite} onChange={(event)=> this.handleInviteChange(event, i)} autoComplete="new-password" />
+            </div>
+          )))}
+          <div className="input-wrapper">
+            <input type="text" placeholder="Add Email Address" value={[...invites].pop()} onChange={(event)=> this.handleInviteChange(event, invites.length - 1)} autoComplete="new-password" />
+            <CreateTeamFormPlusAcc onClick={this.handleInviteAppend} />
           </div>
         </div>
-				<div className="button-wrapper-col button-wrapper">
-          <button type="button" className="quiet-button" onClick={this.props.onCancel}>Cancel</button>
-				  <button type="submit" disabled={(title.length === 0)} onClick={this.handleSubmit}>Create Pair</button>
+				<div className="button-wrapper button-wrapper-row">
+				  <button type="submit" disabled={(title.length === 0)} onClick={this.handleSubmit}>Submit</button>
+          <button type="button" className="cancel-button" onClick={this.props.onCancel}>Cancel</button>
         </div>
 			</form>
     </div>);
   }
 }
+
+const CreateTeamFormPlusAcc = (props)=> {
+  return (<div className="create-team-form-acc" onClick={props.onClick}>
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="12" cy="12" r="11" fill="white" stroke="#999999" stroke-width="2"/>
+      <path fill-rule="evenodd" clip-rule="evenodd" d="M13 7H11V11H7V13H11V17H13V13H17V11H13V7Z" fill="#909090"/>
+    </svg>
+  </div>);
+};
+
+const CreateTeamFormMinusAcc = (props)=> {
+  return (<div className="create-team-form-acc" onClick={props.onClick}>
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="12" cy="12" r="11" fill="white" stroke="#999999" stroke-width="2"/>
+      <path d="M7 13V11H17V13H7Z" fill="#909090"/>
+    </svg>
+  </div>);
+};
 
 export default (CreateTeamForm);

@@ -8,6 +8,7 @@ import BasePage from '../BasePage';
 import CreateTeamForm from './CreateTeamForm';
 import { makeTeam } from '../../../redux/actions';
 
+
 function CreateTeamPage(props) {
 
   const { profile } = props;

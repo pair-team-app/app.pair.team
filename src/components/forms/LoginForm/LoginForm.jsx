@@ -5,7 +5,7 @@ import './LoginForm.css'
 import axios from 'axios';
 import { Bits, Strings } from 'lang-js-utils';
 
-import DummyForm from '../../forms/DummyForm';
+import DummyForm from '../DummyForm';
 import { API_ENDPT_URL } from '../../../consts/uris';
 import { trackEvent } from '../../../utils/tracking';
 

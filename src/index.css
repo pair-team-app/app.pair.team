@@ -39,6 +39,8 @@
 	--quiet-btn-selected-bg-color: var(--site-fg-color); /* #232323 */
 	--quiet-btn-selected-fg-color: 255, 255, 255; /* #ffffff */
 	--quiet-btn-border-color: 206, 206, 206; /* cecece */
+	--cancel-button-bg-color: 255, 190, 190; /* ffbebe */
+	--cancel-button-hover-bg-color: 255, 153, 153; /* ffbebe */
 	--img-bg-color: 240, 240, 240; /* #f0f0f0 */
 	--overlay-hover-color: 153, 153, 153; /* #999999 */
 	--link-color: 58, 79, 255; /* #3a4fff */
@@ -244,9 +246,13 @@ button.glyph-button[data-selected="true"] > svg, button.glyph-button[data-select
 }
 
 button.cancel-button {
-	min-width: unset;
-	max-width: unset;
-	padding: var(--spacing-10) var(--spacing-20);
+	border-color: rgba(var(--cancel-button-bg-color), 1.0);
+	background-color: rgba(var(--cancel-button-bg-color), 1.0);
+}
+
+button.cancel-button:hover {
+	border-color: rgba(var(--cancel-button-hover-bg-color), 1.0);
+	background-color: rgba(var(--cancel-button-hover-bg-color), 1.0);
 }
 
 fieldset {
