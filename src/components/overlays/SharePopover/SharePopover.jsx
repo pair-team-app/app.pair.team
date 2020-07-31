@@ -112,8 +112,8 @@ class SharePopover extends Component {
     const payload = {
       fixed    : false,
       position : {
-        x : -310,
-        y : 18
+        x : -275,
+        y : 10
       },
       offset   : null
     };
