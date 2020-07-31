@@ -9,5 +9,11 @@ export const BreadcrumbTypes = {
   COMMENT       : 'COMMENT'
 };
 
+export const CommentSortTypes = {
+  SORT_BY_DATE  : 'SORT_BY_DATE',
+  SORT_BY_SCORE : 'SORT_BY_SCORE'
+};
+
+
 export { default } from './TopNav';
 

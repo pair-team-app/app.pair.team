@@ -260,6 +260,8 @@ export function onMiddleware(store) {
         dispatch(push(`/team/${payload.team.id}--${payload.team.slug}`));
       }
 
+      payload.playgrounds = null;
+
     } else if (type === SET_PLAYGROUND) {
       const { playground } = payload;
       const { team } = prevState.teams;
@@ -268,9 +270,9 @@ export function onMiddleware(store) {
       payload.playground = (playground) ? { ...playground,
         selected : true
       } : null;
-      payload.playgrounds = playgrounds.map((item)=> ((playground && item.id === playground.id) ? payload.playground : { ...item,
+      payload.playgrounds = (playgrounds) ? playgrounds.map((item)=> ((playground && item.id === playground.id) ? payload.playground : { ...item,
         selected : false
-      }));
+      })) : null;
 
       if (payload.playground) {
         dispatch(push(`/team/${team.id}--${team.slug}/project/${payload.playground.buildID}--${payload.playground.slug}/${payload.playground.device.slug}`));

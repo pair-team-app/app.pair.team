@@ -225,7 +225,7 @@ class TeamPageFileDrop extends Component {
 
 
 	render() {
-    console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
+    // console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
 
 
     const { team, profile, dragging } = this.props;

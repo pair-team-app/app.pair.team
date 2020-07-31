@@ -16,19 +16,21 @@ class SharePopover extends Component {
     super(props);
 
     this.state = {
+      url        : null,
       email      : '',
       emailValid : false,
       outro      : false
     };
   }
 
+  componentDidMount() {
+    console.log('%s.componentDidMount()', this.constructor.name, { props : this.props, state : this.state });
+    this.onPathname();
+  }
+
   componentDidUpdate(prevProps, prevState, snapshot) {
-    // console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : this.props, prevState, state : this.state });
-    // console.log('%s.componentDidUpdate()', this.constructor.name, this.props);
-    // 		const { position } = this.props;
-    // 		if (position !== this.state.position) {
-    // 			this.setState({ position });
-    // 		}
+    console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : this.props, prevState, state : this.state });
+    this.onPathname();
   }
 
   handleClipboardCopy = (text)=> {
@@ -93,11 +95,20 @@ class SharePopover extends Component {
     }
   };
 
-  render() {
-    // console.log('%s.render()', this.constructor.name, this.props, this.state);
+  onPathname = ()=> {
+    console.log('%s.onPathname()', this.constructor.name);
 
-    const { playground, typeGroup, component, comment } = this.props;
-    const { email, emailValid, outro } = this.state;
+    const { pathname } = this.props;
+    if (pathname && (this.state.url === null)) {
+      const url = `${window.location.protocol}//${window.location.hostname}${pathname}`;
+      this.setState({ url });
+    }
+  };
+
+  render() {
+    console.log('%s.render()', this.constructor.name, this.props, this.state);
+
+    const { url, email, emailValid, outro } = this.state;
     const payload = {
       fixed    : false,
       position : {
@@ -107,21 +118,17 @@ class SharePopover extends Component {
       offset   : null
     };
 
-    const shareURL = (comment) ? comment.uri : (component) ? component.uri : (typeGroup) ? typeGroup.url : (playground ) ? playground.uri : '/404';
-
-    console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state, shareURL });
-
     return (<BasePopover outro={outro} payload={payload} onOutroComplete={this.props.onClose}>
       <div className="share-popover">
-        <CopyToClipboard text={window.location.href} onCopy={()=> this.handleClipboardCopy(window.location.href)}>
-          <div className="share-popover-url">{window.location.href}</div>
+        <CopyToClipboard text={url} onCopy={()=> this.handleClipboardCopy(url)}>
+          <div className="url">{url}</div>
         </CopyToClipboard>
 
-        <div className="share-popover-form-wrapper">
+        <div className="form-wrapper">
           <form onSubmit={this.handleSubmit}>
             <input type="text" value={email} placeholder="Enter Email Address" onChange={(event)=> this.handleEmailChange(event)} autoFocus />
             <button disabled={!emailValid} type="submit" onClick={this.handleSubmit}>Submit</button>
-            <CopyToClipboard text={window.location.href} onCopy={()=> this.handleClipboardCopy(window.location.href)}>
+            <CopyToClipboard text={url} onCopy={()=> this.handleClipboardCopy(url)}>
               <button>Copy URL</button>
             </CopyToClipboard>
           </form>
@@ -138,7 +145,8 @@ const mapStateToProps = (state, ownProps)=> {
     playground : state.playground,
     typeGroup  : state.typeGroup,
     component  : state.component,
-    comment    : state.comment
+    comment    : state.comment,
+    pathname   : state.router.location.pathname
   };
 };
 

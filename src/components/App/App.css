@@ -76,6 +76,26 @@
 	margin-bottom: var(--spacing-20);
 }
 
+.col {
+	display: flex;
+	flex-wrap: nowrap;
+}
+
+.col-left {
+	justify-content: flex-start;
+	align-items: flex-start;
+}
+
+.col-mid {
+	justify-content: center;
+	align-items: center;
+}
+
+.col-right {
+	justify-content: flex-end;
+	align-items: flex-end;
+}
+
 
 .form-disclaimer {
 	/* font-size: 14px; */

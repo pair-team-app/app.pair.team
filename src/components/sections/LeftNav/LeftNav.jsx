@@ -6,7 +6,6 @@ import { push } from 'connected-react-router';
 import { Strings } from 'lang-js-utils';
 import FontAwesome from 'react-fontawesome';
 import { connect } from 'react-redux';
-import { NavLink } from 'react-router-dom';
 
 import ContentExpander from '../../iterables/ContentExpander';
 import { Pages } from '../../../consts/uris';
@@ -76,9 +75,7 @@ class LeftNav extends Component {
 
     this.setState({ builds : null }, ()=> {
       this.props.setTeam(team);
-      // if (this.props.playground) {
-        this.props.setPlayground(null);
-      // }
+      this.props.setPlayground(null);
     });
   }
 
@@ -102,7 +99,7 @@ class LeftNav extends Component {
   };
 
   render() {
-    // console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
+    console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
 
     const { teams, team, invite, profile } = this.props;
     const { builds } = this.state;
@@ -110,33 +107,31 @@ class LeftNav extends Component {
     return ((profile) && (<div className="left-nav">
       <LeftNavHeader { ...this.props } />
       {(profile && !teams && !invite) && (<div className="loading">Loading…</div>)}
-      {(teams) && (<div className="tree-wrapper">
-        <div className="teams-wrapper">
-          <div className="items-wrapper">
-            {teams.map((team, i)=> (
-              <LeftNavTeam
-                key={i}
-                team={team}
-                onClick={this.handleTeamClick}
-              />
-            ))}
-          </div>
-          {(profile && profile.state >= 2) && (<div className="create-team" onClick={this.handleCreateTeam}>Create Pair</div>)}
+      {(teams) && (<div className="teams-wrapper">
+        <div className="items-wrapper">
+          {teams.map((team, i)=> (
+            <LeftNavTeam
+              key={i}
+              team={team}
+              onClick={this.handleTeamClick}
+            />
+          ))}
         </div>
-        {(!builds) ? (<div className="loading">Loading…</div>)
-        : (<div className="builds-wrapper">
-          <div className="header">{(builds.length === 0) ? 'No ' : ''}Projects</div>
-          <div className="items-wrapper">
-            {builds.map((build, i)=> (
-              <LeftNavBuild
-                key={i}
-                build={build}
-                onBuildClick={this.handleBuildClick}
-                onDeviceRenderClick={this.handleDeviceRenderClick}
-              />
-            ))}
-          </div>
-        </div>)}
+        {(profile && profile.state >= 2) && (<div className="nav-link" onClick={this.handleCreateTeam}>Create Pair</div>)}
+      </div>)}
+      {(!builds) ? (<div className="loading">Loading…</div>)
+      : (<div className="builds-wrapper">
+        <div className="header">{(builds.length === 0) ? 'No ' : ''}Projects</div>
+        <div className="items-wrapper">
+          {builds.map((build, i)=> (
+            <LeftNavBuild
+              key={i}
+              build={build}
+              onBuildClick={this.handleBuildClick}
+              onDeviceRenderClick={this.handleDeviceRenderClick}
+            />
+          ))}
+        </div>
       </div>)}
     </div>));
   }
@@ -171,11 +166,19 @@ const LeftNavBuild = (props)=> {
 const LeftNavHeader = (props)=> {
   // console.log('LeftNavHeader()', { props });
 
-  const { teams } = props
-  return (<div className="left-nav-header">
-    {(teams.length > 0) && (<div className="title" onClick={()=> props.setTeam(teams[0])}>
-      <img src={pairLogo} alt="Logo" />Pair
-    </div>)}
+  const { teams } = props;
+
+  const onClick = ()=> {
+    if (teams.length > 0) {
+      props.setTeam(teams[0]);
+
+    } else {
+
+    }
+  };
+
+  return (<div className="left-nav-header" data-teams={teams.length > 0} onClick={onClick}>
+    <img src={pairLogo} alt="Logo" />Pair
   </div>);
 };
 

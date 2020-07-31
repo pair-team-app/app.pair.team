@@ -4,15 +4,15 @@ import './TopNav.css';
 import { push } from 'connected-react-router';
 import { connect } from 'react-redux';
 import { Strings } from 'lang-js-utils';
-import { NavLink, withRouter } from 'react-router-dom';
+import { matchPath, withRouter } from 'react-router-dom';
 
-import { BreadcrumbTypes } from './';
+import { BreadcrumbTypes, CommentSortTypes } from './';
 import UserSettings, { SettingsMenuItemTypes} from './UserSettings';
+import { RoutePaths } from '../../helpers/Routes';
 import SharePopover from '../../overlays/SharePopover';
 import { Modals, Pages } from '../../../consts/uris';
 import { setTeamCommentsSort, toggleTheme } from '../../../redux/actions';
 import { trackOutbound } from '../../../utils/tracking';
-import TeamPageHeader from './TeamPageHeader';
 
 
 class TopNav extends Component {
@@ -20,7 +20,12 @@ class TopNav extends Component {
 		super(props);
 
 		this.state = {
-			popover : false,
+			popover    : false,
+			matchPaths : {
+				team    : null,
+				create  : null,
+				project : null
+			}
 		};
 	}
 
@@ -37,13 +42,36 @@ class TopNav extends Component {
 		// console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : this.props, prevState, state : this.state });
 // console.log('%s.componentDidUpdate()', this.constructor.name, { left : shareLink.offsetLeft, top : shareLink.offsetTop });
 
-		 const { hash } = this.props;
+		const { pathname, hash } = this.props;
+
 		if ((hash === '#share') && !this.state.popover) {
 			this.setState({ popover : true });
 		}
 
 		if (hash !== '#share' && this.state.popover) {
 			this.setState({ popover : false });
+		}
+
+		const matchPaths = {
+			team    : matchPath(pathname, {
+				path   : RoutePaths.TEAM,
+				exact  : false,
+				strict : false
+			}),
+			create  : matchPath(pathname, {
+				path   : RoutePaths.CREATE,
+				exact  : false,
+				strict : false
+			}),
+			project : matchPath(pathname, {
+				path   : RoutePaths.PROJECT,
+				exact  : false,
+				strict : false
+			})
+		};
+
+		if (matchPaths !== this.state.matchPaths && this.state.matchPaths === prevState.matchPaths) {
+			this.setState({ matchPaths });
 		}
 	}
 
@@ -129,30 +157,24 @@ class TopNav extends Component {
 		// console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
 
 		const { darkThemed, playground, profile, invite, team, teamSort } = this.props;
-		const { popover } = this.state;
-
-
-		const handleURL = (event, url)=> {
-// console.log('%s.handleURL()', this.constructor.name, event, url);
-
-      event.preventDefault();
-      trackOutbound(url);
-	  };
-
-		// console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state, deviceIDs });
+		const { popover, matchPaths } = this.state;
 
 		return (<div className="top-nav">
 			{/* <div className="col breadcrumb-wrapper">{this.buildBreadcrumbs().map((breadcrumb)=> (breadcrumb))}</div> */}
-			{(window.location.pathname.includes('/team') && profile && !playground) && (<div className="col col-left">
-				<TeamPageHeader sort={teamSort} onSortClick={this.handleTeamCommentsSort} />
-			</div>)}
+			<div className="col col-left"><div className="page-header-wrapper">
+				{(matchPaths.team && !matchPaths.project) && (<TeamPageHeader sort={teamSort} onSortClick={this.handleTeamCommentsSort} />)}
+				{(matchPaths.create) && (<CreateTeamPageHeader />)}
+				{(matchPaths.project) && (<ProjectPageHeader />)}
+			</div></div>
 			<div className="col col-middle">
         <input type="checkbox" checked={darkThemed} value={darkThemed} onChange={this.props.toggleTheme} />
 			</div>
 			<div className="col col-right">
-				<TopNavShareLink popover={popover} playground={playground} onClick={this.handlePopoverToggle} onPopup={this.props.onPopup} onPopoverClose={this.handlePopoverClose} />
-				{(profile && !invite) && (<UserSettings onMenuItem={this.handleSettingsItem} onLogout={this.props.onLogout} />)}
-				{(profile && !invite) && (<div className="" onClick={()=> this.props.onModal(Modals.INVITE)}>invite</div>)}
+				{(profile && !invite) && (<div className="link-wrapper">
+					<TopNavInviteLink onModal={this.props.onModal} />
+					<TopNavShareLink popover={popover} onClick={this.handlePopoverToggle} onPopup={this.props.onPopup} onPopoverClose={this.handlePopoverClose} />
+					<UserSettings onMenuItem={this.handleSettingsItem} onLogout={this.props.onLogout} />
+				</div>)}
 			</div>
 		</div>);
 	}
@@ -171,16 +193,49 @@ const TopNavBreadcrumb = (props)=> {
 	);
 };
 
+const TopNavInviteLink = (props)=> {
+	//   console.log('TopNavInviteLink()', { props });
+
+		return (<div className="top-nav-invite-link">
+			<div className="nav-link" onClick={()=> props.onModal(Modals.INVITE)}>Invite</div>
+		</div>);
+	};
 
 const TopNavShareLink = (props)=> {
 //   console.log('TopNavShareLink()', { props });
 
-  const { popover, playground } = props;
+  const { popover } = props;
 	return (<div className="top-nav-share-link">
     <div className="nav-link" onClick={props.onClick}>Share</div>
-
-    {(popover) && (<SharePopover playground={playground} onPopup={props.onPopup} onClose={props.onPopoverClose} />)}
+    {(popover) && (<SharePopover onPopup={props.onPopup} onClose={props.onPopoverClose} />)}
 	</div>);
+};
+
+
+const CreateTeamPageHeader = (props)=> {
+	// console.log('CreateTeamPageHeader()', { props });
+
+	return (<div className="create-team-page-header">
+		<div className="title">Create Pair</div>
+	</div>);
+};
+
+const TeamPageHeader = (props)=> {
+	// console.log('TeamPageHeader()', { props });
+
+	const { sort } = props;
+	const { SORT_BY_DATE, SORT_BY_SCORE } = CommentSortTypes;
+
+	return (<div className="team-page-header">
+		<div className="sort-by-wrapper">
+			<div className="sort-by-link" data-selected={sort === SORT_BY_SCORE} onClick={()=> props.onSortClick(SORT_BY_SCORE)}>Top</div>
+			<div className="sort-by-link" data-selected={sort === SORT_BY_DATE} onClick={()=> props.onSortClick(SORT_BY_DATE)}>New</div>
+		</div>
+	</div>);
+};
+
+const ProjectPageHeader = (props)=> {
+	return (<div className="project-page-header">Project</div>);
 };
 
 
@@ -206,7 +261,8 @@ const mapStateToProps = (state, ownProps)=> {
 		component   : state.builds.component,
 		comment     : state.comments.comment,
 		matchPath   : state.matchPath,
-		hash        : state.router.location.hash
+		hash        : state.router.location.hash,
+		pathname    : state.router.location.pathname
 	});
 };
 

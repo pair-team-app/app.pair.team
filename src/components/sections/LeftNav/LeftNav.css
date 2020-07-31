@@ -15,23 +15,41 @@
 .left-nav .tree-wrapper {
 	flex-grow: 1;
 	max-height: 100%;
+	font-size: 14px;
+	font-weight: 600;
 	/* max-height: calc(100vh - calc(var(--spacing-20) * 2.0)); */
 	overflow-y: auto;
+}
+
+.left-nav .nav-link {
+	margin: 10px 0;
+	font-weight: 400;
+	color: rgba(var(--link-color), 1.0);
+	transition: color 0.125s ease-out;
+}
+
+.left-nav .nav-link:hover {
+	color: rgba(var(--playground-panel-link-hover-color), 1.0);
+	cursor: pointer;
 }
 
 .left-nav .loading {
 	color: rgba(var(--status-text-color), 1.0);
 }
 
-.left-nav .link {
-	display: block;
-	margin-bottom: var(--spacing-10);
-	font-size: 14px;
-}
-
 .left-nav .left-nav-header {
 	flex-shrink: 0;
 	margin-bottom: var(--spacing-20);
+	font-size: 16px;
+	font-weight: 600;
+	color: rgba(var(--site-fg-color), 1.0);
+	transition: color 0.125s ease-out;
+}
+
+.left-nav .left-nav-header[data-teams="true"]:hover {
+	color: rgba(var(--link-color), 1.0);
+	text-decoration: underline;
+	cursor: pointer;
 }
 
 .left-nav .left-nav-header img {
@@ -40,24 +58,7 @@
 	margin-right: var(--spacing-10);
 }
 
-.left-nav .left-nav-header .title {
-	color: rgba(var(--link-color), 1.0);
-	transition: color 0.125s ease-out;
-}
-
-.left-nav .left-nav-header .title:hover {
-	color: rgba(var(--link-hover-color), 1.0);
-	cursor: pointer;
-}
-
-.left-nav .teams-wrapper {
-	width: 100%;
-	height: min-content;
-	margin-bottom: var(--spacing-20);
-	font-size: 14px;
-}
-
-.left-nav .teams-wrapper .items-wrapper {
+.left-nav .teams-wrapper > * {
 	margin-bottom: var(--spacing-10);
 }
 
@@ -82,19 +83,9 @@
 	cursor: default;
 }
 
-.left-nav .teams-wrapper .create-team {
-	color: rgba(var(--link-color), 1.0);
-	transition: color 0.125s ease-out;
-}
-
-.left-nav .teams-wrapper .create-team:hover {
-	color: rgba(var(--playground-panel-link-hover-color), 1.0);
-	cursor: pointer;
-}
-
 .left-nav .builds-wrapper {
 	width: 100%;
-	font-size: 14px;
+	/* font-size: 14px; */
 }
 
 .left-nav .builds-wrapper .header {
