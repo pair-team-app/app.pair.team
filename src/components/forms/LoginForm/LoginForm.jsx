@@ -115,7 +115,7 @@ class LoginForm extends Component {
 					: (<input type="password" placeholder="Enter Password" value={(passMsg || password)} onFocus={()=> this.setState({ passwordValid : true, passMsg : null })} onChange={(event)=> this.setState({ password : event.target.value })} onClick={this.handlePassword} autoComplete="off" />)
 				}
 
-				<button disabled={(email.length === 0 || password.length === 0 || !emailValid || !passwordValid || passMsg)} type="submit" onClick={(event)=> this.handleSubmit(event)}>Login</button>
+				<button disabled={(email.length === 0 || password.length === 0 || !emailValid || !passwordValid || passMsg)} type="submit" onClick={(event)=> this.handleSubmit(event)}>Submit</button>
 			</form>
 		</div>);
 	}

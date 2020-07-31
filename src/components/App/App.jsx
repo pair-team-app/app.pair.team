@@ -18,6 +18,7 @@ import InviteModal from '../overlays/InviteModal';
 import LoginModal from '../overlays/LoginModal';
 import PopupNotification, { POPUP_TYPE_OK } from '../overlays/PopupNotification';
 import ProfileModal from '../overlays/ProfileModal';
+import RecoverModal from '../overlays/RecoverModal';
 import RegisterModal from '../overlays/RegisterModal';
 import StripeModal from '../overlays/StripeModal';
 import LeftNav from '../sections/LeftNav';
@@ -46,6 +47,7 @@ class App extends Component {
         noAccess : false,
         payment  : false,
         profile  : false,
+        recover  : false,
         register : false,
         stripe   : false,
         payload  : null
@@ -173,7 +175,7 @@ class App extends Component {
         }
 
       } else if (pathname.startsWith(Pages.TEAM)) {
-        if (!profile && !modals.login && !modals.register && !modals.payment) {
+        if (!profile && !modals.login && !modals.register && !modals.payment && !modals.recover) {
           this.onToggleModal(Modals.LOGIN);
         }
       }
@@ -199,6 +201,10 @@ class App extends Component {
         this.onToggleModal(Modals.PROFILE);
       }
 
+      if (hash === '#recover' && !modals.recover) {
+        this.onToggleModal(Modals.RECOVER);
+      }
+
       if (hash === '') {
         if (prevProps.hash === '#invite') {
           this.onToggleModal(Modals.INVITE, false);
@@ -206,6 +212,10 @@ class App extends Component {
 
         if (prevProps.hash === '#profile') {
           this.onToggleModal(Modals.PROFILE, false);
+        }
+
+        if (prevProps.hash === '#recover') {
+          this.onToggleModal(Modals.RECOVER, false);
         }
       }
 
@@ -305,6 +315,7 @@ class App extends Component {
           noAccess : uri === Modals.NO_ACCESS,
           payment  : uri === Modals.PAYMENT,
           profile  : uri === Modals.PROFILE,
+          recover  : uri === Modals.RECOVER,
           register : uri === Modals.REGISTER,
           stripe   : uri === Modals.STRIPE
         }
@@ -323,6 +334,7 @@ class App extends Component {
           noAccess : (uri === Modals.NO_ACCESS) ? false : modals.noAccess,
           payment  : (uri === Modals.PAYMENT) ? false : modals.payment,
           profile  : (uri === Modals.PROFILE) ? false : modals.profile,
+          recover  : (uri === Modals.RECOVER) ? false : modals.recover,
           register : (uri === Modals.REGISTER) ? false : modals.register,
           stripe   : (uri === Modals.STRIPE) ? false : modals.stripe,
           payload  : null
@@ -377,6 +389,12 @@ class App extends Component {
 				  onPopup={this.handlePopup}
 				  onComplete={()=> this.onToggleModal(Modals.LOGIN, false)}
 				  onLoggedIn={this.handleUpdateUser}
+			  />)}
+
+        {(modals.recover) && (<RecoverModal
+				  onModal={(uri)=> this.onToggleModal(uri, true)}
+				  onPopup={this.handlePopup}
+				  onComplete={()=> this.onToggleModal(Modals.RECOVER, false)}
 			  />)}
 
 			  {(modals.register) && (<RegisterModal

@@ -33,7 +33,7 @@ class LoginModal extends Component {
 	}
 
 	handleComplete = ()=> {
-		console.log('%s.handleComplete()', this.constructor.name);
+		console.log('%s.handleComplete()', this.constructor.name, { outroURI : this.state.outroURI });
 
 		const { outroURI } = this.state;
 		this.setState({ outro : false }, ()=> {

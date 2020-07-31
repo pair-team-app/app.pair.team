@@ -2,14 +2,9 @@
 import React, { Component } from 'react';
 import './RecoverModal.css';
 
-import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
-
 import BaseOverlay from '../BaseOverlay';
-import LoginForm from '../../forms/LoginForm';
-import { POPUP_TYPE_ERROR } from '../PopupNotification';
+import RecoverForm from '../../forms/RecoverForm';
 import { Modals } from '../../../consts/uris';
-import { updateUserProfile } from '../../../redux/actions';
 import { trackEvent } from '../../../utils/tracking';
 
 
@@ -19,18 +14,12 @@ class RecoverModal extends Component {
 
 		this.state = {
 			outro    : false,
-			email    : null,
-			upload   : null,
-			outroURI : null
+			outroURI : Modals.LOGIN
 		};
 	}
 
 	componentDidUpdate(prevProps, prevState, snapshot) {
 // console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : this.props, prevState, state : this.state });
-
-		const { profile } = this.props;
-		if (!prevProps.profile && profile) {
-		}
 	}
 
 	handleComplete = ()=> {
@@ -44,26 +33,6 @@ class RecoverModal extends Component {
 				this.props.onModal(outroURI);
 			}
 		});
-	};
-
-	handleError = (error)=> {
-// console.log('%s.handleError()', this.constructor.name, error);
-
-		this.props.onPopup({
-			type    : POPUP_TYPE_ERROR,
-			content : error.code
-		});
-	};
-
-	handleLoggedIn = (profile)=> {
-// console.log('%s.handleLoggedIn()', this.constructor.name, profile, this.props);
-
-		trackEvent('user', 'login');
-    this.setState({ outro : true }, ()=> {
-      setTimeout(()=> {
-        this.props.onLoggedIn(profile);
-      }, 333);
-    });
 	};
 
 	handleModal = (uri)=> {
@@ -81,25 +50,21 @@ class RecoverModal extends Component {
 		const { outro } = this.state;
 		return (
 			<BaseOverlay
-				tracking={Modals.LOGIN}
+				tracking={Modals.RECOVER}
 				outro={outro}
 				filled={true}
 				closeable={false}
 				delay={125}
 				onComplete={this.handleComplete}>
 
-				<div className="login-modal">
+				<div className="recover-modal">
 					<div className="form-wrapper">
-						<LoginForm
-							inviteID={null}
-							email={null}
-							onCancel={(event)=> { event.preventDefault(); this.handleComplete(); }}
-							onLoggedIn={this.handleLoggedIn} />
+						<RecoverForm onSubmitted={(event)=> { event.preventDefault(); this.handleComplete(); }} />
 					</div>
 
 					<div className="footer-wrapper form-disclaimer">
 						<div onClick={()=> this.handleModal(Modals.REGISTER)}>Don't have an account? Sign Up</div>
-						<div onClick={()=> this.handleModal(Modals.RECOVER)}>Forgot Password</div>
+						<div onClick={()=> this.handleModal(Modals.LOGIN)}>Already have an Account? Login</div>
 					</div>
 				</div>
 			</BaseOverlay>);
@@ -107,17 +72,4 @@ class RecoverModal extends Component {
 }
 
 
-const mapDispatchToProps = (dispatch)=> {
-	return ({
-		updateUserProfile : (profile)=> dispatch(updateUserProfile(profile))
-	});
-
-};
-
-const mapStateToProps = (state, ownProps)=> {
-	return ({
-		profile : state.user.profile,
-	});
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(RecoverModal);
+export default (RecoverModal);
