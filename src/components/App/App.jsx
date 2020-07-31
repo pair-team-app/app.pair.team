@@ -369,7 +369,7 @@ class App extends Component {
 	    {/* <div className={`page-wrapper${(location.pathname.startsWith(Pages.PROJECT) && !location.pathname.includes(Pages.TEAM)) ? ' playground-page-wrapper' : ''}`}> */}
 	    {/* <div className="page-wrapper"> */}
 	    <div className="page-wrapper">
-        <TopNav darkTheme={darkThemed} onToggleTheme={this.handleThemeToggle} onLogout={this.handleLogout} onModal={this.onToggleModal} />
+        <TopNav darkTheme={darkThemed} onToggleTheme={this.handleThemeToggle} onLogout={this.handleLogout} onModal={this.onToggleModal} onPopup={this.handlePopup} />
 		    <Routes onLogout={this.handleLogout} onModal={this.onToggleModal} onPopup={this.handlePopup} { ...this.props } />
 	    </div>
 

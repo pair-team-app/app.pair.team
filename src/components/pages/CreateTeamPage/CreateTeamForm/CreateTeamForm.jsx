@@ -136,8 +136,8 @@ class CreateTeamForm extends Component {
 const CreateTeamFormPlusAcc = (props)=> {
   return (<div className="create-team-form-acc" onClick={props.onClick}>
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <circle cx="12" cy="12" r="11" fill="white" stroke="#999999" stroke-width="2"/>
-      <path fill-rule="evenodd" clip-rule="evenodd" d="M13 7H11V11H7V13H11V17H13V13H17V11H13V7Z" fill="#909090"/>
+      <circle cx="12" cy="12" r="11" fill="white" stroke="#999999" strokeWidth="2"/>
+      <path fillRule="evenodd" clipRule="evenodd" d="M13 7H11V11H7V13H11V17H13V13H17V11H13V7Z" fill="#909090"/>
     </svg>
   </div>);
 };
@@ -145,7 +145,7 @@ const CreateTeamFormPlusAcc = (props)=> {
 const CreateTeamFormMinusAcc = (props)=> {
   return (<div className="create-team-form-acc" onClick={props.onClick}>
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <circle cx="12" cy="12" r="11" fill="white" stroke="#999999" stroke-width="2"/>
+      <circle cx="12" cy="12" r="11" fill="white" stroke="#999999" strokeWidth="2"/>
       <path d="M7 13V11H17V13H7Z" fill="#909090"/>
     </svg>
   </div>);
