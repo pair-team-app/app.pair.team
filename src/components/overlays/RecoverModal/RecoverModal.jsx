@@ -5,7 +5,6 @@ import './RecoverModal.css';
 import BaseOverlay from '../BaseOverlay';
 import RecoverForm from '../../forms/RecoverForm';
 import { Modals } from '../../../consts/uris';
-import { trackEvent } from '../../../utils/tracking';
 
 
 class RecoverModal extends Component {

@@ -3,13 +3,12 @@ import React, { Component } from 'react';
 import './StripeModal.css';
 
 import { loadStripe } from '@stripe/stripe-js';
-import axios from 'axios';
 import { connect } from 'react-redux';
 import { NavLink, withRouter } from 'react-router-dom';
 
 import BaseOverlay from '../BaseOverlay';
-import { POPUP_TYPE_ERROR, POPUP_TYPE_OK } from '../PopupNotification';
-import { API_ENDPT_URL, Modals } from '../../../consts/uris';
+import { POPUP_TYPE_ERROR } from '../PopupNotification';
+import { Modals } from '../../../consts/uris';
 import { makeStripeSession } from '../../../redux/actions';
 import { trackEvent, trackOutbound } from '../../../utils/tracking';
 import stripeCreds from '../../../assets/json/configs/stripe-creds';
@@ -66,43 +65,8 @@ class StripeModal extends Component {
 		console.log('%s.handleSubmit()', this.constructor.name, { event, product });
 
 		event.preventDefault();
-
 		trackEvent('button', `${product.billing}-subscription`);
-
-		const { team } = this.props;
-
 		this.props.makeStripeSession({ product })
-
-
-
-		// axios.post(API_ENDPT_URL, {
-		// 	action  : 'STRIPE_SESSION',
-		// 	payload : { payment,
-		// 		quantity : team.members.length
-		// 	}
-		// }).then(async(response)=> {
-		// 	console.log('STRIPE_SESSION', response.data);
-		// 	const { session, error } = response.data;
-
-		// 	if (error) {
-		// 		this.props.onPopup({
-		// 			type    : POPUP_TYPE_ERROR,
-		// 			content : error.code
-		// 		});
-
-		// 	} else {
-		// 		const stripe = await stripePromise;
-		// 		const { error } = await stripe.redirectToCheckout({ sessionId : session.id });
-
-		// 		if (error) {
-		// 			this.props.onPopup({
-		// 				type    : POPUP_TYPE_ERROR,
-		// 				content : error.code
-		// 			});
-		// 		}
-		// 	}
-		// }).catch((error)=> {
-		// });
 	};
 
 	onStripeSession = async()=> {

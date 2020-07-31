@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import './InviteForm.css'
 
 import axios from 'axios';
-import { Bits, Strings } from 'lang-js-utils';
+import { Strings } from 'lang-js-utils';
 
 import DummyForm from '../../forms/DummyForm';
 import { API_ENDPT_URL } from '../../../consts/uris';
@@ -32,8 +32,7 @@ class InviteForm extends Component {
 		trackEvent('button', 'team-invite');
 
 		const { profile, team } = this.props
-		const { emails, validations } = this.state;
-		// const emailsValid = emails.reduce((acc, val)=> (acc * ((val.includes('@')) ? Strings.isEmail(val) : (val.length > 0))), 1);
+		const { emails } = this.state;
 		const emailsValid = emails.map((email)=> (email.includes('@')) ? Strings.isEmail(email) : (email.length > 0));
 
 		this.setState({ emailsValid,
@@ -98,9 +97,7 @@ class InviteForm extends Component {
 	render() {
 // console.log('%s.render()', this.constructor.name, this.props, this.state);
 
-		const { profile, team } = this.props;
 		const { emails, emailsValid, validations } = this.state;
-
 		return (<div className="invite-form">
 			<form onSubmit={this.handleSubmit}>
 				<DummyForm />

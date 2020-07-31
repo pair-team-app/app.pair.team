@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
 import BasePage from '../BasePage';
-import BaseComment from '../../iterables/BaseComment';
+// import BaseComment from '../../iterables/BaseComment';
 import { setComment, setComponent, setPlayground } from '../../../redux/actions';
 
 
@@ -48,11 +48,7 @@ class ProjectPage extends Component {
   render() {
     console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
 
-    const { playground, match, component, params } = this.props;
-
-    if (playground) {
-      const { buildID, title, projectSlug, device } = playground;
-    }
+    const { playground, component } = this.props;
 
     return (<BasePage { ...this.props } className="project-page" data-comments={(window.location.href.includes('/comments'))}>
       {(!playground) && (<div>Project page loading...</div>)}
@@ -117,8 +113,6 @@ const ProjectPageCommentsListComment = (props)=> {
 
 const ProjectViewItem = (props)=> {
   console.log('ProjectViewItem()', { props });
-
-  const { components } = props;
   return (<div className="project-view-item" onClick={props.onClick}>
     <img src={null} alt="" />
   </div>);

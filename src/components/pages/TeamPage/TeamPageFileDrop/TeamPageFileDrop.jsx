@@ -52,16 +52,7 @@ class TeamPageFileDrop extends Component {
 	componentDidUpdate(prevProps, prevState, snapshot) {
     console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : this.props, prevState, state : this.state });
 
-    const { imageURL, dataURI, textContent } = this.props;
-    // if (dataURI && !this.state.image && !prevState.image) {
-    //   this.setState({
-    //     url   : true,
-    //     image : dataURI,
-    //   }, ()=> {
-    //     this.dataURIFile(dataURI, `${URIs.lastComponent(imageURL)}.png`);
-    //   });
-    // }
-
+    const { textContent } = this.props;
     if (textContent !== '' && textContent !== this.state.text && this.state.text === '') {
       const urlComment = (/https?:\/\//i.test(textContent));
 
@@ -228,8 +219,13 @@ class TeamPageFileDrop extends Component {
     // console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
 
 
-    const { team, profile, dragging } = this.props;
+    const { dragging } = this.props;
     const { text, url, code, uploaded, image, files } = this.state;
+
+    // const cdnHeaders = {
+    //   'Content-Type' : 'multipart/form-data',
+    //   'Accept'       : 'application/json'
+    // };
 
 		return (<div className="team-page-file-drop" data-hidden={(!dragging && files.length === 0 && text.length === 0)}>
       <div data-file={files.length > 0 || image !== null || text.length > 0}>
@@ -307,10 +303,7 @@ const mapDispatchToProps = (dispatch)=> {
 };
 
 const mapStateToProps = (state, ownProps)=> {
-	return ({
-    profile : state.user.profile,
-    team    : state.teams.team
-	});
+	return (null);
 };
 
 

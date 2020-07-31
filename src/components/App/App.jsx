@@ -7,13 +7,11 @@ import { push } from 'connected-react-router';
 import { Browsers } from 'lang-js-utils';
 import cookie from 'react-cookies';
 import { connect } from 'react-redux';
-import { matchPath, withRouter } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 
-import Routes, { RoutePaths } from '../helpers/Routes';
-import ModalRoutes from '../helpers/ModalRoutes';
+import Routes from '../helpers/Routes';
 import AlertDialog from '../overlays/AlertDialog';
 import ConfirmDialog from '../overlays/ConfirmDialog';
-import CookiesOverlay from '../overlays/CookiesOverlay';
 import InviteModal from '../overlays/InviteModal';
 import LoginModal from '../overlays/LoginModal';
 import PopupNotification, { POPUP_TYPE_OK } from '../overlays/PopupNotification';
@@ -92,8 +90,8 @@ class App extends Component {
     console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : this.props, prevState, state : this.state, snapshot });
     // console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props, this.state.modals);
 
-    const { location, profile, team, playgrounds, playground, purchase } = this.props;
-    const { pathname, hash } = location;
+    const { location, profile, team, purchase } = this.props;
+    const { pathname } = location;
     const { modals } = this.state;
 
     // url changed
@@ -145,20 +143,11 @@ class App extends Component {
       }
 
 
-      if (profile && team && team.type == 'free' && !modals.stripe && !modals.profile) {
+      if (profile && team && team.type === 'free' && !modals.stripe && !modals.profile) {
         if (team.members.length >= 2) {
           this.onToggleModal(Modals.STRIPE);
         }
       }
-
-
-      // if (products && team !== null && prevProps.team === null) {
-      //   const modal = (team.members.length > 10 && team.type === 'free') || (team.members.length > 50 && team.type !== 'enterprise');
-      //   if (modal && !prevState.modals.stripe && !modals.stripe) {
-      //     const product = products.find(({ threshold })=> team.members.length >= threshold);
-      //     this.onToggleModal(Modals.STRIPE, true, { team, product });
-      //   }
-      // }
 
       if (location.pathname.startsWith(Pages.PAYMENT)) {
         if (profile) {
@@ -197,7 +186,7 @@ class App extends Component {
         this.onToggleModal(Modals.INVITE);
       }
 
-      if (hash === '#profile' && !modals.profile) {
+      if (profile !== null && hash === '#profile' && !modals.profile) {
         this.onToggleModal(Modals.PROFILE);
       }
 
@@ -344,30 +333,15 @@ class App extends Component {
   };
 
   render() {
-    const matchPlaygrounds = matchPath(this.props.location.pathname, {
-      path : RoutePaths.PROJECT,
-      exact : false,
-      strict: false
-    });
-
-
-
     // console.log('%s.render()', this.constructor.name, { props : this.props, matchPlaygrounds });
     console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
     // console.log('%s.render()', this.constructor.name, this.state.modals);
 
-    const { darkThemed, profile, location, team, purchase } = this.props;
+    const { darkThemed, profile, team, purchase } = this.props;
     const { popup, inviteID, modals } = this.state;
 
-    const { pathname } = location;
-
     return (<div className="site-wrapper" data-theme={(darkThemed) ? 'dark' : 'light'} data-devin-matty={MATTY_DEVIN_THEME}>
-      {/* {(!matchPlaygrounds) && (<TopNav darkTheme={darkThemed} onToggleTheme={this.handleThemeToggle} onModal={(uri, payload)=> this.onToggleModal(uri, true, payload)} />)} */}
       <LeftNav />
-
-
-	    {/* <div className={`page-wrapper${(location.pathname.startsWith(Pages.PROJECT) && !location.pathname.includes(Pages.TEAM)) ? ' playground-page-wrapper' : ''}`}> */}
-	    {/* <div className="page-wrapper"> */}
 	    <div className="page-wrapper">
         <TopNav darkTheme={darkThemed} onToggleTheme={this.handleThemeToggle} onLogout={this.handleLogout} onModal={this.onToggleModal} onPopup={this.handlePopup} />
 		    <Routes onLogout={this.handleLogout} onModal={this.onToggleModal} onPopup={this.handlePopup} { ...this.props } />
@@ -450,7 +424,6 @@ class App extends Component {
         {(modals.payment) && (<AlertDialog
 				  title='Payment Processed'
 				  tracking={Modals.PAYMENT}
-				  // onComplete={()=> { this.onToggleModal(Modals.PAYMENT, false); window.location.pathname = `${Pages.TEAM}/${team.id}--${team.slug}` }}>
 				  onComplete={()=> { this.onToggleModal(Modals.PAYMENT, false); this.props.history.replace(`${Pages.TEAM}/${team.id}--${team.slug}`) }}>
 				  Your team <strong>{team.title} - [{team.id}]</strong> is now a paid {purchase.type} plan.
 			  </AlertDialog>)}

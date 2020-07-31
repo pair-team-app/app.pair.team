@@ -3,18 +3,18 @@ import React, { Component } from 'react';
 import './TeamPage.css';
 
 import axios from 'axios';
-import { Arrays, Strings } from 'lang-js-utils';
+import { Strings } from 'lang-js-utils';
 import { Menu, Item, Separator, Submenu, MenuProvider } from 'react-contexify';
-import TextareaAutosize from 'react-autosize-textarea';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
 import TeamPageFileDrop from './TeamPageFileDrop';
 import BasePage from '../BasePage';
 import BaseComment from '../../iterables/BaseComment';
-import { SORT_BY_DATE, SORT_BY_SCORE } from '../../sections/TopNav/TeamPageHeader';
+import { SORT_BY_DATE } from '../../sections/TopNav/TeamPageHeader';
 import { TEAM_TIMESTAMP } from '../../../consts/formats';
-import { BASKSPACE_KEY, TAB_KEY, ALT_KEY, CTRL_KEY, CAP_KEY, SHIFT_KEY, ENTER_KEY, META_LT_KEY } from '../../../consts/key-codes';
+// import { BASKSPACE_KEY, TAB_KEY, ALT_KEY, CTRL_KEY, CAP_KEY, SHIFT_KEY, ENTER_KEY, META_LT_KEY } from '../../../consts/key-codes';
+import { ENTER_KEY } from '../../../consts/key-codes';
 import { API_ENDPT_URL } from '../../../consts/uris';
 import { fetchTeamComments, makeComment, makeTeamRule, modifyTeam, setComment, setPlayground, setTypeGroup } from '../../../redux/actions';
 import { trackEvent } from '../../../utils/tracking';
@@ -177,7 +177,8 @@ class TeamPage extends Component {
     console.log('%s.handleKeyDown()', this.constructor.name, { event });
 
     if (event.keyCode === ENTER_KEY) {
-      const { ruleInput, commentContent, teamDescription, ruleContent } = this.state;
+      const { ruleInput, teamDescription, ruleContent } = this.state;
+      // const { ruleInput, commentContent, teamDescription, ruleContent } = this.state;
       // if (commentContent.length > 0) {
       //   this.handleAddComment(event);
       // }
@@ -236,13 +237,7 @@ class TeamPage extends Component {
     console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
 
     const { profile, team, sort } = this.props;
-    const { commentContent, teamDescription, ruleContent, ruleInput, fetching, loading, dataURI, codeComment, dragOver } = this.state;
-
-
-    const cdnHeaders = {
-      'Content-Type' : 'multipart/form-data',
-      'Accept'       : 'application/json'
-    };
+    const { commentContent, teamDescription, ruleContent, ruleInput, fetching, loading, dragOver } = this.state;
 
     return (<BasePage { ...this.props } className="team-page">
       {(profile && team) && (<>

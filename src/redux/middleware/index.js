@@ -6,7 +6,7 @@ import cookie from 'react-cookies';
 import { matchPath } from 'react-router-dom';
 
 import { RoutePaths } from '../../components/helpers/Routes';
-import { fetchBuildPlaygrounds, fetchTeamBuilds, fetchTeamComments, fetchUserTeams, setRoutePath, setTeam } from '../actions';
+import { fetchTeamBuilds, fetchTeamComments, fetchUserTeams, setRoutePath } from '../actions';
 import { STRIPE_SESSION_PAID, BUILD_PLAYGROUNDS_LOADED, INVITE_LOADED, COMMENT_ADDED, COMMENT_UPDATED, COMMENT_VOTED, DEVICES_LOADED, SET_COMMENT, SET_COMPONENT, SET_PLAYGROUND, SET_TEAM, SET_TYPE_GROUP, TEAM_BUILDS_LOADED, TEAM_COMMENTS_LOADED, TEAMS_LOADED, TEAM_LOGO_LOADED, TEAM_RULES_UPDATED, TEAM_CREATED, TEAM_UPDATED, UPDATE_MOUSE_COORDS, UPDATE_RESIZE_BOUNDS, USER_PROFILE_LOADED, USER_PROFILE_UPDATED } from '../../consts/action-types';
 import { LOG_MIDDLEWARE_POSTFIX, LOG_MIDDLEWARE_PREFIX } from '../../consts/log-ascii';
 import { Pages } from '../../consts/uris';
@@ -136,7 +136,6 @@ export function onMiddleware(store) {
 
     } else if (type === TEAM_COMMENTS_LOADED) {
       const { team } = prevState.teams;
-      const verbose = payload.comments.reduce((acc, val)=> (acc + (val << 0)), 0);
 
       if (payload.comments.reduce((acc, val)=> (acc + (val << 0)), 0) !== 0) {
         // dispatch(fetchTeamComments({ team, verbose : true }));
@@ -161,10 +160,10 @@ export function onMiddleware(store) {
       const components = [ ...playgrounds.map(({ components })=> (components)).flat()];
       const comments = null;//[ ...components.map(({ comments })=> (comments)).flat()];
 
-      const playground = null;// (params.projectSlug !== 'ask') ? playgrounds.find(({ buildID, device })=> (buildID === params.buildID && device.slug === params.deviceSlug)) || null : null;
-      const typeGroup = null;// (playground) ? (playground.typeGroups.find(({ key })=> (key === params.typeGroupSlug)) || playground.typeGroups.find(({ key })=> (key === 'views'))) : null;
-      const component = null;// (playground) ? playground.components.find(({ id })=> (id === params.componentID)) || null : null;
-      const comment = null;// (component) ? component.comments.find(({ id })=> (id === params.commentID)) || null : null;
+      // const playground = null;// (params.projectSlug !== 'ask') ? playgrounds.find(({ buildID, device })=> (buildID === params.buildID && device.slug === params.deviceSlug)) || null : null;
+      // const typeGroup = null;// (playground) ? (playground.typeGroups.find(({ key })=> (key === params.typeGroupSlug)) || playground.typeGroups.find(({ key })=> (key === 'views'))) : null;
+      // const component = null;// (playground) ? playground.components.find(({ id })=> (id === params.componentID)) || null : null;
+      // const comment = null;// (component) ? component.comments.find(({ id })=> (id === params.commentID)) || null : null;
 
 
       // payload.playgrounds = playgrounds.sort((i, ii)=> ((i.id < ii.id) ? 1 : (i.id > ii.id) ? -1 : 0));
@@ -177,7 +176,9 @@ export function onMiddleware(store) {
       // payload.comment = comment;
 
     } else if (type === TEAM_CREATED) {
-      const { profile, team } = payload;
+      // const { profile, team } = payload;
+      const { profile } = payload;
+
       dispatch(fetchUserTeams({ profile }));
 
     } else if (type === UPDATE_MOUSE_COORDS) {
@@ -210,9 +211,6 @@ export function onMiddleware(store) {
 
 
     } else if (type === COMMENT_UPDATED) {
-      const { component } = prevState.builds;
-      const { comment } = prevState.comments;
-
       const { team } = prevState.teams;
       payload.team = { ...team,
         comments : [ ...team.comments, reformComment(payload.comment, `${Pages.TEAM}/${team.slug}/comments`)]
@@ -287,8 +285,6 @@ export function onMiddleware(store) {
       }
 
     } else if (type === SET_TYPE_GROUP) {
-      const { typeGroup } = payload;
-
     } else if (type === SET_COMPONENT) {
       const { component } = payload;
       const { team } = prevState.teams;
@@ -312,22 +308,23 @@ export function onMiddleware(store) {
       const { teams } = prevState.teams;
       const { playgrounds } = prevState.builds;
       const { action, isFirstRendering, location } = payload;
+      const { pathname } = location;
 
       if (action === 'POP') {
-        console.log('-=-=-=-=-=-=-=-=-=-=-=-=', { location : payload.location });
+        console.log('-=-=-=-=-=-=-=-=-=-=-=-=', { location });
 
         if (isFirstRendering) {
-          const teamMatch = matchPath(payload.location.pathname, {
-            path : RoutePaths.TEAM,
-            exact : false,
-            strict: false
+          const teamMatch = matchPath(pathname, {
+            path   : RoutePaths.TEAM,
+            exact  : false,
+            strict : false
           }) || {};
 
           if (Object.keys(teamMatch).length > 0) {
-            const projectMatch = matchPath(payload.location.pathname, {
-              path : RoutePaths.PROJECT,
-              exact : false,
-              strict: false
+            const projectMatch = matchPath(pathname, {
+              path   : RoutePaths.PROJECT,
+              exact  : false,
+              strict : false
             }) || {};
 
             console.log('=-=-=-=-=-=-=-=-=-=-=-=', { teamMatch, projectMatch });
@@ -364,10 +361,10 @@ export function onMiddleware(store) {
           }
 
         } else {
-          const teamMatch = matchPath(payload.location.pathname, {
-            path : RoutePaths.TEAM,
-            exact : false,
-            strict: false
+          const teamMatch = matchPath(pathname, {
+            path   : RoutePaths.TEAM,
+            exact  : false,
+            strict : false
           }) || {};
 
           if (Object.keys(teamMatch).length > 0) {
@@ -385,10 +382,10 @@ export function onMiddleware(store) {
             dispatch(fetchTeamComments({ team : payload.team, verbose : true }));
 
 
-            const projectMatch = matchPath(payload.location.pathname, {
-              path : RoutePaths.PROJECT,
-              exact : false,
-              strict: false
+            const projectMatch = matchPath(pathname, {
+              path   : RoutePaths.PROJECT,
+              exact  : false,
+              strict : false
             }) || {};
 
             console.log('=-=-=-=-=-=-=-=-=-=-=-=', { projectMatch });
@@ -436,11 +433,8 @@ export function onMiddleware(store) {
 
     next(action);
 
-    const postState = store.getState();
-
-    if (type === TEAM_BUILDS_LOADED) {
-      const { devices, componentTypes, team } = postState;
-    }
+    // const postState = store.getState();
+    // const { devices, componentTypes, team } = postState;
 
     logFormat({ store, action, next, meta : 'POST [==>' });
   });

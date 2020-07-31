@@ -12,7 +12,6 @@ import { RoutePaths } from '../../helpers/Routes';
 import SharePopover from '../../overlays/SharePopover';
 import { Modals, Pages } from '../../../consts/uris';
 import { setTeamCommentsSort, toggleTheme } from '../../../redux/actions';
-import { trackOutbound } from '../../../utils/tracking';
 
 
 class TopNav extends Component {
@@ -156,7 +155,7 @@ class TopNav extends Component {
 	render() {
 		// console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
 
-		const { darkThemed, playground, profile, invite, team, teamSort } = this.props;
+		const { darkThemed, profile, invite, teamSort } = this.props;
 		const { popover, matchPaths } = this.state;
 
 		return (<div className="top-nav">

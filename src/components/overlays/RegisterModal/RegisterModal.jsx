@@ -12,7 +12,6 @@ import { POPUP_TYPE_ERROR } from '../PopupNotification';
 import { Modals } from '../../../consts/uris';
 import { fetchInvite, modifyInvite, updateUserProfile } from '../../../redux/actions';
 import { trackEvent } from '../../../utils/tracking';
-import pairLogo from '../../../assets/images/logos/logo-pairurl-310.png';
 
 class RegisterModal extends Component {
 	constructor(props) {
@@ -91,7 +90,7 @@ class RegisterModal extends Component {
 	render() {
 // console.log('%s.render()', this.constructor.name, this.props, this.state);
 
-		const { invite, team } = this.props;
+		const { invite } = this.props;
 		const { outro } = this.state;
 
 		return (<BaseOverlay
@@ -132,8 +131,7 @@ const mapDispatchToProps = (dispatch)=> {
 const mapStateToProps = (state, ownProps)=> {
 	return ({
 		invite  : state.teams.invite,
-		profile : state.user.profile,
-		team    : state.teams.team
+		profile : state.user.profile
 	});
 };
 

@@ -8,7 +8,7 @@ import { Bits, Strings } from 'lang-js-utils';
 import DummyForm from '../../forms/DummyForm';
 import { API_ENDPT_URL } from '../../../consts/uris';
 import { makeAvatar } from '../../../utils/funcs';
-import blacklistTeamDomains from '../../../assets/json/configs/blacklist-team-domains.json';
+// import blacklistTeamDomains from '../../../assets/json/configs/blacklist-team-domains.json';
 
 class RegisterForm extends Component {
 	constructor(props) {

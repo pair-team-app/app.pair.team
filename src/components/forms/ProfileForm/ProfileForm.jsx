@@ -94,7 +94,7 @@ class ProfileForm extends Component {
 				if (emailValid && passwordValid) {
 					const { id } = profile;
 					const avatar = (!Strings.compare(Strings.firstChar(email), Strings.firstChar(profile.email), false)) ? makeAvatar(email) : profile.avatar;
-					
+
 					this.props.onSubmit({ id, email, password, avatar, username : email });
 				}
 			});
@@ -105,7 +105,6 @@ class ProfileForm extends Component {
 	render() {
 // console.log('%s.render()', this.constructor.name, this.props, this.state);
 
-		const { team } = this.props;
 		const { email, password } = this.state;
 // 		const { emailValid, passwordValid } = this.state;
 		const { emailValid, changed, validated } = this.state;

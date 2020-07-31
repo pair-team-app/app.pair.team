@@ -92,8 +92,8 @@ class CreateTeamForm extends Component {
   render() {
     console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
 
-    const { profile, team } = this.props;
-    const { title, description, rules, invites, changed, validated } = this.state;
+    // const { title, description, rules, invites, validated } = this.state;
+    const { title, description, rules, invites } = this.state;
 
     return (<div className="create-team-form">
       <form onSubmit={this.handleSubmit}>

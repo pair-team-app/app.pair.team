@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import './RecoverForm.css'
 
 import axios from 'axios';
-import { Bits, Strings } from 'lang-js-utils';
+import { Strings } from 'lang-js-utils';
 
 import DummyForm from '../../forms/DummyForm';
 import { API_ENDPT_URL } from '../../../consts/uris';
@@ -45,8 +45,6 @@ class RecoverForm extends Component {
 				action  : 'RECOVER',
 				payload : { email, username }
 			}).then((response)=> {
-        const { mail } = response.data;
-
         this.props.onSubmitted();
 			}).catch((error)=> {
 			});

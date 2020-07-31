@@ -55,7 +55,6 @@ class LeftNav extends Component {
   handleCreateTeam = ()=> {
     console.log('%s.handleCreateTeam()', this.constructor.name, { props : this.props });
 
-    const { team } = this.props;
     this.props.setTeam(null);
     this.props.push(Pages.CREATE);
   }
@@ -63,7 +62,8 @@ class LeftNav extends Component {
   handleDeviceRenderClick = (deviceRender)=> {
     console.log('%s.handleDeviceRenderClick()', this.constructor.name, { deviceRender });
 
-    const { buildID, title } = deviceRender;
+    // const { buildID, title } = deviceRender;
+    const { title } = deviceRender;
     trackEvent('nav', 'device', title);
     this.props.setPlayground(deviceRender);
     this.props.setComponent(null);
@@ -101,7 +101,7 @@ class LeftNav extends Component {
   render() {
     console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
 
-    const { teams, team, invite, profile } = this.props;
+    const { teams, invite, profile } = this.props;
     const { builds } = this.state;
 
     return (<div className="left-nav">
