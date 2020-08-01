@@ -307,4 +307,4 @@ const mapStateToProps = (state, ownProps)=> {
 };
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(TeamPageFileDrop);
+export default connect(null, mapDispatchToProps)(TeamPageFileDrop);

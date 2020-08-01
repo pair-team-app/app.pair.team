@@ -6,7 +6,7 @@
 	flex-flow: column;
 	width: 100%;
 	height: fit-content;
-	padding: var(--spacing-30) var(--spacing-20) var(--spacing-20) var(--spacing-20);
+	/* padding: var(--spacing-20); */
 }
 
 .base-comment[data-loading="true"] {
@@ -36,7 +36,8 @@
 	justify-content: center; /* h-align */
 	align-items: flex-start; /* v-align */
 	width: 100%;
-	margin-bottom: var(--spacing-20);
+	margin-bottom: 20px;
+	padding-left: 30px;
 }
 
 .base-comment-header > * {
@@ -109,8 +110,13 @@
 	flex-direction: column;
 	flex-wrap: nowrap;
 	align-items: center;
-	padding: 0 var(--spacing-20) 0 0;
+	margin-top: -10px;
+	margin: -10px var(--spacing-20) 0 0;
 	/* border: 1px dotted #ff00ff; */
+}
+
+.comment-body .base-comment-vote > * {
+	margin: auto;
 }
 
 .base-comment-vote .vote-arrow {
@@ -141,15 +147,15 @@
 	cursor: default;
 }
 
-.base-comment-vote .vote-score {
+.base-comment-vote .score {
 	cursor: default;
 }
 
-.base-comment-vote [data-voted="true"] .vote-score:hover {
+.base-comment-vote [data-voted="true"] .score:hover {
 	cursor: pointer;
 }
 
-.base-comment-vote[data-author="true"] .vote-score:hover {
+.base-comment-vote[data-author="true"] .score:hover {
 	cursor: default;
 }
 
@@ -160,7 +166,14 @@
 	align-items: flex-start;
 	width: 100%;
 }
+
+.comment-body .base-comment-content > form {
+	width: 100%;
+	margin-top: 20px;
+}
+
 .base-comment .timestamp {
+	margin-bottom: 10px;
 	font-size: 12px;
 	color: rgba(var(--timestamp-color), 1.0);
 }
@@ -194,12 +207,10 @@
 }
 
 .base-comment-reply {
-	/* width: 100%; */
 	margin-top: var(--spacing-15);
-	/* text-align: left; */
 }
 
-.base-comment-reply .header {
+/* .base-comment-reply .header {
 	display: flex;
 	flex-wrap: nowrap;
 	width: 100%;
@@ -208,13 +219,14 @@
 
 .base-comment-reply .header > * {
 	margin: auto;
-	flex: 1 0 0;
+	/* flex: 1 0 0;
 	border: 1px dashed var(--matty-royall);
 }
 
 
 .base-comment-reply .header .timestamp {
 	flex: 4 0 0;
+	margin-bottom: 10px;
 }
 
 
@@ -228,5 +240,5 @@
 	padding: var(--spacing-05);
 	border-color: rgba(var(--border-color), 0.0);
 	font-size: 12px;
-}
+} */
 

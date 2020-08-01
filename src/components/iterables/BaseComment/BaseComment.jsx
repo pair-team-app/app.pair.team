@@ -101,7 +101,7 @@ class BaseComment extends Component {
 		const { profile, comment } = this.props;
 		const { replyContent } = this.state;
 
-		const contentProps = { ...this.props, replyContent};
+		const contentProps = { ...this.props, replyContent };
 
 		return (<div className="base-comment" data-id={comment.id} data-type={comment.type} data-author={comment.author.id === profile.id} data-votable={comment.votable} data-selected={comment.selected}>
 			<BaseCommentHeader { ...this.props} onDelete={this.handleDeleteComment} />
@@ -131,7 +131,8 @@ const BaseCommentHeader = (props)=> {
 	// console.log('BaseComment.BaseCommentHeader()', { props });
 
 	const { profile, ind, comment } = props;
-	const { src, author } = comment;
+	const { author } = comment;
+	const { roles } = author
 
 	const handleDelete = (event)=> {
 		event.preventDefault();
@@ -140,7 +141,7 @@ const BaseCommentHeader = (props)=> {
 
 	return (<div className="base-comment-header">
 		<div className="icon-wrapper">
-			{(src !== 'npm' && ind >= 0) && (<div className="icon avatar-wrapper"><div>{ind}</div></div>)}
+			{(ind >= 0) && (<div className="icon avatar-wrapper"><div>{ind}</div></div>)}
 			<div className="icon avatar-wrapper"><img src={(!author.avatar) ? USER_DEFAULT_AVATAR : author.avatar} alt={author.username} data-id={author.id} /></div>
 		</div>
 		<div className="spacer" />
@@ -167,11 +168,11 @@ const BaseCommentContent = (props)=> {
 		{(content) && (<div className="content" dangerouslySetInnerHTML={{ __html : content.replace(author.username, `<span class="txt-bold">${author.username}</span>`) }} />)}
 		{/* {(types.indexOf('component') > -1) && (<div className="uri" onClick={onURIClick}>{Strings.truncate(window.location.href.replace(/\/app\/.*$/, uri), 45)}</div>)} */}
 		{(types.indexOf('component') > -1) && (<NavLink className="uri" to={uri}>{Strings.truncate(window.location.href.replace(/\/app\/.*$/, uri), 45)}</NavLink>)}
+		{(comment.state !== 'closed' && comment.types.find((type)=> (type === 'op'))) && (<form className="reply-form">
+			<input type="text" placeholder="Reply" value={replyContent} onChange={props.onTextChange} autoComplete="new-password" />
+			{/* <Picker set="apple" onSelect={this.handleEmoji} onClick={this.handleEmoji} perline={9} emojiSize={24} native={true} sheetSize={20} showPreview={true} showSkinTones={true} title="Pick your emoji…" emoji="point_up" style={{ position : 'relative', bottom : '20px', right : '20px' }} /> */}
+		</form>)}
 		{(comment.replies.length > 0) && (<BaseCommentReplies { ...props } onDelete={props.onDeleteReply} />)}
-		{(comment.state !== 'closed') && (<form className="reply-form">
-				<input type="text" placeholder="Reply to this…" value={replyContent} onChange={props.onTextChange} autoComplete="new-password" />
-				{/* <Picker set="apple" onSelect={this.handleEmoji} onClick={this.handleEmoji} perline={9} emojiSize={24} native={true} sheetSize={20} showPreview={true} showSkinTones={true} title="Pick your emoji…" emoji="point_up" style={{ position : 'relative', bottom : '20px', right : '20px' }} /> */}
-			</form>)}
 	</div>
 	);
 }
@@ -188,15 +189,18 @@ const BaseCommentReplies = (props)=> {
 	};
 
 	return(<div className="base-comment-replies">
-		{(comment.replies.map((reply, i)=> (<div key={i} className="base-comment-reply" data-id={reply.id}>
-			<div className="header">
-				<div className="timestamp" dangerouslySetInnerHTML={{ __html : reply.timestamp.format(COMMENT_TIMESTAMP).replace(/(\d{1,2})(\w{2}) @/, (match, p1, p2)=> (`${p1}<sup>${p2}</sup> @`)) }} />
-				<div className="link-wrapper">
-					{(profile.id === reply.author.id) && (<div className="link" onClick={(event)=> handleDelete(event, reply)}>Delete</div>)}
+		{(comment.replies.map((reply, i)=> {
+			const replyProps = { ...props, comment : reply }
+
+			return (<div key={i} className="base-comment base-comment-reply" data-id={comment.id} data-type={comment.type} data-author={comment.author.id === profile.id} data-votable={comment.votable} data-selected={comment.selected}>
+				<BaseCommentHeader { ...replyProps } onDelete={handleDelete} />
+				<div className="comment-body">
+					{(comment.votable) && (<BaseCommentVote { ...props } onVote={props.handleVote} />)}
+					<BaseCommentContent { ...replyProps } onTextChange={props.handleTextChange} onDeleteReply={props.handleDeleteComment} />
+					{/* <Picker set="apple" onSelect={this.handleEmoji} onClick={this.handleEmoji} perline={9} emojiSize={24} native={true} sheetSize={16} showPreview={false} showSkinTones={false} title="Pick your emoji…" emoji="point_up" style={{ position : 'relative', bottom : '20px', right : '20px' }} /> */}
 				</div>
-			</div>
-			{(reply.content) && (<div className="content" dangerouslySetInnerHTML={{ __html : reply.content.replace(reply.author.username, `<span class="txt-bold">${reply.author.username}</span>`) }} />)}
-		</div>)))}
+			</div>);
+		}))}
 	</div>);
 };
 

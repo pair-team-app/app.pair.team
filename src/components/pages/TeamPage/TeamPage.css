@@ -63,12 +63,14 @@
 	flex-flow: column nowrap;
 	align-content: center;
 	height: 0;
+	margin-top: 20px;
 	color: rgba(var(--site-fg-lite-color), 1.0);
 	opacity: 0;
 	transition: opacity 333ms cubic-bezier(0.5, 0.9, 0.1, 1.0);
 }
 
 .team-page > div .comments-wrapper[data-empty="true"] .empty-comments {
+	margin-top: 20px;
 	opacity: 1;
 }
 
@@ -92,6 +94,7 @@
 
 .team-page > div .team-wrapper > * {
 	width: 50%;
+	background-color: rgba(var(--modal-bg-color), 1.0);
 	text-align: left;
 	border-radius: var(--border-radius);
 	border: 1px solid rgba(var(--border-alt-color), 1.0);
@@ -102,7 +105,10 @@
 }
 
 .team-page > div .team-wrapper .header {
-	padding: var(--spacing-15) 0;
+	padding: var(--spacing-15) 0 var(--spacing-15) var(--spacing-15);
+	color: rgba(var(--panel-title-fg-color), 1.0);
+	font-size: 16px;
+	font-weight: 600;
 }
 
 .team-page > div .team-wrapper .header:hover {
@@ -110,19 +116,11 @@
 }
 
 .team-page > div .team-wrapper .content {
-	padding: var(--spacing-10) var(--spacing-15);
+	padding: 0 var(--spacing-15);
 }
 
 .team-page > div .team-wrapper .footer {
 	padding: var(--spacing-15);
-}
-
-.team-page > div .team-wrapper .timestamp {
-	padding-top: var(--spacing-10);
-	color: rgba(var(--txtfield-fg-color), 1.0);
-	font-size: 10px;
-	font-weight: 700;
-	text-transform: uppercase;
 }
 
 .team-page > div .team-wrapper .about-wrapper {
@@ -135,29 +133,37 @@
 .team-page > div .team-wrapper .about-wrapper > * {
 	flex: 1 1 0;
 	width: 100%;
-	padding-left: var(--spacing-15);
-	padding-right: var(--spacing-15);
 }
 
-.team-page > div .team-wrapper .about-wrapper textarea {
-	font-size: var(--orthodox-font-size);
-	font-weight: 500;
+.team-page > div .team-wrapper .content textarea {
+	min-height: 88px;
 	padding: var(--spacing-05);
-	border: none;
 }
 
-.team-page > div .team-wrapper .rules-wrapper .header {
-	border-bottom: 1px solid rgba(var(--border-alt-color), 1.0);
+.team-page > div .team-wrapper .member-count {
+	font-size: 12px;
+	font-weight: 700;
 }
 
-.team-page > div .team-wrapper .rules-wrapper .header span {
-	padding-left: var(--spacing-15);
+.team-page > div .team-wrapper .timestamp {
+	padding-top: var(--spacing-10);
+	color: rgba(var(--txtfield-fg-color), 1.0);
+	font-size: 10px;
+	font-weight: 700;
+	text-transform: uppercase;
 }
 
-.team-page > div .team-wrapper .rules-wrapper .content *:nth-child(even) {
-	background-color: rgba(var(--alt-list-bg-color), 1.0);
+.team-page > div .team-wrapper .rules-wrapper .content > *:nth-child(even) {
+	background-color: rgba(var(--modal-bg-color), 1.0);
 }
 
+.team-page > div .team-wrapper .rules-wrapper .content > *:not(:last-child) {
+	margin-bottom: 10px;
+}
+
+.team-page > div .team-wrapper .rules-wrapper textarea {
+	min-height: 36px;
+}
 
 .team-page > div .team-wrapper .rules-wrapper .footer {
 	display: flex;
@@ -166,16 +172,18 @@
 	align-items: center;
 }
 
-
 .team-page > div .team-wrapper .rules-wrapper .footer > * {
+	padding: 5px 10px;
+	width: 100%;
 	transition: opacity 125ms cubic-bezier(0.4, 0, 0.2, 1);
 }
+
 
 .team-page > div .team-wrapper .rules-wrapper .footer[data-input="false"] button {
 	z-index: 2;
 }
 
-.team-page > div .team-wrapper .rules-wrapper .footer[data-input="false"] input {
+.team-page > div .team-wrapper .rules-wrapper .footer[data-input="false"] textarea {
 	z-index: 1;
 }
 
@@ -189,18 +197,14 @@
 	opacity: 0;
 }
 
-.team-page > div .team-wrapper .rules-wrapper .footer[data-input="false"] input {
+.team-page > div .team-wrapper .rules-wrapper .footer[data-input="false"] textarea {
 	display: none;
 	opacity: 0;
 }
 
-.team-page > div .team-wrapper .rules-wrapper .footer[data-input="true"] input {
+.team-page > div .team-wrapper .rules-wrapper .footer[data-input="true"] textarea {
 	display: flex;
 	opacity: 1;
-}
-
-.team-page > div .team-wrapper .rules-wrapper .footer > * {
-	padding: 5px 10px;
 }
 
 
@@ -209,16 +213,13 @@
 	display: flex;
 	width: 100%;
 	padding: 5px;
-	background-color: #f8f8f8;
-	border: 1px solid #e6e6e6;
+	background-color: rgba(var(--txtfield-bg-color));
+	border: 1px solid rgba(var(--txtfield-border-color));
 	border-radius: var(--border-radius);
 }
 
 .team-page-add-comment .content-wrapper textarea.comment-txt, .team-page-add-comment .content-wrapper textarea.comment-txt:hover {
 	padding: 10px 50px 10px 10px;
-	color: #999999;
-  font-family: 'Helvetica Neue', Ubuntu, Arial, sans-serif;
-	border: none;
 }
 
 .team-page-add-comment form {
@@ -233,9 +234,30 @@
   width: fit-content;
 }
 
+.team-page-comments-panel {
+	transition: all 125ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.team-page-comments-panel > .team-page-comment:not(:last-child) {
+	margin-bottom: 50px;
+}
 
 .team-page-rule {
-	padding: 15px;
-	border-bottom: 1px solid rgba(var(--border-alt-color), 1.0);
+	/* padding: 15px; */
 	word-break: break-all;
+}
+
+
+.team-page > div .team-wrapper .rules-wrapper .footer .team-page-add-rule-button {
+	/* width: 100%; */
+	min-width: 100%;
+	justify-content: center;
+	border-color: rgba(var(--txtfield-border-color));
+  opacity: 0.5;
+  transition: opacity 0.125s ease-out;
+}
+
+.team-page > div .team-wrapper .rules-wrapper .footer .team-page-add-rule-button:hover {
+  opacity: 1;
+  cursor: pointer;
 }

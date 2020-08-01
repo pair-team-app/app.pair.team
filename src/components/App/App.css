@@ -13,7 +13,6 @@
 	--disabled-fg-color: 51, 51, 51; /* #333333 */
 	--invalid-bg-color: 0, 15, 15; /* 000f0f */
 	--invalid-fg-color: 255, 70, 70; /* #ff4646 */
-	--invalid-border-color: var(--invalid-fg-color); /* #ff4646 */
 	--btn-bg-color: 255, 152, 0; /* #ff9800 */
 	--btn-fg-color: 0, 0, 0; /* 000000 */
 	--btn-hover-bg-color: 255, 163, 26; /* #ffa31a */

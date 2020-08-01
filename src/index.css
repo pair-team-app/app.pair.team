@@ -26,14 +26,13 @@
 	--disabled-fg-color: 204, 204, 204; /* #cccccc */
 	--invalid-bg-color: 255, 240, 240; /* #fff0f0 */
 	--invalid-fg-color: 255, 101, 101; /* #ff6565 */
-	--invalid-border-color: var(--invalid-fg-color); /* #ff4646 */
 	--btn-bg-color: 32, 96, 255; /* #2060ff */
 	--btn-fg-color: 255, 255, 255; /* #ffffff */
 	--btn-hover-bg-color: 0, 92, 229; /* #005ce5 */
 	--btn-disabled-bg-color: var(--disabled-fg-color); /* #cccccc */
 	--btn-disabled-fg-color: 247, 247, 247; /* #f7f7f7 */
-	--quiet-btn-bg-color: 247, 247, 247; /* #f7f7f7 */
 	--modal-bg-color: 255, 255, 255; /* #ffffff */
+	--quiet-btn-bg-color: 247, 247, 247; /* #f7f7f7 */
 	--quiet-btn-fg-color: var(--site-fg-color); /* #232323 */
 	--quiet-btn-hover-bg-color: 237, 237, 237; /* #ededed */
 	--quiet-btn-selected-bg-color: var(--site-fg-color); /* #232323 */
@@ -46,8 +45,9 @@
 	--link-color: 58, 79, 255; /* #3a4fff */
 	--link-hover-color: 153, 153, 153; /* #999999 */
 	--link-selected-color: var(--site-fg-color); /* #232323 */
-	--txtfield-bg-color: 247, 247, 247; /* #f7f7f7 */
+	--txtfield-bg-color: 255, 255, 255; /* #ffffff */
 	--txtfield-fg-color: 153, 153, 153; /* #999999 */
+	--txtfield-border-color: 229, 229, 229; /* e5e5e5 */
 	--txtfield-focused-bg-color: 247, 247, 247; /* #f7f7f7 */
 	--txtfield-focused-fg-color: var(--site-fg-color); /* #232323 */
 	--txtfield-hover-bg-color: 247, 247, 247; /* #f7f7f7 */
@@ -55,13 +55,14 @@
 	--txtfield-invalid-fg-color: 255, 111, 111; /* #ff6f6f */
 	--txtfield-disabled-bg-color: var(--disabled-fg-color); /* #cccccc */
 	--txtfield-disabled-fg-color: 153, 153, 153; /* #999999 */
+	--txtarea-bg-color: 247, 247, 247; /* f7f7f7 */
+	--panel-title-fg-color: 153, 153, 153; /* #999999 */
 	--border-color: 112, 112, 112; /* 707070 */
-	--border-alt-color: 206, 206, 206; /* #cecece */
+	--border-alt-color: var(--txtfield-border-color); /* #e5e5e5 */
 	--overlay-shadow: 2px 2px 6px rgba(var(--border-color), 0.125);
 	--playground-component-shadow: 2px 2px 3px rgba(var(--border-color), 0.75);
 	--playground-panel-bg-color: 247, 247, 247; /* #f4f4f4 */
 	--playground-content-bg-color: 255, 255, 255; /* #ffffff */
-	/*--playground-content-bg-color: 80, 80, 80; /*#f4f4f4*/
 	--playground-component-bg-color: 252, 252, 252; /* #fbfbfb */
 	--playground-panel-link-color: 153, 153, 153; /* #999999 */
 	--playground-panel-link-hover-color: var(--site-fg-color); /* #232323 */
@@ -101,8 +102,8 @@
 	--orthodox-acc-size: 18px;
 	--orthodox-ico-size: 24px;
 
-	/* --orthodox-font-size: 16px; */
 	--orthodox-font-size: 14px;
+	--orthodox-line-height: 20px;
 	--orthodox-font-weight: 400;
 
 
@@ -142,7 +143,8 @@ html, body {
   /* font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Ubuntu, Arial, sans-serif; */
   font-family: 'SF Pro Display', system-ui, -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Ubuntu, Arial, sans-serif;
   font-weight: var(--orthodox-font-weight);
-  font-size: var(--orthodox-font-size);
+	font-size: var(--orthodox-font-size);
+	/* line-height: var(--orthodox-line-height); */
 	color: rgba(var(--site-fg-color), 1.0);
 
 	scrollbar-width: none;
@@ -207,7 +209,7 @@ button.quiet-button {
 }
 
 button.quiet-button:hover {
-	border: 1px solid rgba(var(--border-color), 1.0);
+	border: 1px solid rgba(var(--quiet-btn-border-color), 1.0);
 	background-color: rgba(var(--quiet-btn-hover-bg-color), 1.0);
 	color: rgba(var(--quiet-btn-fg-color), 1.0);
 }
@@ -358,11 +360,10 @@ h6::before {
 input[type="email"], input[type="password"], input[type="text"], select, textarea {
 	width: 100%;
 	padding: 16px;
-	background-color: #ffffff;
-	/* border: 1px solid #ffffff; */
-	border: none;
+	background-color: rgba(var(--txtfield-bg-color), 1.0);
+	border: 1px solid rgba(var(--txtfield-border-color), 1.0);
 	border-radius: var(--border-radius);
-	color: #999999;
+	color: rgba(var(--site-fg-color), 1.0);;
 	/*text-align: center;*/
 	font-family: 'SF Pro Display', system-ui, -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Ubuntu, Arial, sans-serif;
 	font-size: 16px;
@@ -373,7 +374,7 @@ input[type="email"], input[type="password"], input[type="text"], select, textare
 }
 
 input[type="email"]:hover, input[type="password"]:hover, input[type="text"]:hover, textarea:hover {
-	/* border: 1px solid rbga(var(--txtfield-focused-bg-color), 1.0); */
+	border: 1px solid rbga(var(--txtfield-border-color), 1.0);
 	background-color: rgba(var(--txtfield-hover-bg-color), 1.0);
 	color: rgba(var(--txtfield-hover-fg-color), 1.0);
 }
@@ -385,7 +386,7 @@ input[type="email"]:invalid, input[type="email"]:invalid:hover, input[type="pass
 }
 
 input[type="email"]:valid, input[type="password"]:valid, input[type="text"]:valid, select:valid, textarea:valid {
-	border: none;
+	border: 1px solid rgba(var(--txtfield-border-color), 1.0);
 	color: rgba(var(--txtfield-fg-color), 1.0);
 }
 
@@ -396,7 +397,6 @@ input[type="email"]:valid:hover, input[type="password"]:valid:hover, input[type=
 
 input[type="email"]:disabled, input[type="password"]:disabled, input[type="text"]:disabled, select:disabled, textarea:disabled {
 	cursor: not-allowed;
-	/* border: 1px solid rbga(var(--txtfield-focused-bg-color), 1.0); */
 	background-color: rgba(var(--txtfield-disabled-bg-color), 1.0);
 	color: rgba(var(--txtfield-disabled-fg-color), 1.0);
 }
@@ -414,7 +414,6 @@ input:-webkit-autofill:focus, input:-webkit-autofill:hover:focus, input:-webkit-
 }
 
 input[type="email"]:focus, input[type="password"]:focus, input[type="text"]:focus, textarea:focus {
-	/* border: 1px solid rbga(var(--txtfield-focused-bg-color), 1.0); */
 	background-color: rgba(var(--txtfield-focused-bg-color), 1.0);
 	color: rgba(var(--txtfield-focused-fg-color), 1.0);
 }
@@ -459,11 +458,12 @@ sup {
 }
 
 textarea, textarea:hover, textarea:active, textarea:focus, textarea:disabled, textarea:valid {
-  resize: none;
-	/* padding: var(--spacing-20);
-	font-family: 'SF Pro Display', system-ui, -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Ubuntu, Arial, sans-serif;
-	border: 1px solid rgba(var(--border-color), 1.0);
-	border-radius: var(--border-radius); */
+	resize: none;
+	color: rgba(var(--txtfield-fg-color), 1.0);
+	background-color: rgba(var(--txtarea-bg-color), 1.0);
+	font-size: 12px;
+	font-weight: 500;
+	border: 1px solid rgba(var(--txtfield-border-color), 1.0);
 }
 
 ul {

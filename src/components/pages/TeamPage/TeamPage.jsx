@@ -7,6 +7,7 @@ import { Strings } from 'lang-js-utils';
 import { Menu, Item, Separator, Submenu, MenuProvider } from 'react-contexify';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
+import TextareaAutosize from 'react-autosize-textarea';
 
 import TeamPageFileDrop from './TeamPageFileDrop';
 import BasePage from '../BasePage';
@@ -244,8 +245,8 @@ class TeamPage extends Component {
         <div className="content-wrapper">
           <div className="comments-wrapper" data-fetching={fetching} data-empty={team && team.comments.length === 0}>
             <div className="header" data-loading={loading}>
-              <input type="text" className="comment-txt" placeholder="Start Typing or Pasting…" value={commentContent} onChange={this.handleTextChange} />
-              <button disabled={true}>Submit</button>
+              <input type="text" className="comment-txt" placeholder="Typing or Pasting anything…" value={commentContent} onChange={this.handleTextChange} />
+              <button disabled={true}>Comment</button>
             </div>
 
             <div className="empty-comments">No Activity</div>
@@ -259,24 +260,22 @@ class TeamPage extends Component {
           </div>
           <div className="team-wrapper" data-fetching={fetching}>
             <div className="about-wrapper">
-              <div>
-                <MenuProvider id="menu_id">
-                  <div className="header">About</div>
-                </MenuProvider>
-                <MyAwesomeMenu onClick={({ event, props })=> { console.log('MenuClick', { event, props }); this.props.onPopup({
-        type    : POPUP_TYPE_OK,
-        content : 'Menu Clicked.',
-        delay   : 0
-      });}} />
-              </div>
-              <div className="content"><textarea placeholder="Enter Text to Describe you team" value={teamDescription} onChange={(event)=> this.setState({ teamDescription : event.target.value })}></textarea></div>
+              <MenuProvider id="menu_id">
+                <div className="header">About</div>
+              </MenuProvider>
+              <MyAwesomeMenu onClick={({ event, props })=> { console.log('MenuClick', { event, props }); this.props.onPopup({
+      type    : POPUP_TYPE_OK,
+      content : 'Menu Clicked.',
+      delay   : 0
+    });}} />
+              <div className="content"><TextareaAutosize placeholder="Enter Text to Describe you team" value={teamDescription} onChange={(event)=> this.setState({ teamDescription : event.target.value })} /></div>
               <div className="footer">
-                <div>{team.members.length} {Strings.pluralize('member', team.members.length)}</div>
+                <div className="member-count">{team.members.length} {Strings.pluralize('member', team.members.length)}</div>
                 <div className="timestamp">CREATED {team.added.format(TEAM_TIMESTAMP)}</div>
               </div>
             </div>
             <div className="rules-wrapper">
-              <div className="header"><span>Rules</span></div>
+              <div className="header">Rules</div>
               {(team) && (<div className="content">
                 {(team.rules.map((rule, i)=> {
                   return (<TeamPageRule
@@ -287,8 +286,9 @@ class TeamPage extends Component {
                 }))}
               </div>)}
               <div className="footer" data-input={ruleInput}>
-                <button className="quiet-button" onClick={this.handleRuleInput}>+</button>
-                <input type="text" placeholder="" value={ruleContent} onChange={(event)=> this.setState({ ruleContent : event.target.value })} />
+                <TeamPageAddRuleButton onClick={this.handleRuleInput} />
+                {/* <button className="quiet-button" onClick={this.handleRuleInput}>+</button> */}
+                <TextareaAutosize type="text" placeholder="" value={ruleContent} onChange={(event)=> this.setState({ ruleContent : event.target.value })} />
               </div>
             </div>
           </div>
@@ -326,9 +326,20 @@ const TeamPageRule = (props)=> {
   // console.log('TeamPageRule()', { props });
 
   const { ind, rule } = props;
+  const { title, content } = rule;
+  const text = `${title}${(content) ? `\n${content}` : ''}`;
+
   return (<div className="team-page-rule">
-    {ind}. {rule.title} {rule.content}
+    <TextareaAutosize disabled={true} value={text} onChange={(event)=> this.setState({ teamDescription : event.target.value })} />
   </div>);
+};
+
+const TeamPageAddRuleButton = (props)=> {
+  return (<button className="quiet-button team-page-add-rule-button" onClick={props.onClick}>
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path fillRule="evenodd" clipRule="evenodd" d="M13 7H11V11H7V13H11V17H13V13H17V11H13V7Z" fill="#909090"/>
+    </svg>
+  </button>);
 };
 
 

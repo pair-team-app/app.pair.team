@@ -5,20 +5,26 @@ import { jsonFormatKB } from '../consts/formats';
 import { Pages, TEAM_DEFAULT_AVATAR } from '../consts/uris';
 
 
+const memberLookup = (user_id, members)=> {
+  return (members.find(({ id })=> (id === user_id)) || null);
+};
+
+
+
+
 export const reformComment = (comment, uri, overwrite={})=> {
   // console.log('reformComment()', { comment, uri, overwrite }, { position : typeof comment.position });
 
   const { id, position, content, author, state, votes, types, replies, added } = comment;
 
-  const reformed = { ...comment, uri,
+  const reformed = { ...comment, uri, types,
     id       : id << 0,
     position : (position) ? (typeof position === 'string' && position.charAt(0) === '{') ? JSON.parse(position) : (position || { x : 0, y : 0 }) : { x : 0, y : 0 },
     content  : (content || null),
-    author   : (author || null),
+    author   : { ...author },
     votes    : (votes) ? votes.map((vote)=> ({ ...vote,
       score : vote.score << 0
     })) : [],
-    types     : (types) ? types.split(',') : [],
     score     : (votes) ? votes.reduce((acc, vote)=> (acc + (vote.score << 0)), 0) : 0,
     // uri       : `${uri}/${id}`,
     selected  : false,
