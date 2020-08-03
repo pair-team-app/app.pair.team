@@ -9,9 +9,11 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import TextareaAutosize from 'react-autosize-textarea';
 
-import TeamPageFileDrop from './TeamPageFileDrop';
 import BasePage from '../BasePage';
 import BaseComment from '../../iterables/BaseComment';
+import TeamPageFileDrop from './TeamPageFileDrop';
+// import ContentDropModal from '../../overlays/ContentDropModal';
+
 import { SORT_BY_DATE } from '../../sections/TopNav/TeamPageHeader';
 import { TEAM_TIMESTAMP } from '../../../consts/formats';
 // import { BASKSPACE_KEY, TAB_KEY, ALT_KEY, CTRL_KEY, CAP_KEY, SHIFT_KEY, ENTER_KEY, META_LT_KEY } from '../../../consts/key-codes';
@@ -264,10 +266,10 @@ class TeamPage extends Component {
                 <div className="header">About</div>
               </MenuProvider>
               <MyAwesomeMenu onClick={({ event, props })=> { console.log('MenuClick', { event, props }); this.props.onPopup({
-      type    : POPUP_TYPE_OK,
-      content : 'Menu Clicked.',
-      delay   : 0
-    });}} />
+                type    : POPUP_TYPE_OK,
+                content : 'Menu Clicked.',
+                delay   : 0
+              });}} />
               <div className="content"><TextareaAutosize placeholder="Enter Text to Describe you team" value={teamDescription} onChange={(event)=> this.setState({ teamDescription : event.target.value })} /></div>
               <div className="footer">
                 <div className="member-count">{team.members.length} {Strings.pluralize('member', team.members.length)}</div>
@@ -280,21 +282,19 @@ class TeamPage extends Component {
                 {(team.rules.map((rule, i)=> {
                   return (<TeamPageRule
                     key={i}
-                    ind={i+1}
                     rule={rule}
                   />);
                 }))}
               </div>)}
               <div className="footer" data-input={ruleInput}>
                 <TeamPageAddRuleButton onClick={this.handleRuleInput} />
-                {/* <button className="quiet-button" onClick={this.handleRuleInput}>+</button> */}
                 <TextareaAutosize type="text" placeholder="" value={ruleContent} onChange={(event)=> this.setState({ ruleContent : event.target.value })} />
               </div>
             </div>
           </div>
         </div>
-        {/* <TeamPageFileDrop hidden={false} onClose={()=> this.setState({ dragOver : false })} />) */}
         <TeamPageFileDrop dragging={(dragOver)} textContent={commentContent} onClose={this.handleFileDropClose} />
+        {/* <ContentDropModal dragging={(dragOver)} textContent={commentContent} onClose={this.handleFileDropClose} /> */}
       </>)}
     </BasePage>);
   }
@@ -325,7 +325,7 @@ const TeamPageComment = (props)=> {
 const TeamPageRule = (props)=> {
   // console.log('TeamPageRule()', { props });
 
-  const { ind, rule } = props;
+  const { rule } = props;
   const { title, content } = rule;
   const text = `${title}${(content) ? `\n${content}` : ''}`;
 

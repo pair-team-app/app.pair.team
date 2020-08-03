@@ -132,7 +132,7 @@ const BaseCommentHeader = (props)=> {
 
 	const { profile, ind, comment } = props;
 	const { author } = comment;
-	const { roles } = author
+	// const { roles } = author;
 
 	const handleDelete = (event)=> {
 		event.preventDefault();
@@ -153,7 +153,7 @@ const BaseCommentHeader = (props)=> {
 
 
 const BaseCommentContent = (props)=> {
-	console.log('BaseComment.BaseCommentContent()', { props });
+	// console.log('BaseComment.BaseCommentContent()', { props });
 
 	const { comment, replyContent } = props;
 	const { author, types, content, uri, timestamp } = comment;

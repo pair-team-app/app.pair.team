@@ -1,6 +1,5 @@
 
 import React, { Component } from 'react';
-import './TeamPageFileDrop.css';
 
 import axios from 'axios';
 import FilePondPluginImageExifOrientation from 'filepond-plugin-image-exif-orientation';
@@ -9,23 +8,26 @@ import { URIs } from 'lang-js-utils';
 import TextareaAutosize from 'react-autosize-textarea';
 import { FilePond, registerPlugin } from 'react-filepond';
 import { connect } from 'react-redux';
-import { makeComment } from '../../../../redux/actions';
-import btnCode from '../../../../assets/images/ui/btn-code.svg';
+
+import BaseOverlay from '../BaseOverlay';
+import { Modals } from '../../../consts/uris';
+import { trackEvent } from '../../../utils/tracking';
+import { makeComment } from '../../../redux/actions';
+import btnCode from '../../../assets/images/ui/btn-code.svg';
+import { API_ENDPT_URL, CDN_FILEPOND_URL } from '../../../consts/uris';
 
 import 'filepond/dist/filepond.min.css';
 import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css';
-import './post-styles.css';
-
-import { API_ENDPT_URL, CDN_FILEPOND_URL } from '../../../../consts/uris';
+import './ContentDropModal.css'
 
 registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview);
 
 
-class TeamPageFileDrop extends Component {
+class ContentDropModal extends Component {
 	constructor(props) {
 		super(props);
-
 		this.state = {
+      outro    : false,
       text     : '',
       image    : null,
       loading  : false,
@@ -34,9 +36,9 @@ class TeamPageFileDrop extends Component {
       code     : false,
       files    : []
 		};
-  }
+	}
 
-  dataURIFile = (dataURI, filename)=> {
+	dataURIFile = (dataURI, filename)=> {
     console.log('%s.dataURIFile()', this.constructor.name, {dataURI, filename });
 
     fetch(dataURI).then((res)=>(res.arrayBuffer())).then((res)=> {
@@ -73,12 +75,36 @@ class TeamPageFileDrop extends Component {
   }
 
 
+  handleComplete = ()=> {
+		console.log('%s.handleComplete()', this.constructor.name, { outroURI : this.state.outroURI });
+
+		const { outroURI } = this.state;
+		this.setState({ outro : false }, ()=> {
+			this.props.onComplete();
+
+			if (outroURI) {
+				this.props.onModal(outroURI);
+			}
+		});
+  };
+
+  handleModal = (uri)=> {
+		console.log('%s.handleModal()', this.constructor.name, { uri });
+		this.setState({
+			outro    : true,
+			outroURI : uri
+		});
+	};
+
+
   handleInit() {
     console.log('FilePond instance has initialised');
   };
 
   handleCode = (event)=> {
     console.log('%s.handleCode()', this.constructor.name, { event });
+
+    trackEvent('button', 'code-comment', !this.state.code);
     this.setState({ code : !this.state.code });
   };
 
@@ -220,66 +246,68 @@ class TeamPageFileDrop extends Component {
 
 
     const { dragging } = this.props;
-    const { text, url, code, uploaded, image, files } = this.state;
+    const { text, url, code, uploaded, image, files, outro } = this.state;
 
     // const cdnHeaders = {
     //   'Content-Type' : 'multipart/form-data',
     //   'Accept'       : 'application/json'
     // };
 
-		return (<div className="team-page-file-drop" data-hidden={(!dragging && files.length === 0 && text.length === 0)}>
-      <div data-file={files.length > 0 || image !== null || text.length > 0}>
-        {(files.length > 0 || text.length > 0) && (<div className="input-wrapper" data-uploaded={uploaded}>
-          <div>
-            {(text.length > 0 && !url) && (<img src={btnCode} className="code-btn" onClick={this.handleCode} alt="Code" />)}
-            <TextareaAutosize className="comment-txt" placeholder={`Add a comment to this${(url) ? ' url' : ' image'}…`} value={text} onChange={this.handleTextChange} data-code={(code)} />
-          </div>
-          <button type="submit" disabled={false} onClick={this.handleSubmit}>Submit</button>
-        </div>)}
+		return (<BaseOverlay tracking={Modals.LOGIN} outro={outro} filled={true} closeable={true} onComplete={this.handleComplete}>
+      <div className="content-drop-modal" data-hidden={(!dragging && files.length === 0 && text.length === 0)}>
+        <div data-file={files.length > 0 || image !== null || text.length > 0}>
+          {(files.length > 0 || text.length > 0) && (<div className="input-wrapper" data-uploaded={uploaded}>
+            <div>
+              {(text.length > 0 && !url) && (<img src={btnCode} className="code-btn" onClick={this.handleCode} alt="Code" />)}
+              <TextareaAutosize className="comment-txt" placeholder={`Add a comment to this${(url) ? ' url' : ' image'}…`} value={text} onChange={this.handleTextChange} data-code={(code)} />
+            </div>
+            <button type="submit" disabled={false} onClick={this.handleSubmit}>Submit</button>
+          </div>)}
 
-        <FilePond
-          server={{
-            url     : CDN_FILEPOND_URL,
-            process : {
-              url : './index.php'
-            }
-          }}
-          // ref={ref => (this.pond = ref)}
-          files={files}
-          className="file-pond-wrapper"
-          allowMultiple={true}
-          maxFiles={3}
-          allowReorder={false}
-          allowReplace={true}
-          allowRevert={true}
-          // appendTo={filePondAttach}
-          itemInsertLocation="after"
-          instantUpload={true}
-          labelIdle=""
-          // iconRemove={null}
-          labelFileProcessingComplete=""
-          labelTapToUndo=""
-          oninit={this.handleInit}
-          onwarning={this.handleFileWarning}
-          onerror={this.handleFileError}
-          oninitfile={this.handleFileInit}
-          onaddfile={this.handleFileAdd}
-          onaddfileprogress={this.handleFileProgress}
-          onprocessfilestart={this.handleFileProcessStart}
-          onprocessfileprogress={this.handleFileProcessProgress}
-          onprocessfile={this.handleProcessedFile}
-          onprocessfiles={this.handleProcessedFiles}
-          onremovefile={this.handleFileRemoved}
-          onupdatefiles={this.handleFilesUpdated}
+          <FilePond
+            server={{
+              url     : CDN_FILEPOND_URL,
+              process : {
+                url : './index.php'
+              }
+            }}
+            // ref={ref => (this.pond = ref)}
+            files={files}
+            className="file-pond-wrapper"
+            allowMultiple={true}
+            maxFiles={3}
+            allowReorder={false}
+            allowReplace={true}
+            allowRevert={true}
+            // appendTo={filePondAttach}
+            itemInsertLocation="after"
+            instantUpload={true}
+            labelIdle=""
+            // iconRemove={null}
+            labelFileProcessingComplete=""
+            labelTapToUndo=""
+            oninit={this.handleInit}
+            onwarning={this.handleFileWarning}
+            onerror={this.handleFileError}
+            oninitfile={this.handleFileInit}
+            onaddfile={this.handleFileAdd}
+            onaddfileprogress={this.handleFileProgress}
+            onprocessfilestart={this.handleFileProcessStart}
+            onprocessfileprogress={this.handleFileProcessProgress}
+            onprocessfile={this.handleProcessedFile}
+            onprocessfiles={this.handleProcessedFiles}
+            onremovefile={this.handleFileRemoved}
+            onupdatefiles={this.handleFilesUpdated}
 
-          // onupdatefiles={(fileItems)=> {
-          //   console.log('%s.onupdatefiles()', this.constructor.name, { fileItems });
-          //   this.setState({ files: fileItems.map(fileItem => fileItem.file) });
-          // }}
-        />
+            // onupdatefiles={(fileItems)=> {
+            //   console.log('%s.onupdatefiles()', this.constructor.name, { fileItems });
+            //   this.setState({ files: fileItems.map(fileItem => fileItem.file) });
+            // }}
+          />
+        </div>
+        <AddContentCloseButton onCloseClick={this.handleResetFiles} />
       </div>
-      <AddContentCloseButton onCloseClick={this.handleResetFiles} />
-    </div>);
+    </BaseOverlay>);
 	}
 }
 
@@ -307,4 +335,4 @@ const mapStateToProps = (state, ownProps)=> {
 };
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(TeamPageFileDrop);
+export default connect(mapStateToProps, mapDispatchToProps)(ContentDropModal);

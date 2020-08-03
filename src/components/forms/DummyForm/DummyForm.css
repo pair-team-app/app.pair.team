@@ -3,6 +3,6 @@
 	margin: 0;
 }
 
-.dummy-form > input {
+.dummy-form > * {
 	display: none;
 }

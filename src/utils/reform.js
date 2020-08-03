@@ -5,13 +5,6 @@ import { jsonFormatKB } from '../consts/formats';
 import { Pages, TEAM_DEFAULT_AVATAR } from '../consts/uris';
 
 
-const memberLookup = (user_id, members)=> {
-  return (members.find(({ id })=> (id === user_id)) || null);
-};
-
-
-
-
 export const reformComment = (comment, uri, overwrite={})=> {
   // console.log('reformComment()', { comment, uri, overwrite }, { position : typeof comment.position });
 

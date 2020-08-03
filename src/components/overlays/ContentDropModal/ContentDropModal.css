@@ -1,21 +1,9 @@
 
-.team-page-file-drop {
-  position: fixed;
-  top: 0px;
-  left: 0px;
-  width: 100vw;
-  height: 100vh;
-  z-index: 101;
-  background-color: rgba(var(--site-bg-color), 1.0);
-  /* background-color: rgba(0, 0, 0, 0.33); */
-}
-
-
-.team-page-file-drop[data-hidden="true"] {
+.content-drop-modal[data-hidden="true"] {
   display: none;
 }
 
-.team-page-file-drop > div {
+.content-drop-modal > div {
   position: absolute;
   top: 0;
   left: 0;
@@ -26,7 +14,7 @@
   transition: all 0.875s cubic-bezier(0.1, 0.9, 0.3, 1.0);
 }
 
-.team-page-file-drop > div[data-file="true"] {
+.content-drop-modal > div[data-file="true"] {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
@@ -35,7 +23,7 @@
   height: 50%;
 }
 
-.team-page-file-drop button.glyph-button {
+.content-drop-modal button.glyph-button {
   position: absolute;
   top: 20px;
   left: 20px;
@@ -50,12 +38,12 @@
   border: none;
 }
 
-.team-page-file-drop button.glyph-button:hover {
+.content-drop-modal button.glyph-button:hover {
   border: none;
   background: none;
 }
 
-.team-page-file-drop .input-wrapper {
+.content-drop-modal .input-wrapper {
   margin: 0 10px;
   transition: height 0.125s ease-out;
 
@@ -65,12 +53,12 @@
 	margin-bottom: var(--spacing-20);
 }
 
-.team-page-file-drop .input-wrapper > div {
+.content-drop-modal .input-wrapper > div {
   position: relative;
   width: 100%;
 }
 
-.team-page-file-drop .input-wrapper .code-btn {
+.content-drop-modal .input-wrapper .code-btn {
 	position: absolute;
 	bottom: 8px;
 	right: 10px;
@@ -78,27 +66,22 @@
 	transition: opacity 125ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.team-page-file-drop .input-wrapper .code-btn:hover {
+.content-drop-modal .input-wrapper .code-btn:hover {
   opacity: 1;
   cursor: pointer;
 }
 
-.team-page-file-drop .input-wrapper textarea {
-  font-size: 16px;
-  font-weight: 700;
-}
-
-.team-page-file-drop .input-wrapper textarea.comment-txt[data-code="true"] {
+.content-drop-modal .input-wrapper textarea.comment-txt[data-code="true"] {
 	font-family: Consolas, Monaco, "Courier New", Courier, monospace;
 }
 
-.team-page-file-drop .input-wrapper button {
+.content-drop-modal .input-wrapper button {
   margin-left: var(--spacing-10);
   width: fit-content;
 }
 
 
-.team-page-file-drop .filepond--wrapper {
+.content-drop-modal .filepond--wrapper {
   height: 100%;
 }
 
@@ -113,5 +96,17 @@
 
 .filepond--panel-root {
   height: 100%;
+}
+
+
+
+
+
+.filepond--root, .filepond--root > * {
+  background-color: rgba(var(--site-bg-color), 1.0);
+}
+
+.filepond--root.filepond-wrapper, .filepond--root.filepond-wrapper > * {
+  background-color: rgba(var(--site-bg-color), 1.0);
 }
 

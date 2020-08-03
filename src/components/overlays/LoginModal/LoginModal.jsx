@@ -19,7 +19,6 @@ class LoginModal extends Component {
 		this.state = {
 			outro    : false,
 			email    : null,
-			upload   : null,
 			outroURI : null
 		};
 	}
@@ -78,30 +77,29 @@ class LoginModal extends Component {
 // console.log('%s.render()', this.constructor.name, this.props, this.state);
 
 		const { outro } = this.state;
-		return (
-			<BaseOverlay
-				tracking={Modals.LOGIN}
-				outro={outro}
-				filled={true}
-				closeable={false}
-				delay={125}
-				onComplete={this.handleComplete}>
+		return (<BaseOverlay
+			tracking={Modals.LOGIN}
+			outro={outro}
+			filled={true}
+			closeable={false}
+			delay={125}
+			onComplete={this.handleComplete}>
 
-				<div className="login-modal">
-					<div className="form-wrapper">
-						<LoginForm
-							inviteID={null}
-							email={null}
-							onCancel={(event)=> { event.preventDefault(); this.handleComplete(); }}
-							onLoggedIn={this.handleLoggedIn} />
-					</div>
-
-					<div className="footer-wrapper form-disclaimer">
-						<div onClick={()=> this.handleModal(Modals.REGISTER)}>Don't have an account? Sign Up</div>
-						<div onClick={()=> this.handleModal(Modals.RECOVER)}>Forgot Password</div>
-					</div>
+			<div className="login-modal">
+				<div className="form-wrapper">
+					<LoginForm
+						inviteID={null}
+						email={null}
+						onCancel={(event)=> { event.preventDefault(); this.handleComplete(); }}
+						onLoggedIn={this.handleLoggedIn} />
 				</div>
-			</BaseOverlay>);
+
+				<div className="footer-wrapper form-disclaimer">
+					<div onClick={()=> this.handleModal(Modals.REGISTER)}>Don't have an account? Sign Up</div>
+					<div onClick={()=> this.handleModal(Modals.RECOVER)}>Forgot Password</div>
+				</div>
+			</div>
+		</BaseOverlay>);
 	}
 }
 
