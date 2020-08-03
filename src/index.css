@@ -99,7 +99,7 @@
 	--spacing-50: 50px;
 
 
-	--orthodox-acc-size: 18px;
+	--orthodox-acc-size: 24px;
 	--orthodox-ico-size: 24px;
 
 	--orthodox-font-size: 14px;
@@ -261,6 +261,16 @@ fieldset {
   margin: 0;
   padding: 0;
   border: none;
+}
+
+
+form .input-acc-wrapper {
+	position: relative;
+  width: 100%;
+}
+
+form .input-acc-wrapper > input {
+	position: relative;
 }
 
 h1, h2, h3, h4, h5, h6 {

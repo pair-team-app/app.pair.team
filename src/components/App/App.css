@@ -125,34 +125,22 @@
 	cursor: pointer;
 }
 
-.form-acc-wrapper {
-	position: relative;
+
+.create-team-form-acc {
+  position: absolute;
+  top: 50%;
+  right: 12px;
+  transform: translateY(-50%);
+  width: 24px;
+  height: 24px;
+  opacity: 0.5;
+  transition: opacity 0.125s ease-out;
 }
 
-.form-acc-wrapper:first-child {
-	position: absolute;
-	top: 0;
-	left:0;
-}
-
-.form-acc-wrapper .form-accessory {
-	position: absolute;
-	top: 50%;
-	right: var(--spacing-20);
-	transform: translateY(-50%);
-	color: rgba(var(--site-hilite-color), 1.0);
-	line-height: 0;
-	text-decoration: none;
-	transition: color 0.125s ease-out;
-	color: #3388ff;
-	background-color: #cc7700;
-}
-
-.form-acc-wrapper .form-accessory:hover {
-	color: rgba(var(--link-hover-color), 1.0);
+.create-team-form-acc:hover {
+  opacity: 1;
 	cursor: pointer;
 }
-
 
 .avatar-wrapper {
 	position: relative;

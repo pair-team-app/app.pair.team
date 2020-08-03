@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import './CreateTeamForm.css';
 
 import DummyForm from '../../../forms/DummyForm';
-
+import { MinusFormAccessory, PlusFormAccessory } from '../../../forms/FormAccessories/FormAccessories';
 
 class CreateTeamForm extends Component {
   constructor(props) {
@@ -102,26 +102,26 @@ class CreateTeamForm extends Component {
         <input type="text" placeholder="Enter Team Description" value={description} onChange={this.handleDescriptionChange} autoComplete="new-password" />
         <div className="rules-wrapper">
           {(rules.slice(0, -1).map((rule, i)=> (
-            <div key={i} className="input-wrapper">
-              <CreateTeamFormMinusAcc onClick={(event)=> this.handleRuleRemove(event, i)} />
+            <div key={i} className="input-acc-wrapper">
               <input type="text" placeholder="Enter a rule" value={rule} onChange={(event)=> this.handleRuleChange(event, i)} autoComplete="new-password" />
+              <MinusFormAccessory onClick={(event)=> this.handleRuleRemove(event, i)} />
             </div>
           )))}
-          <div className="input-wrapper">
+          <div className="input-acc-wrapper">
             <input type="text" placeholder="Add Team Rule" value={[...rules].pop()} onChange={(event)=> this.handleRuleChange(event, rules.length - 1)} autoComplete="new-password" />
-            <CreateTeamFormPlusAcc onClick={this.handleRuleAppend} />
+            <PlusFormAccessory onClick={this.handleRuleAppend} />
           </div>
         </div>
         <div className="invites-wrapper">
           {(invites.slice(0, -1).map((invite, i)=> (
-            <div key={i} className="input-wrapper">
-              <CreateTeamFormMinusAcc onClick={(event)=> this.handleInviteRemove(event, i)} />
+            <div key={i} className="input-acc-wrapper">
               <input type="text" name={`invite-${i}`} placeholder="Enter a email address" value={invite} onChange={(event)=> this.handleInviteChange(event, i)} autoComplete="new-password" />
+              <MinusFormAccessory onClick={(event)=> this.handleInviteRemove(event, i)} />
             </div>
           )))}
-          <div className="input-wrapper">
+          <div className="input-acc-wrapper">
             <input type="text" placeholder="Add Email Address" value={[...invites].pop()} onChange={(event)=> this.handleInviteChange(event, invites.length - 1)} autoComplete="new-password" />
-            <CreateTeamFormPlusAcc onClick={this.handleInviteAppend} />
+            <PlusFormAccessory onClick={this.handleInviteAppend} />
           </div>
         </div>
 				<div className="button-wrapper button-wrapper-row">
@@ -133,22 +133,5 @@ class CreateTeamForm extends Component {
   }
 }
 
-const CreateTeamFormPlusAcc = (props)=> {
-  return (<div className="create-team-form-acc" onClick={props.onClick}>
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <circle cx="12" cy="12" r="11" fill="white" stroke="#999999" strokeWidth="2"/>
-      <path fillRule="evenodd" clipRule="evenodd" d="M13 7H11V11H7V13H11V17H13V13H17V11H13V7Z" fill="#909090"/>
-    </svg>
-  </div>);
-};
-
-const CreateTeamFormMinusAcc = (props)=> {
-  return (<div className="create-team-form-acc" onClick={props.onClick}>
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <circle cx="12" cy="12" r="11" fill="white" stroke="#999999" strokeWidth="2"/>
-      <path d="M7 13V11H17V13H7Z" fill="#909090"/>
-    </svg>
-  </div>);
-};
 
 export default (CreateTeamForm);

@@ -1,0 +1,27 @@
+
+.form-acc {
+	position: absolute;
+	width: var(--orthodox-acc-size);
+	height: var(--orthodox-acc-size);
+	right: calc(var(--orthodox-acc-size) * 0.5);
+	opacity: 0.5;
+  transition: opacity 0.125s ease-out;
+}
+
+.form-acc:hover {
+	opacity: 1;
+  cursor: pointer;
+}
+
+.form-acc-top {
+	top: calc(var(--orthodox-acc-size) * 0.5);
+}
+
+.form-acc-center {
+	top: 50%;
+	transform: translateY(-50%);
+}
+
+.form-acc-bottom {
+	bottom: calc(var(--orthodox-acc-size) * 0.5);
+}
