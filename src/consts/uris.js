@@ -32,21 +32,19 @@ export const Pages = {
 
 let endpts = {};
 if (process.env.NODE_ENV === 'development') {
-	const API_VER = 'v7';
 	const CDN_VER = 'v1';
 
 	endpts = {
-		API_ENDPT_URL    : `http://192.168.1.50:1215/${API_VER}/gateway.php`,
+		API_ENDPT_URL    : `http://192.168.1.50:1215/current/gateway.php`,
 		CDN_FILEPOND_URL : `http://cdn.pairurl.devlocal/vendor/filepond-php/`,
 		CDN_UPLOAD_URL   : `http://cdn.pairurl.devlocal/${CDN_VER}/upload.php`
 	};
 
 } else {
-	const API_VER = 'v6';
 	const CDN_VER = 'v1';
 
 	endpts = {
-		API_ENDPT_URL    : `https://api.pairurl.com/${API_VER}/gateway.php`,
+		API_ENDPT_URL    : `https://api.pairurl.com/current/gateway.php`,
 		CDN_FILEPOND_URL : `https://cdn.pairurl.com/vendor/filepond-php/`,
 		CDN_UPLOAD_URL   : `https://cdn.pairurl.com/${CDN_VER}/upload.php`
 	};
