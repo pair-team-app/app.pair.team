@@ -9,9 +9,8 @@ import KeyboardEventHandler from 'react-keyboard-event-handler';
 import { connect } from 'react-redux';
 
 import { COMMENT_TIMESTAMP } from '../../../consts/formats';
-import { ENTER_KEY } from '../../../consts/key-codes';
 import { USER_DEFAULT_AVATAR } from '../../../consts/uris';
-import { makeComment, makeVote, modifyComment } from '../../../redux/actions';
+import { createComment, setComment, makeComment, makeVote, modifyComment } from '../../../redux/actions';
 import { trackEvent } from '../../../utils/tracking';
 
 class BaseComment extends Component {
@@ -26,7 +25,7 @@ class BaseComment extends Component {
 	componentDidMount() {
     // console.log('%s.componentDidMount()', this.constructor.name, { props : this.props, state : this.state });
 
-		document.addEventListener('keydown', this.handleKeyDown);
+		// document.addEventListener('keydown', this.handleKeyDown);
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
@@ -36,7 +35,7 @@ class BaseComment extends Component {
 	componentWillUnmount() {
 		// console.log('%s.componentWillUnmount()', this.constructor.name, { props : this.props, state : this.state });
 
-		document.removeEventListener('keydown', this.handleKeyDown);
+		// document.removeEventListener('keydown', this.handleKeyDown);
 	}
 
 
@@ -48,17 +47,17 @@ class BaseComment extends Component {
 	handleKeyDown = (event)=> {
     // console.log('%s.handleKeyDown()', this.constructor.name, { event });
 
-    const { replyContent } = this.state;
-    if (event.keyCode === ENTER_KEY && replyContent.length > 0) {
-      this.handleReplySubmit(event);
-    }
+    // const { replyContent } = this.state;
+    // if (event.keyCode === ENTER_KEY && replyContent.length > 0) {
+    //   this.handleReplySubmit(event);
+    // }
   }
 
 	handleTextChange = (event)=> {
 		// console.log('%s.handleTextChange()', this.constructor.name, { event });
 
-    const replyContent = event.target.value;
-    this.setState({ replyContent });
+    // const replyContent = event.target.value;
+    // this.setState({ replyContent });
 	};
 
 	handleEmoji = (emoji, event)=> {
@@ -69,19 +68,27 @@ class BaseComment extends Component {
 	handleReplyKeyPress = (event, key)=> {
 		console.log('BaseCommentContent.handleReplyKeyPress()', this.constructor.name, { props : this.props, event, key });
 
-		const { comment } = this.props;
-		this.setState({ replyContent : key }, ()=> {
-			this.setState({ replyContent : '' }, ()=> {
-				this.props.onReplyKeyPress(comment, key);
-			});
-		});
+		const { comment, preComment } = this.props;
+
+		if (!preComment) {
+			this.props.setComment(comment);
+			this.props.createComment(key);
+		}
+
+
+
+		// this.setState({ replyContent : key }, ()=> {
+		// 	this.setState({ replyContent : '' }, ()=> {
+		// 		this.props.onReplyKeyPress(comment, key);
+		// 	});
+		// });
 	};
 
 	handleReplySubmit = (event)=> {
     console.log('BaseCommentContent.handleReplySubmit()', this.constructor.name, { event });
 
-		const { comment } = this.props;
-		const { replyContent } = this.state;
+		const { comment, preComment } = this.props;
+		// const { replyContent } = this.state;
 
 		trackEvent('button', 'reply-comment', comment.id);
 
@@ -90,7 +97,7 @@ class BaseComment extends Component {
 
 
 		this.props.makeComment({ comment,
-			content  : replyContent,
+			content  : preComment,
 			position : comment.position
 		});
 
@@ -108,10 +115,10 @@ class BaseComment extends Component {
 	render() {
     // console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
 
-		const { profile, comment } = this.props;
+		const { profile, comment, preComment } = this.props;
 		const { replyContent } = this.state;
 
-		const contentProps = { ...this.props, replyContent };
+		const contentProps = { ...this.props, replyContent : (preComment || '') };
 
 		return (<div className="base-comment" data-id={comment.id} data-type={comment.type} data-author={comment.author.id === profile.id} data-votable={comment.votable} data-selected={comment.selected}>
 			<BaseCommentHeader { ...this.props} onDelete={this.handleDeleteComment} />
@@ -174,7 +181,7 @@ const BaseCommentContent = (props)=> {
 		{(content) && (<div className="content" dangerouslySetInnerHTML={{ __html : content.replace(author.username, `<span class="txt-bold">${author.username}</span>`) }} />)}
 		{(comment.state !== 'closed' && types.find((type)=> (type === 'op'))) && (<KeyboardEventHandler className="reply-form" handleKeys={['alphanumeric']} isDisabled={(replyContent.length > 0)} onKeyEvent={(key, event)=> props.onReplyKeyPress(event, key)}>
 			{/* <input type="text" placeholder="Reply…" value={replyContent} onChange={props.onTextChange} autoComplete="new-password" /> */}
-			<input type="text" placeholder="Reply…" value={replyContent} readOnly autoComplete="new-password" />
+			<input type="text" placeholder="Reply…" defaultValue={replyContent} autoComplete="new-password" />
 			{/* <Picker set="apple" onSelect={this.handleEmoji} onClick={this.handleEmoji} perline={9} emojiSize={24} native={true} sheetSize={20} showPreview={true} showSkinTones={true} title="Pick your emoji…" emoji="point_up" style={{ position : 'relative', bottom : '20px', right : '20px' }} /> */}
 		</KeyboardEventHandler>)}
 		{(comment.replies.length > 0) && (<BaseCommentReplies { ...props } onDelete={props.onDeleteReply} />)}
@@ -212,16 +219,19 @@ const BaseCommentReplies = (props)=> {
 
 const mapDispatchToProps = (dispatch)=> {
   return ({
-		makeComment   : (payload)=> dispatch(makeComment(payload)),
-    modifyComment : (payload)=> dispatch(modifyComment(payload)),
-		makeVote      : (payload)=> dispatch(makeVote(payload))
+		createComment   : (payload)=> dispatch(createComment(payload)),
+		makeComment     : (payload)=> dispatch(makeComment(payload)),
+		setComment      : (payload)=> dispatch(setComment(payload)),
+    modifyComment   : (payload)=> dispatch(modifyComment(payload)),
+		makeVote        : (payload)=> dispatch(makeVote(payload))
 	});
 };
 
 
 const mapStateToProps = (state, ownProps)=> {
 	return ({
-		profile : state.user.profile
+		profile    : state.user.profile,
+		preComment : state.comments.preComment
 	});
 };
 

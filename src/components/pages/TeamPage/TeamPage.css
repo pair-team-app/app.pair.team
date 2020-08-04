@@ -182,42 +182,26 @@
 	padding: var(--spacing-10);
 	justify-content: center;
 	border-color: rgba(var(--txtfield-border-color));
-  /* opacity: 0.5; */
-  /* transition: opacity 0.125s ease-out; */
 }
 
 
 .team-page .content-wrapper .team-wrapper .rules-wrapper .footer > * {
-	/* width: 100%; */
-	/* transition: opacity 125ms cubic-bezier(0.4, 0, 0.2, 1); */
-	transition: width 125ms cubic-bezier(0.4, 0, 0.2, 1);
-	position: relative;
-
 	display: flex;
+	transition: width 125ms cubic-bezier(0.1, 0.9, 0.3, 1.0), opacity 125ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 
 .team-page .content-wrapper .team-wrapper .rules-wrapper .footer[data-input="false"] button {
-	z-index: 2;
-
 	width: 100%;
-	/* display: flex; */
 	opacity: 1;
+	z-index: 2;
 }
 
-/* .team-page .content-wrapper .team-wrapper .rules-wrapper .footer[data-input="false"] > span, .team-page .content-wrapper .team-wrapper .rules-wrapper .footer[data-input="false"] textarea { */
 .team-page .content-wrapper .team-wrapper .rules-wrapper .footer[data-input="false"] > span {
-	z-index: 1;
-
-	/* display: none; */
 	width: 0;
 	opacity: 0;
+	z-index: 1;
 }
-
-/* .team-page .content-wrapper .team-wrapper .rules-wrapper .footer[data-input="false"] button {
-	display: flex;
-	opacity: 1;
-} */
 
 .team-page .content-wrapper .team-wrapper .rules-wrapper .footer[data-input="true"] button {
 	display: none;
@@ -228,20 +212,13 @@
 	z-index: 1;
 }
 
-/* .team-page .content-wrapper .team-wrapper .rules-wrapper .footer[data-input="false"] textarea {
-	display: none;
-	opacity: 0;
-} */
-
-/* .team-page .content-wrapper .team-wrapper .rules-wrapper .footer[data-input="true"] > span, .team-page .content-wrapper .team-wrapper .rules-wrapper .footer[data-input="true"] textarea { */
 .team-page .content-wrapper .team-wrapper .rules-wrapper .footer[data-input="true"] > span {
-	/* display: flex; */
-	z-index: 2;
 	width: 100%;
 	opacity: 1;
+	z-index: 2;
 }
 
-.team-page .content-wrapper .team-wrapper .about-wrapper[data-loading="true"] textarea, .team-page .content-wrapper .team-wrapper .rules-wrapper[data-loading="true"] .footer textarea {
+.team-page .content-wrapper .team-wrapper .about-wrapper[data-loading="true"] textarea, .team-page .content-wrapper .team-wrapper .rules-wrapper[data-loading="true"] .footer > span {
 	opacity: 0.75;
 	cursor: progress;
 }
@@ -277,8 +254,6 @@
 	transition: all 125ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* .team-page-comments-panel > .team-page-comment:not(:first-child) {} */
-
 .team-page-comments-panel > .team-page-comment:not(:last-child) {
 	margin-bottom: 20px;
 }
@@ -302,9 +277,3 @@
 	word-break: break-all;
 }
 
-
-
-/* .team-page .content-wrapper .team-wrapper .rules-wrapper .footer .team-page-add-rule-button:hover { */
-  /* opacity: 1; */
-  /* cursor: pointer; */
-/* } */

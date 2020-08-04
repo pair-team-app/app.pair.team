@@ -19,7 +19,7 @@ import { SORT_BY_DATE } from '../../sections/TopNav/TeamPageHeader';
 import { TEAM_TIMESTAMP } from '../../../consts/formats';
 import { ENTER_KEY, ESCAPE_KEY } from '../../../consts/key-codes';
 import { API_ENDPT_URL } from '../../../consts/uris';
-import { fetchTeamComments, makeComment, makeTeamRule, modifyTeam, setComment, setPlayground, setTypeGroup } from '../../../redux/actions';
+import { fetchTeamComments, createComment, makeComment, makeTeamRule, modifyTeam, setComment, setPlayground, setTypeGroup } from '../../../redux/actions';
 import { trackEvent } from '../../../utils/tracking';
 
 import 'react-contexify/dist/ReactContexify.min.css';
@@ -225,20 +225,24 @@ class TeamPage extends Component {
   }
 
   handlePageKeyPress = (event, key)=> {
-    console.log('%s.handlePageKeyPress()', this.constructor.name, { event, target : event.target, attribs : { elementID : event.target.id, className : event.target.className, attribs : event.target.getAttributeNames(), hasOverride : (event.target.getAttributeNames().findIndex((attrib)=> (attrib === 'data-keypress-override')) !== -1) }, key });
+    console.log('%s.handlePageKeyPress()_____', this.constructor.name, { event, target : event.target, attribs : { elementID : event.target.id, className : event.target.className, attribs : event.target.getAttributeNames(), hasOverride : (event.target.getAttributeNames().findIndex((attrib)=> (attrib === 'data-keypress-override')) !== -1) }, key });
 
     const { target } = event;
-    if (target.getAttributeNames().findIndex((attrib)=> (attrib === 'data-keypress-override')) === -1) {
+    const { preComment } = this.props;
+    if (target.getAttributeNames().findIndex((attrib)=> (attrib === 'data-keypress-override')) === -1 && !preComment) {
       const commentContent = key;
-      this.setState({ commentContent }, ()=> {
-        this.setState({ commentContent : '' });
-      });
+      this.props.createComment(key);
+      // this.setState({ commentContent }, ()=> {
+        // this.setState({ commentContent : '' });
+      // });
     }
   };
 
 
   handleCommentReply = (comment, key)=> {
     console.log('%s.handleCommentReply()', this.constructor.name, { comment, key });
+
+    
 
     const commentContent = key;
     this.setState({ commentContent }, ()=> {
@@ -274,8 +278,8 @@ class TeamPage extends Component {
 
   render() {
     console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
-    const { profile, team, sort } = this.props;
-    const { commentContent, teamDescription, ruleContent, ruleInput, fetching, loading, dragOver } = this.state;
+    const { profile, team, sort, preComment } = this.props;
+    const { teamDescription, ruleContent, ruleInput, fetching, loading, dragOver } = this.state;
 
     const infoLoading = Boolean(((loading << 0) & 0x001) === 0x001);
     const rulesLoading = Boolean(((loading << 0) & 0x010) === 0x010);
@@ -338,7 +342,7 @@ class TeamPage extends Component {
         </div>)
 
       : (<div className="content-loading">Loading…</div>)}
-      <TeamPageFileDrop dragging={(dragOver)} textContent={commentContent} onClose={this.handleFileDropClose} />
+      <TeamPageFileDrop dragging={(dragOver)} onClose={this.handleFileDropClose} />
       {/* <ContentDropModal dragging={(dragOver)} textContent={commentContent} onClose={this.handleFileDropClose} /> */}
     </BasePage>);
   }
@@ -412,6 +416,7 @@ const MyAwesomeMenu = (props)=> {
 const mapDispatchToProps = (dispatch)=> {
   return ({
     fetchTeamComments : (payload)=> dispatch(fetchTeamComments(payload)),
+    createComment     : (payload)=> dispatch(createComment(payload)),
     makeComment       : (payload)=> dispatch(makeComment(payload)),
     makeTeamRule      : (payload)=> dispatch(makeTeamRule(payload)),
     modifyTeam        : (payload)=> dispatch(modifyTeam(payload)),
@@ -423,6 +428,7 @@ const mapDispatchToProps = (dispatch)=> {
 
 const mapStateToProps = (state, ownProps)=> {
   return ({
+    preComment : state.comments.preComment,
     comment    : state.comments.comment,
     profile    : state.user.profile,
     team       : state.teams.team,

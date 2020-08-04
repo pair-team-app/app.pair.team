@@ -8,8 +8,9 @@ import FilePondPluginImagePreview from 'filepond-plugin-image-preview';
 import { URIs } from 'lang-js-utils';
 import TextareaAutosize from 'react-autosize-textarea';
 import { FilePond, registerPlugin } from 'react-filepond';
+import KeyboardEventHandler from 'react-keyboard-event-handler';
 import { connect } from 'react-redux';
-import { makeComment } from '../../../../redux/actions';
+import { createComment, makeComment } from '../../../../redux/actions';
 import btnCode from '../../../../assets/images/ui/btn-code.svg';
 
 import 'filepond/dist/filepond.min.css';
@@ -52,20 +53,34 @@ class TeamPageFileDrop extends Component {
 	componentDidUpdate(prevProps, prevState, snapshot) {
     console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : this.props, prevState, state : this.state });
 
-    const { textContent } = this.props;
-    // if (textContent !== '' && textContent !== this.state.text && this.state.text === '') {
-    if (prevState.text === '' && this.state.text === '' && textContent !== '' && prevProps.textContent === '') {
-      const urlComment = (/https?:\/\//i.test(textContent));
+    const { preComment } = this.props;
 
+    if (preComment && !prevProps.preComment) {
+      const urlComment = (/https?:\/\//i.test(preComment));
       this.setState({
-        text : textContent,
+        // text : preComment,
         url  : urlComment
       }, ()=> {
         if (urlComment) {
-          this.onFetchScreenshot(textContent);
+          this.onFetchScreenshot(preComment);
         }
       });
     }
+
+    // const { textContent } = this.props;
+    // if (textContent !== '' && textContent !== this.state.text && this.state.text === '') {
+    // // if (prevState.text === '' && this.state.text === '' && textContent !== '' && prevProps.textContent === '') {
+    //   const urlComment = (/https?:\/\//i.test(textContent));
+
+    //   this.setState({
+    //     text : textContent,
+    //     url  : urlComment
+    //   }, ()=> {
+    //     if (urlComment) {
+    //       this.onFetchScreenshot(textContent);
+    //     }
+    //   });
+    // }
   }
 
 
@@ -78,8 +93,8 @@ class TeamPageFileDrop extends Component {
     this.setState({ code : !this.state.code });
   };
 
-  handleResetFiles = (event)=> {
-    console.log('%s.handleResetFiles(event)', this.constructor.name, { event });
+  handleResetContent = (event)=> {
+    console.log('%s.handleResetContent(event)', this.constructor.name, { event });
     this.setState({
       text     : '',
       image    : null,
@@ -89,6 +104,7 @@ class TeamPageFileDrop extends Component {
       code     : false,
       files    : []
     }, ()=> {
+      this.props.createComment(null);
       this.props.onClose();
     });
   }
@@ -134,8 +150,7 @@ class TeamPageFileDrop extends Component {
 
   handleFileRemoved = (error, output)=> {
     console.log('%s.handleFileRemoved(error, output)', this.constructor.name, { error, output });
-
-    this.handleResetFiles();
+    this.handleResetContent();
   };
 
   // // processes the first file
@@ -157,23 +172,49 @@ class TeamPageFileDrop extends Component {
     });
   }
 
+  handleKeyPress = (event, key)=> {
+    console.log('%s.handleKeyPress(event, key)_____', this.constructor.name, { event, key });
+
+    if (key === 'esc') {
+      this.handleResetContent();
+
+    } else if (key === 'enter') {
+
+    } else {
+      const { preComment } = this.props;
+
+      const text = `${preComment}${key}`;
+      const urlComment = (/https?:\/\//i.test(text));
+
+      // this.setState({ text,
+      this.props.createComment(text);
+      this.setState({
+        url : urlComment,
+      }, ()=> {
+        if (urlComment) {
+          this.onFetchScreenshot(text);
+        }
+      });
+    }
+  };
+
   /* handleFilePond = ()=> {
     console.log('%s.()', this.constructor.name, { ,  });
   }; */
 
   handleTextChange = (event)=> {
-    console.log('%s.handleTextChange()', this.constructor.name, { event, state : this.state });
+    console.log('%s.handleTextChange()_____', this.constructor.name, { event, val : event.target.value, state : this.state });
 
     const text = event.target.value;
     const urlComment = (/https?:\/\//i.test(text));
 
-    this.setState({ text,
-      url : urlComment,
-    }, ()=> {
-      if (urlComment) {
-        this.onFetchScreenshot(text);
-      }
-    });
+    // this.setState({ text,
+    //   url : urlComment,
+    // }, ()=> {
+    //   if (urlComment) {
+    //     this.onFetchScreenshot(text);
+    //   }
+    // });
   };
 
   handleSubmit = (event)=> {
@@ -189,7 +230,7 @@ class TeamPageFileDrop extends Component {
       format   : (code) ? 'code' : 'text'
     });
 
-    this.handleResetFiles();
+    this.handleResetContent();
   };
 
   onFetchScreenshot = (text)=> {
@@ -212,24 +253,28 @@ class TeamPageFileDrop extends Component {
 
 
 	render() {
-    // console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
+    console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
 
 
-    const { dragging } = this.props;
-    const { text, url, code, uploaded, image, files } = this.state;
+    const { dragging, preComment } = this.props;
+    // const { text, url, code, uploaded, image, files } = this.state;
+    const { url, code, uploaded, image, files } = this.state;
 
     // const cdnHeaders = {
     //   'Content-Type' : 'multipart/form-data',
     //   'Accept'       : 'application/json'
     // };
 
-		return (<div className="team-page-file-drop" data-hidden={(!dragging && files.length === 0 && text.length === 0)}>
-      <div data-file={files.length > 0 || image !== null || text.length > 0}>
-        {(files.length > 0 || text.length > 0) && (<div className="input-wrapper" data-uploaded={uploaded}>
-          <div>
-            {(text.length > 0 && !url) && (<img src={btnCode} className="code-btn" onClick={this.handleCode} alt="Code" />)}
-            <TextareaAutosize className="comment-txt" placeholder={`Add a comment to this${(url) ? ' url' : ' image'}…`} value={text} onChange={this.handleTextChange} data-code={(code)} autoFocus />
-          </div>
+		return (<div className="team-page-file-drop" data-hidden={(!dragging && files.length === 0 && !preComment)}>
+      {/* <div data-file={files.length > 0 || image !== null || !preComment}> */}
+      <div data-file={files.length > 0 || image !== null || preComment !== null}>
+      <KeyboardEventHandler isDisabled={(preComment === null)} handleFocusableElements handleKeys={['alphanumeric', 'esc', 'enter']} onKeyEvent={(key, event)=> this.handleKeyPress(event, key)} />
+        {(files.length > 0 || preComment) && (<div className="input-wrapper" data-uploaded={uploaded}>
+          {(preComment && !url) && (<img src={btnCode} className="code-btn" onClick={this.handleCode} alt="Code" />)}
+          {/* <TextareaAutosize className="comment-txt" placeholder={`Add a comment to this${(url) ? ' url' : ' image'}…`} value={preComment} onChange={this.handleTextChange} data-code={(code)} autoFocus /> */}
+          {/* <TextareaAutosize className="comment-txt" placeholder={`Add a comment to this${(url) ? ' url' : ' image'}…`} defaultValue={preComment} data-code={(code)} autoFocus /> */}
+            {/* <TextareaAutosize className="comment-txt" placeholder={`Add a comment to this${(url) ? ' url' : ' image'}…`} defaultValue={preComment} data-code={(code)} autoFocus /> */}
+          <div className="comment-txt" data-code={(code)}>{preComment}</div>
           <button type="submit" disabled={false} onClick={this.handleSubmit}>Submit</button>
         </div>)}
 
@@ -274,7 +319,7 @@ class TeamPageFileDrop extends Component {
           // }}
         />
       </div>
-      <AddContentCloseButton onCloseClick={this.handleResetFiles} />
+      <AddContentCloseButton onCloseClick={this.handleResetContent} />
     </div>);
 	}
 }
@@ -294,12 +339,15 @@ const AddContentCloseButton = (props)=> {
 
 const mapDispatchToProps = (dispatch)=> {
   return ({
-    makeComment : (payload)=> dispatch(makeComment(payload)),
+    createComment : (payload)=> dispatch(createComment(payload)),
+    makeComment   : (payload)=> dispatch(makeComment(payload)),
   });
 };
 
 const mapStateToProps = (state, ownProps)=> {
-	return ({});
+	return ({
+    preComment : state.comments.preComment
+  });
 };
 
 

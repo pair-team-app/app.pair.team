@@ -1,5 +1,5 @@
 
-import { BUILD_PLAYGROUNDS_LOADED, COMMENT_ADDED, COMMENT_UPDATED, SET_COMMENT, TEAM_COMMENTS_LOADED } from '../../consts/action-types';
+import { BUILD_PLAYGROUNDS_LOADED, COMMENT_ADDED, COMMENT_UPDATED, COMMENT_CREATED, SET_COMMENT, TEAM_COMMENTS_LOADED } from '../../consts/action-types';
 import { LOG_REDUCER_POSTFIX, LOG_REDUCER_PREFIX } from '../../consts/log-ascii';
 
 
@@ -7,7 +7,7 @@ import { LOG_REDUCER_POSTFIX, LOG_REDUCER_PREFIX } from '../../consts/log-ascii'
 const initialState = {
   comments      : [],
   comment       : null,
-  createComment : null
+  preComment    : null
 };
 
 
@@ -38,6 +38,10 @@ export default function comments(state=initialState, action) {
   } else if (type === SET_COMMENT) {
     const { comment } = payload;
     return (Object.assign({}, state, { comment }));
+
+  } else if (type === COMMENT_CREATED) {
+    const { preComment } = payload;
+    return (Object.assign({}, state, { preComment }));
 
   } else {
     return (state);

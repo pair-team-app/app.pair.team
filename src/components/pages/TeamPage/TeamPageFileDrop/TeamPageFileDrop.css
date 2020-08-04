@@ -83,12 +83,17 @@
   cursor: pointer;
 }
 
-.team-page-file-drop .input-wrapper textarea {
+.team-page-file-drop .input-wrapper .comment-txt {
+  width: 100%;
+  padding: 16px;;
+  background-color: rgba(var(--txtarea-bg-color), 1.0);;
+  border: 1px solid rgba(var(--txtfield-border-color), 1.0);
+  border-radius: var(--border-radius);;
   font-size: 16px;
   font-weight: 700;
 }
 
-.team-page-file-drop .input-wrapper textarea.comment-txt[data-code="true"] {
+.team-page-file-drop .input-wrapper .comment-txt[data-code="true"] {
 	font-family: Consolas, Monaco, "Courier New", Courier, monospace;
 }
 
