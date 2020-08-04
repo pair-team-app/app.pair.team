@@ -233,27 +233,6 @@ class TeamPage extends Component {
       this.setState({ commentContent }, ()=> {
         this.setState({ commentContent : '' });
       });
-
-    } else {
-      event.preventDefault();
-      event.stopPropagation();
-
-      const { team } = this.props;
-      const { teamDescription, ruleContent, ruleInput } = this.state;
-      const elementID = target.id;
-
-
-      const { loading } = this.state;
-      // if (elementID === 'team-info-txtarea' && (key === 'meta' || key === 'ctrl') && event.keyCode === ENTER_KEY) {
-      //   if (teamDescription.length > 0 && teamDescription !== team.description) {
-      //     trackEvent('text', 'update-team-info');
-
-      //     target.blur();
-      //     this.setState({ loading : loading ^ 0x001 }, ()=> {
-      //       this.props.modifyTeam({ description : teamDescription });
-      //     });
-      //   }
-      // }
     }
   };
 
@@ -307,8 +286,8 @@ class TeamPage extends Component {
       {(profile && team)
       ? (<div className="content-wrapper">
           <KeyboardEventHandler handleKeys={['alphanumeric']} onKeyEvent={(key, event)=> this.handlePageKeyPress(event, key)} />
-          <div className="comments-wrapper" data-fetching={Boolean(fetching & 0x010 == 0x010)} data-loading={commentsLoading} data-empty={team && team.comments.length === 0}>
-            <div className="header" data-loading={Boolean(fetching & 0x010 == 0x010)}>
+          <div className="comments-wrapper" data-fetching={Boolean((fetching & 0x010) === 0x010)} data-loading={commentsLoading} data-empty={team && team.comments.length === 0}>
+            <div className="header" data-loading={Boolean((fetching & 0x010) === 0x010)}>
               <input type="text" className="comment-txt" placeholder="Typing or Pasting anything…" value="" onChange={(event)=> this.handlePageKeyPress(event, event.target.value)} />
               <button disabled={true}>Comment</button>
             </div>
@@ -318,13 +297,13 @@ class TeamPage extends Component {
             <TeamPageCommentsPanel
               profile={profile}
               comments={(sort === SORT_BY_DATE) ? team.comments.sort((i, ii)=> ((i.epoch > ii.epoch) ? -1 : (i.epoch < ii.epoch) ? 1 : 0)) : team.comments.sort((i, ii)=> ((i.score > ii.score) ? -1 : (i.score < ii.score) ? 1 : 0)).filter((comment)=> (comment !== null))}
-              fetching={Boolean(fetching & 0x010 == 0x010)}
+              fetching={Boolean((fetching & 0x010) === 0x010)}
               loading={commentsLoading}
               sort={sort}
               onReplyKeyPress={this.handleCommentReply}
             />
           </div>
-          <div className="team-wrapper" data-fetching={Boolean(fetching & 0x010 == 0x010)}>
+          <div className="team-wrapper" data-fetching={Boolean((fetching & 0x010) === 0x010)}>
             <div className="about-wrapper" data-loading={infoLoading}>
               <MenuProvider id="menu_id">
                 <div className="header">About</div>
