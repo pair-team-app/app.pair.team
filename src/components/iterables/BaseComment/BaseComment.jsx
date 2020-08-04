@@ -70,8 +70,10 @@ class BaseComment extends Component {
 		console.log('BaseCommentContent.handleReplyKeyPress()', this.constructor.name, { props : this.props, event, key });
 
 		const { comment } = this.props;
-		this.setState({ replyContent : key }, ()=>{
-			this.props.onReplyKeyPress(comment, key);
+		this.setState({ replyContent : key }, ()=> {
+			this.setState({ replyContent : '' }, ()=> {
+				this.props.onReplyKeyPress(comment, key);
+			});
 		});
 	};
 

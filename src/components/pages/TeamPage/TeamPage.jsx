@@ -230,7 +230,9 @@ class TeamPage extends Component {
     console.log('%s.handlePageKeyPress()', this.constructor.name, { event, key });
 
     const commentContent = key;
-    this.setState({ commentContent });
+    this.setState({ commentContent }, ()=> {
+
+    });
   };
 
 
@@ -268,7 +270,7 @@ class TeamPage extends Component {
           <KeyboardEventHandler handleKeys={['alphanumeric']} onKeyEvent={(key, event)=> this.handlePageKeyPress(event, key)} />
           <div className="comments-wrapper" data-fetching={fetching} data-empty={team && team.comments.length === 0}>
             <div className="header" data-loading={loading}>
-              <input type="text" className="comment-txt" placeholder="Typing or Pasting anything…" defaultValue={commentContent} />
+              <input type="text" className="comment-txt" placeholder="Typing or Pasting anything…" value="" onChange={(event)=> this.handlePageKeyPress(event, event.target.value)} />
               <button disabled={true}>Comment</button>
             </div>
 
