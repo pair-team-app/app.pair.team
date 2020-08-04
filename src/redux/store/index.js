@@ -3,6 +3,7 @@ import { routerMiddleware } from 'connected-react-router';
 import { createBrowserHistory } from 'history';
 import cookie from 'react-cookies';
 import { applyMiddleware, createStore, compose } from 'redux';
+import { composeWithDevTools } from 'redux-devtools-extension/developmentOnly';
 import thunk from 'redux-thunk';
 
 import { fetchComponentTypes, fetchDevices, fetchProducts, fetchUserProfile } from '../actions';
@@ -32,7 +33,7 @@ const stackTraceMiddleware = createLogActionStackTraceMiddleware([SET_PLAYGROUND
 
 
 // const store = createStore(rootReducer, compose(applyMiddleware(onMiddleware, thunk, stackTraceMiddleware)));
-const store = createStore(rootReducer(history), compose(applyMiddleware(routerMiddleware(history), onMiddleware, thunk, stackTraceMiddleware)));
+const store = createStore(rootReducer(history), composeWithDevTools(applyMiddleware(routerMiddleware(history), onMiddleware, thunk, stackTraceMiddleware)));
 
 
 if (typeof cookie.load('user_id') === 'undefined') {
