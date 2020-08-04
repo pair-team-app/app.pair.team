@@ -84,7 +84,7 @@ class ProfileModal extends Component {
   };
 
   handleDowngradePlan = (event)=> {
-    console.log('%s.handleDowngradePlan()', this.constructor.name, event);
+    console.log('%s.handleDowngradePlan()', this.constructor.name, { event });
 
     this.setState({ submitting: true }, ()=> {
       const { profile, team } = this.props;

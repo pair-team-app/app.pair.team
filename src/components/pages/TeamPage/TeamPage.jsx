@@ -102,7 +102,7 @@ class TeamPage extends Component {
   };
 
   handleAddRule = (event)=> {
-    // console.log('%s.handleAddRule()', this.constructor.name, event);
+    // console.log('%s.handleAddRule()', this.constructor.name, { event });
     trackEvent('button', 'add-rule');
 
     event.preventDefault();
@@ -207,8 +207,12 @@ class TeamPage extends Component {
     // }
   }
 
+  handleTeamDescriptionKeyPress = (event, key)=> {
+    console.log('%s.handleTeamDescriptionKeyPress()', this.constructor.name, { event, key });
+  };
+
   handleRuleInput = (event)=> {
-    // console.log('%s.handleRuleInput()', this.constructor.name, event);
+    // console.log('%s.handleRuleInput()', this.constructor.name, { event });
     trackEvent('button', 'add-rule');
 
     this.setState({
@@ -218,7 +222,7 @@ class TeamPage extends Component {
   }
 
   handleTextChange = (event)=> {
-    // console.log('%s.handleTextChange()', this.constructor.name, event);
+    // console.log('%s.handleTextChange()', this.constructor.name, { event });
 
     // const commentContent = event.target.value;
     // this.setState({ commentContent }, ()=> {
@@ -227,12 +231,29 @@ class TeamPage extends Component {
   };
 
   handlePageKeyPress = (event, key)=> {
-    console.log('%s.handlePageKeyPress()', this.constructor.name, { event, key });
+    console.log('%s.handlePageKeyPress()', this.constructor.name, { event, target : event.target, attribs : { className : event.target.className, keypressOverride : event.target.attributes.getNamedItem('data-keypress-override').value }, key });
 
-    const commentContent = key;
-    this.setState({ commentContent }, ()=> {
+    const { target } = event;
+    const { attributes } = target;
 
-    });
+    const kpOverride = attributes.getNamedItem('data-keypress-override').value;
+    if (!kpOverride) {
+      const commentContent = key;
+      this.setState({ commentContent }, ()=> {
+        this.setState({ commentContent : '' });
+      });
+    }
+
+    // const classNames = target.className.split(' ');
+    // if (classNames.findIndex((className)=> ((className === 'kp-override'))) === -1) {
+    //   const commentContent = key;
+    //   this.setState({ commentContent }, ()=> {
+    //     this.setState({ commentContent : '' });
+    //   });
+
+    // } else {
+
+    // }
   };
 
 
@@ -248,7 +269,7 @@ class TeamPage extends Component {
   };
 
   handleUpdateTeamDescription = (event)=> {
-    // console.log('%s.handleUpdateTeamDescription()', this.constructor.name, event);
+    // console.log('%s.handleUpdateTeamDescription()', this.constructor.name, { event });
     trackEvent('button', 'update-team');
 
     event.preventDefault();
@@ -294,8 +315,9 @@ class TeamPage extends Component {
                 content : 'Menu Clicked.',
                 delay   : 0
               });}} />
-              <div className="content">
-                <TextareaAutosize placeholder="Enter Text to Describe you team" value={teamDescription} onChange={(event)=> this.setState({ teamDescription : event.target.value })} /></div>
+              <div className="content"><KeyboardEventHandler handleKeys={['alphanumeric']} onKeyEvent={(key, event)=> this.handlePageKeyPress(event, key)}>
+                <TextareaAutosize className="team-info-txtarea kp-override" data-keypress-override="true" placeholder="Enter Text to Describe you team" value={teamDescription} onChange={(event)=> this.setState({ teamDescription : event.target.value })} />
+              </KeyboardEventHandler></div>
               <div className="footer">
                 <div className="member-count">{team.members.length} {Strings.pluralize('member', team.members.length)}</div>
                 <div className="timestamp">CREATED {team.added.format(TEAM_TIMESTAMP)}</div>

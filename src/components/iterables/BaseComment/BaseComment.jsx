@@ -46,7 +46,7 @@ class BaseComment extends Component {
 	};
 
 	handleKeyDown = (event)=> {
-    // console.log('%s.handleKeyDown()', this.constructor.name, event);
+    // console.log('%s.handleKeyDown()', this.constructor.name, { event });
 
     const { replyContent } = this.state;
     if (event.keyCode === ENTER_KEY && replyContent.length > 0) {
@@ -55,7 +55,7 @@ class BaseComment extends Component {
   }
 
 	handleTextChange = (event)=> {
-		// console.log('%s.handleTextChange()', this.constructor.name, event);
+		// console.log('%s.handleTextChange()', this.constructor.name, { event });
 
     const replyContent = event.target.value;
     this.setState({ replyContent });

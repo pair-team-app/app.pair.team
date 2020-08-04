@@ -81,7 +81,7 @@ class App extends Component {
 
     window.onpopstate = (event)=> {
       event.preventDefault();
-      // console.log('%s.onpopstate()', this.constructor.name, '-/\\/\\/\\/\\/\\/\\-', this.props.location.pathname, event);
+      // console.log('%s.onpopstate()', this.constructor.name, '-/\\/\\/\\/\\/\\/\\-', this.props.location.pathname, { event });
     };
   }
 
@@ -275,7 +275,7 @@ class App extends Component {
   };
 
   handleThemeToggle = (event)=> {
-    // console.log('%s.handleThemeToggle()', this.constructor.name, event);
+    // console.log('%s.handleThemeToggle()', this.constructor.name, { event });
     this.setState({ darkTheme : !this.state.darkTheme });
   };
 

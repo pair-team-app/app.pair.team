@@ -42,7 +42,7 @@ class ProfileForm extends Component {
 	}
 
 	handleEmailChange = (event)=> {
-// console.log('%s.handleEmailChange()', this.constructor.name, event);
+// console.log('%s.handleEmailChange()', this.constructor.name, { event });
 		this.setState({
 			email   : event.target.value,
 			changed : true
@@ -50,7 +50,7 @@ class ProfileForm extends Component {
 	};
 
 	handlePasswordChange = (event)=> {
-// console.log('%s.handlePasswordChange()', this.constructor.name, event);
+// console.log('%s.handlePasswordChange()', this.constructor.name, { event });
 
 		this.setState({
 			password : event.target.value,
@@ -60,7 +60,7 @@ class ProfileForm extends Component {
 	};
 
 	handlePasswordClick = (event)=> {
-// console.log('%s.handlePasswordClick()', this.constructor.name, event);
+// console.log('%s.handlePasswordClick()', this.constructor.name, { event });
 		event.preventDefault();
 
 		this.setState({
