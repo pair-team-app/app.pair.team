@@ -53,7 +53,8 @@ class TeamPageFileDrop extends Component {
     console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : this.props, prevState, state : this.state });
 
     const { textContent } = this.props;
-    if (textContent !== '' && textContent !== this.state.text && this.state.text === '') {
+    // if (textContent !== '' && textContent !== this.state.text && this.state.text === '') {
+    if (prevState.text === '' && this.state.text === '' && textContent !== '' && prevProps.textContent === '') {
       const urlComment = (/https?:\/\//i.test(textContent));
 
       this.setState({
@@ -64,11 +65,6 @@ class TeamPageFileDrop extends Component {
           this.onFetchScreenshot(textContent);
         }
       });
-    }
-
-    const { text } = this.state;
-    if (prevState.text !== text) {
-
     }
   }
 
@@ -232,7 +228,7 @@ class TeamPageFileDrop extends Component {
         {(files.length > 0 || text.length > 0) && (<div className="input-wrapper" data-uploaded={uploaded}>
           <div>
             {(text.length > 0 && !url) && (<img src={btnCode} className="code-btn" onClick={this.handleCode} alt="Code" />)}
-            <TextareaAutosize className="comment-txt" placeholder={`Add a comment to this${(url) ? ' url' : ' image'}…`} value={text} onChange={this.handleTextChange} data-code={(code)} />
+            <TextareaAutosize className="comment-txt" placeholder={`Add a comment to this${(url) ? ' url' : ' image'}…`} value={text} onChange={this.handleTextChange} data-code={(code)} autoFocus />
           </div>
           <button type="submit" disabled={false} onClick={this.handleSubmit}>Submit</button>
         </div>)}

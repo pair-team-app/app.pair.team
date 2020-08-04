@@ -384,7 +384,7 @@ input[type="email"], input[type="password"], input[type="text"], select, textare
 }
 
 input[type="email"]:hover, input[type="password"]:hover, input[type="text"]:hover, textarea:hover {
-	border: 1px solid rbga(var(--txtfield-border-color), 1.0);
+	/* border: 1px solid rbga(var(--txtfield-border-color), 1.0); */
 	background-color: rgba(var(--txtfield-hover-bg-color), 1.0);
 	color: rgba(var(--txtfield-hover-fg-color), 1.0);
 }
@@ -403,12 +403,12 @@ input[type="email"]:valid, input[type="password"]:valid, input[type="text"]:vali
 input[type="email"]:valid:hover, input[type="password"]:valid:hover, input[type="text"]:valid:hover, textarea:valid:hover {
 	background-color: rgba(var(--txtfield-hover-bg-color), 1.0);
 	color: rgba(var(--txtfield-hover-fg-color), 1.0);
-} */
+}
 
 input[type="email"]:disabled, input[type="password"]:disabled, input[type="text"]:disabled, select:disabled, textarea:disabled {
-	cursor: not-allowed;
 	background-color: rgba(var(--txtfield-disabled-bg-color), 1.0);
 	color: rgba(var(--txtfield-disabled-fg-color), 1.0);
+	cursor: not-allowed;
 }
 
 input:-webkit-autofill {

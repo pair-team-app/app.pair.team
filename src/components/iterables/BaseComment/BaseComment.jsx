@@ -4,10 +4,9 @@ import './BaseComment.css';
 import { VOTE_ACTION_DOWN, VOTE_ACTION_RETRACT, VOTE_ACTION_UP } from './index';
 
 import 'emoji-mart/css/emoji-mart.css';
-import { Strings } from 'lang-js-utils';
 import FontAwesome from 'react-fontawesome';
+import KeyboardEventHandler from 'react-keyboard-event-handler';
 import { connect } from 'react-redux';
-import { NavLink } from 'react-router-dom';
 
 import { COMMENT_TIMESTAMP } from '../../../consts/formats';
 import { ENTER_KEY } from '../../../consts/key-codes';
@@ -67,6 +66,15 @@ class BaseComment extends Component {
 	};
 
 
+	handleReplyKeyPress = (event, key)=> {
+		console.log('BaseCommentContent.handleReplyKeyPress()', this.constructor.name, { props : this.props, event, key });
+
+		const { comment } = this.props;
+		this.setState({ replyContent : key }, ()=>{
+			this.props.onReplyKeyPress(comment, key);
+		});
+	};
+
 	handleReplySubmit = (event)=> {
     console.log('BaseCommentContent.handleReplySubmit()', this.constructor.name, { event });
 
@@ -107,7 +115,8 @@ class BaseComment extends Component {
 			<BaseCommentHeader { ...this.props} onDelete={this.handleDeleteComment} />
 			<div className="comment-body">
 				{(comment.votable) && (<BaseCommentVote { ...this.props } onVote={this.handleVote} />)}
-				<BaseCommentContent { ...contentProps } onTextChange={this.handleTextChange} onDeleteReply={this.handleDeleteComment} />
+				{/* <BaseCommentContent { ...contentProps } onTextChange={this.handleTextChange} onDeleteReply={this.handleDeleteComment} /> */}
+				<BaseCommentContent { ...contentProps } onReplyKeyPress={this.handleReplyKeyPress} onDeleteReply={this.handleDeleteComment} />
 				{/* <Picker set="apple" onSelect={this.handleEmoji} onClick={this.handleEmoji} perline={9} emojiSize={24} native={true} sheetSize={16} showPreview={false} showSkinTones={false} title="Pick your emoji…" emoji="point_up" style={{ position : 'relative', bottom : '20px', right : '20px' }} /> */}
 			</div>
 		</div>);
@@ -156,22 +165,16 @@ const BaseCommentContent = (props)=> {
 	// console.log('BaseComment.BaseCommentContent()', { props });
 
 	const { comment, replyContent } = props;
-	const { author, types, content, uri, timestamp } = comment;
-
-	// const onURIClick = ()=> {
-	// console.log('BaseComment.BaseCommentContent.onURIClick()', { props });
-	// 	window.location.href = window.location.href.replace(/\/app\/.*$/, uri)
-	// };
+	const { author, types, content, timestamp } = comment;
 
 	return (<div className="base-comment-content">
 		<div className="timestamp" dangerouslySetInnerHTML={{ __html : timestamp.format(COMMENT_TIMESTAMP).replace(/(\d{1,2})(\w{2}) @/, (match, p1, p2)=> (`${p1}<sup>${p2}</sup> @`)) }} />
 		{(content) && (<div className="content" dangerouslySetInnerHTML={{ __html : content.replace(author.username, `<span class="txt-bold">${author.username}</span>`) }} />)}
-		{/* {(types.indexOf('component') > -1) && (<div className="uri" onClick={onURIClick}>{Strings.truncate(window.location.href.replace(/\/app\/.*$/, uri), 45)}</div>)} */}
-		{(types.indexOf('component') > -1) && (<NavLink className="uri" to={uri}>{Strings.truncate(window.location.href.replace(/\/app\/.*$/, uri), 45)}</NavLink>)}
-		{(comment.state !== 'closed' && comment.types.find((type)=> (type === 'op'))) && (<form className="reply-form">
-			<input type="text" placeholder="Reply" value={replyContent} onChange={props.onTextChange} autoComplete="new-password" />
+		{(comment.state !== 'closed' && types.find((type)=> (type === 'op'))) && (<KeyboardEventHandler className="reply-form" handleKeys={['alphanumeric']} isDisabled={(replyContent.length > 0)} onKeyEvent={(key, event)=> props.onReplyKeyPress(event, key)}>
+			{/* <input type="text" placeholder="Reply…" value={replyContent} onChange={props.onTextChange} autoComplete="new-password" /> */}
+			<input type="text" placeholder="Reply…" value={replyContent} readOnly autoComplete="new-password" />
 			{/* <Picker set="apple" onSelect={this.handleEmoji} onClick={this.handleEmoji} perline={9} emojiSize={24} native={true} sheetSize={20} showPreview={true} showSkinTones={true} title="Pick your emoji…" emoji="point_up" style={{ position : 'relative', bottom : '20px', right : '20px' }} /> */}
-		</form>)}
+		</KeyboardEventHandler>)}
 		{(comment.replies.length > 0) && (<BaseCommentReplies { ...props } onDelete={props.onDeleteReply} />)}
 	</div>
 	);

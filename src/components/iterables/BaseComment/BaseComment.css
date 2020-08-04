@@ -168,7 +168,12 @@
 	margin-bottom: 20px;
 }
 
-.comment-body .base-comment-content > form {
+/* .comment-body .base-comment-content > form {
+	width: 100%;
+	margin-top: 20px;
+} */
+
+.comment-body .base-comment-content .reply-form {
 	width: 100%;
 	margin-top: 20px;
 }

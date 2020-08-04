@@ -14,15 +14,11 @@
 
 .team-page {
 	margin: 0;
-	/* height: 100vh; */
-	/*border-style: dashed;*/
-	/*border-width: 1px;*/
-	/*border-color: var(--matty-mana);*/
 	text-align: left;
 	overflow: hidden;
 }
 
-.team-page > .content-wrapper {
+.team-page .content-wrapper, .team-page .content-loading {
 	position: fixed;
 	left: 208px;
 	top: 58px;
@@ -36,12 +32,17 @@
 }
 
 
-/* .team-page > div .filepond--root.file-pond-wrapper {
+.team-page .content-wrapper > span {
+	display: flex;
+	width: 100%;
+}
+
+/* .team-page .content-wrapper .filepond--root.file-pond-wrapper {
 	width: 100%;
 	height: 100%;
 } */
 
-.team-page > div .comments-wrapper {
+.team-page .content-wrapper .comments-wrapper {
 	height: 100%;
 	flex: 3 3 0;
 	background-color: rgba(var(--site-bg-color), 0.0);
@@ -49,16 +50,16 @@
 	overflow-y: auto;
 }
 
-.team-page > div .comments-wrapper .header {
+.team-page .content-wrapper .comments-wrapper .header {
 	display: flex;
 }
 
-.team-page > div .comments-wrapper .header button {
+.team-page .content-wrapper .comments-wrapper .header button {
 	width: fit-content;
 	margin-left: var(--spacing-10);
 }
 
-.team-page > div .comments-wrapper .empty-comments {
+.team-page .content-wrapper .comments-wrapper .empty-comments {
 	display: flex;
 	flex-flow: column nowrap;
 	align-content: center;
@@ -69,21 +70,21 @@
 	transition: opacity 333ms cubic-bezier(0.5, 0.9, 0.1, 1.0);
 }
 
-.team-page > div .comments-wrapper[data-empty="true"] .empty-comments {
+.team-page .content-wrapper .comments-wrapper[data-empty="true"] .empty-comments {
 	margin-top: 20px;
 	opacity: 1;
 }
 
-.team-page > div .comments-wrapper::-webkit-scrollbar {
+.team-page .content-wrapper .comments-wrapper::-webkit-scrollbar {
 	/* display: initial; */
 	display: none;
 }
 
-.team-page > div .comments-wrapper[data-fetching="true"] {
+.team-page .content-wrapper .comments-wrapper[data-fetching="true"] {
 	background-color: rgba(var(--site-bg-color), 1.0);
 }
 
-.team-page > div .team-wrapper {
+.team-page .content-wrapper .team-wrapper {
 	flex: 2 0 0;
 	margin-left: var(--spacing-20);
 	/* width: 100px; */
@@ -92,7 +93,7 @@
 	align-items: flex-start; /* v-align */
 }
 
-.team-page > div .team-wrapper > * {
+.team-page .content-wrapper .team-wrapper > * {
 	width: 50%;
 	background-color: rgba(var(--modal-bg-color), 1.0);
 	text-align: left;
@@ -100,52 +101,52 @@
 	border: 1px solid rgba(var(--border-alt-color), 1.0);
 }
 
-.team-page > div .team-wrapper > *:not(:last-child) {
+.team-page .content-wrapper .team-wrapper > *:not(:last-child) {
 	margin-bottom: var(--spacing-20);
 }
 
-.team-page > div .team-wrapper .header {
+.team-page .content-wrapper .team-wrapper .header {
 	padding: var(--spacing-15) 0 var(--spacing-15) var(--spacing-15);
 	color: rgba(var(--panel-title-fg-color), 1.0);
 	font-size: 16px;
 	font-weight: 600;
 }
 
-.team-page > div .team-wrapper .header:hover {
+.team-page .content-wrapper .team-wrapper .header:hover {
 	cursor: crosshair;
 }
 
-.team-page > div .team-wrapper .content {
+.team-page .content-wrapper .team-wrapper .content {
 	padding: 0 var(--spacing-15);
 }
 
-.team-page > div .team-wrapper .footer {
+.team-page .content-wrapper .team-wrapper .footer {
 	padding: var(--spacing-15);
 }
 
-.team-page > div .team-wrapper .about-wrapper {
+.team-page .content-wrapper .team-wrapper .about-wrapper {
 	display: flex;
 	flex-flow: column nowrap;
 	justify-content: space-around; /* h-align */
 	align-items: flex-start; /* v-align */
 }
 
-.team-page > div .team-wrapper .about-wrapper > * {
+.team-page .content-wrapper .team-wrapper .about-wrapper > * {
 	flex: 1 1 0;
 	width: 100%;
 }
 
-.team-page > div .team-wrapper .content textarea {
+.team-page .content-wrapper .team-wrapper .content textarea {
 	min-height: 88px;
 	padding: var(--spacing-05);
 }
 
-.team-page > div .team-wrapper .member-count {
+.team-page .content-wrapper .team-wrapper .member-count {
 	font-size: 12px;
 	font-weight: 700;
 }
 
-.team-page > div .team-wrapper .timestamp {
+.team-page .content-wrapper .team-wrapper .timestamp {
 	padding-top: var(--spacing-10);
 	color: rgba(var(--txtfield-fg-color), 1.0);
 	font-size: 10px;
@@ -153,56 +154,56 @@
 	text-transform: uppercase;
 }
 
-.team-page > div .team-wrapper .rules-wrapper .content > *:nth-child(even) {
+.team-page .content-wrapper .team-wrapper .rules-wrapper .content > *:nth-child(even) {
 	background-color: rgba(var(--modal-bg-color), 1.0);
 }
 
-.team-page > div .team-wrapper .rules-wrapper .content > *:not(:last-child) {
+.team-page .content-wrapper .team-wrapper .rules-wrapper .content > *:not(:last-child) {
 	margin-bottom: 10px;
 }
 
-.team-page > div .team-wrapper .rules-wrapper textarea {
+.team-page .content-wrapper .team-wrapper .rules-wrapper textarea {
 	min-height: 36px;
 }
 
-.team-page > div .team-wrapper .rules-wrapper .footer {
+.team-page .content-wrapper .team-wrapper .rules-wrapper .footer {
 	display: flex;
 	flex-wrap: nowrap;
 	justify-content: center; /* h-align */
 	align-items: center;
 }
 
-.team-page > div .team-wrapper .rules-wrapper .footer > * {
+.team-page .content-wrapper .team-wrapper .rules-wrapper .footer > * {
 	padding: 5px 10px;
 	width: 100%;
 	transition: opacity 125ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 
-.team-page > div .team-wrapper .rules-wrapper .footer[data-input="false"] button {
+.team-page .content-wrapper .team-wrapper .rules-wrapper .footer[data-input="false"] button {
 	z-index: 2;
 }
 
-.team-page > div .team-wrapper .rules-wrapper .footer[data-input="false"] textarea {
+.team-page .content-wrapper .team-wrapper .rules-wrapper .footer[data-input="false"] textarea {
 	z-index: 1;
 }
 
-.team-page > div .team-wrapper .rules-wrapper .footer[data-input="false"] button {
+.team-page .content-wrapper .team-wrapper .rules-wrapper .footer[data-input="false"] button {
 	display: flex;
 	opacity: 1;
 }
 
-.team-page > div .team-wrapper .rules-wrapper .footer[data-input="true"] button {
+.team-page .content-wrapper .team-wrapper .rules-wrapper .footer[data-input="true"] button {
 	display: none;
 	opacity: 0;
 }
 
-.team-page > div .team-wrapper .rules-wrapper .footer[data-input="false"] textarea {
+.team-page .content-wrapper .team-wrapper .rules-wrapper .footer[data-input="false"] textarea {
 	display: none;
 	opacity: 0;
 }
 
-.team-page > div .team-wrapper .rules-wrapper .footer[data-input="true"] textarea {
+.team-page .content-wrapper .team-wrapper .rules-wrapper .footer[data-input="true"] textarea {
 	display: flex;
 	opacity: 1;
 }
@@ -255,7 +256,7 @@
 }
 
 
-.team-page > div .team-wrapper .rules-wrapper .footer .team-page-add-rule-button {
+.team-page .content-wrapper .team-wrapper .rules-wrapper .footer .team-page-add-rule-button {
 	/* width: 100%; */
 	min-width: 100%;
 	justify-content: center;
@@ -264,7 +265,7 @@
   transition: opacity 0.125s ease-out;
 }
 
-.team-page > div .team-wrapper .rules-wrapper .footer .team-page-add-rule-button:hover {
+.team-page .content-wrapper .team-wrapper .rules-wrapper .footer .team-page-add-rule-button:hover {
   opacity: 1;
   cursor: pointer;
 }

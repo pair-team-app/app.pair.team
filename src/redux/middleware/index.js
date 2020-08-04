@@ -300,8 +300,13 @@ export function onMiddleware(store) {
       const { team } = prevState.teams;
       const { playground, component } = prevState.builds;
 
-      if (payload.comment) {
-        dispatch(push(`/team/${team.id}--${team.slug}/project/${playground.buildID}--${playground.slug}/${playground.device.slug}/${component.id}/comments/${comment.id}`));
+      if (comment) {
+        if (playground) {
+          dispatch(push(`/team/${team.id}--${team.slug}/project/${playground.buildID}--${playground.slug}/${playground.device.slug}/${component.id}/comments/${comment.id}`));
+
+        } else {
+          dispatch(push(`/team/${team.id}--${team.slug}/comments/${comment.id}`));
+        }
       }
 
     } else if (type === '@@router/LOCATION_CHANGE') {

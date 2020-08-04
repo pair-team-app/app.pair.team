@@ -5,6 +5,7 @@ import './TeamPage.css';
 import axios from 'axios';
 import { Strings } from 'lang-js-utils';
 import { Menu, Item, Separator, Submenu, MenuProvider } from 'react-contexify';
+import KeyboardEventHandler from 'react-keyboard-event-handler';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import TextareaAutosize from 'react-autosize-textarea';
@@ -219,9 +220,28 @@ class TeamPage extends Component {
   handleTextChange = (event)=> {
     // console.log('%s.handleTextChange()', this.constructor.name, event);
 
-    const commentContent = event.target.value;
+    // const commentContent = event.target.value;
+    // this.setState({ commentContent }, ()=> {
+    //   this.setState({ commentContent : '' });
+    // });
+  };
+
+  handlePageKeyPress = (event, key)=> {
+    console.log('%s.handlePageKeyPress()', this.constructor.name, { event, key });
+
+    const commentContent = key;
+    this.setState({ commentContent });
+  };
+
+
+  handleCommentReply = (comment, key)=> {
+    console.log('%s.handleCommentReply()', this.constructor.name, { comment, key });
+
+    const commentContent = key;
     this.setState({ commentContent }, ()=> {
-      this.setState({ commentContent : '' });
+      if (comment !== this.props.comment) {
+        this.props.setComment(comment);
+      }
     });
   };
 
@@ -243,22 +263,24 @@ class TeamPage extends Component {
     const { commentContent, teamDescription, ruleContent, ruleInput, fetching, loading, dragOver } = this.state;
 
     return (<BasePage { ...this.props } className="team-page">
-      {(profile && team) && (<>
-        <div className="content-wrapper">
+      {(profile && team)
+      ? (<div className="content-wrapper">
+          <KeyboardEventHandler handleKeys={['alphanumeric']} onKeyEvent={(key, event)=> this.handlePageKeyPress(event, key)} />
           <div className="comments-wrapper" data-fetching={fetching} data-empty={team && team.comments.length === 0}>
             <div className="header" data-loading={loading}>
-              <input type="text" className="comment-txt" placeholder="Typing or Pasting anything…" value={commentContent} onChange={this.handleTextChange} />
+              <input type="text" className="comment-txt" placeholder="Typing or Pasting anything…" defaultValue={commentContent} />
               <button disabled={true}>Comment</button>
             </div>
 
             <div className="empty-comments">No Activity</div>
 
-            {(team) && (<TeamPageCommentsPanel
+            <TeamPageCommentsPanel
               profile={profile}
               comments={(sort === SORT_BY_DATE) ? team.comments.sort((i, ii)=> ((i.epoch > ii.epoch) ? -1 : (i.epoch < ii.epoch) ? 1 : 0)) : team.comments.sort((i, ii)=> ((i.score > ii.score) ? -1 : (i.score < ii.score) ? 1 : 0)).filter((comment)=> (comment !== null))}
               fetching={fetching}
               sort={sort}
-            />)}
+              onReplyKeyPress={this.handleCommentReply}
+            />
           </div>
           <div className="team-wrapper" data-fetching={fetching}>
             <div className="about-wrapper">
@@ -270,7 +292,8 @@ class TeamPage extends Component {
                 content : 'Menu Clicked.',
                 delay   : 0
               });}} />
-              <div className="content"><TextareaAutosize placeholder="Enter Text to Describe you team" value={teamDescription} onChange={(event)=> this.setState({ teamDescription : event.target.value })} /></div>
+              <div className="content">
+                <TextareaAutosize placeholder="Enter Text to Describe you team" value={teamDescription} onChange={(event)=> this.setState({ teamDescription : event.target.value })} /></div>
               <div className="footer">
                 <div className="member-count">{team.members.length} {Strings.pluralize('member', team.members.length)}</div>
                 <div className="timestamp">CREATED {team.added.format(TEAM_TIMESTAMP)}</div>
@@ -278,24 +301,20 @@ class TeamPage extends Component {
             </div>
             <div className="rules-wrapper">
               <div className="header">Rules</div>
-              {(team) && (<div className="content">
-                {(team.rules.map((rule, i)=> {
-                  return (<TeamPageRule
-                    key={i}
-                    rule={rule}
-                  />);
-                }))}
-              </div>)}
+              <div className="content">
+                {(team.rules.map((rule, i)=> (<TeamPageRule key={i} rule={rule} />)))}
+              </div>
               <div className="footer" data-input={ruleInput}>
                 <TeamPageAddRuleButton onClick={this.handleRuleInput} />
                 <TextareaAutosize type="text" placeholder="" value={ruleContent} onChange={(event)=> this.setState({ ruleContent : event.target.value })} />
               </div>
             </div>
           </div>
-        </div>
-        <TeamPageFileDrop dragging={(dragOver)} textContent={commentContent} onClose={this.handleFileDropClose} />
-        {/* <ContentDropModal dragging={(dragOver)} textContent={commentContent} onClose={this.handleFileDropClose} /> */}
-      </>)}
+        </div>)
+
+      : (<div className="content-loading">Loading…</div>)}
+      <TeamPageFileDrop dragging={(dragOver)} textContent={commentContent} onClose={this.handleFileDropClose} />
+      {/* <ContentDropModal dragging={(dragOver)} textContent={commentContent} onClose={this.handleFileDropClose} /> */}
     </BasePage>);
   }
 }
@@ -307,7 +326,7 @@ const TeamPageCommentsPanel = (props)=> {
   return (<div className="team-page-comments-panel" data-loading={loading}>
 		{(comments.map((comment, i)=> {
 			const vote = (comment.votes.find(({ author, score })=> (author.id === profile.id && score !== 0 )) || null);
-			return (<TeamPageComment key={i} comment={comment}  loading={loading} vote={vote} />);
+			return (<TeamPageComment key={i} comment={comment}  loading={loading} vote={vote} onReplyKeyPress={props.onReplyKeyPress} />);
 		}))}
 	</div>);
 }
@@ -318,7 +337,7 @@ const TeamPageComment = (props)=> {
 
   const { loading, vote, comment } = props;
 	return (<div className="team-page-comment" data-id={comment.id} data-author={comment.author.id} data-loading={loading}>
-    <BaseComment loading={loading} vote={vote} comment={comment} />
+    <BaseComment loading={loading} vote={vote} comment={comment} onReplyKeyPress={props.onReplyKeyPress} />
   </div>);
 };
 
