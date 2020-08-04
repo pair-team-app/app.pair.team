@@ -17,8 +17,7 @@ import TeamPageFileDrop from './TeamPageFileDrop';
 
 import { SORT_BY_DATE } from '../../sections/TopNav/TeamPageHeader';
 import { TEAM_TIMESTAMP } from '../../../consts/formats';
-// import { BASKSPACE_KEY, TAB_KEY, ALT_KEY, CTRL_KEY, CAP_KEY, SHIFT_KEY, ENTER_KEY, META_LT_KEY } from '../../../consts/key-codes';
-import { ENTER_KEY } from '../../../consts/key-codes';
+import { ENTER_KEY, ESCAPE_KEY } from '../../../consts/key-codes';
 import { API_ENDPT_URL } from '../../../consts/uris';
 import { fetchTeamComments, makeComment, makeTeamRule, modifyTeam, setComment, setPlayground, setTypeGroup } from '../../../redux/actions';
 import { trackEvent } from '../../../utils/tracking';
@@ -39,8 +38,8 @@ class TeamPage extends Component {
       ruleContent     : '',
       ruleInput       : false,
       sort            : SORT_BY_DATE,
-      fetching        : false,
-      loading         : false,
+      fetching       : 0x111,
+      loading        : 0x000,
       share           : false,
       urlComment      : false,
       dataURI         : null,
@@ -61,18 +60,49 @@ class TeamPage extends Component {
     window.ondragleave = this.handleDragLeave;
 
     // window.addEventListener('paste', this.handleClipboardPaste);
-    // document.addEventListener('keydown', this.handleKeyDown);
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
     console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : this.props, prevState, state : this.state });
+    // console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : this.props, prevFetching : prevState.fetching.toString(16), fetching : this.state.fetching.toString(16), prevLoading : prevState.loading.toString(16), loading : this.state.loading.toString(16) });
 
-    const { team } = this.props;
-    const { teamDescription } = this.state;
+    const { profile, team, comment } = this.props;
+    const { fetching, loading, teamDescription } = this.state;
 
     if (prevProps.team !== team && team && teamDescription !== team.description) {
       this.setState({ teamDescription : team.description });
     }
+
+    if ((fetching & 0x001) === 0x001 && profile && !prevProps.profile) {
+      this.setState({ fetching : fetching ^ 0x001 });
+    }
+
+    if ((fetching & 0x010) === 0x010 && team && !prevProps.team) {
+      this.setState({ fetching : fetching ^ 0x010 });
+    }
+
+    if ((fetching & 0x100) === 0x100 && comment && !prevProps.comment) {
+      this.setState({ fetching : loading ^ 0x100 });
+    }
+
+    if ((loading & 0x001) === 0x001 && prevProps.team.description !== team.description) {
+      this.setState({ loading : loading ^ 0x001 });
+    }
+
+    if ((loading & 0x010) === 0x010 && prevProps.team.rules !== team.rules) {
+      // this.setState({ loading : loading ^ 0x010 });
+
+      this.setState({
+        ruleInput : false,
+        ruleContent : '',
+        loading : loading ^ 0x010
+      });
+    }
+
+    if ((loading & 0x100) === 0x100 && prevProps.team.comments !== team.comments) {
+      this.setState({ loading : loading ^ 0x100 });
+    }
+
   }
 
   componentWillUnmount() {
@@ -80,7 +110,6 @@ class TeamPage extends Component {
 
     window.ondragenter = null;
     window.ondragleave = null;
-		document.removeEventListener('keydown', this.handleKeyDown);
 		window.removeEventListener('paste', this.handleClipboardPaste);
 	}
 
@@ -102,18 +131,25 @@ class TeamPage extends Component {
   };
 
   handleAddRule = (event)=> {
-    // console.log('%s.handleAddRule()', this.constructor.name, { event });
-    trackEvent('button', 'add-rule');
-
+    console.log('%s.handleAddRule()', this.constructor.name, { event });
     event.preventDefault();
     event.stopPropagation();
 
-    const { ruleContent } = this.state;
-    this.props.makeTeamRule({ title : ruleContent });
-    this.setState({
-      ruleInput   : false
-      // ruleContent : ''
-    });
+    const { keyCode } = event;
+    if (keyCode === ESCAPE_KEY) {
+      this.setState({
+        ruleContent : '',
+        ruleInput   : false
+      });
+
+    } else {
+      trackEvent('text', 'add-team-rule');
+      const { ruleContent, loading } = this.state;
+
+      this.setState({ loading  : loading ^ 0x010 }, ()=> {
+        this.props.makeTeamRule({ title : ruleContent });
+      });
+    }
   }
 
   handleClipboardPaste = (event)=> {
@@ -177,83 +213,48 @@ class TeamPage extends Component {
     });
   };
 
-  handleKeyDown = (event)=> {
-    console.log('%s.handleKeyDown()', this.constructor.name, { event });
-
-    if (event.keyCode === ENTER_KEY) {
-      const { ruleInput, teamDescription, ruleContent } = this.state;
-      // const { ruleInput, commentContent, teamDescription, ruleContent } = this.state;
-      // if (commentContent.length > 0) {
-      //   this.handleAddComment(event);
-      // }
-
-      if (teamDescription.length > 0) {
-        this.handleUpdateTeamDescription(event);
-      }
-
-      if (ruleContent.length > 0 && ruleInput) {
-        this.handleAddRule(event);
-      }
-    }
-
-    // } else if (event.keyCode !== META_LT_KEY && event.keyCode !== BASKSPACE_KEY && event.keyCode !== TAB_KEY && event.keyCode !== ALT_KEY && event.keyCode !== CTRL_KEY && event.keyCode !== CAP_KEY && event.keyCode !== SHIFT_KEY) {
-    //   const { keyPress, commentContent } = this.state;
-    //   // if (!keyPress) {
-    //     this.setState({
-    //       keyPress       : true,
-    //       commentContent : `${commentContent}${event.key}`
-    //     });
-    //   // }
-    // }
-  }
-
-  handleTeamDescriptionKeyPress = (event, key)=> {
-    console.log('%s.handleTeamDescriptionKeyPress()', this.constructor.name, { event, key });
-  };
-
   handleRuleInput = (event)=> {
     // console.log('%s.handleRuleInput()', this.constructor.name, { event });
     trackEvent('button', 'add-rule');
 
+    // this.addRuleTxt.focus();
     this.setState({
       ruleContent : '',
       ruleInput   : true
     });
   }
 
-  handleTextChange = (event)=> {
-    // console.log('%s.handleTextChange()', this.constructor.name, { event });
-
-    // const commentContent = event.target.value;
-    // this.setState({ commentContent }, ()=> {
-    //   this.setState({ commentContent : '' });
-    // });
-  };
-
   handlePageKeyPress = (event, key)=> {
-    console.log('%s.handlePageKeyPress()', this.constructor.name, { event, target : event.target, attribs : { className : event.target.className, keypressOverride : event.target.attributes.getNamedItem('data-keypress-override').value }, key });
+    console.log('%s.handlePageKeyPress()', this.constructor.name, { event, target : event.target, attribs : { elementID : event.target.id, className : event.target.className, attribs : event.target.getAttributeNames(), hasOverride : (event.target.getAttributeNames().findIndex((attrib)=> (attrib === 'data-keypress-override')) !== -1) }, key });
 
     const { target } = event;
-    const { attributes } = target;
-
-    const kpOverride = attributes.getNamedItem('data-keypress-override').value;
-    if (!kpOverride) {
+    if (target.getAttributeNames().findIndex((attrib)=> (attrib === 'data-keypress-override')) === -1) {
       const commentContent = key;
       this.setState({ commentContent }, ()=> {
         this.setState({ commentContent : '' });
       });
+
+    } else {
+      event.preventDefault();
+      event.stopPropagation();
+
+      const { team } = this.props;
+      const { teamDescription, ruleContent, ruleInput } = this.state;
+      const elementID = target.id;
+
+
+      const { loading } = this.state;
+      // if (elementID === 'team-info-txtarea' && (key === 'meta' || key === 'ctrl') && event.keyCode === ENTER_KEY) {
+      //   if (teamDescription.length > 0 && teamDescription !== team.description) {
+      //     trackEvent('text', 'update-team-info');
+
+      //     target.blur();
+      //     this.setState({ loading : loading ^ 0x001 }, ()=> {
+      //       this.props.modifyTeam({ description : teamDescription });
+      //     });
+      //   }
+      // }
     }
-
-    // const classNames = target.className.split(' ');
-    // if (classNames.findIndex((className)=> ((className === 'kp-override'))) === -1) {
-    //   const commentContent = key;
-    //   this.setState({ commentContent }, ()=> {
-    //     this.setState({ commentContent : '' });
-    //   });
-
-    // } else {
-
-    // }
   };
 
 
@@ -268,29 +269,46 @@ class TeamPage extends Component {
     });
   };
 
-  handleUpdateTeamDescription = (event)=> {
-    // console.log('%s.handleUpdateTeamDescription()', this.constructor.name, { event });
-    trackEvent('button', 'update-team');
+
+  handleUpdateTeamDescription = (event, key)=> {
+    // console.log('%s.handleUpdateTeamDescription()', this.constructor.name, { event, key });
+    trackEvent('text', 'update-team-info');
 
     event.preventDefault();
     event.stopPropagation();
 
-    const { teamDescription } = this.state;
-    this.props.modifyTeam({ description : teamDescription });
+    const { team } = this.props;
+    const { teamDescription, loading } = this.state;
+    if (key !== 'meta' && key !== 'ctrl') {
+      this.setState({ teamDescription : `${teamDescription}\n` });
+
+    } else {
+    if (teamDescription.length > 0 && teamDescription !== team.description && event.keyCode === ENTER_KEY) {
+      trackEvent('text', 'update-team-info');
+
+      event.target.blur();
+      this.setState({ loading : loading ^ 0x001 }, ()=> {
+        this.props.modifyTeam({ description : teamDescription });
+      });
+    }}
   }
 
   render() {
     console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
-
     const { profile, team, sort } = this.props;
     const { commentContent, teamDescription, ruleContent, ruleInput, fetching, loading, dragOver } = this.state;
+
+    const infoLoading = Boolean(((loading << 0) & 0x001) === 0x001);
+    const rulesLoading = Boolean(((loading << 0) & 0x010) === 0x010);
+    const commentsLoading = Boolean(((loading << 0) & 0x100) === 0x100);
+    // console.log('%s.render()', this.constructor.name, { infoLoading, rulesLoading, commentsLoading });
 
     return (<BasePage { ...this.props } className="team-page">
       {(profile && team)
       ? (<div className="content-wrapper">
           <KeyboardEventHandler handleKeys={['alphanumeric']} onKeyEvent={(key, event)=> this.handlePageKeyPress(event, key)} />
-          <div className="comments-wrapper" data-fetching={fetching} data-empty={team && team.comments.length === 0}>
-            <div className="header" data-loading={loading}>
+          <div className="comments-wrapper" data-fetching={Boolean(fetching & 0x010 == 0x010)} data-loading={commentsLoading} data-empty={team && team.comments.length === 0}>
+            <div className="header" data-loading={Boolean(fetching & 0x010 == 0x010)}>
               <input type="text" className="comment-txt" placeholder="Typing or Pasting anything…" value="" onChange={(event)=> this.handlePageKeyPress(event, event.target.value)} />
               <button disabled={true}>Comment</button>
             </div>
@@ -300,13 +318,14 @@ class TeamPage extends Component {
             <TeamPageCommentsPanel
               profile={profile}
               comments={(sort === SORT_BY_DATE) ? team.comments.sort((i, ii)=> ((i.epoch > ii.epoch) ? -1 : (i.epoch < ii.epoch) ? 1 : 0)) : team.comments.sort((i, ii)=> ((i.score > ii.score) ? -1 : (i.score < ii.score) ? 1 : 0)).filter((comment)=> (comment !== null))}
-              fetching={fetching}
+              fetching={Boolean(fetching & 0x010 == 0x010)}
+              loading={commentsLoading}
               sort={sort}
               onReplyKeyPress={this.handleCommentReply}
             />
           </div>
-          <div className="team-wrapper" data-fetching={fetching}>
-            <div className="about-wrapper">
+          <div className="team-wrapper" data-fetching={Boolean(fetching & 0x010 == 0x010)}>
+            <div className="about-wrapper" data-loading={infoLoading}>
               <MenuProvider id="menu_id">
                 <div className="header">About</div>
               </MenuProvider>
@@ -315,22 +334,25 @@ class TeamPage extends Component {
                 content : 'Menu Clicked.',
                 delay   : 0
               });}} />
-              <div className="content"><KeyboardEventHandler handleKeys={['alphanumeric']} onKeyEvent={(key, event)=> this.handlePageKeyPress(event, key)}>
-                <TextareaAutosize className="team-info-txtarea kp-override" data-keypress-override="true" placeholder="Enter Text to Describe you team" value={teamDescription} onChange={(event)=> this.setState({ teamDescription : event.target.value })} />
+              <div className="content"><KeyboardEventHandler handleKeys={['ctrl', 'meta', 'enter']} onKeyEvent={(key, event)=> this.handleUpdateTeamDescription(event, key)}>
+                <TextareaAutosize id="team-info-txtarea" className="team-info-txtarea" placeholder="Enter Text to Describe you team" value={teamDescription} onChange={(event)=> this.setState({ teamDescription : event.target.value })} data-keypress-override="true" />
               </KeyboardEventHandler></div>
               <div className="footer">
                 <div className="member-count">{team.members.length} {Strings.pluralize('member', team.members.length)}</div>
                 <div className="timestamp">CREATED {team.added.format(TEAM_TIMESTAMP)}</div>
               </div>
             </div>
-            <div className="rules-wrapper">
+            <div className="rules-wrapper"  data-loading={rulesLoading}>
               <div className="header">Rules</div>
               <div className="content">
                 {(team.rules.map((rule, i)=> (<TeamPageRule key={i} rule={rule} />)))}
               </div>
               <div className="footer" data-input={ruleInput}>
                 <TeamPageAddRuleButton onClick={this.handleRuleInput} />
-                <TextareaAutosize type="text" placeholder="" value={ruleContent} onChange={(event)=> this.setState({ ruleContent : event.target.value })} />
+                {/* <KeyboardEventHandler handleKeys={['enter']} handleFocusableElements onKeyEvent={(key, event)=> this.handlePageKeyPress(event, key)}> */}
+                <KeyboardEventHandler handleKeys={['enter', 'esc']} handleFocusableElements onKeyEvent={(key, event)=> this.handleAddRule(event)}>
+                  <TextareaAutosize id="team-add-rule-txtarea" placeholder="" value={ruleContent} onChange={(event)=> this.setState({ ruleContent : event.target.value })} />
+                </KeyboardEventHandler>
               </div>
             </div>
           </div>
@@ -346,8 +368,8 @@ class TeamPage extends Component {
 const TeamPageCommentsPanel = (props)=> {
 	// console.log('TeamPageCommentsPanel()', { ...props });
 
-	const { loading, profile, comments } = props;
-  return (<div className="team-page-comments-panel" data-loading={loading}>
+	const { fetching, loading, profile, comments } = props;
+  return (<div className="team-page-comments-panel" data-loading={fetching}>
 		{(comments.map((comment, i)=> {
 			const vote = (comment.votes.find(({ author, score })=> (author.id === profile.id && score !== 0 )) || null);
 			return (<TeamPageComment key={i} comment={comment}  loading={loading} vote={vote} onReplyKeyPress={props.onReplyKeyPress} />);
@@ -373,14 +395,17 @@ const TeamPageRule = (props)=> {
   const text = `${title}${(content) ? `\n${content}` : ''}`;
 
   return (<div className="team-page-rule">
-    <TextareaAutosize disabled={true} value={text} onChange={(event)=> this.setState({ teamDescription : event.target.value })} />
+    {text}
   </div>);
 };
 
 const TeamPageAddRuleButton = (props)=> {
+  // console.log('TeamPageAddRuleButton()', { props });
+
   return (<button className="quiet-button team-page-add-rule-button" onClick={props.onClick}>
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path fillRule="evenodd" clipRule="evenodd" d="M13 7H11V11H7V13H11V17H13V13H17V11H13V7Z" fill="#909090"/>
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="7" width="2" height="16" fill="#CCCCCC"/>
+      <rect x="16" y="7" width="2" height="16" transform="rotate(90 16 7)" fill="#CCCCCC"/>
     </svg>
   </button>);
 };

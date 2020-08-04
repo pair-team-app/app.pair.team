@@ -120,6 +120,12 @@
 	padding: 0 var(--spacing-15);
 }
 
+.team-page .content-wrapper .team-wrapper .content textarea {
+	min-height: 88px;
+	padding: var(--spacing-05);
+	transition: opacity 125ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
 .team-page .content-wrapper .team-wrapper .footer {
 	padding: var(--spacing-15);
 }
@@ -136,11 +142,6 @@
 	width: 100%;
 }
 
-.team-page .content-wrapper .team-wrapper .content textarea {
-	min-height: 88px;
-	padding: var(--spacing-05);
-}
-
 .team-page .content-wrapper .team-wrapper .member-count {
 	font-size: 12px;
 	font-weight: 700;
@@ -154,8 +155,10 @@
 	text-transform: uppercase;
 }
 
+
+
 .team-page .content-wrapper .team-wrapper .rules-wrapper .content > *:nth-child(even) {
-	background-color: rgba(var(--modal-bg-color), 1.0);
+	background-color: rgba(var(--txtarea-bg-color), 1.0);
 }
 
 .team-page .content-wrapper .team-wrapper .rules-wrapper .content > *:not(:last-child) {
@@ -174,7 +177,6 @@
 }
 
 .team-page .content-wrapper .team-wrapper .rules-wrapper .footer > * {
-	padding: 5px 10px;
 	width: 100%;
 	transition: opacity 125ms cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -182,30 +184,41 @@
 
 .team-page .content-wrapper .team-wrapper .rules-wrapper .footer[data-input="false"] button {
 	z-index: 2;
-}
 
-.team-page .content-wrapper .team-wrapper .rules-wrapper .footer[data-input="false"] textarea {
-	z-index: 1;
-}
-
-.team-page .content-wrapper .team-wrapper .rules-wrapper .footer[data-input="false"] button {
 	display: flex;
 	opacity: 1;
 }
+
+.team-page .content-wrapper .team-wrapper .rules-wrapper .footer[data-input="false"] > span, .team-page .content-wrapper .team-wrapper .rules-wrapper .footer[data-input="false"] textarea {
+	z-index: 1;
+
+	display: none;
+	opacity: 0;
+}
+
+/* .team-page .content-wrapper .team-wrapper .rules-wrapper .footer[data-input="false"] button {
+	display: flex;
+	opacity: 1;
+} */
 
 .team-page .content-wrapper .team-wrapper .rules-wrapper .footer[data-input="true"] button {
 	display: none;
 	opacity: 0;
 }
 
-.team-page .content-wrapper .team-wrapper .rules-wrapper .footer[data-input="false"] textarea {
+/* .team-page .content-wrapper .team-wrapper .rules-wrapper .footer[data-input="false"] textarea {
 	display: none;
 	opacity: 0;
-}
+} */
 
-.team-page .content-wrapper .team-wrapper .rules-wrapper .footer[data-input="true"] textarea {
+.team-page .content-wrapper .team-wrapper .rules-wrapper .footer[data-input="true"] > span, .team-page .content-wrapper .team-wrapper .rules-wrapper .footer[data-input="true"] textarea {
 	display: flex;
 	opacity: 1;
+}
+
+.team-page .content-wrapper .team-wrapper .about-wrapper[data-loading="true"] textarea, .team-page .content-wrapper .team-wrapper .rules-wrapper[data-loading="true"] .footer textarea {
+	opacity: 0.75;
+	cursor: progress;
 }
 
 
@@ -251,7 +264,16 @@
 
 
 .team-page-rule {
-	/* padding: 15px; */
+	display: flex;
+	min-width: 100%;
+	/* min-height: 38px; */
+	align-items: center;
+	padding: var(--spacing-10);
+	background-color: rgba(var(--txtarea-bg-color), 1.0);
+	color: rgba(var(--txtfield-fg-color), 1.0);
+	border: 1px solid rgba(var(--txtfield-border-color), 1.0);
+	border-radius: var(--border-radius);
+	font-size: 12px;
 	word-break: break-all;
 }
 
@@ -259,6 +281,7 @@
 .team-page .content-wrapper .team-wrapper .rules-wrapper .footer .team-page-add-rule-button {
 	/* width: 100%; */
 	min-width: 100%;
+	padding: var(--spacing-10);
 	justify-content: center;
 	border-color: rgba(var(--txtfield-border-color));
   opacity: 0.5;
