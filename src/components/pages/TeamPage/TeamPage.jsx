@@ -230,11 +230,7 @@ class TeamPage extends Component {
     const { target } = event;
     const { preComment } = this.props;
     if (target.getAttributeNames().findIndex((attrib)=> (attrib === 'data-keypress-override')) === -1 && !preComment) {
-      const commentContent = key;
       this.props.createComment(key);
-      // this.setState({ commentContent }, ()=> {
-        // this.setState({ commentContent : '' });
-      // });
     }
   };
 
@@ -278,7 +274,7 @@ class TeamPage extends Component {
 
   render() {
     console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
-    const { profile, team, sort, preComment } = this.props;
+    const { profile, team, sort } = this.props;
     const { teamDescription, ruleContent, ruleInput, fetching, loading, dragOver } = this.state;
 
     const infoLoading = Boolean(((loading << 0) & 0x001) === 0x001);

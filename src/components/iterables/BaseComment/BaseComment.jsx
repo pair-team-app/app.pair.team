@@ -10,7 +10,7 @@ import { connect } from 'react-redux';
 
 import { COMMENT_TIMESTAMP } from '../../../consts/formats';
 import { USER_DEFAULT_AVATAR } from '../../../consts/uris';
-import { createComment, setComment, makeComment, makeVote, modifyComment } from '../../../redux/actions';
+import { createComment, setComment, makeVote, modifyComment } from '../../../redux/actions';
 import { trackEvent } from '../../../utils/tracking';
 
 class BaseComment extends Component {
@@ -18,14 +18,11 @@ class BaseComment extends Component {
     super(props);
 
     this.state = {
-			replyContent : ''
 		};
 	}
 
 	componentDidMount() {
     // console.log('%s.componentDidMount()', this.constructor.name, { props : this.props, state : this.state });
-
-		// document.addEventListener('keydown', this.handleKeyDown);
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
@@ -34,30 +31,13 @@ class BaseComment extends Component {
 
 	componentWillUnmount() {
 		// console.log('%s.componentWillUnmount()', this.constructor.name, { props : this.props, state : this.state });
-
-		// document.removeEventListener('keydown', this.handleKeyDown);
 	}
 
 
 	handleDeleteComment = (comment)=> {
 		console.log('%s.handleDeleteComment()', this.constructor.name, { comment });
+		trackEvent('button', 'delete-comment');
 		this.props.modifyComment({ comment, action : 'deleted' });
-	};
-
-	handleKeyDown = (event)=> {
-    // console.log('%s.handleKeyDown()', this.constructor.name, { event });
-
-    // const { replyContent } = this.state;
-    // if (event.keyCode === ENTER_KEY && replyContent.length > 0) {
-    //   this.handleReplySubmit(event);
-    // }
-  }
-
-	handleTextChange = (event)=> {
-		// console.log('%s.handleTextChange()', this.constructor.name, { event });
-
-    // const replyContent = event.target.value;
-    // this.setState({ replyContent });
 	};
 
 	handleEmoji = (emoji, event)=> {
@@ -69,45 +49,16 @@ class BaseComment extends Component {
 		console.log('BaseCommentContent.handleReplyKeyPress()', this.constructor.name, { props : this.props, event, key });
 
 		const { comment, preComment } = this.props;
-
 		if (!preComment) {
 			this.props.setComment(comment);
 			this.props.createComment(key);
 		}
-
-
-
-		// this.setState({ replyContent : key }, ()=> {
-		// 	this.setState({ replyContent : '' }, ()=> {
-		// 		this.props.onReplyKeyPress(comment, key);
-		// 	});
-		// });
 	};
-
-	handleReplySubmit = (event)=> {
-    console.log('BaseCommentContent.handleReplySubmit()', this.constructor.name, { event });
-
-		const { comment, preComment } = this.props;
-		// const { replyContent } = this.state;
-
-		trackEvent('button', 'reply-comment', comment.id);
-
-    event.preventDefault();
-    event.stopPropagation();
-
-
-		this.props.makeComment({ comment,
-			content  : preComment,
-			position : comment.position
-		});
-
-		this.setState({ replyContent : '' });
-  };
 
 	handleVote = ({ comment, action })=> {
 		console.log('BaseComment.handleVote()', this.constructor.name, { comment, action });
 
-		// trackEvent('button', (action === VOTE_ACTION_UP) ? 'upvote-comment' : (action === VOTE_ACTION_DOWN) ? 'downvote-comment' : 'retract-vote');
+		trackEvent('button', (action === VOTE_ACTION_UP) ? 'upvote-comment' : (action === VOTE_ACTION_DOWN) ? 'downvote-comment' : 'retract-vote');
     this.props.makeVote({ comment, action });
 	}
 
@@ -115,17 +66,12 @@ class BaseComment extends Component {
 	render() {
     // console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
 
-		const { profile, comment, preComment } = this.props;
-		const { replyContent } = this.state;
-
-		const contentProps = { ...this.props, replyContent : (preComment || '') };
-
+		const { profile, comment } = this.props;
 		return (<div className="base-comment" data-id={comment.id} data-type={comment.type} data-author={comment.author.id === profile.id} data-votable={comment.votable} data-selected={comment.selected}>
 			<BaseCommentHeader { ...this.props} onDelete={this.handleDeleteComment} />
 			<div className="comment-body">
 				{(comment.votable) && (<BaseCommentVote { ...this.props } onVote={this.handleVote} />)}
-				{/* <BaseCommentContent { ...contentProps } onTextChange={this.handleTextChange} onDeleteReply={this.handleDeleteComment} /> */}
-				<BaseCommentContent { ...contentProps } onReplyKeyPress={this.handleReplyKeyPress} onDeleteReply={this.handleDeleteComment} />
+				<BaseCommentContent { ...this.props } onReplyKeyPress={this.handleReplyKeyPress} onDeleteReply={this.handleDeleteComment} />
 				{/* <Picker set="apple" onSelect={this.handleEmoji} onClick={this.handleEmoji} perline={9} emojiSize={24} native={true} sheetSize={16} showPreview={false} showSkinTones={false} title="Pick your emoji…" emoji="point_up" style={{ position : 'relative', bottom : '20px', right : '20px' }} /> */}
 			</div>
 		</div>);
@@ -173,16 +119,14 @@ const BaseCommentHeader = (props)=> {
 const BaseCommentContent = (props)=> {
 	// console.log('BaseComment.BaseCommentContent()', { props });
 
-	const { comment, replyContent } = props;
+	const { comment, preComment } = props;
 	const { author, types, content, timestamp } = comment;
 
 	return (<div className="base-comment-content">
 		<div className="timestamp" dangerouslySetInnerHTML={{ __html : timestamp.format(COMMENT_TIMESTAMP).replace(/(\d{1,2})(\w{2}) @/, (match, p1, p2)=> (`${p1}<sup>${p2}</sup> @`)) }} />
 		{(content) && (<div className="content" dangerouslySetInnerHTML={{ __html : content.replace(author.username, `<span class="txt-bold">${author.username}</span>`) }} />)}
-		{(comment.state !== 'closed' && types.find((type)=> (type === 'op'))) && (<KeyboardEventHandler className="reply-form" handleKeys={['alphanumeric']} isDisabled={(replyContent.length > 0)} onKeyEvent={(key, event)=> props.onReplyKeyPress(event, key)}>
-			{/* <input type="text" placeholder="Reply…" value={replyContent} onChange={props.onTextChange} autoComplete="new-password" /> */}
-			<input type="text" placeholder="Reply…" defaultValue={replyContent} autoComplete="new-password" />
-			{/* <Picker set="apple" onSelect={this.handleEmoji} onClick={this.handleEmoji} perline={9} emojiSize={24} native={true} sheetSize={20} showPreview={true} showSkinTones={true} title="Pick your emoji…" emoji="point_up" style={{ position : 'relative', bottom : '20px', right : '20px' }} /> */}
+		{(comment.state !== 'closed' && types.find((type)=> (type === 'op'))) && (<KeyboardEventHandler className="reply-form" handleKeys={['alphanumeric']} isDisabled={(preComment !== null)} onKeyEvent={(key, event)=> props.onReplyKeyPress(event, key)}>
+			<input type="text" placeholder="Reply…" value="" onChange={(event)=> null} autoComplete="new-password" />
 		</KeyboardEventHandler>)}
 		{(comment.replies.length > 0) && (<BaseCommentReplies { ...props } onDelete={props.onDeleteReply} />)}
 	</div>
@@ -191,21 +135,15 @@ const BaseCommentContent = (props)=> {
 
 
 const BaseCommentReplies = (props)=> {
-	// console.log('BaseComment.BaseCommentReplies()', { props });
+	console.log('BaseComment.BaseCommentReplies()', { props });
 
 	const { profile, comment } = props;
-
-	const handleDelete = (event, reply)=> {
-		event.preventDefault();
-		props.onDelete(reply);
-	};
-
 	return(<div className="base-comment-replies">
 		{(comment.replies.map((reply, i)=> {
 			const replyProps = { ...props, comment : reply }
 
 			return (<div key={i} className="base-comment base-comment-reply" data-id={comment.id} data-type={comment.type} data-author={comment.author.id === profile.id} data-votable={comment.votable} data-selected={comment.selected}>
-				<BaseCommentHeader { ...replyProps } onDelete={handleDelete} />
+				<BaseCommentHeader { ...replyProps } onDelete={props.onDelete} />
 				<div className="comment-body">
 					{(comment.votable) && (<BaseCommentVote { ...props } onVote={props.handleVote} />)}
 					<BaseCommentContent { ...replyProps } onTextChange={props.handleTextChange} onDeleteReply={props.handleDeleteComment} />
@@ -220,7 +158,6 @@ const BaseCommentReplies = (props)=> {
 const mapDispatchToProps = (dispatch)=> {
   return ({
 		createComment   : (payload)=> dispatch(createComment(payload)),
-		makeComment     : (payload)=> dispatch(makeComment(payload)),
 		setComment      : (payload)=> dispatch(setComment(payload)),
     modifyComment   : (payload)=> dispatch(modifyComment(payload)),
 		makeVote        : (payload)=> dispatch(makeVote(payload))
