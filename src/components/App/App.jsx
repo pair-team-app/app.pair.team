@@ -24,6 +24,7 @@ import TopNav from '../sections/TopNav';
 
 import { API_ENDPT_URL, Modals, Pages } from '../../consts/uris';
 import { fetchUserTeams, fetchUserProfile, fetchInvite, setPlayground, modifyInvite, paidStripeSession, updateUserProfile } from '../../redux/actions';
+import { makeAvatar } from '../../utils/funcs';
 import { initTracker, trackEvent, trackPageview } from '../../utils/tracking';
 
 const MATTY_DEVIN_THEME = false;
@@ -144,7 +145,7 @@ class App extends Component {
 
 
       if (profile && team && team.type === 'free' && !modals.stripe && !modals.profile) {
-        if (team.members.length >= 2) {
+        if (team.members.filter(({ role })=> (role !== 'bot')).length >= 4) {
           this.onToggleModal(Modals.STRIPE);
         }
       }

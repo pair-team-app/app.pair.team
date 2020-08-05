@@ -56,6 +56,7 @@
 	--txtfield-disabled-bg-color: var(--disabled-fg-color); /* #cccccc */
 	--txtfield-disabled-fg-color: 153, 153, 153; /* #999999 */
 	--txtarea-bg-color: 247, 247, 247; /* f7f7f7 */
+	--txtfield-shadow: drop-shadow(0px 0px 10px rgba(0, 0, 0, 0.1));
 	--panel-title-fg-color: 153, 153, 153; /* #999999 */
 	--border-color: 112, 112, 112; /* 707070 */
 	--border-alt-color: var(--txtfield-border-color); /* #e5e5e5 */

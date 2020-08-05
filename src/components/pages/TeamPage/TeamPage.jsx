@@ -238,7 +238,7 @@ class TeamPage extends Component {
   handleCommentReply = (comment, key)=> {
     console.log('%s.handleCommentReply()', this.constructor.name, { comment, key });
 
-    
+
 
     const commentContent = key;
     this.setState({ commentContent }, ()=> {
@@ -317,7 +317,7 @@ class TeamPage extends Component {
                 <TextareaAutosize id="team-info-txtarea" className="team-info-txtarea" placeholder="Enter Text to Describe you team" value={teamDescription} onChange={(event)=> this.setState({ teamDescription : event.target.value })} data-keypress-override="true" />
               </KeyboardEventHandler></div>
               <div className="footer">
-                <div className="member-count">{team.members.length} {Strings.pluralize('member', team.members.length)}</div>
+                <div className="member-count">{team.members.filter(({ role })=> (role !== 'bot')).length} {Strings.pluralize('member', team.members.length)}</div>
                 <div className="timestamp">CREATED {team.added.format(TEAM_TIMESTAMP)}</div>
               </div>
             </div>

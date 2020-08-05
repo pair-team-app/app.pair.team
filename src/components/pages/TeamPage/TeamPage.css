@@ -54,6 +54,10 @@
 	display: flex;
 }
 
+.team-page .content-wrapper .comments-wrapper .header input.comment-txt {
+	filter: var(--txtfield-shadow);
+}
+
 .team-page .content-wrapper .comments-wrapper .header button {
 	width: fit-content;
 	margin-left: var(--spacing-10);
@@ -94,6 +98,7 @@
 }
 
 .team-page .content-wrapper .team-wrapper > * {
+	padding: 10px;
 	width: 50%;
 	background-color: rgba(var(--modal-bg-color), 1.0);
 	text-align: left;
@@ -106,7 +111,6 @@
 }
 
 .team-page .content-wrapper .team-wrapper .header {
-	padding: var(--spacing-15) 0 var(--spacing-15) var(--spacing-15);
 	color: rgba(var(--panel-title-fg-color), 1.0);
 	font-size: 16px;
 	font-weight: 600;
@@ -117,17 +121,14 @@
 }
 
 .team-page .content-wrapper .team-wrapper .content {
-	padding: 0 var(--spacing-15);
+	padding: var(--spacing-10) 0;
 }
 
-.team-page .content-wrapper .team-wrapper .content textarea {
+.team-page .content-wrapper .team-wrapper textarea {
 	min-height: 88px;
 	padding: var(--spacing-05);
+	border: 1px solid rgba(var(--txtarea-bg-color), 1.0);
 	transition: opacity 125ms cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.team-page .content-wrapper .team-wrapper .footer {
-	padding: var(--spacing-15);
 }
 
 .team-page .content-wrapper .team-wrapper .about-wrapper {
@@ -165,31 +166,36 @@
 	margin-bottom: 10px;
 }
 
+
+
+
+
+.team-page .content-wrapper .team-wrapper .rules-wrapper .footer {
+	display: flex;
+	flex-wrap: column nowrap;
+	justify-content: center; /* h-align */
+	align-items: center;
+}
+
+.team-page .content-wrapper .team-wrapper .rules-wrapper .footer > * {
+	display: flex;
+	flex: 1 1 0;
+	transition: width 125ms cubic-bezier(0.1, 0.9, 0.3, 1.0), opacity 125ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+
 .team-page .content-wrapper .team-wrapper .rules-wrapper textarea {
 	min-height: 38px;
 	padding: var(--spacing-10);
 }
 
-.team-page .content-wrapper .team-wrapper .rules-wrapper .footer {
-	display: flex;
-	flex-wrap: nowrap;
-	justify-content: center; /* h-align */
-	align-items: center;
-}
 
 .team-page .content-wrapper .team-wrapper .rules-wrapper .footer .team-page-add-rule-button {
 	min-width: 100%;
 	padding: var(--spacing-10);
 	justify-content: center;
-	border-color: rgba(var(--txtfield-border-color));
+	border: none;
 }
-
-
-.team-page .content-wrapper .team-wrapper .rules-wrapper .footer > * {
-	display: flex;
-	transition: width 125ms cubic-bezier(0.1, 0.9, 0.3, 1.0), opacity 125ms cubic-bezier(0.4, 0, 0.2, 1);
-}
-
 
 .team-page .content-wrapper .team-wrapper .rules-wrapper .footer[data-input="false"] button {
 	width: 100%;
@@ -197,7 +203,7 @@
 	z-index: 2;
 }
 
-.team-page .content-wrapper .team-wrapper .rules-wrapper .footer[data-input="false"] > span {
+.team-page .content-wrapper .team-wrapper .rules-wrapper .footer[data-input="false"] > span, .team-page .content-wrapper .team-wrapper .rules-wrapper .footer[data-input="false"] > span > textarea {
 	width: 0;
 	opacity: 0;
 	z-index: 1;
@@ -234,22 +240,6 @@
 	border-radius: var(--border-radius);
 }
 
-.team-page-add-comment .content-wrapper textarea.comment-txt, .team-page-add-comment .content-wrapper textarea.comment-txt:hover {
-	padding: 10px 50px 10px 10px;
-}
-
-.team-page-add-comment form {
-  display: flex;
-	align-items: flex-start;
-	flex-wrap: nowrap;
-	margin-bottom: var(--spacing-20);
-}
-
-.team-page-add-comment button {
-  margin-left: var(--spacing-10);
-  width: fit-content;
-}
-
 .team-page-comments-panel {
 	transition: all 125ms cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -271,7 +261,7 @@
 	padding: var(--spacing-10);
 	background-color: rgba(var(--txtarea-bg-color), 1.0);
 	color: rgba(var(--txtfield-fg-color), 1.0);
-	border: 1px solid rgba(var(--txtfield-border-color), 1.0);
+	/* border: 1px solid rgba(var(--txtfield-border-color), 1.0); */
 	border-radius: var(--border-radius);
 	font-size: 12px;
 	word-break: break-all;

@@ -65,9 +65,10 @@
 	margin-bottom: var(--spacing-20);
 }
 
-.team-page-file-drop .input-wrapper > div {
+.team-page-file-drop .input-wrapper > div.comment-txt {
   position: relative;
   width: 100%;
+  filter: var(--txtfield-shadow);
 }
 
 .team-page-file-drop .input-wrapper .code-btn {
