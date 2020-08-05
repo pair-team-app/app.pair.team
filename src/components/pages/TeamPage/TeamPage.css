@@ -90,7 +90,7 @@
 
 .team-page .content-wrapper .team-wrapper {
 	flex: 2 0 0;
-	margin-left: var(--spacing-20);
+	margin-left: var(--spacing-10);
 	/* width: 100px; */
 	display: flex;
 	flex-flow: column nowrap;
@@ -99,7 +99,7 @@
 
 .team-page .content-wrapper .team-wrapper > * {
 	padding: 10px;
-	width: 50%;
+	width: 200px;
 	background-color: rgba(var(--modal-bg-color), 1.0);
 	text-align: left;
 	border-radius: var(--border-radius);
@@ -203,8 +203,9 @@
 	z-index: 2;
 }
 
-.team-page .content-wrapper .team-wrapper .rules-wrapper .footer[data-input="false"] > span, .team-page .content-wrapper .team-wrapper .rules-wrapper .footer[data-input="false"] > span > textarea {
+.team-page .content-wrapper .team-wrapper .rules-wrapper .footer[data-input="false"] > span, .team-page .content-wrapper .team-wrapper .rules-wrapper .footer[data-input="false"] > span > * {
 	width: 0;
+	padding: 0;
 	opacity: 0;
 	z-index: 1;
 }
