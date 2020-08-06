@@ -372,10 +372,10 @@ input[type="email"], input[type="password"], input[type="text"], select, textare
 	width: 100%;
 	padding: 16px;
 	background-color: rgba(var(--txtfield-bg-color), 1.0);
-	border: 1px solid rgba(var(--txtfield-border-color), 1.0);
+	border: none;
+	/* border: 1px solid rgba(var(--txtfield-border-color), 1.0); */
 	border-radius: var(--border-radius);
 	color: rgba(var(--site-fg-color), 1.0);;
-	/*text-align: center;*/
 	font-family: 'SF Pro Display', system-ui, -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Ubuntu, Arial, sans-serif;
 	font-size: 16px;
 	font-weight: 700;
@@ -391,13 +391,13 @@ input[type="email"]:hover, input[type="password"]:hover, input[type="text"]:hove
 }
 
 input[type="email"]:invalid, input[type="email"]:invalid:hover, input[type="password"]:invalid, input[type="password"]:invalid:hover, input[type="text"]:invalid, input[type="text"]:invalid:hover {
-	border: 1px solid rgba(var(--txtfield-invalid-fg-color), 1.0);
+	/* border: 1px solid rgba(var(--txtfield-invalid-fg-color), 1.0); */
 	background-color: rgba(var(--txtfield-invalid-bg-color), 1.0);
 	color: rgba(var(--txtfield-invalid-fg-color), 1.0);
 }
 
 input[type="email"]:valid, input[type="password"]:valid, input[type="text"]:valid, select:valid, textarea:valid {
-	border: 1px solid rgba(var(--txtfield-border-color), 1.0);
+	/* border: 1px solid rgba(var(--txtfield-border-color), 1.0); */
 	color: rgba(var(--txtfield-fg-color), 1.0);
 }
 

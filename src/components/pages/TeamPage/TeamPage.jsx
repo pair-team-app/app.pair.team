@@ -291,17 +291,16 @@ class TeamPage extends Component {
               <input type="text" className="comment-txt" placeholder="Typing or Pasting anything…" value="" onChange={(event)=> this.handlePageKeyPress(event, event.target.value)} />
               <button disabled={true}>Comment</button>
             </div>
-
-            <div className="empty-comments">No Activity</div>
-
-            <TeamPageCommentsPanel
-              profile={profile}
-              comments={(sort === SORT_BY_DATE) ? team.comments.sort((i, ii)=> ((i.epoch > ii.epoch) ? -1 : (i.epoch < ii.epoch) ? 1 : 0)) : team.comments.sort((i, ii)=> ((i.score > ii.score) ? -1 : (i.score < ii.score) ? 1 : 0)).filter((comment)=> (comment !== null))}
-              fetching={Boolean((fetching & 0x010) === 0x010)}
-              loading={commentsLoading}
-              sort={sort}
-              onReplyKeyPress={this.handleCommentReply}
-            />
+            <div className="scroll-comments-wrapper">
+              <TeamPageCommentsPanel
+                profile={profile}
+                comments={(sort === SORT_BY_DATE) ? team.comments.sort((i, ii)=> ((i.epoch > ii.epoch) ? -1 : (i.epoch < ii.epoch) ? 1 : 0)) : team.comments.sort((i, ii)=> ((i.score > ii.score) ? -1 : (i.score < ii.score) ? 1 : 0)).filter((comment)=> (comment !== null))}
+                fetching={Boolean((fetching & 0x010) === 0x010)}
+                loading={commentsLoading}
+                sort={sort}
+                onReplyKeyPress={this.handleCommentReply}
+              />
+            </div>
           </div>
           <div className="team-wrapper" data-fetching={Boolean((fetching & 0x010) === 0x010)}>
             <div className="about-wrapper" data-loading={infoLoading}>
@@ -348,7 +347,8 @@ const TeamPageCommentsPanel = (props)=> {
 	// console.log('TeamPageCommentsPanel()', { ...props });
 
 	const { fetching, loading, profile, comments } = props;
-  return (<div className="team-page-comments-panel" data-loading={fetching}>
+  return (<div className="team-page-comments-panel" data-loading={fetching} data-empty={comments.length === 0}>
+    <div className="empty-comments">No Activity</div>
 		{(comments.map((comment, i)=> {
 			const vote = (comment.votes.find(({ author, score })=> (author.id === profile.id && score !== 0 )) || null);
 			return (<TeamPageComment key={i} comment={comment}  loading={loading} vote={vote} onReplyKeyPress={props.onReplyKeyPress} />);
