@@ -15,7 +15,7 @@ import BaseComment from '../../iterables/BaseComment';
 import TeamPageFileDrop from './TeamPageFileDrop';
 // import ContentDropModal from '../../overlays/ContentDropModal';
 
-import { SORT_BY_DATE } from '../../sections/TopNav/TeamPageHeader';
+import { CommentSortTypes } from '../../sections/TopNav';
 import { TEAM_TIMESTAMP } from '../../../consts/formats';
 import { ENTER_KEY, ESCAPE_KEY } from '../../../consts/key-codes';
 import { API_ENDPT_URL } from '../../../consts/uris';
@@ -37,7 +37,7 @@ class TeamPage extends Component {
       teamDescription : '',
       ruleContent     : '',
       ruleInput       : false,
-      sort            : SORT_BY_DATE,
+      sort            : CommentSortTypes.DATE,
       fetching       : 0x111,
       loading        : 0x000,
       share           : false,
@@ -294,7 +294,7 @@ class TeamPage extends Component {
             <div className="scroll-comments-wrapper">
               <TeamPageCommentsPanel
                 profile={profile}
-                comments={(sort === SORT_BY_DATE) ? team.comments.sort((i, ii)=> ((i.epoch > ii.epoch) ? -1 : (i.epoch < ii.epoch) ? 1 : 0)) : team.comments.sort((i, ii)=> ((i.score > ii.score) ? -1 : (i.score < ii.score) ? 1 : 0)).filter((comment)=> (comment !== null))}
+                comments={(sort === CommentSortTypes.DATE) ? team.comments.sort((i, ii)=> ((i.epoch > ii.epoch) ? -1 : (i.epoch < ii.epoch) ? 1 : 0)) : team.comments.sort((i, ii)=> ((i.score > ii.score) ? -1 : (i.score < ii.score) ? 1 : 0)).filter((comment)=> (comment !== null))}
                 fetching={Boolean((fetching & 0x010) === 0x010)}
                 loading={commentsLoading}
                 sort={sort}

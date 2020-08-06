@@ -1,11 +1,11 @@
 
 import { INVITE_LOADED, SET_TEAM, SET_TEAM_COMMENTS_SORT, TEAM_COMMENTS_LOADED, TEAMS_LOADED, TEAM_LOGO_LOADED, TEAM_RULES_UPDATED, TEAM_UPDATED, COMMENT_ADDED, COMMENT_UPDATED, COMMENT_VOTED } from '../../consts/action-types';
 import { LOG_REDUCER_POSTFIX, LOG_REDUCER_PREFIX } from '../../consts/log-ascii';
-import { SORT_BY_DATE } from '../../components/sections/TopNav/TeamPageHeader';
+import { CommentSortTypes } from '../../components/sections/TopNav';
 
 const initialState = {
   teams      : [],
-  sort       : SORT_BY_DATE,
+  sort       : CommentSortTypes.DATE,
   team       : null,
   createTeam : false
 };

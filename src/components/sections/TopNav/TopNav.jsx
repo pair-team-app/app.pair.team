@@ -223,12 +223,12 @@ const TeamPageHeader = (props)=> {
 	// console.log('TeamPageHeader()', { props });
 
 	const { sort } = props;
-	const { SORT_BY_DATE, SORT_BY_SCORE } = CommentSortTypes;
+	const { DATE, SCORE } = CommentSortTypes;
 
 	return (<div className="team-page-header">
 		<div className="sort-by-wrapper">
-			<div className="sort-by-link" data-selected={sort === SORT_BY_SCORE} onClick={()=> props.onSortClick(SORT_BY_SCORE)}>Top</div>
-			<div className="sort-by-link" data-selected={sort === SORT_BY_DATE} onClick={()=> props.onSortClick(SORT_BY_DATE)}>New</div>
+			<div className="sort-by-link" data-selected={sort === CommentSortTypes.SCORE} onClick={()=> props.onSortClick(CommentSortTypes.SCORE)}>Top</div>
+			<div className="sort-by-link" data-selected={sort === CommentSortTypes.DATE} onClick={()=> props.onSortClick(CommentSortTypes.DATE)}>New</div>
 		</div>
 	</div>);
 };
