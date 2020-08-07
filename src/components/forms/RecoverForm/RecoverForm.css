@@ -1,0 +1,7 @@
+
+.recover-form {
+}
+
+.recover-form form > *:not(:last-child) {
+	margin-bottom: var(--spacing-20);
+}
