@@ -105,7 +105,7 @@ class LeftNav extends Component {
     const { builds } = this.state;
 
     return (<div className="left-nav">
-      <LeftNavHeader { ...this.props } />
+      <LeftNavHeader { ...this.props } onCreateTeam={this.handleCreateTeam} />
       {(profile && !teams && !invite) && (<div className="loading">Loading…</div>)}
       {(teams) && (<div className="teams-wrapper">
         <div className="items-wrapper">
@@ -167,13 +167,12 @@ const LeftNavHeader = (props)=> {
   // console.log('LeftNavHeader()', { props });
 
   const { teams } = props;
-
   const onClick = ()=> {
     if (teams.length > 0) {
       props.setTeam(teams[0]);
 
     } else {
-
+      props.onCreateTeam();
     }
   };
 
