@@ -382,7 +382,7 @@ input[type="email"], input[type="password"], input[type="text"], select, textare
 	font-weight: 700;
 	cursor: text;
 	-webkit-appearance: none;
-	transition: background-color 0.125s ease-out;
+	transition: all 0.125s ease-out;
 }
 
 input[type="email"]:hover, input[type="password"]:hover, input[type="text"]:hover, textarea:hover {
@@ -399,7 +399,7 @@ input[type="email"]:invalid, input[type="email"]:invalid:hover, input[type="pass
 
 input[type="email"]:valid, input[type="password"]:valid, input[type="text"]:valid, select:valid, textarea:valid {
 	/* border: 1px solid rgba(var(--txtfield-border-color), 1.0); */
-	/* color: rgba(var(--txtfield-fg-color), 1.0); */
+	color: rgba(var(--txtfield-fg-color), 1.0);
 }
 
 input[type="email"]:valid:hover, input[type="password"]:valid:hover, input[type="text"]:valid:hover, textarea:valid:hover {
@@ -475,7 +475,8 @@ textarea, textarea:hover, textarea:active, textarea:focus, textarea:disabled, te
 	background-color: rgba(var(--txtarea-bg-color), 1.0);
 	font-size: 12px;
 	font-weight: 500;
-	border: 1px solid rgba(var(--txtfield-border-color), 1.0);
+	border: none;
+	/* border: 1px solid rgba(var(--txtfield-border-color), 1.0); */
 }
 
 ul {

@@ -238,8 +238,6 @@ class TeamPage extends Component {
   handleCommentReply = (comment, key)=> {
     console.log('%s.handleCommentReply()', this.constructor.name, { comment, key });
 
-
-
     const commentContent = key;
     this.setState({ commentContent }, ()=> {
       if (comment !== this.props.comment) {
@@ -250,7 +248,7 @@ class TeamPage extends Component {
 
 
   handleUpdateTeamDescription = (event, key)=> {
-    // console.log('%s.handleUpdateTeamDescription()', this.constructor.name, { event, key });
+    console.log('%s.handleUpdateTeamDescription()', this.constructor.name, { event, key });
     trackEvent('text', 'update-team-info');
 
     event.preventDefault();
@@ -258,18 +256,24 @@ class TeamPage extends Component {
 
     const { team } = this.props;
     const { teamDescription, loading } = this.state;
-    if (key !== 'meta' && key !== 'ctrl') {
+    const { keyCode, target } = event;
+
+    if (key === 'esc') {
+      target.blur();
+
+    } else if (key !== 'meta' && key !== 'ctrl') {
       this.setState({ teamDescription : `${teamDescription}\n` });
 
     } else {
-    if (teamDescription.length > 0 && teamDescription !== team.description && event.keyCode === ENTER_KEY) {
-      trackEvent('text', 'update-team-info');
+      if (teamDescription.length > 0 && teamDescription !== team.description && keyCode === ENTER_KEY) {
+        trackEvent('text', 'update-team-info');
 
-      event.target.blur();
-      this.setState({ loading : loading ^ 0x001 }, ()=> {
-        this.props.modifyTeam({ description : teamDescription });
-      });
-    }}
+        event.target.blur();
+        this.setState({ loading : loading ^ 0x001 }, ()=> {
+          this.props.modifyTeam({ description : teamDescription });
+        });
+      }
+    }
   }
 
   render() {
@@ -312,7 +316,7 @@ class TeamPage extends Component {
                 content : 'Menu Clicked.',
                 delay   : 0
               });}} />
-              <div className="content"><KeyboardEventHandler handleKeys={['ctrl', 'meta', 'enter']} onKeyEvent={(key, event)=> this.handleUpdateTeamDescription(event, key)}>
+              <div className="content"><KeyboardEventHandler handleKeys={['ctrl', 'meta', 'enter', 'esc']} onKeyEvent={(key, event)=> this.handleUpdateTeamDescription(event, key)}>
                 <TextareaAutosize id="team-info-txtarea" className="team-info-txtarea" placeholder="Enter Text to Describe you team" value={teamDescription} onChange={(event)=> this.setState({ teamDescription : event.target.value })} data-keypress-override="true" />
               </KeyboardEventHandler></div>
               <div className="footer">
@@ -327,7 +331,6 @@ class TeamPage extends Component {
               </div>
               <div className="footer" data-input={ruleInput}>
                 <TeamPageAddRuleButton onClick={this.handleRuleInput} />
-                {/* <KeyboardEventHandler handleKeys={['enter']} handleFocusableElements onKeyEvent={(key, event)=> this.handlePageKeyPress(event, key)}> */}
                 <KeyboardEventHandler handleKeys={['enter', 'esc']} handleFocusableElements onKeyEvent={(key, event)=> this.handleAddRule(event)}>
                   <TextareaAutosize id="team-add-rule-txtarea" placeholder="" value={ruleContent} onChange={(event)=> this.setState({ ruleContent : event.target.value })} />
                 </KeyboardEventHandler>

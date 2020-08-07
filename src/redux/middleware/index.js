@@ -324,11 +324,11 @@ export function onMiddleware(store) {
 
 
         if (Object.keys(teamMatch).length === 0) {
-          console.log('\\\\\\\\\\\\\\\\\\\\', 'NON-TEAM PARAM URL', { pathname, hash }, '\\\\\\\\\\\\\\\\\\\\');
+          console.log('///-///', 'NON-TEAM PARAM URL', { pathname, hash }, '///-///');
 
           if (!pathname.startsWith(Pages.TEAM)) {
             return (dispatch(replace(Pages.TEAM)));
-          
+
           } else {
             if (hash !== '') {
             }
@@ -336,10 +336,10 @@ export function onMiddleware(store) {
 
         } else {
           if (isFirstRendering) {
-            console.log('\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/', 'FIRST RENDER', { pathname, hash }, '\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/');
+            console.log('\\\\\\\\\\\\\\\\\\\\', 'FIRST RENDER', { pathname, hash }, '\\\\\\\\\\\\\\\\\\\\');
 
           } else {
-            console.log('\\\\\\\\\\\\\\\\\\\\', 'ROUTER CHANGE', { pathname, hash }, '\\\\\\\\\\\\\\\\\\\\');
+            console.log('///-///', 'ROUTER CHANGE', { pathname, hash }, '///-///');
 
             const team = { ...teams.find(({ id })=> (id === (teamMatch.params.teamID << 0))), selected : true };
             console.log('≈~≈~≈~≈~≈~≈~≈~≈~≈~≈~≈~≈', { team });

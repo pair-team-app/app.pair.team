@@ -109,8 +109,8 @@
 
 .team-page .content-wrapper .team-wrapper textarea {
 	min-height: 88px;
-	padding: var(--spacing-05);
-	border: 1px solid rgba(var(--txtarea-bg-color), 1.0);
+	padding: var(--spacing-10);
+	/* border: 1px solid rgba(var(--txtarea-bg-color), 1.0); */
 	transition: opacity 125ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -168,8 +168,9 @@
 
 
 .team-page .content-wrapper .team-wrapper .rules-wrapper textarea {
-	min-height: 38px;
-	padding: var(--spacing-10);
+	min-height: 34px;
+	max-height: 34px;
+	padding: 8px var(--spacing-10);
 }
 
 
