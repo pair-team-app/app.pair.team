@@ -29,7 +29,7 @@ class RecoverModal extends Component {
 			this.props.onComplete();
 
 			if (outroURI) {
-				this.props.onModal(outroURI);
+				this.props.onModal(outroURI, true, false);
 			}
 		});
 	};

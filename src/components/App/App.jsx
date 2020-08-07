@@ -36,7 +36,6 @@ class App extends Component {
     this.state = {
       darkTheme : false,
       popup     : null,
-      inviteID  : null,
       modals    : {
         cookies  : (cookie.load('cookies') << 0) === 0,
         disable  : false,
@@ -48,8 +47,7 @@ class App extends Component {
         profile  : false,
         recover  : false,
         register : false,
-        stripe   : false,
-        payload  : null
+        stripe   : false
       }
     };
 
@@ -91,30 +89,59 @@ class App extends Component {
     console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : this.props, prevState, state : this.state, snapshot });
     // console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props, this.state.modals);
 
-    const { location, profile, team, purchase } = this.props;
+    const { location, hash, profile, team, purchase, invite } = this.props;
     const { pathname } = location;
     const { modals } = this.state;
+
 
     // url changed
     if (prevProps.location.pathname !== pathname) {
       trackPageview();
+
+    }
+
+
+    // modal routes
+    if (hash.length > 0 && prevProps.hash !== hash) {
+
+      // invite modal
+      if (hash === '#invite') {
+        this.onToggleModal(Modals.INVITE);
+      }
+
+      // recover modal
+      if (hash === '#recover') {
+        this.onToggleModal(Modals.RECOVER);
+      }
+
+      // profile modal
+      if (hash === '#profile') {
+        this.onToggleModal(Modals.PROFILE);
+      }
+
+      // login
+      if (hash === '#login') {
+        this.onToggleModal(Modals.LOGIN);
+      }
+
+      // register
+      if (hash === '#register') {
+        this.onToggleModal(Modals.REGISTER);
+      }
     }
 
     // has internet
     if (Browsers.isOnline()) {
-      if (location.pathname.startsWith(Pages.INVITE) && !this.state.inviteID && !modals.register) {
-        const inviteID = location.pathname.split('/')[3] << 0;
-        this.setState({ inviteID });
-      }
 
-      if (!prevState.inviteID && this.state.inviteID) {
-        const { inviteID } = this.state;
+      // invite page, extract id from url
+      if (location.pathname.startsWith(Pages.INVITE) && !invite) {
+        const inviteID = location.pathname.split('/')[3] << 0;
         this.props.fetchInvite({ inviteID });
       }
 
+      // post invite fetch
       if (!prevProps.invite && this.props.invite) {
         const { invite } = this.props;
-
 
         if (invite.state === 1 || invite.state === 2) {
           axios.post(API_ENDPT_URL, {
@@ -144,58 +171,57 @@ class App extends Component {
       }
 
 
-      if (profile && team && team.type === 'free' && !modals.stripe && !modals.profile) {
-        if (team.members.filter(({ role })=> (role !== 'bot')).length >= 4) {
-          this.onToggleModal(Modals.STRIPE);
+      // not logged in
+      if (!profile) {
+        if (!modals.login && !modals.register && !modals.invite && !modals.recover) {
+          this.onToggleModal(Modals.LOGIN);
         }
-      }
 
-      if (location.pathname.startsWith(Pages.PAYMENT)) {
-        if (profile) {
-          const sessionID = pathname.split('/').pop();
 
-          if (!purchase) {
-            this.props.paidStripeSession({ sessionID });
+      // logged in
+      } else {
+        // dismiss reg / login modals after login
 
-          } else {
-            if (!prevProps.purchase && purchase && !modals.payment) {
-              this.onToggleModal(Modals.PAYMENT);
-            }
+        if (modals.login) {
+          this.onToggleModal(Modals.LOGIN, false);
+        }
+
+        if (modals.register) {
+          this.onToggleModal(Modals.REGISTER, false);
+        }
+
+
+        // payment modal
+        if (team && team.type === 'free' && !modals.stripe && !modals.profile) {
+          if (team.members.filter(({ role })=> (role !== 'bot')).length >= 4) {
+            this.onToggleModal(Modals.STRIPE);
           }
         }
 
-      } else if (pathname.startsWith(Pages.TEAM)) {
-        if (!profile && !modals.login && !modals.register && !modals.payment && !modals.recover) {
-          this.onToggleModal(Modals.LOGIN);
+        // start payment process
+        if (location.pathname.startsWith(Pages.PAYMENT)) {
+          if (profile) {
+            const sessionID = pathname.split('/').pop();
+
+            if (!purchase) {
+              this.props.paidStripeSession({ sessionID });
+
+            } else {
+              if (!prevProps.purchase && purchase && !modals.payment) {
+                this.onToggleModal(Modals.PAYMENT);
+              }
+            }
+          }
+
+        // within team page
+        } else if (pathname.startsWith(Pages.TEAM)) {
+
+
         }
       }
 
-      // dismiss login modal after profile
-      if (profile !== null && modals.login) {
-        this.onToggleModal(Modals.LOGIN, false);
-      }
-
-
-      // dismiss register modal after profile
-      if (profile !== null && modals.register) {
-        this.onToggleModal(Modals.REGISTER, false);
-      }
-
-
-      const { hash } = this.props;
-      if (hash === '#invite' && !modals.invite) {
-        this.onToggleModal(Modals.INVITE);
-      }
-
-      if (profile !== null && hash === '#profile' && !modals.profile) {
-        this.onToggleModal(Modals.PROFILE);
-      }
-
-      if (hash === '#recover' && !modals.recover) {
-        this.onToggleModal(Modals.RECOVER);
-      }
-
-      if (hash === '') {
+      // outros from history
+      if (hash === '' && prevProps.hash.startsWith('#')) {
         if (prevProps.hash === '#invite') {
           this.onToggleModal(Modals.INVITE, false);
         }
@@ -285,19 +311,19 @@ class App extends Component {
     this.props.updateUserProfile(profile);
   };
 
-  onToggleModal = (uri, show=true, payload=null)=> {
-    console.log('%s.onToggleModal()', this.constructor.name, uri, show, payload, this.state.modals);
+  onToggleModal = (uri, show=true, clear=true)=> {
+    console.log('%s.onToggleModal()', this.constructor.name, { uri, show, clear, modals : this.state.modals });
 
     const { hash } = this.props;
     const { modals } = this.state;
 
     if (show) {
-      if ((uri === Modals.INVITE || uri === Modals.PROFILE) && !hash.includes('#')) {
+      if (hash !== uri) {
         this.props.push(`${window.location.pathname}${uri}`);
       }
 
       this.setState({
-        modals : { ...modals, payload,
+        modals : { ...modals,
           disable  : uri === Modals.DISABLE,
           login    : uri === Modals.LOGIN,
           invite   : uri === Modals.INVITE,
@@ -310,8 +336,9 @@ class App extends Component {
           stripe   : uri === Modals.STRIPE
         }
       });
+
     } else {
-      if (hash === uri) {
+      if (hash === uri && clear) {
         this.props.push(window.location.pathname.replace(uri, ''));
       }
 
@@ -339,7 +366,7 @@ class App extends Component {
     // console.log('%s.render()', this.constructor.name, this.state.modals);
 
     const { darkThemed, profile, team, purchase } = this.props;
-    const { popup, inviteID, modals } = this.state;
+    const { popup, modals } = this.state;
 
     return (<div className="site-wrapper" data-theme={(darkThemed) ? 'dark' : 'light'} data-devin-matty={MATTY_DEVIN_THEME}>
       <LeftNav />
@@ -359,25 +386,24 @@ class App extends Component {
 			  />)}
 
 			  {(modals.login) && (<LoginModal
-				  inviteID={null}
 				  onModal={(uri)=> this.onToggleModal(uri, true)}
 				  onPopup={this.handlePopup}
-				  onComplete={()=> this.onToggleModal(Modals.LOGIN, false)}
-				  onLoggedIn={this.handleUpdateUser}
+				  // onComplete={()=> this.onToggleModal(Modals.LOGIN, false)}
+				  onComplete={()=> this.setState({ modals : { ...modals, login : false }})}
 			  />)}
 
         {(modals.recover) && (<RecoverModal
 				  onModal={(uri)=> this.onToggleModal(uri, true)}
 				  onPopup={this.handlePopup}
-				  onComplete={()=> this.onToggleModal(Modals.RECOVER, false)}
+				  // onComplete={()=> this.onToggleModal(Modals.RECOVER, false)}
+				  onComplete={()=> this.setState({ modals : { ...modals, recover : false }})}
 			  />)}
 
 			  {(modals.register) && (<RegisterModal
-				  inviteID={inviteID}
 				  onModal={(uri)=> this.onToggleModal(uri, true)}
 				  onPopup={this.handlePopup}
-				  onComplete={()=> this.onToggleModal(Modals.REGISTER, false)}
-				  onRegistered={this.handleUpdateUser}
+				  // onComplete={()=> this.onToggleModal(Modals.REGISTER, false)}
+				  onComplete={()=> this.setState({ modals : { ...modals, register : false }})}
 			  />)}
 
 			  {(modals.stripe) && (<StripeModal

@@ -8,7 +8,7 @@ import BaseOverlay from '../BaseOverlay';
 import LoginForm from '../../forms/LoginForm';
 import { POPUP_TYPE_ERROR } from '../PopupNotification';
 import { Modals } from '../../../consts/uris';
-import { updateUserProfile } from '../../../redux/actions';
+import { modifyInvite, updateUserProfile } from '../../../redux/actions';
 import { trackEvent } from '../../../utils/tracking';
 
 
@@ -28,6 +28,7 @@ class LoginModal extends Component {
 
 		const { profile } = this.props;
 		if (!prevProps.profile && profile) {
+			this.setState({ outro : true });
 		}
 	}
 
@@ -39,7 +40,7 @@ class LoginModal extends Component {
 			this.props.onComplete();
 
 			if (outroURI) {
-				this.props.onModal(outroURI);
+				this.props.onModal(outroURI, true, false);
 			}
 		});
 	};
@@ -59,7 +60,7 @@ class LoginModal extends Component {
 		trackEvent('user', 'login');
     this.setState({ outro : true }, ()=> {
       setTimeout(()=> {
-        this.props.onLoggedIn(profile);
+        this.props.updateUserProfile(profile);
       }, 333);
     });
 	};
@@ -74,9 +75,11 @@ class LoginModal extends Component {
 
 
 	render() {
-// console.log('%s.render()', this.constructor.name, this.props, this.state);
+		console.log('%s.render()', this.constructor.name, {props : this.props, state : this.state });
 
+		const { invite } = this.props;
 		const { outro } = this.state;
+
 		return (<BaseOverlay
 			tracking={Modals.LOGIN}
 			outro={outro}
@@ -88,8 +91,7 @@ class LoginModal extends Component {
 			<div className="login-modal">
 				<div className="form-wrapper">
 					<LoginForm
-						inviteID={null}
-						email={null}
+						invite={invite}
 						onCancel={(event)=> { event.preventDefault(); this.handleComplete(); }}
 						onLoggedIn={this.handleLoggedIn} />
 				</div>
@@ -106,6 +108,7 @@ class LoginModal extends Component {
 
 const mapDispatchToProps = (dispatch)=> {
 	return ({
+		modifyInvite      : (payload)=> dispatch(modifyInvite(payload)),
 		updateUserProfile : (profile)=> dispatch(updateUserProfile(profile))
 	});
 
@@ -113,7 +116,7 @@ const mapDispatchToProps = (dispatch)=> {
 
 const mapStateToProps = (state, ownProps)=> {
 	return ({
-		invite : state.invite
+		invite : state.teams.invite
 	});
 };
 

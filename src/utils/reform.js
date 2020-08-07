@@ -83,14 +83,13 @@ export const reformComponent = (component, uri, componentTypes=null, overwrite={
 export const reformInvite = (invite, overwrite={})=> {
   // console.log('reformInvite()', { team, overwrite });
 
-  const { id, email, team_id, user_id, state, updated, added } = invite;
+  const { id, email, user_id, state, updated, added } = invite;
   const reformed = { ...invite, email,
-    id      : id << 0,
-    state   : state << 0,
-    userID  : user_id << 0,
-    teamID  : team_id < 0,
-    updated : moment(updated).utc(),
-    added   : moment(added).utc(),
+    id        : id << 0,
+    state     : state << 0,
+    userID    : user_id << 0,
+    updated   : moment(updated).utc(),
+    added     : moment(added).utc(),
     ...overwrite
   };
 
@@ -161,7 +160,6 @@ export const reformTeam = (team, overwrite={})=> {
 
   const rules = team.rules.map((rule)=> (reformRule(rule, members)));
   const comments = team.comments.map((comment)=> (reformComment(comment, `${Pages.TEAM}/${slug}/comments`)));
-
 
   const reformed = { ...team, rules, members, comments,
     id          : team.id << 0,

@@ -1,7 +1,7 @@
 
 
 // import moment from 'moment';
-import { push } from 'connected-react-router';
+import { push, replace } from 'connected-react-router';
 import cookie from 'react-cookies';
 import { matchPath } from 'react-router-dom';
 
@@ -9,7 +9,7 @@ import { RoutePaths } from '../../components/helpers/Routes';
 import { fetchTeamBuilds, fetchTeamComments, fetchUserTeams, setRoutePath } from '../actions';
 import { STRIPE_SESSION_PAID, BUILD_PLAYGROUNDS_LOADED, INVITE_LOADED, COMMENT_ADDED, COMMENT_UPDATED, COMMENT_VOTED, DEVICES_LOADED, SET_COMMENT, SET_COMPONENT, SET_PLAYGROUND, SET_TEAM, SET_TYPE_GROUP, TEAM_BUILDS_LOADED, TEAM_COMMENTS_LOADED, TEAMS_LOADED, TEAM_LOGO_LOADED, TEAM_RULES_UPDATED, TEAM_CREATED, TEAM_UPDATED, UPDATE_MOUSE_COORDS, UPDATE_RESIZE_BOUNDS, USER_PROFILE_LOADED, USER_PROFILE_UPDATED } from '../../consts/action-types';
 import { LOG_MIDDLEWARE_POSTFIX, LOG_MIDDLEWARE_PREFIX } from '../../consts/log-ascii';
-import { Pages } from '../../consts/uris';
+import { Modals, Pages } from '../../consts/uris';
 import { reformComment, reformPlayground, reformTeam, reformInvite } from '../../utils/reform';
 
 
@@ -128,11 +128,8 @@ export function onMiddleware(store) {
       }
 
     } else if (type === INVITE_LOADED) {
-      const invite = reformInvite(payload.invite);
-      const team = reformTeam(payload.team);
-
-      payload.invite = invite;
-      payload.team = team;
+      payload.invite = reformInvite(payload.invite);
+      payload.team = reformTeam(payload.invite.team);
 
     } else if (type === TEAM_COMMENTS_LOADED) {
       const { team } = prevState.teams;
@@ -310,71 +307,42 @@ export function onMiddleware(store) {
       }
 
     } else if (type === '@@router/LOCATION_CHANGE') {
+      const { profile } = prevState.user;
       const { teams } = prevState.teams;
       const { playgrounds } = prevState.builds;
       const { action, isFirstRendering, location } = payload;
-      const { pathname } = location;
+      const { pathname, hash } = location;
 
       if (action === 'POP') {
-        console.log('-=-=-=-=-=-=-=-=-=-=-=-=', { location });
+        const teamMatch = matchPath(pathname, {
+          path   : RoutePaths.TEAM,
+          exact  : false,
+          strict : false
+        }) || {};
 
-        if (isFirstRendering) {
-          const teamMatch = matchPath(pathname, {
-            path   : RoutePaths.TEAM,
-            exact  : false,
-            strict : false
-          }) || {};
+        console.log('-=-=-=-=-=-=-=-=-=-=-=-=', { location, teamMatch });
 
-          if (Object.keys(teamMatch).length > 0) {
-            const projectMatch = matchPath(pathname, {
-              path   : RoutePaths.PROJECT,
-              exact  : false,
-              strict : false
-            }) || {};
 
-            console.log('=-=-=-=-=-=-=-=-=-=-=-=', { teamMatch, projectMatch });
+        if (Object.keys(teamMatch).length === 0) {
+          console.log('\\\\\\\\\\\\\\\\\\\\', 'NON-TEAM PARAM URL', { pathname, hash }, '\\\\\\\\\\\\\\\\\\\\');
 
-            if (Object.keys(projectMatch).length > 0) {
-              dispatch(setRoutePath({ ...projectMatch,
-                params : { ...projectMatch.params,
-                  teamID        : (projectMatch.params.teamID << 0 || null),
-                  teamSlug      : (projectMatch.params.teamSlug || null),
-                  buildID       : (projectMatch.params.buildID << 0 || null),
-                  projectSlug   : (projectMatch.params.projectSlug || null),
-                  deviceSlug    : (projectMatch.params.deviceSlug || null),
-                  componentID   : (projectMatch.params.componentID << 0 || null),
-                  componentSlug : (projectMatch.params.componentSlug || null),
-                  comments      : (projectMatch.params.comments) ? (projectMatch.params.comments === 'comments' || projectMatch.params.comments === true) : false,
-                  commentID     : (projectMatch.params.commentID << 0 || null)
-                }
-              }));
-
-            } else {
-              dispatch(setRoutePath({ ...teamMatch,
-                params : { ...teamMatch.params,
-                  teamID       : (teamMatch.params.teamID << 0 || null),
-                  teamSlug     : (teamMatch.params.teamSlug || null),
-                  buildID      : null,
-                  projectSlug  : null,
-                  deviceSlug   : null,
-                  componentID  : null,
-                  comments     : (teamMatch.params.comments) ? (teamMatch.params.comments === true) : false,
-                  commentID    : (teamMatch.params.commentID << 0 || null)
-                }
-              }));
+          if (!pathname.startsWith(Pages.TEAM)) {
+            return (dispatch(replace(Pages.TEAM)));
+          
+          } else {
+            if (hash !== '') {
             }
           }
 
         } else {
-          const teamMatch = matchPath(pathname, {
-            path   : RoutePaths.TEAM,
-            exact  : false,
-            strict : false
-          }) || {};
+          if (isFirstRendering) {
+            console.log('\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/', 'FIRST RENDER', { pathname, hash }, '\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/');
 
-          if (Object.keys(teamMatch).length > 0) {
+          } else {
+            console.log('\\\\\\\\\\\\\\\\\\\\', 'ROUTER CHANGE', { pathname, hash }, '\\\\\\\\\\\\\\\\\\\\');
+
             const team = { ...teams.find(({ id })=> (id === (teamMatch.params.teamID << 0))), selected : true };
-            console.log('=-=-=-=-=-=-=-=-=-=-=-=', { teamMatch, team });
+            console.log('≈~≈~≈~≈~≈~≈~≈~≈~≈~≈~≈~≈', { team });
 
             payload.team = team;
             payload.teams = teams.map((item)=> ((item.id === team.id) ? team : { ...item,
@@ -385,53 +353,20 @@ export function onMiddleware(store) {
             const deviceSlug = "";
             dispatch(fetchTeamBuilds({ team : payload.team, buildID, deviceSlug }));
             dispatch(fetchTeamComments({ team : payload.team, verbose : true }));
-
-
-            const projectMatch = matchPath(pathname, {
-              path   : RoutePaths.PROJECT,
-              exact  : false,
-              strict : false
-            }) || {};
-
-            console.log('=-=-=-=-=-=-=-=-=-=-=-=', { projectMatch });
-
-            if (Object.keys(projectMatch).length > 0) {
-              const playground = ({ ...playgrounds.find(({ buildID, device })=> (buildID === (projectMatch.params.buildID << 0) && device.slug === projectMatch.params.deviceSlug)), selected : true } || null);
-              console.log('______________________', { playground });
-              payload.playground = playground;
-              payload.playgrounds = playgrounds.map((item)=> ((item.id === playground.id) ? playground : { ...item,
-                selected : false
-              }));
-
-
-              dispatch(setRoutePath({ ...projectMatch,
-                params : { ...projectMatch.params,
-                  teamID       : (projectMatch.params.teamID << 0 || null),
-                  teamSlug     : (projectMatch.params.teamSlug || null),
-                  buildID      : (projectMatch.params.buildID << 0 || null),
-                  projectSlug  : (projectMatch.params.projectSlug || null),
-                  deviceSlug   : (projectMatch.params.deviceSlug || null),
-                  componentID  : (projectMatch.params.componentID << 0 || null),
-                  comments     : (projectMatch.params.comments) ? (projectMatch.params.comments === 'comments' || projectMatch.params.comments === true) : false,
-                  commentID    : (projectMatch.params.commentID << 0 || null)
-                }
-              }));
-
-            } else {
-              dispatch(setRoutePath({ ...teamMatch,
-                params : { ...teamMatch.params,
-                  teamID       : (teamMatch.params.teamID << 0 || null),
-                  teamSlug     : (teamMatch.params.teamSlug || null),
-                  buildID      : null,
-                  projectSlug  : null,
-                  deviceSlug   : null,
-                  componentID  : null,
-                  comments     : (teamMatch.params.comments) ? (teamMatch.params.comments === true) : false,
-                  commentID    : (teamMatch.params.commentID << 0 || null)
-                }
-              }));
-            }
           }
+
+          dispatch(setRoutePath({ ...teamMatch,
+            params : { ...teamMatch.params,
+              teamID       : (teamMatch.params.teamID << 0 || null),
+              teamSlug     : (teamMatch.params.teamSlug || null),
+              buildID      : null,
+              projectSlug  : null,
+              deviceSlug   : null,
+              componentID  : null,
+              comments     : (teamMatch.params.comments) ? (teamMatch.params.comments === true) : false,
+              commentID    : (teamMatch.params.commentID << 0 || null)
+            }
+          }));
         }
       }
     }

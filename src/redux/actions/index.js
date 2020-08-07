@@ -83,11 +83,11 @@ export function fetchInvite(payload=null) {
       }
     }).then((response)=> {
       console.log('INVITE_LOOKUP', response.data);
-      const { invite, team } = response.data;
+      const { invite } = response.data;
 
       dispatch({
         type    : INVITE_LOADED,
-        payload : { invite, team }
+        payload : { invite }
       });
     }).catch((error)=> {});
   };

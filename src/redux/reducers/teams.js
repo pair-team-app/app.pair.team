@@ -7,7 +7,8 @@ const initialState = {
   teams      : [],
   sort       : CommentSortTypes.DATE,
   team       : null,
-  createTeam : false
+  createTeam : false,
+  invite     : null
 };
 
 

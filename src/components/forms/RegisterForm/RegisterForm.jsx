@@ -14,7 +14,7 @@ class RegisterForm extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			email         : (props.email || ''),
+			email         : (props.invite) ? props.invite.email : '',
 			password      : '',
 			password2     : '',
 			passMsg       : null,
@@ -48,7 +48,7 @@ class RegisterForm extends Component {
 		// console.log('%s.handleSubmit()', this.constructor.name, event.target);
 		event.preventDefault();
 
-		const { inviteID } = this.props;
+		const { invite } = this.props;
 		const { email, password, password2 } = this.state;
 
 		const emailValid = Strings.isEmail(email);
@@ -69,9 +69,9 @@ class RegisterForm extends Component {
 				action  : 'REGISTER',
 				payload : { email, password,
 					username  : email,
-					types     : ['user', (inviteID) ? 'invite' : 'signup'],
+					types     : ['user', (invite) ? 'invite' : 'signup'],
 					avatar    : makeAvatar(email),
-					invite_id : inviteID
+					invite_id : (invite) ? invite.id : null
 				}
 			}).then((response)=> {
 				console.log('REGISTER', response.data);
@@ -103,7 +103,7 @@ class RegisterForm extends Component {
 	render() {
 		// console.log('%s.render()', this.constructor.name, this.props, this.state);
 
-		const { inviteID } = this.props;
+		const { invite } = this.props;
 		const { email, password, password2, passMsg } = this.state;
 		const { emailValid, passwordValid, validated } = this.state;
 
@@ -113,8 +113,8 @@ class RegisterForm extends Component {
 					<DummyForm />
 
 					{(validated)
-						? (<input type="email" disabled={(inviteID !== null)} placeholder="Enter Email Address" value={email} onFocus={()=> this.setState({ email : (emailValid) ? email : '', emailValid : true, validated : false })} onChange={(event)=> this.setState({ email : event.target.value })} autoComplete="new-password" required autoFocus />)
-						: (<input type="text" disabled={(inviteID !== null)} placeholder="Enter Email Address" value={email} onFocus={()=> this.setState({ email : (emailValid) ? email : '', emailValid : true, validated : false })} onChange={(event)=> this.setState({ email : event.target.value })} autoComplete="new-password" />)
+						? (<input type="email" disabled={(invite !== null)} placeholder="Enter Email Address" value={email} onFocus={()=> this.setState({ email : (emailValid) ? email : '', emailValid : true, validated : false })} onChange={(event)=> this.setState({ email : event.target.value })} autoComplete="new-password" required autoFocus />)
+						: (<input type="text" disabled={(invite !== null)} placeholder="Enter Email Address" value={email} onFocus={()=> this.setState({ email : (emailValid) ? email : '', emailValid : true, validated : false })} onChange={(event)=> this.setState({ email : event.target.value })} autoComplete="new-password" />)
 					}
 
 					{(passMsg)
