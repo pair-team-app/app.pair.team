@@ -114,7 +114,7 @@
 
 .form-disclaimer > div, .form-disclaimer a:not(:hover) {
 	text-decoration: none;
-	transition: color 0.125s ease-out;
+	transition: color var(--transition-duration-short) ease-out;
 }
 
 .form-disclaimer > div:hover, .form-disclaimer a:hover {
@@ -132,7 +132,7 @@
   width: 24px;
   height: 24px;
   opacity: 0.5;
-  transition: opacity 0.125s ease-out;
+  transition: opacity var(--transition-duration-short) ease-out;
 }
 
 .create-team-form-acc:hover {
@@ -157,7 +157,7 @@
 	left: 50%;
 	transform: translate(-50%, -50%);
 	clip-path: circle(8px at center);
-	transition: opacity 0.125s ease-out;
+	transition: opacity var(--transition-duration-short) ease-out;
 }
 
 .avatar-wrapper > img {

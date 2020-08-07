@@ -13,11 +13,11 @@
 	left: 208px;
 	width: calc(100vw - (208px + var(--project-comments-width)));
 	height: calc(100vh - 64px);
-	transition: width 333ms 125ms cubic-bezier(0.4, 0, 0.2, 1), height 333ms 125ms cubic-bezier(0.4, 0, 0.2, 1);
+	transition: width var(--transition-duration-long) var(--transition-duration-short) cubic-bezier(0.4, 0, 0.2, 1), height var(--transition-duration-long) var(--transition-duration-short) cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .project-page[data-comments="true"] .view-wrapper {
-	transition: width 333ms cubic-bezier(0.4, 0, 0.2, 1), height 333ms cubic-bezier(0.4, 0, 0.2, 1);
+	transition: width var(--transition-duration-long) cubic-bezier(0.4, 0, 0.2, 1), height var(--transition-duration-long) cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .project-views-grid {
@@ -53,7 +53,7 @@
 	align-items: flex-start; /* v-align */
 	padding: 0 var(--spacing-20) var(--spacing-20) var(--spacing-20);
 	border-top: 1px solid #999999;
-	transition: width 250ms cubic-bezier(0.4, 0, 0.2, 1);
+	transition: width var(--transition-duration-mid) cubic-bezier(0.4, 0, 0.2, 1);
 	z-index: 2;
 }
 
@@ -81,7 +81,7 @@
 	font-weight: var(--orthodox-font-weight);
 	text-align: center;
 	background-color: rgba(var(--comment-marker-bg-color), 0.33);
-	transition: width 125ms cubic-bezier(0.4, 0, 0.2, 1), height 125ms cubic-bezier(0.4, 0, 0.2, 1);
+	transition: width 125ms cubic-bezier(0.4, 0, 0.2, 1), height var(--transition-duration-short) cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .project-view-comment-marker:hover {
@@ -115,7 +115,7 @@
 	overflow-y: auto;
 	background-color: rgba(var(--playground-panel-bg-color), 1.0);
 	border-left: 1px solid rgba(var(--border-alt-color), 1.0);
-	transition: width 333ms 250ms cubic-bezier(0.4, 0, 0.2, 1);
+	transition: width var(--transition-duration-long) var(--transition-duration-mid) cubic-bezier(0.4, 0, 0.2, 1);
 	z-index: 2;
 }
 

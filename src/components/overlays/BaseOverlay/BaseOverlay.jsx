@@ -9,8 +9,9 @@ import {
 } from './';
 import './BaseOverlay.css';
 
-const INTRO_DURATION = 1 / 8;
-const OUTRO_DURATION = 1 / 4;
+const DURATION_MULT = 0.5;
+const INTRO_DURATION = (1 / 8);
+const OUTRO_DURATION = (1 / 4);
 
 class BaseOverlay extends Component {
   constructor(props) {
@@ -88,11 +89,11 @@ class BaseOverlay extends Component {
     trackOverlay(`open${tracking}`);
 
     this.timeline = new TimelineMax();
-    this.timeline.from(this.wrapper, INTRO_DURATION, {
+    this.timeline.from(this.wrapper, INTRO_DURATION * DURATION_MULT, {
       opacity: 0.875,
       scale: 0.875,
       ease: Circ.easeOut,
-      delay: (delay || 0) * 0.001,
+      delay: ((delay || 0) * 0.001) * DURATION_MULT,
       onComplete: ()=> {
         //         console.log('%s.onIntro().onIntroComplete', this.constructor.name, this.props, this.state, this.timeline);
       }
@@ -103,7 +104,7 @@ class BaseOverlay extends Component {
     //  console.log('%s.onOutro()', this.constructor.name, this.props, this.state, this.timeline);
 
     this.timeline = new TimelineMax();
-    this.timeline.to(this.wrapper, OUTRO_DURATION, {
+    this.timeline.to(this.wrapper, OUTRO_DURATION * DURATION_MULT, {
       opacity: 0.9,
       scale: 0.333,
       ease: Back.easeIn,

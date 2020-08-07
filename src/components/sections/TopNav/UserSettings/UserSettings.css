@@ -7,7 +7,7 @@
 }
 
 .user-settings-avatar-ico {
-	transition: opacity 0.125s ease-out;
+	transition: opacity var(--transition-duration-short) ease-out;
 }
 
 .user-settings-avatar-ico:hover {
@@ -27,7 +27,7 @@
 	padding: var(--spacing-15) var(--spacing-20);
 	border-bottom: 1px solid rgba(var(--border-color), 1.0);
 	color: rgba(var(--link-color), 1.0);
-	transition: color 125ms ease-in;
+	transition: color var(--transition-duration-short) ease-in;
 }
 
 .user-settings-popover > *:hover {

@@ -25,7 +25,7 @@
 	margin: 10px 0;
 	font-weight: 400;
 	color: rgba(var(--link-color), 1.0);
-	transition: color 0.125s ease-out;
+	transition: color var(--transition-duration-short) ease-out;
 }
 
 .left-nav .nav-link:hover {
@@ -43,7 +43,7 @@
 	font-size: 16px;
 	font-weight: 600;
 	color: rgba(var(--site-fg-color), 1.0);
-	transition: color 0.125s ease-out;
+	transition: color var(--transition-duration-short) ease-out;
 }
 
 .left-nav .left-nav-header[data-teams="true"]:hover {
@@ -100,7 +100,7 @@
 }
 
 .left-nav .left-nav-build {
-  transition: height 0.125s ease-out;
+  transition: height var(--transition-duration-short) ease-out;
 }
 
 .left-nav .left-nav-build:not(:last-child) {

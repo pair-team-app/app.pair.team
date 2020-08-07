@@ -13,12 +13,12 @@
 
 .cookies-overlay-intro {
 	/*opacity: 0;*/
-	/*transition: opacity 250ms ease-out;*/
+	/*transition: opacity var(--transition-duration-mid) ease-out;*/
 }
 
 .cookies-overlay-hide {
 	bottom: -170px;
-	transition: bottom 250ms ease-in;
+	transition: bottom var(--transition-duration-mid) ease-in;
 }
 
 .cookies-overlay-title {
@@ -29,7 +29,7 @@
 	text-decoration: underline;
 	text-decoration-skip: objects spaces edges box-decoration;
 	text-decoration-color: rgba(var(--link-color), 1.0);
-	transition: text-decoration-color 0.125s ease-in;
+	transition: text-decoration-color var(--transition-duration-short) ease-in;
 }
 
 .cookies-overlay-content a:hover {

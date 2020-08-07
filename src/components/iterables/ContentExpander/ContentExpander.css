@@ -24,7 +24,7 @@
 	background: linear-gradient(0deg, transparent 25%, rgba(var(--site-bg-color), 1.0));
 	pointer-events: none;
 	will-change: opacity;
-	transition: opacity 250ms;
+	transition: opacity var(--transition-duration-mid);
 }
 
 .content-expander-content-wrapper[data-open="true"] {

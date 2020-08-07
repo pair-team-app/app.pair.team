@@ -6,7 +6,7 @@
 	margin-bottom: var(--spacing-20);
 	background-color: rgba(var(--site-bg-color), 0.0);
 	border-bottom: 1px solid rgba(var(--border-alt-color), 1.0);
-	transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1), border 333ms ease-out;
+	transition: background-color var(--transition-duration-mid) cubic-bezier(0.4, 0, 0.2, 1), border var(--transition-duration-long) ease-out;
 }
 
 .vote-comment[data-loading="true"] {
@@ -17,7 +17,7 @@
 
 .vote-comment > * {
 	opacity: 1;
-	transition: opacity 333ms cubic-bezier(0.5, 0.9, 0.1, 1.0);
+	transition: opacity var(--transition-duration-long) cubic-bezier(0.5, 0.9, 0.1, 1.0);
 }
 
 .vote-comment[data-loading="true"] > * {
@@ -30,7 +30,7 @@
 
 .vote-comment .vote-wrapper .vote-arrow {
 	color: rgba(var(--site-fg-color), 1.0);
-	transition: color 0.125s ease-out;
+	transition: color var(--transition-duration-short) ease-out;
 }
 
 .vote-comment .vote-wrapper .vote-arrow:hover {
