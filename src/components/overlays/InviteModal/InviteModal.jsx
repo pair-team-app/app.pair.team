@@ -117,7 +117,7 @@ class InviteModal extends Component {
 
 const mapDispatchToProps = (dispatch)=> {
 	return ({
-		updateUserProfile : (profile)=> dispatch(updateUserProfile(profile))
+		updateUserProfile : (payload)=> dispatch(updateUserProfile(payload))
 	});
 
 };

@@ -2,9 +2,7 @@
 import React, { Component } from 'react';
 import './RegisterModal.css';
 
-import { URIs } from 'lang-js-utils';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
 
 import BaseOverlay from '../BaseOverlay';
 import RegisterForm from '../../forms/RegisterForm';
@@ -65,7 +63,7 @@ class RegisterModal extends Component {
 
 		this.setState({
 			outro    : true,
-			outroURI : `/modal${uri}`
+			outroURI : uri
 		});
 	};
 
@@ -75,7 +73,7 @@ class RegisterModal extends Component {
 		trackEvent('user', 'sign-up');
 		this.setState({ outro : true }, ()=> {
       setTimeout(()=> {
-        this.props.updateUserProfile(profile);
+        this.props.updateUserProfile({ profile });
       }, 333);
     });
 	};
@@ -114,7 +112,7 @@ class RegisterModal extends Component {
 const mapDispatchToProps = (dispatch)=> {
 	return ({
 		modifyInvite      : (payload)=> dispatch(modifyInvite(payload)),
-		updateUserProfile : (profile)=> dispatch(updateUserProfile(profile))
+		updateUserProfile : (payload)=> dispatch(updateUserProfile(payload))
 	});
 };
 

@@ -60,7 +60,7 @@ class LoginModal extends Component {
 		trackEvent('user', 'login');
     this.setState({ outro : true }, ()=> {
       setTimeout(()=> {
-        this.props.updateUserProfile(profile);
+        this.props.updateUserProfile({ profile });
       }, 333);
     });
 	};
@@ -109,7 +109,7 @@ class LoginModal extends Component {
 const mapDispatchToProps = (dispatch)=> {
 	return ({
 		modifyInvite      : (payload)=> dispatch(modifyInvite(payload)),
-		updateUserProfile : (profile)=> dispatch(updateUserProfile(profile))
+		updateUserProfile : (payload)=> dispatch(updateUserProfile(payload))
 	});
 
 };

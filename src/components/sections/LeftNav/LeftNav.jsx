@@ -117,7 +117,7 @@ class LeftNav extends Component {
             />
           ))}
         </div>
-        {(profile && profile.state >= 2) && (<div className="nav-link" onClick={this.handleCreateTeam}>Create Pair</div>)}
+        {(profile && profile.validated) && (<div className="nav-link" onClick={this.handleCreateTeam}>Create Pair</div>)}
       </div>)}
       {(!builds) ? (<div className="loading">Loading…</div>)
       : (<div className="builds-wrapper">

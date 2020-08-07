@@ -137,7 +137,10 @@ class ProfileModal extends Component {
     console.log('%s.handleSubmit()', this.constructor.name, { id, username, email, password, avatar });
 
     trackEvent('button', 'update-profile');
-    this.props.updateUserProfile({ id, username : email, email, password, avatar });
+    this.props.updateUserProfile({ 
+      profile : { id, username : email, email, password, avatar },
+      remote  : true
+    });
   };
 
   render() {
@@ -176,7 +179,7 @@ const mapDispatchToProps = (dispatch)=> {
   return {
     fetchUserTeams    : (payload)=> dispatch(fetchUserTeams(payload)),
     fetchUserProfile  : ()=> dispatch(fetchUserProfile()),
-    updateUserProfile : (profile)=> dispatch(updateUserProfile(profile))
+    updateUserProfile : (payload)=> dispatch(updateUserProfile(payload))
   };
 };
 

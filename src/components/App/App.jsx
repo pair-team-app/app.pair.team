@@ -24,7 +24,7 @@ import TopNav from '../sections/TopNav';
 
 import { API_ENDPT_URL, Modals, Pages } from '../../consts/uris';
 import { fetchUserTeams, fetchUserProfile, fetchInvite, setPlayground, modifyInvite, paidStripeSession, updateUserProfile } from '../../redux/actions';
-import { makeAvatar } from '../../utils/funcs';
+// import { makeAvatar } from '../../utils/funcs';
 import { initTracker, trackEvent, trackPageview } from '../../utils/tracking';
 
 const MATTY_DEVIN_THEME = false;
@@ -261,7 +261,7 @@ class App extends Component {
       // console.log('DISABLE_ACCOUNT', response.data);
 
       trackEvent('user', 'delete-account');
-      this.props.updateUserProfile(null);
+      this.props.updateUserProfile({ profile : null });
       this.props.history.push(Pages.HOME);
     }).catch((error)=> {});
   };
@@ -270,7 +270,7 @@ class App extends Component {
     console.log('%s.handleLogout()', this.constructor.name, this.constructor.name, { page, modal });
     trackEvent('user', 'sign-out');
 
-    this.props.updateUserProfile(null);
+    this.props.updateUserProfile({ profile : null });
 
     if (page) {
       this.props.history.push(page);
@@ -308,7 +308,7 @@ class App extends Component {
 
   handleUpdateUser = (profile)=> {
     console.log('%s.handleUpdateUser()', this.constructor.name, profile);
-    this.props.updateUserProfile(profile);
+    this.props.updateUserProfile({ profile, remote : true });
   };
 
   onToggleModal = (uri, show=true, clear=true)=> {

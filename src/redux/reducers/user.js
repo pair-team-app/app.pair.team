@@ -23,7 +23,7 @@ export default function user(state=initialState, action) {
     return (Object.assign({}, state, { profile }));
 
   } else if (type === USER_PROFILE_UPDATED) {
-    const profile = payload;
+    const { profile } = payload;
     return (Object.assign({}, state, { profile }));
 
   } else {

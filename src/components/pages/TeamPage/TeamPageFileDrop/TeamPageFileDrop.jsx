@@ -54,7 +54,7 @@ class TeamPageFileDrop extends Component {
     console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : this.props, prevState, state : this.state });
 
     const { preComment } = this.props;
-    const { text, url, files } = this.state;
+    const { text, url } = this.state;
 
     if (preComment && !prevProps.preComment) {
       if (/https?:\/\//i.test(preComment)) {

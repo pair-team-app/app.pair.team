@@ -1,6 +1,7 @@
 
 
 // import moment from 'moment';
+import { Bits } from 'lang-js-utils';
 import { push, replace } from 'connected-react-router';
 import cookie from 'react-cookies';
 import { matchPath } from 'react-router-dom';
@@ -9,7 +10,8 @@ import { RoutePaths } from '../../components/helpers/Routes';
 import { fetchTeamBuilds, fetchTeamComments, fetchUserTeams, setRoutePath } from '../actions';
 import { STRIPE_SESSION_PAID, BUILD_PLAYGROUNDS_LOADED, INVITE_LOADED, COMMENT_ADDED, COMMENT_UPDATED, COMMENT_VOTED, DEVICES_LOADED, SET_COMMENT, SET_COMPONENT, SET_PLAYGROUND, SET_TEAM, SET_TYPE_GROUP, TEAM_BUILDS_LOADED, TEAM_COMMENTS_LOADED, TEAMS_LOADED, TEAM_LOGO_LOADED, TEAM_RULES_UPDATED, TEAM_CREATED, TEAM_UPDATED, UPDATE_MOUSE_COORDS, UPDATE_RESIZE_BOUNDS, USER_PROFILE_LOADED, USER_PROFILE_UPDATED } from '../../consts/action-types';
 import { LOG_MIDDLEWARE_POSTFIX, LOG_MIDDLEWARE_PREFIX } from '../../consts/log-ascii';
-import { Modals, Pages } from '../../consts/uris';
+// import { Modals, Pages } from '../../consts/uris';
+import { Pages } from '../../consts/uris';
 import { reformComment, reformPlayground, reformTeam, reformInvite } from '../../utils/reform';
 
 
@@ -55,15 +57,36 @@ export function onMiddleware(store) {
 
     } else if (type === USER_PROFILE_LOADED) {
       const { profile } = payload;
+      const { id, state } = profile;
+
+      cookie.save('user_id', (profile) ? profile.id : '0', { path : '/', sameSite : false });
+
       if (profile) {
-        cookie.save('user_id', (profile) ? profile.id : '0', { path : '/', sameSite : false });
+        payload.profile = { ...profile,
+          id        : id << 0,
+          status    : 0x00,
+          validated : (state === 2)
+        };
+
         dispatch(fetchUserTeams({ profile }));
       }
 
     } else if (type === USER_PROFILE_UPDATED) {
-      const profile = payload;
+      const { profile } = payload;
+
+      cookie.save('user_id', (profile) ? profile.id : '0', { path : '/', sameSite : false });
       if (profile) {
-        cookie.save('user_id', (profile) ? profile.id : '0', { path : '/', sameSite : false });
+        const status = parseInt(payload.status, 16);
+        const { id, username, email, state } = profile;
+
+        payload.profile = { ...profile,
+          status    : status,
+          id        : id << 0,
+          username  : (Bits.contains(status, 0x01)) ? 'Username Already in Use' : username,
+          email     : (Bits.contains(status, 0x10)) ? 'Email Already in Use' : email,
+          validated : ((state << 0) === 2)
+        };
+
         dispatch(fetchUserTeams({ profile }));
       }
 
@@ -307,9 +330,7 @@ export function onMiddleware(store) {
       }
 
     } else if (type === '@@router/LOCATION_CHANGE') {
-      const { profile } = prevState.user;
       const { teams } = prevState.teams;
-      const { playgrounds } = prevState.builds;
       const { action, isFirstRendering, location } = payload;
       const { pathname, hash } = location;
 

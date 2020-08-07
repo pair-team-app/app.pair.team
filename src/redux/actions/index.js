@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { Bits } from 'lang-js-utils';
 import cookie from 'react-cookies';
 import { VOTE_ACTION_DOWN, VOTE_ACTION_UP } from '../../components/iterables/BaseComment';
 import { BUILD_PLAYGROUNDS_LOADED, SET_TEAM_COMMENTS_SORT, INVITE_LOADED, INVITE_MODIFIED, COMMENT_CREATED, COMMENT_ADDED, COMMENT_UPDATED, COMMENT_VOTED, COMPONENT_TYPES_LOADED, DEVICES_LOADED, PRODUCTS_LOADED, SET_COMMENT, SET_COMPONENT, SET_INVITE, SET_PLAYGROUND, SET_ROUTE_PATH, SET_TEAM, SET_TYPE_GROUP, TEAM_BUILDS_LOADED, TEAM_COMMENTS_LOADED, TEAMS_LOADED, TEAM_LOGO_LOADED, TEAM_RULES_UPDATED, TEAM_UPDATED, TOGGLE_THEME, UPDATE_MOUSE_COORDS, UPDATE_RESIZE_BOUNDS, USER_PROFILE_ERROR, USER_PROFILE_LOADED, USER_PROFILE_UPDATED, TEAM_CREATED, STRIPE_SESSION_CREATED, STRIPE_SESSION_PAID } from '../../consts/action-types';
@@ -242,15 +241,10 @@ export function fetchUserProfile(payload=null) {
     }).then((response)=> {
       console.log(API_RESPONSE_PREFIX, 'USER_PROFILE', response.data);
 
-      const { id } = response.data.user;
+      const { user : profile } = response.data;
       dispatch({
         type    : USER_PROFILE_LOADED,
-        payload : {
-          profile : { ...response.data.user,
-            id     : id << 0,
-            status : 0x00
-          }
-        }
+        payload : { profile }
       });
     }).catch((error)=> {});
   };
@@ -610,61 +604,54 @@ export function updateResizeBounds(payload) {
   return { payload : resizeBounds, type : UPDATE_RESIZE_BOUNDS };
 }
 
-export function updateUserProfile(payload, force=false) {
-  logFormat('updateUserProfile()', null, payload, force);
+export function updateUserProfile(payload) {
+  logFormat('updateUserProfile()', null, payload);
 
-  if (payload) {
-    const { id } = payload;
-    payload = { ...payload,
-      id : id << 0
-    };
-
-    if (payload.hasOwnProperty('password') && payload.password === '') {
-      delete (payload.password);
+  const { profile, remote } = payload;
+  if (profile) {
+    if (profile.hasOwnProperty('password') && profile.password === '') {
+      delete (profile.password);
     }
   }
 
-  if (!force) {
+  if (remote === undefined || remote === false) {
     return (dispatch)=> {
-      dispatch({ payload, type : USER_PROFILE_UPDATED });
-    };
-  }
-
-  return (dispatch)=> {
-    if (payload) {
-      const { id, avatar } = payload;
-      axios.post(API_ENDPT_URL, {
-        action  : 'UPDATE_USER_PROFILE',
-        payload : { ...payload,
-          user_id  : id,
-					filename : avatar
-        }
-      }).then((response)=> {
-        console.log(API_RESPONSE_PREFIX, 'UPDATE_USER_PROFILE', response.data);
-
-        const status = parseInt(response.data.status, 16);
-        if (status === 0x00) {
-        }
-
-        const { id, username, email } = response.data.user;
-        dispatch({
-          type    : (status === 0x00) ? USER_PROFILE_UPDATED : USER_PROFILE_ERROR,
-          payload : { ...response.data.user,
-            status   : status,
-            id       : id << 0,
-            username : (Bits.contains(status, 0x01)) ? 'Username Already in Use' : username,
-            email    : (Bits.contains(status, 0x10)) ? 'Email Already in Use' : email
-          }
-        });
-      }).catch((error)=> {});
-
-    } else {
-      cookie.save('user_id', '0', { path : '/', sameSite : false });
-
       dispatch({
         type    : USER_PROFILE_UPDATED,
-        payload : null
+        payload : { profile }
       });
-    }
-  };
+    };
+
+  } else {
+    return ((dispatch)=> {
+      if (profile) {
+        const { id, avatar } = profile;
+        axios.post(API_ENDPT_URL, {
+          action  : 'UPDATE_USER_PROFILE',
+          payload : { ...profile,
+            user_id  : id,
+            filename : avatar
+          }
+        }).then((response)=> {
+          console.log(API_RESPONSE_PREFIX, 'UPDATE_USER_PROFILE', response.data);
+
+          const status = parseInt(response.data.status, 16);
+          const { user : profile } = response.data;
+
+          dispatch({
+            type    : (status === 0x00) ? USER_PROFILE_UPDATED : USER_PROFILE_ERROR,
+            payload : { profile, status }
+          });
+        }).catch((error)=> {});
+
+      } else {
+        cookie.save('user_id', '0', { path : '/', sameSite : false });
+
+        dispatch({
+          type    : USER_PROFILE_UPDATED,
+          payload : { profile : null }
+        });
+      }
+    });
+  }
 }

@@ -68,7 +68,7 @@ class LoginForm extends Component {
 			axios.post(API_ENDPT_URL, {
 				action  : 'LOGIN',
 				payload : { email, password, username,
-					invite_id : invite.id
+					invite_id : (invite) ? invite.id : null
 				}
 			}).then((response)=> {
 				const { user } = response.data;
