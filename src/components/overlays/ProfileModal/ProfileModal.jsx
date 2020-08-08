@@ -125,6 +125,23 @@ class ProfileModal extends Component {
     });
   };
 
+  handleResendVerify = ()=> {
+    console.log('%s.handleResendVerify()', this.constructor.name);
+
+    const { profile } = this.props;
+    axios.post(API_ENDPT_URL, {
+      action  : 'RESEND_VERIFY',
+      payload : {
+        user_id : profile.id
+      }
+    }).then((response)=> {
+      console.log('[=|-]', 'RESEND_VERIFY', response.data);
+      const { verify } = response.data;
+
+    }).catch((error)=> {
+    });
+  }
+
   handleResetPassword = ()=> {
     console.log('%s.handleResetPassword()', this.constructor.name);
     this.setState({
@@ -156,6 +173,7 @@ class ProfileModal extends Component {
         <div className="form-wrapper">
           <ProfileForm profile={profile} team={team} onCancel={this.handleCancel} onDowngradePlan={this.handleDowngradePlan} onSubmit={this.handleSubmit} />
           <div className="footer-wrapper form-disclaimer">
+            {(!profile.validated) && (<div onClick={this.handleResendVerify}>Resend Verify Email</div>)}
             <div onClick={this.handleResetPassword}>Delete Account?</div>
           </div>
         </div>
