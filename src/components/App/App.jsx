@@ -97,7 +97,6 @@ class App extends Component {
     // url changed
     if (prevProps.location.pathname !== pathname) {
       trackPageview();
-
     }
 
 
@@ -173,21 +172,28 @@ class App extends Component {
 
       // not logged in
       if (!profile) {
-        if (!modals.login && !modals.register && !modals.invite && !modals.recover) {
+
+        // show login first
+        if ((cookie.load('user_id') << 0) === 0 && !modals.login && !modals.register && !modals.invite && !modals.recover) {
           this.onToggleModal(Modals.LOGIN);
         }
 
 
       // logged in
       } else {
-        // dismiss reg / login modals after login
-
+        // dismiss modals after login
         if (modals.login) {
           this.onToggleModal(Modals.LOGIN, false);
         }
 
         if (modals.register) {
           this.onToggleModal(Modals.REGISTER, false);
+        }
+
+        if (!prevProps.profile) {
+          if (hash === '#profile') {
+            this.onToggleModal(Modals.PROFILE);
+          }
         }
 
 
@@ -221,7 +227,7 @@ class App extends Component {
       }
 
       // outros from history
-      if (hash === '' && prevProps.hash.startsWith('#')) {
+      if (hash.length === 0 && prevProps.hash.length !== 0) {
         if (prevProps.hash === '#invite') {
           this.onToggleModal(Modals.INVITE, false);
         }

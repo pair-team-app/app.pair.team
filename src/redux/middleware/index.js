@@ -7,7 +7,7 @@ import cookie from 'react-cookies';
 import { matchPath } from 'react-router-dom';
 
 import { RoutePaths } from '../../components/helpers/Routes';
-import { fetchTeamBuilds, fetchTeamComments, fetchUserTeams, setRoutePath } from '../actions';
+import { fetchTeamBuilds, fetchTeamComments, fetchUserTeams, setRoutePath, setEntryHash } from '../actions';
 import { STRIPE_SESSION_PAID, BUILD_PLAYGROUNDS_LOADED, INVITE_LOADED, COMMENT_ADDED, COMMENT_UPDATED, COMMENT_VOTED, DEVICES_LOADED, SET_COMMENT, SET_COMPONENT, SET_PLAYGROUND, SET_TEAM, SET_TYPE_GROUP, TEAM_BUILDS_LOADED, TEAM_COMMENTS_LOADED, TEAMS_LOADED, TEAM_LOGO_LOADED, TEAM_RULES_UPDATED, TEAM_CREATED, TEAM_UPDATED, UPDATE_MOUSE_COORDS, UPDATE_RESIZE_BOUNDS, USER_PROFILE_LOADED, USER_PROFILE_UPDATED } from '../../consts/action-types';
 import { LOG_MIDDLEWARE_POSTFIX, LOG_MIDDLEWARE_PREFIX } from '../../consts/log-ascii';
 // import { Modals, Pages } from '../../consts/uris';
@@ -56,6 +56,8 @@ export function onMiddleware(store) {
       payload.devices = devices.map((device)=> ({ ...device, scale : parseFloat(device.scale) })).sort((i, ii)=> ((i.title < ii.title) ? -1 : (i.title > ii.title) ? 1 : 0));
 
     } else if (type === USER_PROFILE_LOADED) {
+      const { hash } = prevState.path;
+
       const { profile } = payload;
       const { id, state } = profile;
 
@@ -351,13 +353,17 @@ export function onMiddleware(store) {
             return (dispatch(replace(Pages.TEAM)));
 
           } else {
-            if (hash !== '') {
+            if (hash.length > 0) {
             }
           }
 
         } else {
           if (isFirstRendering) {
             console.log('\\\\\\\\\\\\\\\\\\\\', 'FIRST RENDER', { pathname, hash }, '\\\\\\\\\\\\\\\\\\\\');
+
+            if (hash.length > 0) {
+              dispatch(setEntryHash({ hash }));
+            }
 
           } else {
             console.log('///-///', 'ROUTER CHANGE', { pathname, hash }, '///-///');

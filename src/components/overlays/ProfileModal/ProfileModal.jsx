@@ -137,7 +137,7 @@ class ProfileModal extends Component {
     console.log('%s.handleSubmit()', this.constructor.name, { id, username, email, password, avatar });
 
     trackEvent('button', 'update-profile');
-    this.props.updateUserProfile({ 
+    this.props.updateUserProfile({
       profile : { id, username : email, email, password, avatar },
       remote  : true
     });
@@ -155,7 +155,7 @@ class ProfileModal extends Component {
         </div>
         <div className="form-wrapper">
           <ProfileForm profile={profile} team={team} onCancel={this.handleCancel} onDowngradePlan={this.handleDowngradePlan} onSubmit={this.handleSubmit} />
-          <div className="form-disclaimer">
+          <div className="footer-wrapper form-disclaimer">
             <div onClick={this.handleResetPassword}>Delete Account?</div>
           </div>
         </div>
