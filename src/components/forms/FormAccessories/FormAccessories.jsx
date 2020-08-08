@@ -7,7 +7,7 @@ import { FormAccessoryAlignment } from '../FormAccessories';
 
 
 export const PlusFormAccessory = (props)=> {
-  console.log('PlusFormAccessory', { props });
+  // console.log('PlusFormAccessory', { props });
 
   const { align } = props;
   return (<div className={`form-acc form-acc-${(align || FormAccessoryAlignment.CENTER)} plus-form-accessory`} onClick={props.onClick}>
@@ -20,7 +20,7 @@ export const PlusFormAccessory = (props)=> {
 
 
 export const MinusFormAccessory = (props)=> {
-  console.log('MinusFormAccessory', { props });
+  // console.log('MinusFormAccessory', { props });
 
   const { align } = props;
   return (<div className={`form-acc form-acc-${(align || FormAccessoryAlignment.CENTER)} minus-form-accessory`} onClick={props.onClick}>

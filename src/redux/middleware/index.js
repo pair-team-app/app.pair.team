@@ -109,7 +109,7 @@ export function onMiddleware(store) {
         strict : false
       });
 
-      const team = (params) ? payload.teams.find(({ id })=> (id === params.teamID)) : (payload.teams.length > 0 && !createMatch) ? [ ...payload.teams ].shift() : null;
+      const team = (createMatch && prevState.teams.team) ? prevState.teams.team : (payload.teams.length > 0) ? (params) ? payload.teams.find(({ id })=> (id === params.teamID)) : [ ...payload.teams ].shift() : null;
       payload.teams = payload.teams.map((item)=> ({ ...item,
         selected : (team && item.id === team.id)
       }));
@@ -121,6 +121,15 @@ export function onMiddleware(store) {
       if (team) {
         dispatch(fetchTeamBuilds({ team : payload.team, buildID, deviceSlug }));
         dispatch(fetchTeamComments({ team : payload.team }));
+
+        if (!params || params.teamID !== team.id) {
+          if (createMatch) {
+            dispatch(push(`${Pages.TEAM}/${team.id}--${team.slug}`));
+
+          } else {
+            dispatch(replace(`${Pages.TEAM}/${team.id}--${team.slug}`));
+          }
+        }
       }
 
     } else if (type === TEAM_LOGO_LOADED) {
@@ -202,9 +211,10 @@ export function onMiddleware(store) {
       // payload.comment = comment;
 
     } else if (type === TEAM_CREATED) {
-      // const { profile, team } = payload;
-      const { profile } = payload;
+      const { profile, team } = payload;
+      // const { profile } = payload;
 
+      payload.team = reformTeam(team);
       dispatch(fetchUserTeams({ profile }));
 
     } else if (type === UPDATE_MOUSE_COORDS) {
@@ -285,7 +295,7 @@ export function onMiddleware(store) {
       }));
       payload.team = (payload.team) ? payload.teams.find(({ id })=> (id === payload.team.id)) : null;
 
-      const member = payload.team.members.find(({ id })=> (id === profile.id));
+      const member = (payload.team) ? payload.team.members.find(({ id })=> (id === profile.id)) : null;
       payload.member = member;
 
       const buildID = 0;

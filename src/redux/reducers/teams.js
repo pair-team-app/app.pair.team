@@ -1,5 +1,5 @@
 
-import { INVITE_LOADED, SET_TEAM, SET_TEAM_COMMENTS_SORT, TEAM_COMMENTS_LOADED, TEAMS_LOADED, TEAM_LOGO_LOADED, TEAM_RULES_UPDATED, TEAM_UPDATED, COMMENT_ADDED, COMMENT_UPDATED, COMMENT_VOTED } from '../../consts/action-types';
+import { INVITE_LOADED, SET_TEAM, SET_TEAM_COMMENTS_SORT, TEAM_COMMENTS_LOADED, TEAMS_LOADED, TEAM_CREATED, TEAM_LOGO_LOADED, TEAM_RULES_UPDATED, TEAM_UPDATED, COMMENT_ADDED, COMMENT_UPDATED, COMMENT_VOTED } from '../../consts/action-types';
 import { LOG_REDUCER_POSTFIX, LOG_REDUCER_PREFIX } from '../../consts/log-ascii';
 import { CommentSortTypes } from '../../components/sections/TopNav';
 
@@ -37,6 +37,10 @@ export default function comments(state=initialState, action) {
   } else if (type === TEAMS_LOADED) {
     const { team, teams, member } = payload;
     return (Object.assign({}, state, { team, teams, member }));
+
+  } else if (type === TEAM_CREATED) {
+    const { team } = payload;
+    return (Object.assign({}, state, { team }));
 
   } else if (type === TEAM_UPDATED) {
     const { team } = payload;

@@ -59,7 +59,7 @@ class TeamPage extends Component {
     window.ondragenter = this.handleDragEnter;
     window.ondragleave = this.handleDragLeave;
 
-    // window.addEventListener('paste', this.handleClipboardPaste);
+    window.addEventListener('paste', this.handleClipboardPaste);
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
@@ -155,28 +155,9 @@ class TeamPage extends Component {
   handleClipboardPaste = (event)=> {
     console.log('%s.handleClipboardPaste()', this.constructor.name, { event, data : event.clipboardData.getData('Text') });
 
-    const commentContent = event.clipboardData.getData('Text');
-    if (commentContent) {
-      const urlComment = (/https?:\/\//i.test(commentContent));
-
-      this.setState({ commentContent, urlComment,
-        parsing      : urlComment,
-      }, ()=> {
-        if (urlComment) {
-          const url = commentContent.match(/https?:\/\/.+ ?/i).shift().split(' ').shift();
-          axios.post(API_ENDPT_URL, {
-            action  : 'SCREENSHOT_URL',
-            payload : { url }
-          }).then((response)=> {
-            const { image } = response.data;
-            console.log('SCREENSHOT_URL', { data : response.data });
-            this.setState({
-              parsing : false,
-              dataURI : image.data
-              });
-          });
-        }
-      });
+    const preComment = event.clipboardData.getData('Text');
+    if (preComment) {
+      this.props.createComment(preComment);
     }
   }
 
@@ -236,7 +217,7 @@ class TeamPage extends Component {
   }
 
   handlePageKeyPress = (event, key)=> {
-    console.log('%s.handlePageKeyPress()_____', this.constructor.name, { event, target : event.target, attribs : { elementID : event.target.id, className : event.target.className, attribs : event.target.getAttributeNames(), hasOverride : (event.target.getAttributeNames().findIndex((attrib)=> (attrib === 'data-keypress-override')) !== -1) }, key });
+    console.log('%s.handlePageKeyPress()', this.constructor.name, { event, target : event.target, attribs : { elementID : event.target.id, className : event.target.className, attribs : event.target.getAttributeNames(), hasOverride : (event.target.getAttributeNames().findIndex((attrib)=> (attrib === 'data-keypress-override')) !== -1) }, key });
 
     const { target } = event;
     const { preComment } = this.props;
@@ -313,7 +294,7 @@ class TeamPage extends Component {
     // console.log('%s.render()', this.constructor.name, { infoLoading, rulesLoading, commentsLoading });
 
     return (<BasePage { ...this.props } className="team-page">
-      {(profile && team)
+      {(profile && team && member)
       ? (<div className="content-wrapper">
           <KeyboardEventHandler handleKeys={['alphanumeric']} onKeyEvent={(key, event)=> this.handlePageKeyPress(event, key)} />
           <div className="comments-wrapper" data-fetching={Boolean((fetching & 0x010) === 0x010)} data-loading={commentsLoading} data-empty={team && team.comments.length === 0}>

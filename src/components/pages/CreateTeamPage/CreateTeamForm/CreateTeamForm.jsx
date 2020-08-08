@@ -90,7 +90,7 @@ class CreateTeamForm extends Component {
 
 
   render() {
-    console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
+    // console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
 
     // const { title, description, rules, invites, validated } = this.state;
     const { title, description, rules, invites } = this.state;
