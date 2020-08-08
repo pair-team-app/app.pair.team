@@ -137,6 +137,7 @@ class ProfileModal extends Component {
     }).then((response)=> {
       console.log('[=|-]', 'RESEND_VERIFY', response.data);
       const { verify } = response.data;
+      console.log({ verify });
 
     }).catch((error)=> {
     });

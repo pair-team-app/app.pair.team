@@ -7,12 +7,13 @@ import cookie from 'react-cookies';
 import { matchPath } from 'react-router-dom';
 
 import { RoutePaths } from '../../components/helpers/Routes';
-import { fetchTeamBuilds, fetchTeamComments, fetchUserTeams, setRoutePath, setEntryHash } from '../actions';
-import { STRIPE_SESSION_PAID, BUILD_PLAYGROUNDS_LOADED, INVITE_LOADED, COMMENT_ADDED, COMMENT_UPDATED, COMMENT_VOTED, DEVICES_LOADED, SET_COMMENT, SET_COMPONENT, SET_PLAYGROUND, SET_TEAM, SET_TYPE_GROUP, TEAM_BUILDS_LOADED, TEAM_COMMENTS_LOADED, TEAMS_LOADED, TEAM_LOGO_LOADED, TEAM_RULES_UPDATED, TEAM_CREATED, TEAM_UPDATED, UPDATE_MOUSE_COORDS, UPDATE_RESIZE_BOUNDS, USER_PROFILE_LOADED, USER_PROFILE_UPDATED } from '../../consts/action-types';
+// import { fetchTeamBuilds, fetchTeamComments, fetchUserTeams, setRoutePath, setEntryHash } from '../actions';
+import { fetchTeamBuilds, fetchUserTeams, setRoutePath, setEntryHash } from '../actions';
+import { STRIPE_SESSION_PAID, BUILD_PLAYGROUNDS_LOADED, INVITE_LOADED, COMMENT_CREATED, COMMENT_ADDED, COMMENT_UPDATED, COMMENT_VOTED, DEVICES_LOADED, SET_COMMENT, SET_COMPONENT, SET_PLAYGROUND, SET_TEAM, SET_TYPE_GROUP, TEAM_BUILDS_LOADED, TEAM_COMMENTS_LOADED, TEAMS_LOADED, TEAM_LOGO_LOADED, TEAM_RULES_UPDATED, TEAM_CREATED, TEAM_UPDATED, UPDATE_MOUSE_COORDS, UPDATE_RESIZE_BOUNDS, USER_PROFILE_LOADED, USER_PROFILE_UPDATED } from '../../consts/action-types';
 import { LOG_MIDDLEWARE_POSTFIX, LOG_MIDDLEWARE_PREFIX } from '../../consts/log-ascii';
 // import { Modals, Pages } from '../../consts/uris';
 import { Pages } from '../../consts/uris';
-import { reformComment, reformPlayground, reformTeam, reformInvite } from '../../utils/reform';
+import { reformComment, reformPlayground, reformRule, reformTeam, reformInvite } from '../../utils/reform';
 
 
 
@@ -56,8 +57,6 @@ export function onMiddleware(store) {
       payload.devices = devices.map((device)=> ({ ...device, scale : parseFloat(device.scale) })).sort((i, ii)=> ((i.title < ii.title) ? -1 : (i.title > ii.title) ? 1 : 0));
 
     } else if (type === USER_PROFILE_LOADED) {
-      const { hash } = prevState.path;
-
       const { profile } = payload;
       const { id, state } = profile;
 
@@ -97,11 +96,8 @@ export function onMiddleware(store) {
       const { params } = prevState.path;
       const { pathname } = prevState.router.location;
 
-      const buildID = 0;
-      const deviceSlug = "";
-
       const { teams } = payload;
-      payload.teams = teams.map((team)=> (reformTeam(team))).sort((i, ii)=> ((i.epoch > ii.epoch) ? -1 : (i.epoch < ii.epoch) ? 1 : 0)).map((team, i)=> ({ ...team, selected : (i === 0)}));
+      payload.teams = teams.map((team)=> (reformTeam(team))).sort((i, ii)=> ((i.epoch > ii.epoch) ? -1 : (i.epoch < ii.epoch) ? 1 : 0));
 
       const createMatch = matchPath(pathname, {
         path   : RoutePaths.CREATE,
@@ -109,27 +105,28 @@ export function onMiddleware(store) {
         strict : false
       });
 
-      const team = (createMatch && prevState.teams.team) ? prevState.teams.team : (payload.teams.length > 0) ? (params) ? payload.teams.find(({ id })=> (id === params.teamID)) : [ ...payload.teams ].shift() : null;
-      payload.teams = payload.teams.map((item)=> ({ ...item,
-        selected : (team && item.id === team.id)
-      }));
-      payload.team = team;
+      if (!createMatch) {
+        const team = (params) ? (payload.teams.find(({ id })=> (id === params.teamID)) || [ ...payload.teams].shift()) : [ ...payload.teams].shift();
+        payload.team = team;
 
-      const member = team.members.find(({ id })=> (id === profile.id));
-      payload.member = member;
+        payload.teams = payload.teams.map((item)=> ({ ...item,
+          selected : (team && item.id === team.id)
+        }));
 
-      if (team) {
-        dispatch(fetchTeamBuilds({ team : payload.team, buildID, deviceSlug }));
-        dispatch(fetchTeamComments({ team : payload.team }));
+        const member = team.members.find(({ id })=> (id === profile.id));
+        payload.member = member;
 
         if (!params || params.teamID !== team.id) {
-          if (createMatch) {
-            dispatch(push(`${Pages.TEAM}/${team.id}--${team.slug}`));
-
-          } else {
-            dispatch(replace(`${Pages.TEAM}/${team.id}--${team.slug}`));
-          }
+          dispatch(push(`${Pages.TEAM}/${team.id}--${team.slug}`));
         }
+
+        const buildID = 0;
+        const deviceSlug = '';
+        dispatch(fetchTeamBuilds({ team : payload.team, buildID, deviceSlug }));
+
+      } else {
+        payload.team = null;
+        payload.member = null;
       }
 
     } else if (type === TEAM_LOGO_LOADED) {
@@ -174,7 +171,7 @@ export function onMiddleware(store) {
 
       if (payload.comments.reduce((acc, val)=> (acc + (val << 0)), 0) !== 0) {
         // dispatch(fetchTeamComments({ team, verbose : true }));
-        return (action(dispatch(fetchTeamComments({ team, verbose : true })), store.getState));
+        //// return (action(dispatch(fetchTeamComments({ team, verbose : true })), store.getState));
 
       } else {
         const comments = payload.comments.map((comment, i)=> (reformComment(comment, `${Pages.TEAM}/${team.slug}/comments`)));
@@ -211,11 +208,18 @@ export function onMiddleware(store) {
       // payload.comment = comment;
 
     } else if (type === TEAM_CREATED) {
-      const { profile, team } = payload;
-      // const { profile } = payload;
+      const { profile } = prevState.user;
+      const { teams } = prevState.teams;
+      const { team } = payload;
 
       payload.team = reformTeam(team);
-      dispatch(fetchUserTeams({ profile }));
+      payload.teams = [{ ...team, selected : true }, ...teams.map((item)=> ({ ...item, selected : false }))];
+
+      const member = payload.team.members.find(({ id })=> (id === profile.id));
+      payload.member = member;
+
+      // dispatch(fetchUserTeams({ profile }));
+      dispatch(push(`${Pages.TEAM}/${payload.team.id}--${payload.team.slug}`));
 
     } else if (type === UPDATE_MOUSE_COORDS) {
       const { speed } = prevState.mouse;
@@ -231,6 +235,12 @@ export function onMiddleware(store) {
       payload.resizeBounds = payload.bounds;
       delete (payload.bounds);
 
+    } else if (type === COMMENT_CREATED) {
+      const { team } = prevState.teams;
+
+      payload.comment = null;
+      dispatch(push(`/team/${team.id}--${team.slug}`));
+
     } else if (type === COMMENT_ADDED) {
       const { team } = prevState.teams;
 
@@ -238,27 +248,13 @@ export function onMiddleware(store) {
         comments : [ ...team.comments, reformComment(payload.comment, `${Pages.TEAM}/${team.slug}/comments`)]
       };
 
-      // const prevComment = prevState.comments.comments.comments.find(({ id })=> (id === (payload.comment.id << 0)));
-      // payload.comment = (prevComment) ? reformComment(payload.comment, prevComment.uri) : reformComment(payload.comment, `${Pages.TEAM}/${team.slug}/comments`);
-      // payload.comments = (prevComment) ? prevState.comments.comments.map((comment)=> ((comment.id === payload.comment.id) ? payload.comment : comment)) : [ ...prevState.comments, payload.comment];
-      // payload.component = (component) ? { ...component,
-      //   comments : [ ...component.comments, payload.comment].sort((i, ii)=> ((i.epoch > ii.epoch) ? -1 : (i.epoch < ii.epoch) ? 1 : ((i.type === 'bot') ? -1 : (ii.type === 'bot') ? 1 : 0)))
-      // } : null;
-
-
     } else if (type === COMMENT_UPDATED) {
       const { team } = prevState.teams;
-      payload.team = { ...team,
-        comments : [ ...team.comments, reformComment(payload.comment, `${Pages.TEAM}/${team.slug}/comments`)]
-      };
+      const comment = reformComment(payload.comment, `${Pages.TEAM}/${team.slug}/comments`);
 
-      const prevComment = team.comments.find(({ id })=> (id === (payload.comment.id << 0)));
-      // payload.team = { ...team,
-      //   comments : team.comments.map((comment)=> ((comment.id === prevComment.id) ? reformComment(payload.comment, prevComment.uri) : comment))
-      // };
-
+      payload.comment = comment;
       payload.team = { ...team,
-        comments : team.comments.filter(({ id })=> (id !== prevComment.id))
+        comments : (comment.state === 'deleted') ? team.comments.filter(({ id })=> (id !== comment.id)) : [ ...team.comments.filter(({ id })=> (id !== comment.id)), payload.comment]
       };
 
     } else if (type === STRIPE_SESSION_PAID) {
@@ -268,11 +264,9 @@ export function onMiddleware(store) {
       const { team } = prevState.teams;
       const { rules } = payload;
 
-      // payload.team = { ...team,
-      //   rules : rules.map((rule)=> (reformRule(rule, team.members)))
-      // };
-
-      payload.team = { ...team, rules };
+      payload.team = { ...team,
+        rules : rules.map((rule)=> (reformRule(rule, team.members)))
+      };
 
     } else if (type === TEAM_UPDATED) {
       const { team } = payload;
@@ -303,7 +297,7 @@ export function onMiddleware(store) {
 
       if (payload.team) {
         dispatch(fetchTeamBuilds({ team : payload.team, buildID, deviceSlug }));
-        dispatch(fetchTeamComments({ team : payload.team, verbose : true }));
+        // dispatch(fetchTeamComments({ team : payload.team, verbose : true }));
         dispatch(push(`/team/${payload.team.id}--${payload.team.slug}`));
       }
 
@@ -361,20 +355,20 @@ export function onMiddleware(store) {
           path   : RoutePaths.TEAM,
           exact  : false,
           strict : false
-        }) || {};
+        });
 
-        console.log('-=-=-=-=-=-=-=-=-=-=-=-=', { location, teamMatch });
+        const createMatch = matchPath(pathname, {
+          path   : RoutePaths.CREATE,
+          exact  : false,
+          strict : false
+        });
 
-
-        if (Object.keys(teamMatch).length === 0) {
+        console.log('-=-=-=-=-=-=-=-=-=-=-=-=', { location, teamMatch, createMatch });
+        if (!teamMatch && !createMatch) {
           console.log('///-///', 'NON-TEAM PARAM URL', { pathname, hash }, '///-///');
 
           if (!pathname.startsWith(Pages.TEAM)) {
             return (dispatch(replace(Pages.TEAM)));
-
-          } else {
-            if (hash.length > 0) {
-            }
           }
 
         } else {
@@ -402,21 +396,23 @@ export function onMiddleware(store) {
             const buildID = 0;
             const deviceSlug = "";
             dispatch(fetchTeamBuilds({ team : payload.team, buildID, deviceSlug }));
-            dispatch(fetchTeamComments({ team : payload.team, verbose : true }));
+            // dispatch(fetchTeamComments({ team : payload.team, verbose : true }));
           }
 
-          dispatch(setRoutePath({ ...teamMatch,
-            params : { ...teamMatch.params,
-              teamID       : (teamMatch.params.teamID << 0 || null),
-              teamSlug     : (teamMatch.params.teamSlug || null),
-              buildID      : null,
-              projectSlug  : null,
-              deviceSlug   : null,
-              componentID  : null,
-              comments     : (teamMatch.params.comments) ? (teamMatch.params.comments === true) : false,
-              commentID    : (teamMatch.params.commentID << 0 || null)
-            }
-          }));
+          if (teamMatch) {
+            dispatch(setRoutePath({ ...teamMatch,
+              params : { ...teamMatch.params,
+                teamID       : (teamMatch.params.teamID << 0 || null),
+                teamSlug     : (teamMatch.params.teamSlug || null),
+                buildID      : null,
+                projectSlug  : null,
+                deviceSlug   : null,
+                componentID  : null,
+                comments     : (teamMatch.params.comments) ? (teamMatch.params.comments === true) : false,
+                commentID    : (teamMatch.params.commentID << 0 || null)
+              }
+            }));
+          }
         }
       }
     }

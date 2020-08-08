@@ -51,7 +51,7 @@ class TeamPageFileDrop extends Component {
   }
 
 	componentDidUpdate(prevProps, prevState, snapshot) {
-    console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : this.props, prevState, state : this.state });
+    // console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : this.props, prevState, state : this.state });
 
     const { preComment } = this.props;
     const { text, url } = this.state;
@@ -79,7 +79,7 @@ class TeamPageFileDrop extends Component {
   };
 
   handleCode = (event)=> {
-    console.log('%s.handleCode()', this.constructor.name, { event });
+    // console.log('%s.handleCode()', this.constructor.name, { event });
     this.setState({ code : !this.state.code });
   };
 
@@ -264,7 +264,7 @@ class TeamPageFileDrop extends Component {
 
 
 	render() {
-    console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
+    // console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
 
     const { dragging, preComment } = this.props;
     const { url, code, uploaded, image, files, text, focused } = this.state;
@@ -277,9 +277,11 @@ class TeamPageFileDrop extends Component {
 		return (<div className="team-page-file-drop" data-hidden={(!dragging && files.length === 0 && !preComment)}>
       <div data-file={files.length > 0 || image !== null || preComment !== null}>
       <KeyboardEventHandler isDisabled={(preComment === null)} handleFocusableElements handleKeys={['alphanumeric', ',', '.', '/', '\\', '-', '[', ']', ';', '\'', '`', '=', '+', '*', 'space', 'backspace', 'shift', 'enter', 'esc']} onKeyEvent={(key, event)=> this.handleKeyPress(event, key)} />
-        {(files.length > 0 || preComment) && (<div className="input-wrapper" data-uploaded={uploaded}>
-          <div className="comment-txt" onClick={this.handleFieldFocus} data-focused={focused} data-code={(code)}>{text}</div>
-          {(preComment && !url) && (<img src={btnCode} className="code-btn" onClick={this.handleCode} alt="Code" />)}
+        {(files.length > 0 || preComment) && (<div className="form-wrapper" data-uploaded={uploaded}>
+          <div className="input-wrapper">
+            <div className="comment-txt" onClick={this.handleFieldFocus} data-focused={focused} data-code={(code)}>{text}</div>
+            {/* {(preComment && !url) && (<img src={btnCode} className="code-button" onClick={this.handleCode} alt="Code" />)} */}
+          </div>
           <button type="submit" disabled={text.length === 0} onClick={this.handleSubmit}>Submit</button>
         </div>)}
 

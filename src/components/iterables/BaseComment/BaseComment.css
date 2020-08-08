@@ -6,7 +6,6 @@
 	flex-flow: column;
 	width: 100%;
 	height: fit-content;
-	/* padding: var(--spacing-20); */
 }
 
 .base-comment[data-loading="true"] {
@@ -165,17 +164,30 @@
 	flex-wrap: nowrap;
 	align-items: flex-start;
 	width: 100%;
-	/* margin-bottom: 20px; */
 }
 
-/* .comment-body .base-comment-content > form {
-	width: 100%;
-	margin-top: 20px;
-} */
-
 .comment-body .base-comment-content .reply-form {
+	position: relative;
 	width: 100%;
 	margin-top: 20px;
+}
+
+.comment-body .base-comment-content .reply-form input[data-code="true"] {
+	font-family: Consolas, Monaco, "Courier New", Courier, monospace;
+}
+
+.comment-body .base-comment-content .reply-form > .code-button {
+	position: absolute;
+	top: 50%;
+	right: 8px;
+	transform: translate(-8px, -50%);
+	opacity: 0.67;
+	transition: opacity var(--transition-duration-short) cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.comment-body .base-comment-content .reply-form > .code-button:hover {
+	opacity: 1;
+  cursor: pointer;
 }
 
 .base-comment .timestamp {
@@ -187,30 +199,15 @@
 .base-comment .content {
 	font-size: 14px;
 	font-weight: 500;
-	/* line-height: 20px; */
 	text-align: justify;
-	/* margin-bottom: 20px; */
 }
 
-.base-comment .uri {
-	margin-top: 10px;
-	font-size: 12px;
-	color: rgba(var(--link-color), 1.0);
-	text-decoration: underline;
-	transition: color var(--transition-duration-short) ease-out;
-	word-break: break-all;
-	/* line-break: loose; */
-}
-
-.base-comment .uri:hover {
-	color: rgba(var(--link-hover-color), 1.0);
-	text-decoration: none;
-	cursor: pointer;
+.base-comment .content[data-format="code"] {
+	font-family: Consolas, Monaco, "Courier New", Courier, monospace;
 }
 
 .base-comment-replies {
 	margin-top: var(--spacing-20);
-	padding-right: var(--spacing-20);
 	width: 100%;
 }
 
@@ -218,36 +215,4 @@
 .base-comment-replies > *:not(:last-child) {
 	margin-bottom: 30px;
 }
-
-/* .base-comment-reply .header {
-	display: flex;
-	flex-wrap: nowrap;
-	width: 100%;
-	text-align: left;
-}
-
-.base-comment-reply .header > * {
-	margin: auto;
-	/* flex: 1 0 0;
-	border: 1px dashed var(--matty-royall);
-}
-
-
-.base-comment-reply .header .timestamp {
-	flex: 4 0 0;
-	margin-bottom: 10px;
-}
-
-
-.base-comment form {
-	width: 100%;
-	margin-top: var(--spacing-20);
-}
-
-.base-comment form.reply-form > input {
-	width: 100%;
-	padding: var(--spacing-05);
-	border-color: rgba(var(--border-color), 0.0);
-	font-size: 12px;
-} */
 

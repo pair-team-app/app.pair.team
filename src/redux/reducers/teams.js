@@ -7,7 +7,6 @@ const initialState = {
   teams      : [],
   sort       : CommentSortTypes.DATE,
   team       : null,
-  createTeam : false,
   member     : null,
   invite     : null
 };
@@ -39,8 +38,8 @@ export default function comments(state=initialState, action) {
     return (Object.assign({}, state, { team, teams, member }));
 
   } else if (type === TEAM_CREATED) {
-    const { team } = payload;
-    return (Object.assign({}, state, { team }));
+    const { teams, team, member } = payload;
+    return (Object.assign({}, state, { teams, team, member }));
 
   } else if (type === TEAM_UPDATED) {
     const { team } = payload;

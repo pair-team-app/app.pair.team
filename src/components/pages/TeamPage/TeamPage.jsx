@@ -2,7 +2,6 @@
 import React, { Component } from 'react';
 import './TeamPage.css';
 
-import axios from 'axios';
 import { Strings } from 'lang-js-utils';
 import { Menu, Item, Separator, Submenu, MenuProvider } from 'react-contexify';
 import KeyboardEventHandler from 'react-keyboard-event-handler';
@@ -18,7 +17,6 @@ import TeamPageFileDrop from './TeamPageFileDrop';
 import { CommentSortTypes } from '../../sections/TopNav';
 import { TEAM_TIMESTAMP } from '../../../consts/formats';
 import { ENTER_KEY, ESCAPE_KEY } from '../../../consts/key-codes';
-import { API_ENDPT_URL } from '../../../consts/uris';
 import { fetchTeamComments, createComment, makeComment, makeTeamRule, modifyTeam, setComment, setPlayground, setTypeGroup } from '../../../redux/actions';
 import { trackEvent } from '../../../utils/tracking';
 
@@ -112,23 +110,6 @@ class TeamPage extends Component {
     window.ondragleave = null;
 		window.removeEventListener('paste', this.handleClipboardPaste);
 	}
-
-  handleAddComment = (event)=> {
-    // console.log('%s.handleAddComment()', this.constructor.name, { event, props : this.props, state : this.state });
-    trackEvent('button', 'add-comment');
-
-    event.preventDefault();
-    event.stopPropagation();
-
-    const { commentContent } = this.state;
-    this.props.makeComment({
-      comment  : null,
-			content  : commentContent,
-      position : null
-		});
-
-    this.setState({ commentContent : '' });
-  };
 
   handleAddRule = (event)=> {
     console.log('%s.handleAddRule()', this.constructor.name, { event });
@@ -226,18 +207,12 @@ class TeamPage extends Component {
     }
   };
 
-
   handleCommentReply = (comment, key)=> {
     console.log('%s.handleCommentReply()', this.constructor.name, { comment, key });
-
-    const commentContent = key;
-    this.setState({ commentContent }, ()=> {
-      if (comment !== this.props.comment) {
-        this.props.setComment(comment);
-      }
-    });
+    if (comment !== this.props.comment) {
+      this.props.setComment(comment);
+    }
   };
-
 
   handleUpdateTeamDescription = (event, key)=> {
     console.log('%s.handleUpdateTeamDescription()', this.constructor.name, { event, key });
@@ -246,7 +221,7 @@ class TeamPage extends Component {
     event.preventDefault();
     event.stopPropagation();
 
-    const { profile, team } = this.props;
+    const { team } = this.props;
     const { teamDescription, loading } = this.state;
     const { keyCode, target } = event;
 
@@ -283,7 +258,7 @@ class TeamPage extends Component {
   }
 
   render() {
-    console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
+    // console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
     const { profile, team, member, sort } = this.props;
     const { teamDescription, ruleContent, ruleInput, fetching, loading, dragOver } = this.state;
 

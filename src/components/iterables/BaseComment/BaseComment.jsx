@@ -10,14 +10,17 @@ import { connect } from 'react-redux';
 
 import { COMMENT_TIMESTAMP } from '../../../consts/formats';
 import { USER_DEFAULT_AVATAR } from '../../../consts/uris';
-import { createComment, setComment, makeVote, modifyComment } from '../../../redux/actions';
+import { makeComment, setComment, makeVote, modifyComment } from '../../../redux/actions';
 import { trackEvent } from '../../../utils/tracking';
+import btnCode from '../../../assets/images/ui/btn-code.svg';
 
 class BaseComment extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
+			replyContent : '',
+			codeFormat   : false
 		};
 	}
 
@@ -33,27 +36,74 @@ class BaseComment extends Component {
 		// console.log('%s.componentWillUnmount()', this.constructor.name, { props : this.props, state : this.state });
 	}
 
+	handleReplyFocus = ()=> {
+		// console.log('%s.handleReplyFocus()', this.constructor.name);
+		const { comment } = this.props;
+		this.props.setComment(comment);
+	};
+
+	handleCodeToggle = ()=> {
+		console.log('%s.handleCodeToggle()', this.constructor.name);
+		this.setState({ codeFormat : !this.state.codeFormat });
+	};
 
 	handleDeleteComment = (comment)=> {
 		console.log('%s.handleDeleteComment()', this.constructor.name, { comment });
 		trackEvent('button', 'delete-comment');
 		this.props.modifyComment({ comment, action : 'deleted' });
+		this.props.setComment(null);
 	};
 
 	handleEmoji = (emoji, event)=> {
 		console.log('BaseComment.handleEmoji()', { emoji, event });
 	};
 
+	handleTextChange = (event)=> {
+		// console.log('%s.handleTextChange()', this.constructor.name, event);
+    const replyContent = event.target.value;
+    this.setState({ replyContent });
+	};
 
 	handleReplyKeyPress = (event, key)=> {
 		console.log('BaseCommentContent.handleReplyKeyPress()', this.constructor.name, { props : this.props, event, key });
 
-		const { comment, preComment } = this.props;
-		if (!preComment) {
-			this.props.setComment(comment);
-			this.props.createComment(key);
+		const { replyContent } = this.state;
+    if (key === 'enter' && replyContent.length > 0) {
+      this.handleReplySubmit(event);
+
+		} else if (key === 'esc') {
+			this.setState({
+				replyContent : '',
+				codeFormat   : false
+			}, ()=> {
+				event.target.blur();
+				this.props.setComment(null);
+			});
 		}
 	};
+
+	handleReplySubmit = (event)=> {
+    console.log('BaseCommentContent.handleReplySubmit()', this.constructor.name, { event });
+
+		const { comment } = this.props;
+		const { replyContent, codeFormat } = this.state;
+
+		trackEvent('button', 'reply-comment', comment.id);
+
+    event.preventDefault();
+    event.stopPropagation();
+
+		this.props.makeComment({ comment,
+			content  : replyContent,
+			format   : (codeFormat) ? 'code' : 'text',
+			position : comment.position
+		});
+
+		this.setState({
+			replyContent : '' ,
+			codeFormat   : false
+		});
+  };
 
 	handleVote = ({ comment, action })=> {
 		console.log('BaseComment.handleVote()', this.constructor.name, { comment, action });
@@ -67,11 +117,14 @@ class BaseComment extends Component {
     // console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
 
 		const { profile, comment } = this.props;
+		const { replyContent, codeFormat } = this.state;
+		const contentProps = { ...this.props, replyContent, codeFormat };
+
 		return (<div className="base-comment" data-id={comment.id} data-type={comment.type} data-author={comment.author.id === profile.id} data-votable={comment.votable} data-selected={comment.selected}>
 			<BaseCommentHeader { ...this.props} onDelete={this.handleDeleteComment} />
 			<div className="comment-body">
 				{(comment.votable) && (<BaseCommentVote { ...this.props } onVote={this.handleVote} />)}
-				<BaseCommentContent { ...this.props } onReplyKeyPress={this.handleReplyKeyPress} onDeleteReply={this.handleDeleteComment} />
+				<BaseCommentContent { ...contentProps } onReplyFocus={this.handleReplyFocus} onReplyKeyPress={this.handleReplyKeyPress} onTextChange={this.handleTextChange} onDeleteReply={this.handleDeleteComment} onCodeToggle={this.handleCodeToggle} />
 				{/* <Picker set="apple" onSelect={this.handleEmoji} onClick={this.handleEmoji} perline={9} emojiSize={24} native={true} sheetSize={16} showPreview={false} showSkinTones={false} title="Pick your emoji…" emoji="point_up" style={{ position : 'relative', bottom : '20px', right : '20px' }} /> */}
 			</div>
 		</div>);
@@ -119,15 +172,18 @@ const BaseCommentHeader = (props)=> {
 const BaseCommentContent = (props)=> {
 	// console.log('BaseComment.BaseCommentContent()', { props });
 
-	const { comment, preComment } = props;
-	const { author, types, content, timestamp } = comment;
+	const { comment, replyContent, codeFormat, preComment } = props;
+	const { author, types, content, format, timestamp } = comment;
 
 	return (<div className="base-comment-content">
 		<div className="timestamp" dangerouslySetInnerHTML={{ __html : timestamp.format(COMMENT_TIMESTAMP).replace(/(\d{1,2})(\w{2}) @/, (match, p1, p2)=> (`${p1}<sup>${p2}</sup> @`)) }} />
-		{(content) && (<div className="content" dangerouslySetInnerHTML={{ __html : content.replace(author.username, `<span class="txt-bold">${author.username}</span>`) }} />)}
-		{(comment.state !== 'closed' && types.find((type)=> (type === 'op'))) && (<KeyboardEventHandler className="reply-form" handleKeys={['alphanumeric']} isDisabled={(preComment !== null)} onKeyEvent={(key, event)=> props.onReplyKeyPress(event, key)}>
-			<input type="text" placeholder="Reply…" value="" onChange={(event)=> null} autoComplete="new-password" />
-		</KeyboardEventHandler>)}
+		{(content) && (<div className="content" dangerouslySetInnerHTML={{ __html : content.replace(author.username, `<span class="txt-bold">${author.username}</span>`) }} data-format={format} />)}
+		{(comment.state !== 'closed' && types.find((type)=> (type === 'op'))) && (<div className="reply-form">
+			<KeyboardEventHandler handleKeys={['enter', `esc`]} isDisabled={(preComment !== null)} onKeyEvent={(key, event)=> props.onReplyKeyPress(event, key)}>
+			<input type="text" placeholder="Reply…" value={replyContent} onFocus={props.onReplyFocus} onChange={props.onTextChange} data-code={codeFormat} autoComplete="new-password" /></KeyboardEventHandler>
+			{/* <img src={btnCode} className="code-button" onClick={props.onCodeToggle} alt="Code" /> */}
+		</div>)}
+
 		{(comment.replies.length > 0) && (<BaseCommentReplies { ...props } onDelete={props.onDeleteReply} />)}
 	</div>
 	);
@@ -145,7 +201,7 @@ const BaseCommentReplies = (props)=> {
 			return (<div key={i} className="base-comment base-comment-reply" data-id={comment.id} data-type={comment.type} data-author={comment.author.id === profile.id} data-votable={comment.votable} data-selected={comment.selected}>
 				<BaseCommentHeader { ...replyProps } onDelete={props.onDelete} />
 				<div className="comment-body">
-					{(comment.votable) && (<BaseCommentVote { ...props } onVote={props.handleVote} />)}
+					{(comment.votable) && (<BaseCommentVote { ...replyProps } onVote={props.handleVote} />)}
 					<BaseCommentContent { ...replyProps } onTextChange={props.handleTextChange} onDeleteReply={props.handleDeleteComment} />
 					{/* <Picker set="apple" onSelect={this.handleEmoji} onClick={this.handleEmoji} perline={9} emojiSize={24} native={true} sheetSize={16} showPreview={false} showSkinTones={false} title="Pick your emoji…" emoji="point_up" style={{ position : 'relative', bottom : '20px', right : '20px' }} /> */}
 				</div>
@@ -157,10 +213,10 @@ const BaseCommentReplies = (props)=> {
 
 const mapDispatchToProps = (dispatch)=> {
   return ({
-		createComment   : (payload)=> dispatch(createComment(payload)),
-		setComment      : (payload)=> dispatch(setComment(payload)),
-    modifyComment   : (payload)=> dispatch(modifyComment(payload)),
-		makeVote        : (payload)=> dispatch(makeVote(payload))
+		makeComment   : (payload)=> dispatch(makeComment(payload)),
+		setComment    : (payload)=> dispatch(setComment(payload)),
+    modifyComment : (payload)=> dispatch(modifyComment(payload)),
+		makeVote      : (payload)=> dispatch(makeVote(payload))
 	});
 };
 

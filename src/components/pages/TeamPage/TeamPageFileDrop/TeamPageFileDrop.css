@@ -55,7 +55,7 @@
   background: none;
 }
 
-.team-page-file-drop .input-wrapper {
+.team-page-file-drop .form-wrapper {
   margin: 0 10px;
   transition: height var(--transition-duration-short) ease-out;
 
@@ -65,13 +65,13 @@
 	margin-bottom: var(--spacing-20);
 }
 
-.team-page-file-drop .input-wrapper > div.comment-txt {
+.team-page-file-drop .form-wrapper .input-wrapper {
   position: relative;
   width: 100%;
   filter: var(--txtfield-shadow);
 }
 
-.team-page-file-drop .input-wrapper .code-btn {
+.team-page-file-drop .form-wrapper .input-wrapper .code-button {
 	position: absolute;
 	bottom: 8px;
 	right: 10px;
@@ -79,12 +79,12 @@
 	transition: opacity var(--transition-duration-short) cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.team-page-file-drop .input-wrapper .code-btn:hover {
+.team-page-file-drop .form-wrapper .input-wrapper .code-button:hover {
   opacity: 1;
   cursor: pointer;
 }
 
-.team-page-file-drop .input-wrapper .comment-txt, .team-page-file-drop {
+.team-page-file-drop .form-wrapper .input-wrapper .comment-txt {
   width: 100%;
   min-height: 51px;
   padding: 15px;
@@ -95,14 +95,14 @@
   font-weight: 700;
 }
 
-.team-page-file-drop .input-wrapper .comment-txt {
+.team-page-file-drop .form-wrapper .input-wrapper .comment-txt {
   background-color: rgba(var(--txtfield-bg-color), 1.0);
   color: rgba(var(--site-fg-color), 1.0);
   border: 1px solid rgba(var(--txtfield-border-color), 1.0);
   transition: background-color var(--transition-duration-short) ease-out, color var(--transition-duration-short) ease-out;
 }
 
-.team-page-file-drop .input-wrapper .comment-txt:hover {
+.team-page-file-drop .form-wrapper .input-wrapper .comment-txt:hover {
   background-color: rgba(var(--txtfield-hover-bg-color), 1.0);
   color: rgba(var(--txtfield-hover-fg-color), 1.0);
   cursor: text;
@@ -114,11 +114,11 @@
 }
 
 
-.team-page-file-drop .input-wrapper .comment-txt[data-code="true"] {
+.team-page-file-drop .form-wrapper .input-wrapper .comment-txt[data-code="true"] {
 	font-family: Consolas, Monaco, "Courier New", Courier, monospace;
 }
 
-.team-page-file-drop .input-wrapper button {
+.team-page-file-drop .form-wrapper button {
   margin-left: var(--spacing-10);
   width: fit-content;
 }

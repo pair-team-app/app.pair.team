@@ -40,8 +40,8 @@ export default function comments(state=initialState, action) {
     return (Object.assign({}, state, { comment }));
 
   } else if (type === COMMENT_CREATED) {
-    const { preComment } = payload;
-    return (Object.assign({}, state, { preComment }));
+    const { preComment, comment } = payload;
+    return (Object.assign({}, state, { preComment, comment }));
 
   } else {
     return (state);

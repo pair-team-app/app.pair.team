@@ -357,7 +357,7 @@ export function makeTeam(payload) {
 
       dispatch({
         type    : TEAM_CREATED,
-        payload : { profile, team }
+        payload : { team }
       });
     }).catch((error)=> {
       console.log(API_RESPONSE_PREFIX, 'CREATE_TEAM >> ERROR', { error, payload : {
@@ -385,11 +385,12 @@ export function makeTeamRule(payload) {
         team_id : team.id
       }
     }).then((response)=> {
-      console.log(API_RESPONSE_PREFIX, 'ADD_RULE', response.data, response.data.comment);
+      console.log(API_RESPONSE_PREFIX, 'ADD_RULE', response.data, response.data.rules);
+      const { rules } = response.data;
 
       dispatch({
         type    : TEAM_RULES_UPDATED,
-        payload : { rules : response.data.rules }
+        payload : { rules }
       });
     }).catch((error)=> {});
   });
