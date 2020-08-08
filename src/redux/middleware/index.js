@@ -93,6 +93,7 @@ export function onMiddleware(store) {
       }
 
     } else if (type === TEAMS_LOADED) {
+      const { profile } = prevState.user;
       const { params } = prevState.path;
       const { pathname } = prevState.router.location;
 
@@ -113,6 +114,9 @@ export function onMiddleware(store) {
         selected : (team && item.id === team.id)
       }));
       payload.team = team;
+
+      const member = team.members.find(({ id })=> (id === profile.id));
+      payload.member = member;
 
       if (team) {
         dispatch(fetchTeamBuilds({ team : payload.team, buildID, deviceSlug }));
@@ -273,11 +277,16 @@ export function onMiddleware(store) {
       };
 
     } else if (type === SET_TEAM) {
+      const { profile } = prevState.user;
       const { teams } = prevState.teams;
+
       payload.teams = teams.map((team)=> ({ ...team,
         selected : (payload.team && team.id === payload.team.id)
       }));
       payload.team = (payload.team) ? payload.teams.find(({ id })=> (id === payload.team.id)) : null;
+
+      const member = payload.team.members.find(({ id })=> (id === profile.id));
+      payload.member = member;
 
       const buildID = 0;
       const deviceSlug = "";
@@ -332,6 +341,7 @@ export function onMiddleware(store) {
       }
 
     } else if (type === '@@router/LOCATION_CHANGE') {
+      const { profile } = prevState.user;
       const { teams } = prevState.teams;
       const { action, isFirstRendering, location } = payload;
       const { pathname, hash } = location;
@@ -375,6 +385,9 @@ export function onMiddleware(store) {
             payload.teams = teams.map((item)=> ((item.id === team.id) ? team : { ...item,
               selected : false
             }));
+
+            const member = team.members.find(({ id })=> (id === profile.id));
+            payload.member = member;
 
             const buildID = 0;
             const deviceSlug = "";

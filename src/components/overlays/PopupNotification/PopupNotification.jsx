@@ -63,7 +63,7 @@ class PopupNotification extends Component {
 	}
 
 	render() {
-		console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state, timeline : this.timeline, wrapper : this.wrapper });
+		// console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state, timeline : this.timeline, wrapper : this.wrapper });
 		// console.log('%s.render()', this.constructor.name, this.timeline);
 
 // 		if (this.wrapper && this.timeline) {
@@ -87,6 +87,8 @@ class PopupNotification extends Component {
 // 			transform : `translate(${offset.left}px, ${offset.top}px)`
 // 			transform : `translate(${offset.left}px, 38px)`
 		};
+
+		console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state, timeline : this.timeline, wrapper : this.wrapper, type, position });
 
 		return (<div className="popup-notification" data-embedded={(position === POPUP_POSITION_EMBEDDED)} style={wrapperStyle} ref={(element)=> { this.wrapper = element; }}>
 			<div className="content" data-type={(type === POPUP_TYPE_OK) ? 'ok' : (type === POPUP_TYPE_ERROR) ? 'error' : 'status'}>

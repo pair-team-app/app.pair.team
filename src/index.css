@@ -83,6 +83,9 @@
 	--popup-ok-bg-color: 247, 247, 247; /* #ededed */
 	--popup-ok-fg-color: var(--site-fg-color); /* #232323 */
 
+	--popup-error-bg-color: 255, 247, 247; /* #fff7f7 */
+	--popup-error-fg-color: var(--txtfield-invalid-fg-color); /* #ff6f6f */
+
 	--scroll-track-color: 247, 247, 247; /* #f7f7f7 */
 	--scroll-thumb-color: var(--site-fg-color); /* #232323 */
 	--scroll-thumb-hover-color: 153, 153, 153; /* #999999 */

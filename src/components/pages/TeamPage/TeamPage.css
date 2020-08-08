@@ -114,6 +114,10 @@
 	transition: opacity var(--transition-duration-short) cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+.team-page .content-wrapper .team-wrapper textarea[data-admin="false"]:hover {
+	cursor: not-allowed;
+}
+
 .team-page .content-wrapper .team-wrapper .about-wrapper {
 	display: flex;
 	flex-flow: column nowrap;
@@ -173,13 +177,20 @@
 	padding: 8px var(--spacing-10);
 }
 
-
 .team-page .content-wrapper .team-wrapper .rules-wrapper .footer .team-page-add-rule-button {
 	min-width: 100%;
 	padding: var(--spacing-10);
 	justify-content: center;
 	border: none;
 }
+
+.team-page .content-wrapper .team-wrapper .rules-wrapper .footer .team-page-add-rule-button[data-admin="false"]:hover {
+	background-color: rgba(var(--quiet-btn-bg-color), 1.0);
+	color: rgba(var(--quiet-btn-fg-color), 1.0);
+	cursor: not-allowed;
+	transition: none;
+}
+
 
 .team-page .content-wrapper .team-wrapper .rules-wrapper .footer[data-input="false"] button {
 	width: 100%;

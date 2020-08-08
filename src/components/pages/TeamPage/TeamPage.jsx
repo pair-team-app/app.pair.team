@@ -23,7 +23,7 @@ import { fetchTeamComments, createComment, makeComment, makeTeamRule, modifyTeam
 import { trackEvent } from '../../../utils/tracking';
 
 import 'react-contexify/dist/ReactContexify.min.css';
-import { POPUP_TYPE_OK } from '../../overlays/PopupNotification';
+import { POPUP_TYPE_OK, POPUP_TYPE_ERROR } from '../../overlays/PopupNotification';
 
 
 class TeamPage extends Component {
@@ -215,13 +215,24 @@ class TeamPage extends Component {
 
   handleRuleInput = (event)=> {
     // console.log('%s.handleRuleInput()', this.constructor.name, { event });
-    trackEvent('button', 'add-rule');
 
-    // this.addRuleTxt.focus();
-    this.setState({
-      ruleContent : '',
-      ruleInput   : true
-    });
+    const { member } = this.props;
+    if (member.roles.includes('admin')) {
+      trackEvent('button', 'add-rule');
+
+      // this.addRuleTxt.focus();
+      this.setState({
+        ruleContent : '',
+        ruleInput   : true
+      });
+
+    } else {
+      this.props.onPopup({
+        type     : POPUP_TYPE_ERROR,
+        content  : 'You don\'t have access to edit this team\'s rules',
+        duration : 2000
+      });
+    }
   }
 
   handlePageKeyPress = (event, key)=> {
@@ -254,7 +265,7 @@ class TeamPage extends Component {
     event.preventDefault();
     event.stopPropagation();
 
-    const { team } = this.props;
+    const { profile, team } = this.props;
     const { teamDescription, loading } = this.state;
     const { keyCode, target } = event;
 
@@ -276,9 +287,23 @@ class TeamPage extends Component {
     }
   }
 
+  handleTeamFocus = (event)=> {
+    console.log('%s.handleTeamFocus()', this.constructor.name, { event });
+
+    const { member } = this.props;
+    if (!member.roles.includes('admin')) {
+      this.props.onPopup({
+        type     : POPUP_TYPE_ERROR,
+        content  : 'You don\'t have access to edit this team',
+        duration : 2000
+      });
+      event.target.blur();
+    }
+  }
+
   render() {
     console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
-    const { profile, team, sort } = this.props;
+    const { profile, team, member, sort } = this.props;
     const { teamDescription, ruleContent, ruleInput, fetching, loading, dragOver } = this.state;
 
     const infoLoading = Boolean(((loading << 0) & 0x001) === 0x001);
@@ -314,15 +339,13 @@ class TeamPage extends Component {
               </MenuProvider>
               <MyAwesomeMenu onClick={({ event, props })=> { console.log('MenuClick', { event, props }); this.props.onPopup({
                 type    : POPUP_TYPE_OK,
-                content : 'Menu Clicked.',
-                delay   : 0
+                content : 'Menu Clicked.'
               });}} />
               <div className="content"><KeyboardEventHandler handleKeys={['ctrl', 'meta', 'enter', 'esc']} onKeyEvent={(key, event)=> this.handleUpdateTeamDescription(event, key)}>
-                <TextareaAutosize id="team-info-txtarea" className="team-info-txtarea" placeholder="Enter Text to Describe you team" value={teamDescription} onChange={(event)=> this.setState({ teamDescription : event.target.value })} data-keypress-override="true" />
+                <TextareaAutosize id="team-info-txtarea" className="team-info-txtarea" placeholder="Enter Text to Describe you team" value={teamDescription} onFocusCapture={this.handleTeamFocus} onFocus={(e)=> console.log('=+=+=+=+=+=+=', 'onFocus', { e })} onChange={(event)=> this.setState({ teamDescription : event.target.value })} data-admin={member.roles.includes('admin')} data-keypress-override="true" />
               </KeyboardEventHandler></div>
               <div className="footer">
                 <div className="member-count">{team.userCount} {Strings.pluralize('member', team.userCount)}</div>
-                {/* <div className="member-count">{team.members.filter(({ roles })=> (roles.findIndex((role)=> (role === 'bot')))).length} {Strings.pluralize('member', team.members.length)}</div> */}
                 <div className="timestamp">CREATED {team.added.format(TEAM_TIMESTAMP)}</div>
               </div>
             </div>
@@ -332,7 +355,7 @@ class TeamPage extends Component {
                 {(team.rules.map((rule, i)=> (<TeamPageRule key={i} rule={rule} />)))}
               </div>
               <div className="footer" data-input={ruleInput}>
-                <TeamPageAddRuleButton onClick={this.handleRuleInput} />
+                <TeamPageAddRuleButton admin={member.roles.includes('admin')} onClick={this.handleRuleInput} />
                 <KeyboardEventHandler handleKeys={['enter', 'esc']} handleFocusableElements onKeyEvent={(key, event)=> this.handleAddRule(event)}>
                   <TextareaAutosize id="team-add-rule-txtarea" placeholder="" value={ruleContent} onChange={(event)=> this.setState({ ruleContent : event.target.value })} />
                 </KeyboardEventHandler>
@@ -385,8 +408,9 @@ const TeamPageRule = (props)=> {
 
 const TeamPageAddRuleButton = (props)=> {
   // console.log('TeamPageAddRuleButton()', { props });
+  const { admin } = props;
 
-  return (<button className="quiet-button team-page-add-rule-button" onClick={props.onClick}>
+  return (<button className="quiet-button team-page-add-rule-button" onClick={props.onClick} data-admin={admin}>
     <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
       <rect x="7" width="2" height="16" fill="#CCCCCC"/>
       <rect x="16" y="7" width="2" height="16" transform="rotate(90 16 7)" fill="#CCCCCC"/>
@@ -433,6 +457,7 @@ const mapStateToProps = (state, ownProps)=> {
     comment    : state.comments.comment,
     profile    : state.user.profile,
     team       : state.teams.team,
+    member     : state.teams.member,
     sort       : state.teams.sort,
     playground : state.playground
   });

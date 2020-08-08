@@ -8,6 +8,7 @@ const initialState = {
   sort       : CommentSortTypes.DATE,
   team       : null,
   createTeam : false,
+  member     : null,
   invite     : null
 };
 
@@ -34,8 +35,8 @@ export default function comments(state=initialState, action) {
     return (Object.assign({}, state, { team }));
 
   } else if (type === TEAMS_LOADED) {
-    const { team, teams } = payload;
-    return (Object.assign({}, state, { team, teams }));
+    const { team, teams, member } = payload;
+    return (Object.assign({}, state, { team, teams, member }));
 
   } else if (type === TEAM_UPDATED) {
     const { team } = payload;
@@ -58,8 +59,8 @@ export default function comments(state=initialState, action) {
     return (Object.assign({}, state, { team }));
 
   } else if (type === SET_TEAM) {
-    const { teams, team } = payload;
-    return (Object.assign({}, state, { teams, team }));
+    const { teams, team, member } = payload;
+    return (Object.assign({}, state, { teams, team, member }));
     // return ({ ...state, teams, team });
     // state.teams = teams;
     // return (state);
@@ -69,10 +70,10 @@ export default function comments(state=initialState, action) {
     return (Object.assign({}, state, { sort }));
 
   } else if (type === '@@router/LOCATION_CHANGE') {
-    const { teams, team } = payload;
+    const { teams, team, member } = payload;
 
     if (teams && team) {
-      return (Object.assign({}, state, { teams, team }));
+      return (Object.assign({}, state, { teams, team, member }));
 
     } else {
       return (state);
