@@ -165,6 +165,7 @@ export const reformTeam = (team, overwrite={})=> {
     id          : team.id << 0,
     description : (description || ''),
     logo        : (image) ? image.replace(/\\n/g, '', image) : TEAM_DEFAULT_AVATAR,
+    userCount   : team.members.filter(({ roles })=> (roles.findIndex((role)=> (role === 'bot')))).length,
     selected    : false,
     updated     : moment(updated).utc(),
     added       : moment(added).utc(),
@@ -174,5 +175,21 @@ export const reformTeam = (team, overwrite={})=> {
 
   // console.log('reformTeam()', { team, reformed });
   return ({ ...reformed, size : jsonFormatKB(reformed) });
-
 };
+
+
+// export const reformUser = (user, overwrite={})=> {
+//   console.log('reformUser()', { user, overwrite });
+
+//   const { id, content, updated, added } = rule;
+//   const reformed = { ...rule,
+//     id      : id << 0,
+//     author  : members.find((member)=> ((member.id === (author << 0)))),
+//     content : (content || ''),
+//     updated : moment(updated).utc(),
+//     added   : moment(added).utc(),
+//     ...overwrite
+//   };
+
+//   return ({ ...reformed, size : jsonFormatKB(reformed) });
+// };

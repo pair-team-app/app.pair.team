@@ -199,7 +199,7 @@ class App extends Component {
 
         // payment modal
         if (team && team.type === 'free' && !modals.stripe && !modals.profile) {
-          if (team.members.filter(({ role })=> (role !== 'bot')).length >= 4) {
+          if (team.userCount >= 4) {
             this.onToggleModal(Modals.STRIPE);
           }
         }

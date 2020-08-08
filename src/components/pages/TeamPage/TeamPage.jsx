@@ -285,6 +285,7 @@ class TeamPage extends Component {
     const rulesLoading = Boolean(((loading << 0) & 0x010) === 0x010);
     const commentsLoading = Boolean(((loading << 0) & 0x100) === 0x100);
     // console.log('%s.render()', this.constructor.name, { infoLoading, rulesLoading, commentsLoading });
+    // console.log('%s.render()', this.constructor.name, { infoLoading, rulesLoading, commentsLoading });
 
     return (<BasePage { ...this.props } className="team-page">
       {(profile && team)
@@ -320,7 +321,8 @@ class TeamPage extends Component {
                 <TextareaAutosize id="team-info-txtarea" className="team-info-txtarea" placeholder="Enter Text to Describe you team" value={teamDescription} onChange={(event)=> this.setState({ teamDescription : event.target.value })} data-keypress-override="true" />
               </KeyboardEventHandler></div>
               <div className="footer">
-                <div className="member-count">{team.members.filter(({ role })=> (role !== 'bot')).length} {Strings.pluralize('member', team.members.length)}</div>
+                <div className="member-count">{team.userCount} {Strings.pluralize('member', team.userCount)}</div>
+                {/* <div className="member-count">{team.members.filter(({ roles })=> (roles.findIndex((role)=> (role === 'bot')))).length} {Strings.pluralize('member', team.members.length)}</div> */}
                 <div className="timestamp">CREATED {team.added.format(TEAM_TIMESTAMP)}</div>
               </div>
             </div>

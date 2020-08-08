@@ -276,7 +276,7 @@ class TeamPageFileDrop extends Component {
 
 		return (<div className="team-page-file-drop" data-hidden={(!dragging && files.length === 0 && !preComment)}>
       <div data-file={files.length > 0 || image !== null || preComment !== null}>
-      <KeyboardEventHandler isDisabled={(preComment === null)} handleFocusableElements handleKeys={['alphanumeric', 'space', 'backspace', 'shift', 'enter', 'esc']} onKeyEvent={(key, event)=> this.handleKeyPress(event, key)} />
+      <KeyboardEventHandler isDisabled={(preComment === null)} handleFocusableElements handleKeys={['alphanumeric', ',', '.', '/', '\\', '-', '[', ']', ';', '\'', '`', '=', '+', '*', 'space', 'backspace', 'shift', 'enter', 'esc']} onKeyEvent={(key, event)=> this.handleKeyPress(event, key)} />
         {(files.length > 0 || preComment) && (<div className="input-wrapper" data-uploaded={uploaded}>
           <div className="comment-txt" onClick={this.handleFieldFocus} data-focused={focused} data-code={(code)}>{text}</div>
           {(preComment && !url) && (<img src={btnCode} className="code-btn" onClick={this.handleCode} alt="Code" />)}
