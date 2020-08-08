@@ -170,7 +170,7 @@ class TopNav extends Component {
 			</div>
 			<div className="col col-right">
 				{(profile && !invite) && (<div className="link-wrapper">
-					<TopNavInviteLink onModal={this.props.onModal} />
+					{/* <TopNavInviteLink onModal={this.props.onModal} /> */}
 					<TopNavShareLink popover={popover} onClick={this.handlePopoverToggle} onPopup={this.props.onPopup} onPopoverClose={this.handlePopoverClose} />
 					<UserSettings onMenuItem={this.handleSettingsItem} onLogout={this.props.onLogout} />
 				</div>)}
@@ -192,13 +192,13 @@ const TopNavBreadcrumb = (props)=> {
 	);
 };
 
-const TopNavInviteLink = (props)=> {
-	//   console.log('TopNavInviteLink()', { props });
+// const TopNavInviteLink = (props)=> {
+// 	//   console.log('TopNavInviteLink()', { props });
 
-		return (<div className="top-nav-invite-link">
-			<div className="nav-link" onClick={()=> props.onModal(Modals.INVITE)}>Invite</div>
-		</div>);
-	};
+// 	return (<div className="top-nav-invite-link">
+// 		<div className="nav-link" onClick={()=> props.onModal(Modals.INVITE)}>Invite</div>
+// 	</div>);
+// };
 
 const TopNavShareLink = (props)=> {
 //   console.log('TopNavShareLink()', { props });
