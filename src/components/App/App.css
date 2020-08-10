@@ -48,11 +48,6 @@
   display: flex;
 	flex-direction: column;
 	height: 100%;
-	overflow: hidden;
-}
-
-.playground-page-wrapper {
-	top: 0;
 	overflow: auto;
 }
 
