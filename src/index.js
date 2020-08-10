@@ -7,12 +7,12 @@ import { Route } from 'react-router';
 import { ConnectedRouter } from 'connected-react-router'
 
 import App from './components/App';
-import ScrollToTop from './components/helpers/ScrollToTop';
+// import ScrollToTop from './components/helpers/ScrollToTop';
 import './index.css';
 import store, { history } from './redux/store';
 
 window.store = store;
-let scrollableElement = null;
+// let scrollableElement = null;
 
 if (typeof cookie.load('cookies') === 'undefined') {
 	cookie.save('cookies', '0', { path : '/', sameSite : false });
@@ -22,10 +22,10 @@ if (typeof cookie.load('cookies') === 'undefined') {
 ReactDOM.render(
 	<Provider store={store}>
 		<ConnectedRouter history={history}>
-			<ScrollToTop props={{ scrollableElement }}>
+			{/* <ScrollToTop props={{ scrollableElement }}> */}
 				<Route path="/" render={(routeProps)=> <App { ...routeProps } />} />
 				{/* <App /> */}
-			</ScrollToTop>
+			{/* </ScrollToTop> */}
 		</ConnectedRouter>
 	</Provider>,
 	document.getElementById('root')

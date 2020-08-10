@@ -107,9 +107,13 @@
 	--orthodox-acc-size: 24px;
 	--orthodox-ico-size: 24px;
 
+	--base-font-size: 14px;
+	--base-font-weight: 600;
+	--base-font-weight-bold: 700;
+
 	--orthodox-font-size: 14px;
 	--orthodox-line-height: 20px;
-	--orthodox-font-weight: 400;
+	--orthodox-font-weight: 600;
 
 
 	--border-radius: 6px;
@@ -143,21 +147,20 @@
 	--matty-elect: #103bdf;
 	--matty-border-style: 1px dashed;
 	--matty-opacity: 0.33;
-
 }
 
 html, body {
   margin: 0;
   padding: 0;
-  background-color: rgba(var(--site-bg-color), 1.0);
-  -webkit-font-smoothing: antialiased;
-	-moz-osx-font-smoothing: grayscale;
-  /* font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Ubuntu, Arial, sans-serif; */
-  font-family: 'SF Pro Display', system-ui, -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Ubuntu, Arial, sans-serif;
+	background-color: rgba(var(--site-bg-color), 1.0);
+	color: rgba(var(--site-fg-color), 1.0);
+  font-family: 'SF Pro Display', system-ui, -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Ubuntu, 'Segoe UI', Roboto, Arial, sans-serif;
   font-weight: var(--orthodox-font-weight);
 	font-size: var(--orthodox-font-size);
-	/* line-height: var(--orthodox-line-height); */
-	color: rgba(var(--site-fg-color), 1.0);
+/* line-height: var(--orthodox-line-height); */
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+
 
 	scrollbar-width: none;
 	-ms-overflow-style: none;
@@ -557,6 +560,14 @@ ul > li:not(:last-child) {
 	h1 {
 		margin-bottom: 50px;
 	}
+}
+
+
+div#root {
+	display: flex;
+	margin: 0;
+	height: 100%;
+	overflow: hidden;
 }
 
 
