@@ -7,7 +7,7 @@
 	/* height: 38px; */
 	display: flex;
 	justify-content: center;
-	font-size: var(--orthodox-font-size);
+	font-size: var(--base-font-size);
 	z-index: 5000;
 	overflow: hidden;
 }

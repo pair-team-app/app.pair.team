@@ -121,6 +121,7 @@ export const reformPlayground = (playground, devices=null, componentTypes=null, 
     //components  : (components && components.length > 0) ? components.map((component)=> (reformComponent(component, uri, componentTypes))) : [],
     typeGroups  : type_groups.map((typeGroupID)=> (componentTypes.find(({ id })=> ((typeGroupID << 0) === id)))),
     device      : (device || device_id),
+    selected    : false,
     lastVisited : moment(last_visited).utc(),
     added       : (playground.added)
       ? moment(added).add(moment().utcOffset() << 0, 'minute')

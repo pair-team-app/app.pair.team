@@ -17,8 +17,10 @@
 }
 
 .top-nav {
+	position: absolute;
 	display: inline-flex;
-  flex-shrink: 0;
+	flex-shrink: 0;
+	width: 100%;
 	padding: 18px;
 	/*background-color: rgba(var(--site-bg-color), 0.975);*/
 	/* z-index: 2; */
@@ -54,7 +56,6 @@
 }
 
 .top-nav .page-header-wrapper {
-	font-size: 16px;
 	font-weight: 700;
 }
 
@@ -94,7 +95,6 @@
 
 
 .top-nav .nav-link {
-	font-size: 16px;
 	color: rgba(var(--link-color), 1.0);
 	transition: color var(--transition-duration-short) ease-out;
 }

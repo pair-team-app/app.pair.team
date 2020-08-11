@@ -25,7 +25,7 @@
 
 .mobile-menu-header-open .mobile-menu-header-title {
 	color: var(--site-fg-color);
-	font-weight: var(--orthodox-font-weight);
+	font-weight: var(--base-font-weight);
 }
 
 .mobile-menu-header-title {

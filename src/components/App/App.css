@@ -5,6 +5,12 @@
 	width: 100vw;
 	height: 100vh;
 	overflow: hidden;
+
+	/* position: relative;
+	display: flex;
+	width: 100vw;
+	height: 100vh;
+	overflow: hidden; */
 }
 
 .site-wrapper[data-theme="dark"] {
@@ -44,11 +50,13 @@
 
 
 .page-wrapper {
-	width: 100%;
+	position: relative;
   display: flex;
 	flex-direction: column;
+	/* width: 100%; */
+	width: calc(100% - 208px);
 	height: 100%;
-	overflow: auto;
+	overflow: hidden;
 }
 
 .modal-wrapper {
@@ -102,7 +110,6 @@
 
 
 .form-disclaimer {
-	/* font-size: 14px; */
 	line-height: 18px;
 	color: #cccccc;
 }

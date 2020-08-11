@@ -15,17 +15,21 @@
 }
 
 *::placeholder {
-	font-size: var(--orthodox-font-size);
+	font-size: var(--base-font-size);
 }
 
 :root {
-	--site-bg-color: 251, 251, 251; /* #fbfbfb */
+	--site-bg-color: 248, 248, 248; /* #fbfbfb */
 	--site-fg-color: 35, 35, 35; /* #232323 */
-	--site-fg-lite-color: 153, 153, 153; /* #232323 */
+	--site-selected-color: 47, 88, 255; /* 2f58ff */
+	--site-lite-fg-color: 153, 153, 153; /* #999999 */
 	--site-hilite-color: 0, 90, 217; /* #0067ff */
 	--disabled-fg-color: 204, 204, 204; /* #cccccc */
 	--invalid-bg-color: 255, 240, 240; /* #fff0f0 */
 	--invalid-fg-color: 255, 101, 101; /* #ff6565 */
+	--nav-bg-color: 255, 255, 255; /* #ffffff */
+
+
 	--btn-bg-color: 32, 96, 255; /* #2060ff */
 	--btn-fg-color: 255, 255, 255; /* #ffffff */
 	--btn-hover-bg-color: 0, 92, 229; /* #005ce5 */
@@ -63,7 +67,7 @@
 	--border-alt-color: var(--txtfield-border-color); /* #e5e5e5 */
 	--overlay-shadow: 2px 2px 6px rgba(var(--border-color), 0.125);
 	--playground-component-shadow: 2px 2px 3px rgba(var(--border-color), 0.75);
-	--playground-panel-bg-color: 247, 247, 247; /* #f4f4f4 */
+	--playground-panel-bg-color: 252, 252, 252; /* #fbfbfb */
 	--playground-content-bg-color: 255, 255, 255; /* #ffffff */
 	--playground-component-bg-color: 252, 252, 252; /* #fbfbfb */
 	--playground-panel-link-color: 153, 153, 153; /* #999999 */
@@ -107,13 +111,10 @@
 	--orthodox-acc-size: 24px;
 	--orthodox-ico-size: 24px;
 
+	--orthodox-font-family: 'SF Pro Display', system-ui, -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Ubuntu, 'Segoe UI', Roboto, Arial, sans-serif;
 	--base-font-size: 14px;
 	--base-font-weight: 600;
-	--base-font-weight-bold: 700;
-
-	--orthodox-font-size: 14px;
-	--orthodox-line-height: 20px;
-	--orthodox-font-weight: 600;
+	--font-weight-bold: 700;
 
 
 	--border-radius: 6px;
@@ -154,9 +155,9 @@ html, body {
   padding: 0;
 	background-color: rgba(var(--site-bg-color), 1.0);
 	color: rgba(var(--site-fg-color), 1.0);
-  font-family: 'SF Pro Display', system-ui, -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Ubuntu, 'Segoe UI', Roboto, Arial, sans-serif;
-  font-weight: var(--orthodox-font-weight);
-	font-size: var(--orthodox-font-size);
+  font-family: var(--orthodox-font-family);
+  font-weight: var(--base-font-weight);
+	font-size: var(--base-font-size);
 /* line-height: var(--orthodox-line-height); */
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
@@ -184,14 +185,16 @@ a:active {
 	text-decoration: none;
 }
 
+
 button {
-  width: 100%;
-	padding: 14px 24px;
+  /* width: 100%; */
+	padding: 14px;
   background-color: rgba(var(--btn-bg-color), 1.0);
   border: 1px solid rgba(var(--btn-bg-color), 1.0);
-  border-radius: var(--border-radius);
+	border-radius: var(--border-radius);
+	font-family: var(--orthodox-font-family);
 	font-size: 18px;
-	font-weight: 700;
+	font-weight: 600;
   color: rgba(var(--btn-fg-color), 1.0);
 	transition: background-color var(--transition-duration-short) ease-out;
 }
@@ -234,13 +237,6 @@ button.quiet-button[data-selected="true"], button.quiet-button[data-selected="tr
 	color: rgba(var(--quiet-btn-selected-fg-color), 1.0);
 }
 
-	/* min-width: unset;
-	min-height: unset;
-	max-width: unset;
-	max-height: unset; */
-	/* width: min-content; */
-	/* height: min-content; */
-
 button.quiet-button[data-selected="true"]:hover {
 	color: rgba(var(--quiet-btn-hover-bg-color), 1.0);
 }
@@ -272,6 +268,7 @@ button.cancel-button:hover {
 	background-color: rgba(var(--cancel-button-hover-bg-color), 1.0);
 }
 
+
 fieldset {
   margin: 0;
   padding: 0;
@@ -288,99 +285,6 @@ form .input-acc-wrapper > input {
 	position: relative;
 }
 
-h1, h2, h3, h4, h5, h6 {
-  margin: 0;
-  font-weight: normal;
-}
-
-h1::before, h2::before, h3::before, h4::before, h5::before, h6::before {
-  content: '';
-  display: block;
-  width: 0;
-  height: 0;
-}
-
-/** Page Title **/
-h1 {
-  margin-bottom: var(--spacing-50);
-  font-size: 48px;
-  letter-spacing: 1px;
-  line-height: 68px;
-}
-
-h1::before {
-  margin-top: calc((1 - 1.4) * 0.5em);
-}
-
-/** Expand Section Title **/
-h2 {
-	margin-bottom: 0;
-	width: fit-content;
-	color: rgba(var(--btn-bg-color), 1.0);
-	font-size: 48px;
-	letter-spacing: 1px;
-	line-height: 43px;
-	transition: color var(--transition-duration-short) ease-out;
-}
-
-h2::before {
-	margin-top: calc((1 - 1.1) * 0.5em);
-}
-
-h2:hover {
-	color: rgba(var(--btn-hover-bg-color), 1.0);
-	cursor: pointer;
-}
-
-/** Modal Title **/
-h3 {
-	color: rgba(var(--btn-bg-color), 1.0);
-	font-size: 36px;
-	font-weight: 500;
-	letter-spacing: 0.75px;
-}
-
-h3::before {
-	margin-top: calc((1 - 2.3) * 0.5em);
-}
-
-/** Modal Title **/
-h4 {
-	font-size: var(--orthodox-font-size);
-	line-height: 24px;
-	margin-bottom: var(--spacing-40);
-}
-
-h4::before {
-	margin-top: calc((1 - 1.2) * 0.5em);
-}
-
-h5 {
-	font-size: 15px;
-}
-
-/** Legal Section Title **/
-h5.legal, h5.terms {
-	padding-bottom: var(--spacing-10);
-	font-size: var(--orthodox-font-size);
-	font-weight: 600;
-	line-height: 20px;
-	text-transform: uppercase;
-	text-align: left;
-}
-
-/** Legal Definition **/
-h6 {
-	display: inline;
-	padding-right: 1px;
-	font-size: var(--orthodox-font-size);
-	font-weight: 500;
-	text-align: left;
-}
-
-h6::before {
-	margin-top: 0;
-}
 
 input[type="email"], input[type="password"], input[type="text"], select, textarea {
 	width: 100%;
@@ -486,7 +390,7 @@ textarea, textarea:hover, textarea:active, textarea:focus, textarea:disabled, te
 	resize: none;
 	color: rgba(var(--txtfield-fg-color), 1.0);
 	background-color: rgba(var(--txtarea-bg-color), 1.0);
-	font-size: 12px;
+	font-size: 16px;
 	font-weight: 500;
 	border: none;
 	/* border: 1px solid rgba(var(--txtfield-border-color), 1.0); */
@@ -525,7 +429,7 @@ ul > li:not(:last-child) {
 
 
 ::-webkit-scrollbar {
-	/*display: initial;*/
+	/* display: initial; */
 	display: none;
 }
 
@@ -564,10 +468,7 @@ ul > li:not(:last-child) {
 
 
 div#root {
-	display: flex;
-	margin: 0;
-	height: 100%;
-	overflow: hidden;
+	display: block;
 }
 
 

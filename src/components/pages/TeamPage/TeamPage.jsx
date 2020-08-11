@@ -272,12 +272,13 @@ class TeamPage extends Component {
       {(profile && team && member)
       ? (<div className="content-wrapper">
           <KeyboardEventHandler handleKeys={['alphanumeric']} onKeyEvent={(key, event)=> this.handlePageKeyPress(event, key)} />
-          <div className="comments-wrapper" data-fetching={Boolean((fetching & 0x010) === 0x010)} data-loading={commentsLoading} data-empty={team && team.comments.length === 0}>
-            <div className="header" data-loading={Boolean((fetching & 0x010) === 0x010)}>
-              <input type="text" className="comment-txt" placeholder="Typing or Pasting anything…" value="" onChange={(event)=> this.handlePageKeyPress(event, event.target.value)} />
-              <button disabled={true}>Comment</button>
-            </div>
-            <div className="scroll-comments-wrapper">
+          <div className="header" data-loading={Boolean((fetching & 0x010) === 0x010)}>
+            <input type="text" className="comment-txt" placeholder="Typing or Pasting anything…" value="" onChange={(event)=> this.handlePageKeyPress(event, event.target.value)} />
+            <button disabled={true}>Comment</button>
+          </div>
+
+          <div className="scroll-wrapper">
+            <div className="comments-wrapper" data-fetching={Boolean((fetching & 0x010) === 0x010)} data-loading={commentsLoading} data-empty={team && team.comments.length === 0}>
               <TeamPageCommentsPanel
                 profile={profile}
                 comments={(sort === CommentSortTypes.DATE) ? team.comments.sort((i, ii)=> ((i.epoch > ii.epoch) ? -1 : (i.epoch < ii.epoch) ? 1 : 0)) : team.comments.sort((i, ii)=> ((i.score > ii.score) ? -1 : (i.score < ii.score) ? 1 : 0)).filter((comment)=> (comment !== null))}
@@ -287,34 +288,35 @@ class TeamPage extends Component {
                 onReplyKeyPress={this.handleCommentReply}
               />
             </div>
-          </div>
-          <div className="team-wrapper" data-fetching={Boolean((fetching & 0x010) === 0x010)}>
-            <div className="about-wrapper" data-loading={infoLoading}>
-              <MenuProvider id="menu_id">
-                <div className="header">About</div>
-              </MenuProvider>
-              <MyAwesomeMenu onClick={({ event, props })=> { console.log('MenuClick', { event, props }); this.props.onPopup({
-                type    : POPUP_TYPE_OK,
-                content : 'Menu Clicked.'
-              });}} />
-              <div className="content"><KeyboardEventHandler handleKeys={['ctrl', 'meta', 'enter', 'esc']} onKeyEvent={(key, event)=> this.handleUpdateTeamDescription(event, key)}>
-                <TextareaAutosize id="team-info-txtarea" className="team-info-txtarea" placeholder="Enter Text to Describe you team" value={teamDescription} onFocusCapture={this.handleTeamFocus} onFocus={(e)=> console.log('=+=+=+=+=+=+=', 'onFocus', { e })} onChange={(event)=> this.setState({ teamDescription : event.target.value })} data-admin={member.roles.includes('admin')} data-keypress-override="true" />
-              </KeyboardEventHandler></div>
-              <div className="footer">
-                <div className="member-count">{team.userCount} {Strings.pluralize('member', team.userCount)}</div>
-                <div className="timestamp">CREATED {team.added.format(TEAM_TIMESTAMP)}</div>
+
+            <div className="team-wrapper" data-fetching={Boolean((fetching & 0x010) === 0x010)}>
+              <div className="about-wrapper" data-loading={infoLoading}>
+                <MenuProvider id="menu_id">
+                  <div className="header">About</div>
+                </MenuProvider>
+                <MyAwesomeMenu onClick={({ event, props })=> { console.log('MenuClick', { event, props }); this.props.onPopup({
+                  type    : POPUP_TYPE_OK,
+                  content : 'Menu Clicked.'
+                });}} />
+                <div className="content"><KeyboardEventHandler handleKeys={['ctrl', 'meta', 'enter', 'esc']} onKeyEvent={(key, event)=> this.handleUpdateTeamDescription(event, key)}>
+                  <TextareaAutosize id="team-info-txtarea" className="team-info-txtarea" placeholder="Enter Text to Describe you team" value={teamDescription} onFocusCapture={this.handleTeamFocus} onFocus={(e)=> console.log('=+=+=+=+=+=+=', 'onFocus', { e })} onChange={(event)=> this.setState({ teamDescription : event.target.value })} data-admin={member.roles.includes('admin')} data-keypress-override="true" />
+                </KeyboardEventHandler></div>
+                <div className="footer">
+                  <div className="member-count">{team.userCount} {Strings.pluralize('member', team.userCount)}</div>
+                  <div className="timestamp">CREATED {team.added.format(TEAM_TIMESTAMP)}</div>
+                </div>
               </div>
-            </div>
-            <div className="rules-wrapper"  data-loading={rulesLoading}>
-              <div className="header">Rules</div>
-              <div className="content">
-                {(team.rules.map((rule, i)=> (<TeamPageRule key={i} rule={rule} />)))}
-              </div>
-              <div className="footer" data-input={ruleInput}>
-                <TeamPageAddRuleButton admin={member.roles.includes('admin')} onClick={this.handleRuleInput} />
-                <KeyboardEventHandler handleKeys={['enter', 'esc']} handleFocusableElements onKeyEvent={(key, event)=> this.handleAddRule(event)}>
-                  <TextareaAutosize id="team-add-rule-txtarea" placeholder="" value={ruleContent} onChange={(event)=> this.setState({ ruleContent : event.target.value })} />
-                </KeyboardEventHandler>
+              <div className="rules-wrapper"  data-loading={rulesLoading}>
+                <div className="header">Rules</div>
+                <div className="content">
+                  {(team.rules.map((rule, i)=> (<TeamPageRule key={i} rule={rule} ind={(i+1)} />)))}
+                </div>
+                <div className="footer" data-input={ruleInput}>
+                  <TeamPageAddRuleButton admin={member.roles.includes('admin')} onClick={this.handleRuleInput} />
+                  <KeyboardEventHandler handleKeys={['enter', 'esc']} handleFocusableElements onKeyEvent={(key, event)=> this.handleAddRule(event)}>
+                    <TextareaAutosize id="team-add-rule-txtarea" placeholder="" value={ruleContent} onChange={(event)=> this.setState({ ruleContent : event.target.value })} />
+                  </KeyboardEventHandler>
+                </div>
               </div>
             </div>
           </div>
@@ -353,9 +355,9 @@ const TeamPageComment = (props)=> {
 const TeamPageRule = (props)=> {
   // console.log('TeamPageRule()', { props });
 
-  const { rule } = props;
+  const { rule, ind } = props;
   const { title, content } = rule;
-  const text = `${title}${(content) ? `\n${content}` : ''}`;
+  const text = `${ind}. ${title}${(content) ? `\n${content}` : ''}`;
 
   return (<div className="team-page-rule">
     {text}

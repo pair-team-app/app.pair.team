@@ -78,7 +78,7 @@
 	border: 1px solid rgba(var(--site-fg-color), 1.0);
 	border-radius: 50%;
 	font-size: 11px;
-	font-weight: var(--orthodox-font-weight);
+	font-weight: var(--base-font-weight);
 	text-align: center;
 	background-color: rgba(var(--comment-marker-bg-color), 0.33);
 	transition: width 125ms cubic-bezier(0.4, 0, 0.2, 1), height var(--transition-duration-short) cubic-bezier(0.4, 0, 0.2, 1);

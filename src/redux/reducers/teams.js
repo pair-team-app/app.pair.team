@@ -4,7 +4,8 @@ import { LOG_REDUCER_POSTFIX, LOG_REDUCER_PREFIX } from '../../consts/log-ascii'
 import { CommentSortTypes } from '../../components/sections/TopNav';
 
 const initialState = {
-  teams      : [],
+  // teams      : [],
+  teams      : null,
   sort       : CommentSortTypes.DATE,
   team       : null,
   member     : null,

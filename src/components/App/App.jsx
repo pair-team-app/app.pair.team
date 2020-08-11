@@ -199,7 +199,8 @@ class App extends Component {
 
         // payment modal
         if (team && team.type === 'free' && !modals.stripe && !modals.profile) {
-          if (team.userCount >= 4) {
+          // if (team.userCount >= 4) {
+          if (team.userCount === 2) {
             this.onToggleModal(Modals.STRIPE);
           }
         }

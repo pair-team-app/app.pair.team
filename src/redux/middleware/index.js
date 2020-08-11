@@ -141,7 +141,7 @@ export function onMiddleware(store) {
       const { devices, componentTypes } = prevState.builds;
 
 
-      const playgrounds = [ ...payload.playgrounds].map((playground)=> (reformPlayground({ ...playground }, devices, componentTypes, team)));
+      const playgrounds = [ ...payload.playgrounds].map((playground)=> (reformPlayground(playground, devices, componentTypes, team)));
       payload.playgrounds = playgrounds;//.sort((i, ii)=> ((i.id < ii.id) ? 1 : (i.id > ii.id) ? -1 : 0));
       payload.playground = null;
 
@@ -149,7 +149,7 @@ export function onMiddleware(store) {
         if (params.buildID) {
           const playground = { ...playgrounds.find(({ buildID, device })=> (buildID === params.buildID && device.slug === params.deviceSlug)), selected : true };
           console.log('______________________', { playground });
-          payload.playground = playground;
+          payload.playground = { ...playground, selected : true };
 
           payload.playgrounds = playgrounds.map((item)=> ((playground && item.id === playground.id) ? payload.playground : { ...item,
             selected : false
@@ -357,13 +357,19 @@ export function onMiddleware(store) {
           strict : false
         });
 
+        const projectMatch = matchPath(pathname, {
+          path   : RoutePaths.PROJECT,
+          exact  : false,
+          strict : false
+        });
+
         const createMatch = matchPath(pathname, {
           path   : RoutePaths.CREATE,
           exact  : false,
           strict : false
         });
 
-        console.log('-=-=-=-=-=-=-=-=-=-=-=-=', { location, teamMatch, createMatch });
+        console.log('-=-=-=-=-=-=-=-=-=-=-=-=', { location, createMatch, teamMatch, projectMatch });
         if (!teamMatch && !createMatch) {
           console.log('///-///', 'NON-TEAM PARAM URL', { pathname, hash }, '///-///');
 
@@ -396,10 +402,26 @@ export function onMiddleware(store) {
             const buildID = 0;
             const deviceSlug = "";
             dispatch(fetchTeamBuilds({ team : payload.team, buildID, deviceSlug }));
-            // dispatch(fetchTeamComments({ team : payload.team, verbose : true }));
+          // dispatch(fetchTeamComments({ team : payload.team, verbose : true }));
           }
 
-          if (teamMatch) {
+          if (projectMatch && projectMatch.isExact) {
+            dispatch(setRoutePath({ ...projectMatch,
+              params : { ...projectMatch.params,
+                teamID       : (projectMatch.params.teamID << 0 || null),
+                teamSlug     : (projectMatch.params.teamSlug || null),
+                buildID      : (projectMatch.params.buildID << 0 || null),
+                projectSlug  : (projectMatch.params.projectSlug || null),
+                deviceSlug   : (projectMatch.params.deviceSlug || null),
+                componentID  : (projectMatch.params.componentID << 0 || null),
+                comments     : (projectMatch.params.comments) ? (projectMatch.params.comments === true) : false,
+                commentID    : (projectMatch.params.commentID << 0 || null)
+              }
+            }));
+          }
+
+
+          if (teamMatch && teamMatch.isExact) {
             dispatch(setRoutePath({ ...teamMatch,
               params : { ...teamMatch.params,
                 teamID       : (teamMatch.params.teamID << 0 || null),
