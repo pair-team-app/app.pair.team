@@ -92,7 +92,7 @@ export function onMiddleware(store) {
         dispatch(fetchUserTeams({ profile }));
 
       } else {
-        dispatch(replace(`${Pages.TEAM}${Modals.LOGIN}`));
+        dispatch(push(`${Pages.TEAM}${Modals.LOGIN}`));
       }
 
     } else if (type === TEAMS_LOADED) {
@@ -120,9 +120,9 @@ export function onMiddleware(store) {
         const member = team.members.find(({ id })=> (id === profile.id));
         payload.member = member;
 
-        if (!params || params.teamID !== team.id) {
+        // if (!params || params.teamID !== team.id) {
           dispatch(push(`${Pages.TEAM}/${team.id}--${team.slug}`));
-        }
+        // }
 
         const buildID = 0;
         const deviceSlug = '';
@@ -386,9 +386,7 @@ export function onMiddleware(store) {
 
       console.log('[|:|]=-=-=-=-=-=-=-=-=-=-=-=[%s]', action, { pathname : `${location.pathname}${location.hash}`, isFirstRendering, createMatch, teamMatch, projectMatch });
 
-      if (!profile && pathname !== Pages.TEAM && !createMatch) {
-        return (dispatch(replace(`${Pages.TEAM}${Modals.LOGIN}`)));
-      }
+
 
       if (action === 'POP') {
         if (!teamMatch && !createMatch && !projectMatch) {
@@ -402,7 +400,7 @@ export function onMiddleware(store) {
           if (!isFirstRendering) {
             console.log('///-///', 'ROUTER CHANGE', { pathname, hash }, '///-///');
 
-            if (profile) {
+            if (profile && teamMatch) {
               const team = { ...teams.find(({ id })=> (id === (teamMatch.params.teamID << 0))), selected : true };
               console.log('≈~≈~≈~≈~≈~≈~≈~≈~≈~≈~≈~≈', { team });
 
@@ -430,7 +428,10 @@ export function onMiddleware(store) {
                   commentID    : null
                 }
               }));
-              return (dispatch(replace(`${Pages.TEAM}${Modals.LOGIN}`)));
+
+              if (!profile) {
+                return (dispatch(replace(`${Pages.TEAM}${Modals.LOGIN}`)));
+              }
             }
           }
 

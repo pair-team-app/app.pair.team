@@ -41,12 +41,12 @@ class BasePopover extends Component {
  		// console.log('%s.componentDidMount()', this.constructor.name, this.props, this.state, { ...this.state, ...this.props});
 
 		const { intro, outro } = { ...this.state, ...this.props };
-		const { 
-			fixed = this.state.fixed, 
-			duration = this.state.duration, 
-			position = this.state.position, 
-			offset = this.state.offset, 
-			size = this.state.size 
+		const {
+			fixed = this.state.fixed,
+			duration = this.state.duration,
+			position = this.state.position,
+			offset = this.state.offset,
+			size = this.state.size
 		} = (this.props.payload) ? Object.assign({}, this.state, this.props.payload) : this.state;
 
 		this.timeline = new TimelineMax();
@@ -172,17 +172,18 @@ class BasePopover extends Component {
 		const { children } = this.props;
 		const { fixed, position, offset, size } = this.state;
 
-
 		const styles = { ...((!offset) ? {
 			left   : `${position.x}px`,
 			top    : `${position.y}px`
 		} : {
 			right  : (isNaN(offset.right)) ? offset.right : `${(offset.right || 0)}px`,
 			bottom : (isNaN(offset.bottom)) ? offset.bottom : `${(offset.bottom || 0)}px`,
-		}),  
+		}),
 			width  : (size.width * size.height === 0) ? 'fit-content' : `${size.width}px`,
 			height : (size.width * size.height === 0) ? 'fit-content' : `${size.height}px`,
 		};
+
+		console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state, size, position, offset, styles });
 
 
 		// const styles = {

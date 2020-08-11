@@ -4,14 +4,13 @@ import './LeftNav.css';
 
 import { push } from 'connected-react-router';
 import { Strings } from 'lang-js-utils';
-import FontAwesome from 'react-fontawesome';
+// import FontAwesome from 'react-fontawesome';
 import { connect } from 'react-redux';
 
 import ContentExpander from '../../iterables/ContentExpander';
 import { Pages } from '../../../consts/uris';
 import { fetchBuildPlaygrounds, setComponent, setPlayground, setTeam } from '../../../redux/actions';
 import { trackEvent } from '../../../utils/tracking';
-import pairLogo from '../../../assets/images/logos/logo-pairurl-310.png';
 
 class LeftNav extends Component {
   constructor(props) {
@@ -36,7 +35,7 @@ class LeftNav extends Component {
   componentDidUpdate(prevProps, prevState, snapshot) {
     // console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : this.props, prevState, state : this.state });
 
-    const { playgrounds } = this.props;
+    const { teams, team, playgrounds } = this.props;
     const { builds } = this.state;
 
     // if (playgrounds && (!builds || prevProps.playgrounds !== playgrounds)) {
@@ -69,8 +68,10 @@ class LeftNav extends Component {
   handleCreateTeam = ()=> {
     console.log('%s.handleCreateTeam()', this.constructor.name, { props : this.props });
 
-    this.props.setTeam(null);
-    this.props.push(Pages.CREATE);
+    this.setState({ builds : null }, ()=> {
+      this.props.setTeam(null);
+      this.props.push(Pages.CREATE);
+    });
   }
 
   handleDeviceRenderClick = (deviceRender)=> {
@@ -135,9 +136,9 @@ class LeftNav extends Component {
           </div>)}
         </div>
 
-        {(teams) && (<div className="builds-wrapper" data-loading={(!builds)}>
+        {(teams) && (<div className="builds-wrapper" data-loading={(!builds && window.location.pathname !== Pages.CREATE)}>
           <div className="loading">Loading…</div>
-          {(builds) && (<div className="header">{(builds.length === 0) ? 'No ' : ''}Builds</div>)}
+          {(builds || window.location.pathname === Pages.CREATE) && (<div className="header">{(window.location.pathname === Pages.CREATE || builds.length === 0) ? 'No ' : ''}Builds</div>)}
           {(builds) && (<div className="row">
             {builds.map((build, i)=> (
               <LeftNavBuild

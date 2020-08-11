@@ -107,7 +107,7 @@ class UserSettings extends Component {
 			</div>
 
 			{(popover) && (<UserSettingsPopover
-				position={{ x : this.wrapper.offsetLeft, y : this.wrapper.offsetTop }}
+				position={{ x : this.wrapper.offsetLeft + 208, y : this.wrapper.offsetTop }}
 				outro={outro}
 				onItemClick={this.handleItemClick}
 				onClose={()=> this.setState({ popover : false })}
@@ -125,7 +125,7 @@ console.log('UserSettingsPopover()', { props });
 	const payload = {
 		position : {
 			x : position.x - 175,
-			y : position.y + 10
+			y : position.y + 12
 		}
 	};
 

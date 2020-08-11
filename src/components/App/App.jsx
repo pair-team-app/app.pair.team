@@ -221,12 +221,12 @@ class App extends Component {
       }
 
       // outros from history
-      if (hash.length === 0 && prevProps.hash.length !== 0) {
-        if (prevProps.hash === '#profile') {
+      if (hash !== prevProps.hash && prevProps.hash.length !== 0) {
+        if (prevProps.hash === Modals.PROFILE) {
           this.onToggleModal(Modals.PROFILE, false);
         }
 
-        if (prevProps.hash === '#recover') {
+        if (prevProps.hash === Modals.RECOVER) {
           this.onToggleModal(Modals.RECOVER, false);
         }
       }
