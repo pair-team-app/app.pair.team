@@ -238,7 +238,8 @@
 }
 
 .team-page .content-wrapper .scroll-wrapper .team-wrapper .about-wrapper[data-loading="true"] textarea, .team-page .content-wrapper .scroll-wrapper .team-wrapper .rules-wrapper[data-loading="true"] .footer > span {
-	opacity: 0.75;
+	background-color: rgba(var(--disabled-bg-color), 0.5);
+	opacity: 0.5;
 	cursor: progress;
 }
 

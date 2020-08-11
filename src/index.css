@@ -24,6 +24,7 @@
 	--site-selected-color: 47, 88, 255; /* 2f58ff */
 	--site-lite-fg-color: 153, 153, 153; /* #999999 */
 	--site-hilite-color: 0, 90, 217; /* #0067ff */
+	--disabled-bg-color: 153, 153, 153; /* #999999 */
 	--disabled-fg-color: 204, 204, 204; /* #cccccc */
 	--invalid-bg-color: 255, 240, 240; /* #fff0f0 */
 	--invalid-fg-color: 255, 101, 101; /* #ff6565 */
@@ -119,11 +120,12 @@
 
 	--border-radius: 6px;
 
-	--transition-duration-fast: calc(0.677s * 0.25);
-	--transition-duration-short: calc(0.125s * 0.25);
-	--transition-duration-mid: calc(0.250s * 0.25);
-	--transition-duration-long: calc(0.333s * 0.25);
-	--transition-duration-slow: calc(0.785s * 0.25);
+	--transition-duration-none: 0s;
+	--transition-duration-fast: var(--transition-duration-none); /* calc(0.677s * 0.25); */
+	--transition-duration-short: var(--transition-duration-none); /* calc(0.125s * 0.25); */
+	--transition-duration-mid: var(--transition-duration-none); /* calc(0.250s * 0.25); */
+	--transition-duration-long: var(--transition-duration-none); /* calc(0.333s * 0.25); */
+	--transition-duration-slow: var(--transition-duration-none); /* calc(0.785s * 0.25); */
 
 
 	--expander-arrow-transition: all var(--transition-duration-mid) cubic-bezier(0.4, 1, 0.2, 1);

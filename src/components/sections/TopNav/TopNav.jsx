@@ -215,7 +215,7 @@ const CreateTeamPageHeader = (props)=> {
 	// console.log('CreateTeamPageHeader()', { props });
 
 	return (<div className="create-team-page-header">
-		<div className="title">Create Pair</div>
+		<div className="title">Create</div>
 	</div>);
 };
 

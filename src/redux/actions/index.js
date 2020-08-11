@@ -635,7 +635,7 @@ export function updateUserProfile(payload) {
   } else {
     return ((dispatch)=> {
       if (profile) {
-        const { id, avatar } = profile;
+        const { id, avatar, validated, state } = profile;
         axios.post(API_ENDPT_URL, {
           action  : 'UPDATE_USER_PROFILE',
           payload : { ...profile,

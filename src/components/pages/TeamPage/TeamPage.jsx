@@ -80,7 +80,7 @@ class TeamPage extends Component {
     }
 
     if ((fetching & 0x100) === 0x100 && comment && !prevProps.comment) {
-      this.setState({ fetching : loading ^ 0x100 });
+      this.setState({ fetching : fetching ^ 0x100 });
     }
 
     if ((loading & 0x001) === 0x001 && prevProps.team.description !== team.description) {

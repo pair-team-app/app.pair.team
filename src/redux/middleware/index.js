@@ -109,7 +109,7 @@ export function onMiddleware(store) {
         strict : false
       });
 
-      if (!createMatch) {
+      if (!createMatch && payload.teams.length > 0) {
         const team = (params) ? (payload.teams.find(({ id })=> (id === params.teamID)) || [ ...payload.teams].shift()) : [ ...payload.teams].shift();
         payload.team = team;
 
@@ -392,9 +392,9 @@ export function onMiddleware(store) {
         if (!teamMatch && !createMatch && !projectMatch) {
           console.log('///-///', 'NON-TEAM PARAM URL', { pathname, hash }, '///-///');
 
-          if (!pathname.startsWith(Pages.TEAM)) {
-            dispatch(replace(`${Pages.TEAM}${hash}`));
-          }
+          // if (!pathname.startsWith(Pages.TEAM)) {
+          //   dispatch(replace(`${Pages.TEAM}${hash}`));
+          // }
 
         } else {
           if (!isFirstRendering) {

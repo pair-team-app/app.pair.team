@@ -54,10 +54,9 @@ class App extends Component {
 
   componentDidMount() {
     console.log('%s.componentDidMount()', this.constructor.name, { props : this.props, state : this.state });
-
     trackEvent('site', 'load');
     trackPageview();
-    //
+
     // console.log('[:][:][:][:][:][:][:][:][:][:]', makeAvatar('M'));
 
     const { profile, location } = this.props;
@@ -214,9 +213,15 @@ class App extends Component {
           }
 
         // within team page
-        } else if (pathname.startsWith(Pages.TEAM)) {
+        } else if (pathname.startsWith(Pages.VERIFY)) {
+          this.props.updateUserProfile({
+            profile : { ...profile,
+              state : 2
+            },
+            remote  : true
+          });
 
-
+          this.props.history.replace(Pages.CREATE);
         }
       }
 
@@ -295,7 +300,7 @@ class App extends Component {
   };
 
   handleUpdateUser = (profile)=> {
-    console.log('%s.handleUpdateUser()', this.constructor.name, profile);
+    console.log('%s.handleUpdateUser()', this.constructor.name, { profile });
     this.props.updateUserProfile({ profile, remote : true });
   };
 

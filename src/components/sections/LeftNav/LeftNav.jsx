@@ -53,7 +53,10 @@ class LeftNav extends Component {
       this.props.setTeam(teams[0]);
 
     } else {
-      this.props.onCreateTeam();
+      this.setState({ builds : null }, ()=> {
+        this.props.setTeam(null);
+        this.props.push(Pages.CREATE);
+      });
     }
   };
 
@@ -125,6 +128,8 @@ class LeftNav extends Component {
         <button disabled={(!profile || !profile.validated)} onClick={this.handleCreateTeam}>Create Channel</button>
         <div className="teams-wrapper" data-loading={!teams}>
           <div className="loading">Loading…</div>
+          {(teams && teams.length === 0) && (<div className="header">No Builds</div>)}
+
           {(teams) && (<div className="row">
             {teams.map((team, i)=> (
               <LeftNavTeam
@@ -136,8 +141,9 @@ class LeftNav extends Component {
           </div>)}
         </div>
 
-        {(teams) && (<div className="builds-wrapper" data-loading={(!builds && window.location.pathname !== Pages.CREATE)}>
+        {(teams && teams.length > 0) && (<div className="builds-wrapper" data-loading={(!builds && window.location.pathname !== Pages.CREATE)}>
           <div className="loading">Loading…</div>
+          {/* {(teams.length === 0) && (<div className="header">No Builds</div>)} */}
           {(builds || window.location.pathname === Pages.CREATE) && (<div className="header">{(window.location.pathname === Pages.CREATE || builds.length === 0) ? 'No ' : ''}Builds</div>)}
           {(builds) && (<div className="row">
             {builds.map((build, i)=> (
@@ -150,6 +156,9 @@ class LeftNav extends Component {
             ))}
           </div>)}
         </div>)}
+
+
+        {(profile && !profile.validated) && (<div className="verify-wrapper">Verify your email first</div>)}
       </div>
     </div>);
   }

@@ -43,7 +43,7 @@ class RegisterModal extends Component {
 		this.setState({ outro : false }, ()=> {
 			this.props.onComplete();
 
-			if (outroURI.startsWith('#')) {
+			if (outroURI && outroURI.startsWith('#')) {
 				this.props.onModal(outroURI, true, false);
 			}
 		});
