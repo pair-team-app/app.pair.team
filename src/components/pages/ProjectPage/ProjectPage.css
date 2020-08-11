@@ -10,8 +10,8 @@
 .project-page .view-wrapper {
 	position: fixed;
 	top: 64px;
-	left: 208px;
-	width: calc(100vw - (208px + var(--project-comments-width)));
+	left: var(--left-nav-width);
+	width: calc(100vw - (var(--left-nav-width) + var(--project-comments-width)));
 	height: calc(100vh - 64px);
 	transition: width var(--transition-duration-long) var(--transition-duration-short) cubic-bezier(0.4, 0, 0.2, 1), height var(--transition-duration-long) var(--transition-duration-short) cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -47,8 +47,8 @@
 .project-page-footer {
 	position: fixed;
 	bottom: 0;
-	left: 208px;
-	width: calc(100vw - (208px + var(--project-comments-width)));
+	left: var(--left-nav-width);
+	width: calc(100vw - (var(--left-nav-width) + var(--project-comments-width)));
 	display: flex;
 	align-items: flex-start; /* v-align */
 	padding: 0 var(--spacing-20) var(--spacing-20) var(--spacing-20);
@@ -114,7 +114,6 @@
 	height: 100%;
 	overflow-y: auto;
 	background-color: rgba(var(--playground-panel-bg-color), 1.0);
-	border-left: 1px solid rgba(var(--border-alt-color), 1.0);
 	transition: width var(--transition-duration-long) var(--transition-duration-mid) cubic-bezier(0.4, 0, 0.2, 1);
 	z-index: 2;
 }

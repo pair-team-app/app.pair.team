@@ -50,7 +50,6 @@
 	/*transform-style: preserve-3d;*/
 	transform-style: flat;
 	/*backface-visibility: hidden;*/
-	/*box-shadow: var(--overlay-shadow);*/
 }
 
 .base-overlay .content-wrapper[data-bordered="true"] {
@@ -92,8 +91,6 @@
 	flex: 1 1 auto;
 	margin: auto;
 	text-align: left;
-	color: var(--dialog-title-color);
-	font-weight: 500;
 }
 
 .base-overlay .content {

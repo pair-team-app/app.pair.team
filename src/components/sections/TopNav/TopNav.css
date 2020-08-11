@@ -101,6 +101,7 @@
 
 .top-nav .nav-link:hover {
 	color: rgba(var(--link-hover-color), 1.0);
+	text-decoration: underline;
 	cursor: pointer;
 }
 
@@ -148,10 +149,11 @@
 .team-page-header .sort-by-wrapper .sort-by-link[data-selected="true"] {
 	/* font-weight: 500; */
 	text-decoration: none;
-	color: rgba(var(--site-fg-color), 1.0);
+	color: rgba(var(--link-selected-color), 1.0);
 }
 
 .team-page-header .sort-by-wrapper .sort-by-link[data-selected="true"]:hover {
+	text-decoration: none;
 	cursor: default;
 }
 

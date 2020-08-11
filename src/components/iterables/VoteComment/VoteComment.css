@@ -5,7 +5,6 @@
 	width: 100%;
 	margin-bottom: var(--spacing-20);
 	background-color: rgba(var(--site-bg-color), 0.0);
-	border-bottom: 1px solid rgba(var(--border-alt-color), 1.0);
 	transition: background-color var(--transition-duration-mid) cubic-bezier(0.4, 0, 0.2, 1), border var(--transition-duration-long) ease-out;
 }
 

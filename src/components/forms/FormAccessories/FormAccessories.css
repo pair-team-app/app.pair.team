@@ -4,12 +4,12 @@
 	width: var(--orthodox-acc-size);
 	height: var(--orthodox-acc-size);
 	right: calc(var(--orthodox-acc-size) * 0.5);
-	opacity: 0.5;
+	opacity: 1;
   transition: opacity var(--transition-duration-short) ease-out;
 }
 
 .form-acc:hover {
-	opacity: 1;
+	opacity: 0.5;
   cursor: pointer;
 }
 

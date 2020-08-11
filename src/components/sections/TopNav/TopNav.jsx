@@ -227,8 +227,8 @@ const TeamPageHeader = (props)=> {
 
 	return (<div className="team-page-header">
 		<div className="sort-by-wrapper">
-			<div className="sort-by-link" data-selected={sort === SCORE} onClick={()=> props.onSortClick(SCORE)}>Top</div>
 			<div className="sort-by-link" data-selected={sort === DATE} onClick={()=> props.onSortClick(DATE)}>New</div>
+			<div className="sort-by-link" data-selected={sort === SCORE} onClick={()=> props.onSortClick(SCORE)}>Top</div>
 		</div>
 	</div>);
 };
