@@ -8,8 +8,7 @@ import { Redirect, Route, Switch } from 'react-router-dom';
 
 import AlertDialog from '../../overlays/AlertDialog';
 import ConfirmDialog from '../../overlays/ConfirmDialog';
-import CookiesOverlay from '../../overlays/CookiesOverlay';
-import InviteModal from '../../overlays/InviteModal';
+// import CookiesOverlay from '../../overlays/CookiesOverlay';
 import LoginModal from '../../overlays/LoginModal';
 import ProfileModal from '../../overlays/ProfileModal';
 import RegisterModal from '../../overlays/RegisterModal';
@@ -117,12 +116,6 @@ class ModalRoutes extends Component {
         onPopup={this.handlePopup}
         onSubmitted={this.handlePurchaseSubmitted}
         onComplete={()=> this.props.onComplete(Modals.STRIPE)}
-      />)}
-
-      {(invite) && (<InviteModal
-        onPopup={this.handlePopup}
-        onSubmitted={this.handlePurchaseSubmitted}
-        onComplete={()=> this.props.onComplete(Modals.INVITE)}
       />)}
 
       {(expired) && (<AlertDialog

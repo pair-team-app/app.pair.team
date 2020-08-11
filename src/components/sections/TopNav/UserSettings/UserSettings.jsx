@@ -5,7 +5,7 @@ import './UserSettings.css';
 import { push } from 'connected-react-router';
 import { connect } from 'react-redux';
 import { NavLink } from 'react-router-dom';
-import { GITHUB_DOCS, Modals, NPM_DE_PLAYGROUND, USER_DEFAULT_AVATAR } from '../../../../consts/uris';
+import { GITHUB_DOCS, NPM_DE_PLAYGROUND, USER_DEFAULT_AVATAR } from '../../../../consts/uris';
 import { trackOutbound } from '../../../../utils/tracking';
 import BasePopover from '../../../overlays/BasePopover';
 import { SettingsMenuItemTypes } from './';
@@ -52,17 +52,21 @@ class UserSettings extends Component {
 		console.log('%s.handleComplete()', this.constructor.name, { state : this.state });
 
 		// window.location.href = window.location.href.replace('#settings', '');
-		this.props.push(window.location.pathname.replace('#settings', ''));
     this.setState({ popover : false }, ()=> {
 			const { itemType } = this.state;
 			if (itemType) {
 				if (itemType === SettingsMenuItemTypes.LOGOUT) {
-					this.props.onLogout(null, Modals.LOGIN);
+					this.props.onLogout();
 
 				} else if (itemType !== SettingsMenuItemTypes.DOCS && itemType !== SettingsMenuItemTypes.INSTALL) {
 					this.props.onMenuItem(itemType);
+
+				} else {
+					// this.props.push(window.location.pathname.replace('#settings', ''));
 				}
 			}
+
+			this.props.push(window.location.pathname.replace('#settings', ''));
 		});
 	};
 

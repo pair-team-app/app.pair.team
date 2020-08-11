@@ -10,8 +10,8 @@ export const Modals = {
 	NO_ACCESS : '#no-access',
 	PAYMENT   : '#payment',
 	PROFILE   : '#profile',
-	RECOVER   : '#recover',
-	REGISTER  : '#register',
+	RECOVER   : '#forgot',
+	REGISTER  : '#signup',
 	STRIPE    : '#stripe'
 };
 

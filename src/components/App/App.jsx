@@ -12,7 +12,6 @@ import { withRouter } from 'react-router-dom';
 import Routes from '../helpers/Routes';
 import AlertDialog from '../overlays/AlertDialog';
 import ConfirmDialog from '../overlays/ConfirmDialog';
-import InviteModal from '../overlays/InviteModal';
 import LoginModal from '../overlays/LoginModal';
 import PopupNotification, { POPUP_TYPE_OK } from '../overlays/PopupNotification';
 import ProfileModal from '../overlays/ProfileModal';
@@ -40,7 +39,6 @@ class App extends Component {
         cookies  : (cookie.load('cookies') << 0) === 0,
         disable  : false,
         expired  : false,
-        invite   : false,
         login    : false,
         noAccess : false,
         payment  : false,
@@ -103,28 +101,23 @@ class App extends Component {
     // modal routes
     if (hash.length > 0 && prevProps.hash !== hash) {
 
-      // invite modal
-      if (hash === '#invite') {
-        this.onToggleModal(Modals.INVITE);
-      }
-
       // recover modal
-      if (hash === '#recover') {
+      if (hash === Modals.RECOVER) {
         this.onToggleModal(Modals.RECOVER);
       }
 
       // profile modal
-      if (hash === '#profile') {
+      if (hash === Modals.PROFILE) {
         this.onToggleModal(Modals.PROFILE);
       }
 
       // login
-      if (hash === '#login') {
+      if (hash === Modals.LOGIN) {
         this.onToggleModal(Modals.LOGIN);
       }
 
       // register
-      if (hash === '#register') {
+      if (hash === Modals.REGISTER) {
         this.onToggleModal(Modals.REGISTER);
       }
     }
@@ -174,7 +167,7 @@ class App extends Component {
       if (!profile) {
 
         // show login first
-        if ((cookie.load('user_id') << 0) === 0 && !modals.login && !modals.register && !modals.invite && !modals.recover) {
+        if ((cookie.load('user_id') << 0) === 0 && !modals.login && !modals.register && !modals.recover) {
           this.onToggleModal(Modals.LOGIN);
         }
 
@@ -190,11 +183,11 @@ class App extends Component {
           this.onToggleModal(Modals.REGISTER, false);
         }
 
-        if (!prevProps.profile) {
-          if (hash === '#profile') {
-            this.onToggleModal(Modals.PROFILE);
-          }
-        }
+        // if (!prevProps.profile) {
+        //   if (hash === '#profile') {
+        //     this.onToggleModal(Modals.PROFILE);
+        //   }
+        // }
 
 
         // payment modal
@@ -229,10 +222,6 @@ class App extends Component {
 
       // outros from history
       if (hash.length === 0 && prevProps.hash.length !== 0) {
-        if (prevProps.hash === '#invite') {
-          this.onToggleModal(Modals.INVITE, false);
-        }
-
         if (prevProps.hash === '#profile') {
           this.onToggleModal(Modals.PROFILE, false);
         }
@@ -278,14 +267,6 @@ class App extends Component {
     trackEvent('user', 'sign-out');
 
     this.props.updateUserProfile({ profile : null });
-
-    if (page) {
-      this.props.history.push(page);
-    }
-
-    if (modal) {
-      this.onToggleModal(modal);
-    }
   };
 
   handleModalComplete = (uri)=> {
@@ -421,14 +402,7 @@ class App extends Component {
 				  onComplete={()=> this.onToggleModal(Modals.STRIPE, false)}
 			  />)}
 
-        {(modals.invite) && (<InviteModal
-				  payload={modals.payload}
-				  onPopup={this.handlePopup}
-				  onSubmitted={this.handlePurchaseSubmitted}
-				  onComplete={()=> this.onToggleModal(Modals.INVITE, false)}
-			  />)}
-
-			  {(modals.expired) && (<AlertDialog
+        {(modals.expired) && (<AlertDialog
 				  title='Invite Expired'
 				  tracking={Modals.EXPIRED}
 				  onComplete={()=> this.onToggleModal(Modals.EXPIRED, false)}>
