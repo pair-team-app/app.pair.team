@@ -232,7 +232,7 @@ class TeamPage extends Component {
       this.setState({ teamDescription : `${teamDescription}\n` });
 
     } else {
-      if (teamDescription.length > 0 && teamDescription !== team.description && keyCode === ENTER_KEY) {
+      if (teamDescription !== team.description && keyCode === ENTER_KEY) {
         trackEvent('text', 'update-team-info');
 
         event.target.blur();
@@ -299,7 +299,7 @@ class TeamPage extends Component {
                   content : 'Menu Clicked.'
                 });}} />
                 <div className="content"><KeyboardEventHandler handleKeys={['ctrl', 'meta', 'enter', 'esc']} onKeyEvent={(key, event)=> this.handleUpdateTeamDescription(event, key)}>
-                  <TextareaAutosize id="team-info-txtarea" className="team-info-txtarea" placeholder="Enter Text to Describe you team" value={teamDescription} onFocusCapture={this.handleTeamFocus} onFocus={(e)=> console.log('=+=+=+=+=+=+=', 'onFocus', { e })} onChange={(event)=> this.setState({ teamDescription : event.target.value })} data-admin={member.roles.includes('admin')} data-keypress-override="true" />
+                  <TextareaAutosize id="team-info-txtarea" className="team-info-txtarea" placeholder="Describe your team" value={teamDescription} onFocusCapture={this.handleTeamFocus} onFocus={(e)=> console.log('=+=+=+=+=+=+=', 'onFocus', { e })} onChange={(event)=> this.setState({ teamDescription : event.target.value })} data-admin={member.roles.includes('admin')} data-keypress-override="true" />
                 </KeyboardEventHandler></div>
                 <div className="footer">
                   <div className="member-count">{team.userCount} {Strings.pluralize('member', team.userCount)}</div>

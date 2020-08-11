@@ -122,7 +122,7 @@
 }
 
 .team-page .content-wrapper .scroll-wrapper .team-wrapper textarea {
-	min-height: 88px;
+	/* min-height: 88px; */
 	padding: var(--spacing-10);
 	background-color: rgba(var(--site-bg-color), 1.0);
 	color: rgba(var(--site-fg-color), 1.0);
