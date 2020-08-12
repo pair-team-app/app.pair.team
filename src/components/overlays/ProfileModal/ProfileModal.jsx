@@ -174,7 +174,10 @@ class ProfileModal extends Component {
         <div className="form-wrapper">
           <ProfileForm profile={profile} team={team} onCancel={this.handleCancel} onDowngradePlan={this.handleDowngradePlan} onSubmit={this.handleSubmit} />
           <div className="footer-wrapper form-disclaimer">
-            {(!profile.validated) && (<div onClick={this.handleResendVerify}>Resend Verify Email</div>)}
+            {(profile.validated)
+              ? (<div>Your account is email verified</div>)
+              : (<div onClick={this.handleResendVerify}>Resend Verify Email</div>)
+            }
             <div onClick={this.handleResetPassword}>Delete Account?</div>
           </div>
         </div>
