@@ -17,6 +17,10 @@
 	text-align: left;
 }
 
+.team-page[data-file-drop="true"] {
+	z-index: 2;
+}
+
 .team-page .content-wrapper, .team-page .content-loading {
 	display: flex;
 	flex-flow: nowrap;
@@ -42,9 +46,8 @@
 .team-page .content-wrapper > .header {
 	/* position: absolute; */
 	display: flex;
-	width: 100%;
 	height: fit-content;
-	padding-right: 220px;
+	margin-right: 220px;
 	z-index: 2;
 }
 
@@ -279,4 +282,3 @@
 	border-radius: var(--border-radius);
 	word-break: break-all;
 }
-

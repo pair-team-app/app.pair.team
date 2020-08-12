@@ -36,14 +36,16 @@ class TeamPage extends Component {
       ruleContent     : '',
       ruleInput       : false,
       sort            : CommentSortTypes.DATE,
-      fetching       : 0x111,
-      loading        : 0x000,
+      fetching        : 0x111,
+      loading         : 0x000,
       share           : false,
       urlComment      : false,
       dataURI         : null,
-      dragOver        : false,
+      dragging        : false,
       keyPress        : false
     };
+
+    this.ruleInput = React.createRef();
   }
 
   componentDidMount() {
@@ -106,6 +108,8 @@ class TeamPage extends Component {
   componentWillUnmount() {
 		// console.log('%s.componentWillUnmount()', this.constructor.name, { props : this.props, state : this.state });
 
+    this.ruleInput = null;
+
     window.ondragenter = null;
     window.ondragleave = null;
 		window.removeEventListener('paste', this.handleClipboardPaste);
@@ -146,9 +150,9 @@ class TeamPage extends Component {
     console.log('%s.handleDragEnter()', this.constructor.name, { event });
     event.preventDefault();
 
-    const { dragOver } = this.state;
-    if (!dragOver) {
-      this.setState({ dragOver : true });
+    const { dragging } = this.state;
+    if (!dragging) {
+      this.setState({ dragging : true });
     }
   };
 
@@ -156,18 +160,18 @@ class TeamPage extends Component {
     console.log('%s.handleDragLeave()', this.constructor.name, { event, client : { x : event.clientX, y : event.clientY }});
     event.preventDefault();
 
-    const { dragOver } = this.state;
+    const { dragging } = this.state;
     const { clientX, clientY } = event;
 
-    if (dragOver && (clientX + clientY === 0)) {
-      this.setState({ dragOver : false });
+    if (dragging && (clientX + clientY === 0)) {
+      this.setState({ dragging : false });
     }
   };
 
   handleFileDropClose = ()=> {
     console.log('%s.handleFileDropClose()', this.constructor.name);
     this.setState({
-      dragOver       : false,
+      dragging       : false,
       commentContent : '',
       dataURI        : null,
       codeComment    : false,
@@ -182,7 +186,7 @@ class TeamPage extends Component {
     if (member.roles.includes('admin')) {
       trackEvent('button', 'add-rule');
 
-      // this.addRuleTxt.focus();
+      this.ruleInput.focus();
       this.setState({
         ruleContent : '',
         ruleInput   : true
@@ -259,8 +263,8 @@ class TeamPage extends Component {
 
   render() {
     // console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
-    const { profile, team, member, sort } = this.props;
-    const { teamDescription, ruleContent, ruleInput, fetching, loading, dragOver } = this.state;
+    const { profile, team, member, sort, preComment } = this.props;
+    const { teamDescription, ruleContent, ruleInput, fetching, loading, dragging } = this.state;
 
     const infoLoading = Boolean(((loading << 0) & 0x001) === 0x001);
     const rulesLoading = Boolean(((loading << 0) & 0x010) === 0x010);
@@ -268,7 +272,7 @@ class TeamPage extends Component {
     // console.log('%s.render()', this.constructor.name, { infoLoading, rulesLoading, commentsLoading });
     // console.log('%s.render()', this.constructor.name, { infoLoading, rulesLoading, commentsLoading });
 
-    return (<BasePage { ...this.props } className="team-page">
+    return (<BasePage { ...this.props } className="team-page" data-file-drop={(dragging || (preComment !== null))}>
       {(profile && team && member)
       ? (<div className="content-wrapper">
           <KeyboardEventHandler handleKeys={['alphanumeric']} onKeyEvent={(key, event)=> this.handlePageKeyPress(event, key)} />
@@ -291,13 +295,9 @@ class TeamPage extends Component {
 
             <div className="team-wrapper" data-fetching={Boolean((fetching & 0x010) === 0x010)}>
               <div className="about-wrapper" data-loading={infoLoading}>
-                <MenuProvider id="menu_id">
+                <MenuProvider id="menu_id" className="menu-provider">
                   <div className="header">About</div>
                 </MenuProvider>
-                <MyAwesomeMenu onClick={({ event, props })=> { console.log('MenuClick', { event, props }); this.props.onPopup({
-                  type    : POPUP_TYPE_OK,
-                  content : 'Menu Clicked.'
-                });}} />
                 <div className="content"><KeyboardEventHandler handleKeys={['ctrl', 'meta', 'shift', 'enter', 'esc']} onKeyEvent={(key, event)=> this.handleUpdateTeamDescription(event, key)}>
                   <TextareaAutosize id="team-info-txtarea" className="team-info-txtarea" placeholder="Describe your team" value={teamDescription} onFocusCapture={this.handleTeamFocus} onFocus={(e)=> console.log('=+=+=+=+=+=+=', 'onFocus', { e })} onChange={(event)=> this.setState({ teamDescription : event.target.value })} data-admin={member.roles.includes('admin')} data-keypress-override="true" />
                 </KeyboardEventHandler></div>
@@ -314,7 +314,7 @@ class TeamPage extends Component {
                 <div className="footer" data-input={ruleInput}>
                   <TeamPageAddRuleButton admin={member.roles.includes('admin')} onClick={this.handleRuleInput} />
                   <KeyboardEventHandler handleKeys={['enter', 'esc']} handleFocusableElements onKeyEvent={(key, event)=> this.handleAddRule(event)}>
-                    <TextareaAutosize id="team-add-rule-txtarea" placeholder="" value={ruleContent} onChange={(event)=> this.setState({ ruleContent : event.target.value })} />
+                    <TextareaAutosize id="team-add-rule-txtarea" placeholder="" value={ruleContent} onChange={(event)=> this.setState({ ruleContent : event.target.value })} ref={(el)=> this.ruleInput = (el) ? el : null} />
                   </KeyboardEventHandler>
                 </div>
               </div>
@@ -323,8 +323,8 @@ class TeamPage extends Component {
         </div>)
 
       : (<div className="content-loading">Loading…</div>)}
-      <TeamPageFileDrop dragging={(dragOver)} onClose={this.handleFileDropClose} />
-      {/* <ContentDropModal dragging={(dragOver)} textContent={commentContent} onClose={this.handleFileDropClose} /> */}
+      <TeamPageFileDrop dragging={(dragging)} onClose={this.handleFileDropClose} />
+      {/* <ContentDropModal dragging={(dragging)} textContent={commentContent} onClose={this.handleFileDropClose} /> */}
     </BasePage>);
   }
 }
@@ -383,12 +383,12 @@ const MyAwesomeMenu = (props)=> {
   console.log('MyAwesomeMenu()', { props });
 
   return (<Menu id="menu_id">
-     <Item onClick={props.onClick}>Lorem</Item>
-     <Item onClick={props.onClick}>Ipsum</Item>
-     <Separator />
-     <Item disabled>Dolor</Item>
-     <Separator />
-     <Submenu label="Foobar">
+    <Item onClick={props.onClick}>Lorem</Item>
+    <Item onClick={props.onClick}>Ipsum</Item>
+    <Separator />
+    <Item disabled>Dolor</Item>
+    <Separator />
+    <Submenu label="Foobar">
       <Item onClick={props.onClick}>Foo</Item>
       <Item onClick={props.onClick}>Bar</Item>
      </Submenu>

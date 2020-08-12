@@ -5,9 +5,8 @@
   left: 0px;
   width: 100vw;
   height: 100vh;
-  z-index: 101;
+  z-index: 3;
   background-color: rgba(var(--site-bg-color), 1.0);
-  /* background-color: rgba(0, 0, 0, 0.33); */
 }
 
 
@@ -33,26 +32,6 @@
 	-webkit-transform: translate(-50%, -50%);
 	width: 50%;
   height: 50%;
-}
-
-.team-page-file-drop button.glyph-button {
-  position: absolute;
-  top: 20px;
-  left: 20px;
-	padding: 0px;
-	width: 28px;
-	height: 28px;
-	min-width: 28px;
-	min-height: 28px;
-	max-width: 28px;
-  max-height: 28px;
-  background: none;
-  border: none;
-}
-
-.team-page-file-drop button.glyph-button:hover {
-  border: none;
-  background: none;
 }
 
 .team-page-file-drop .form-wrapper {

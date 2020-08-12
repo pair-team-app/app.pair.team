@@ -6,6 +6,7 @@ import axios from 'axios';
 import FilePondPluginImageExifOrientation from 'filepond-plugin-image-exif-orientation';
 import FilePondPluginImagePreview from 'filepond-plugin-image-preview';
 import { URIs } from 'lang-js-utils';
+import TextareaAutosize from 'react-autosize-textarea';
 import { FilePond, registerPlugin } from 'react-filepond';
 import KeyboardEventHandler from 'react-keyboard-event-handler';
 import { connect } from 'react-redux';
@@ -280,7 +281,7 @@ class TeamPageFileDrop extends Component {
         {(files.length > 0 || preComment) && (<div className="form-wrapper" data-uploaded={uploaded}>
           <div className="input-wrapper">
             <div className="comment-txt" onClick={this.handleFieldFocus} data-focused={focused} data-code={(code)}>{text}</div>
-            {/* {(preComment && !url) && (<img src={btnCode} className="code-button" onClick={this.handleCode} alt="Code" />)} */}
+            {(preComment && !url) && (<img src={btnCode} className="code-button" onClick={this.handleCode} alt="Code" />)}
           </div>
           <button type="submit" disabled={text.length === 0} onClick={this.handleSubmit}>Submit</button>
         </div>)}
@@ -326,22 +327,10 @@ class TeamPageFileDrop extends Component {
           // }}
         />
       </div>
-      <AddContentCloseButton onCloseClick={this.handleResetContent} />
     </div>);
 	}
 }
 
-
-const AddContentCloseButton = (props)=> {
-  // console.log('AddContentCloseButton()', { props });
-  return (<button className="quiet-button glyph-button" onClick={props.onCloseClick}>
-    <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <rect width="32" height="32" rx="16" fill="#EAEAEA"/>
-      <rect x="9.63623" y="11.0503" width="2" height="16" transform="rotate(-45 9.63623 11.0503)" fill="white"/>
-      <rect x="20.9502" y="9.63599" width="2" height="16" transform="rotate(45 20.9502 9.63599)" fill="white"/>
-    </svg>
-  </button>);
-};
 
 const mapDispatchToProps = (dispatch)=> {
   return ({

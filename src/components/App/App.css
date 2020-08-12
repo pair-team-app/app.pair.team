@@ -64,7 +64,7 @@
 	top: 0;
 	left: 0;
 	width: 100vw;
-	z-index: 2000;
+	z-index: 1000;
 }
 
 
@@ -167,6 +167,10 @@
 	height: 100%;
 }
 
+
+.react-contexify {
+	z-index: 2000;
+}
 
 .roman-index {
 	font-size: 12px;
