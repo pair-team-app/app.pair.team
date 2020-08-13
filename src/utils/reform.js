@@ -100,7 +100,7 @@ export const reformInvite = (invite, overwrite={})=> {
 export const reformPlayground = (playground, devices=null, componentTypes=null, team=null, overwrite={})=> {
   // console.log('reformPlayground()', { playground, devices, componentTypes, team });
 
-  const { build_id, team_id, device_id, title, type_groups, components, added, last_visited, selected } = playground;
+  const { build_id, team_id, device_id, title, type_groups, components, added, last_visited } = playground;
 
   // delete playground['build_id'];
   // delete playground['team_id'];
@@ -112,7 +112,7 @@ export const reformPlayground = (playground, devices=null, componentTypes=null, 
   const device = (devices.find(({ id })=> (id === (device_id << 0))) || null);
   const uri = `${Pages.TEAM}/${team.id}--${team.slug}/project/${build_id}--${slug}/${device.slug}`;
 
-  const reformed = { ...playground, slug, uri, selected,
+  const reformed = { ...playground, slug, uri,
     teamID      : team_id << 0,
     buildID     : build_id << 0,
     deviceID    : device_id << 0,

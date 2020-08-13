@@ -10,7 +10,7 @@ import { fetchComponentTypes, fetchDevices, fetchProducts, fetchUserProfile } fr
 import rootReducer from '../reducers/index';
 import { onMiddleware } from '../middleware'
 
-import { SET_PLAYGROUND, SET_TYPE_GROUP, SET_COMPONENT, SET_COMMENT } from '../../consts/action-types';
+import { SET_TEAM, SET_PLAYGROUND, SET_COMMENT, COMMENT_CREATED } from '../../consts/action-types';
 
 export const history = createBrowserHistory();
 
@@ -29,7 +29,7 @@ const createLogActionStackTraceMiddleware = (actionTypes=[])=> {
 };
 
 
-const stackTraceMiddleware = createLogActionStackTraceMiddleware([SET_PLAYGROUND, SET_TYPE_GROUP, SET_COMPONENT, SET_COMMENT]);
+const stackTraceMiddleware = createLogActionStackTraceMiddleware([SET_TEAM, SET_PLAYGROUND, SET_COMMENT, COMMENT_CREATED]);
 
 
 // const store = createStore(rootReducer, compose(applyMiddleware(onMiddleware, thunk, stackTraceMiddleware)));

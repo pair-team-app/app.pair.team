@@ -215,9 +215,7 @@ class App extends Component {
         // within team page
         } else if (pathname.startsWith(Pages.VERIFY)) {
           this.props.updateUserProfile({
-            profile : { ...profile,
-              state : 2
-            },
+            profile : { ...profile, state : 2 },
             remote  : true
           });
 

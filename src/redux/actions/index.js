@@ -255,7 +255,7 @@ export function createComment(payload) {
   return ((dispatch, getState)=> {
     logFormat('createComment()', { store : (typeof getState === 'function') ? getState() : getState, typeof : typeof getState }, payload);
 
-    const preComment = payload;
+    const preComment = payload || null;
     dispatch({
         type    : COMMENT_CREATED,
         payload : { preComment }
@@ -635,13 +635,10 @@ export function updateUserProfile(payload) {
   } else {
     return ((dispatch)=> {
       if (profile) {
-        const { id, avatar, validated, state } = profile;
+        const { id : user_id, avatar : filename, state } = profile;
         axios.post(API_ENDPT_URL, {
           action  : 'UPDATE_USER_PROFILE',
-          payload : { ...profile,
-            user_id  : id,
-            filename : avatar
-          }
+          payload : { ...profile, user_id, state, filename }
         }).then((response)=> {
           console.log(API_RESPONSE_PREFIX, 'UPDATE_USER_PROFILE', response.data);
 

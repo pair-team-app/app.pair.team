@@ -13,15 +13,21 @@
   cursor: pointer;
 }
 
-.form-acc-top {
+.form-acc[data-align="top"] {
 	top: calc(var(--orthodox-acc-size) * 0.5);
 }
 
-.form-acc-center {
+.form-acc[data-align="center"] {
 	top: 50%;
 	transform: translateY(-50%);
 }
 
-.form-acc-bottom {
+.form-acc[data-align="bottom"] {
 	bottom: calc(var(--orthodox-acc-size) * 0.5);
+}
+
+
+.code-form-accessory {
+	width: 16px;
+	height: 12px;
 }

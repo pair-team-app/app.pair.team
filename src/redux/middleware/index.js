@@ -192,7 +192,7 @@ export function onMiddleware(store) {
       // const components = [ ...prevState.builds.components, ...playgrounds.map(({ components })=> (components)).flat()].map((component, i, arr)=> ((arr.find(({ id }, ii)=> (i === ii))) ? component : null)).sort((i, ii)=> ((i.id < ii.id) ? -1 : (i > ii) ? 1 : 0));
       // const comments = [ ...prevState.comments.comments , ...components.map(({ comments })=> (comments)).flat()].map((comment, i, arr)=> ((arr.find(({ id }, ii)=> (i === ii))) ? comment : null));//loop thru parent and merge merge the dups (InviteForm) -->  .map((comment, i, flatComments)=> ((component.id === )))
 
-      const playgrounds = [ ...payload.playgrounds.map((playground, i)=> (reformPlayground({ ...playground, selected : false }, devices, componentTypes, team)))];
+      const playgrounds = [ ...payload.playgrounds.map((playground, i)=> (reformPlayground(playground, devices, componentTypes, team, { selected : false })))];
       const components = [ ...playgrounds.map(({ components })=> (components)).flat()];
       const comments = null;//[ ...components.map(({ comments })=> (comments)).flat()];
 

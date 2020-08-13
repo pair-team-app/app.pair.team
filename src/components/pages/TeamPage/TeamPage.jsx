@@ -16,7 +16,7 @@ import TeamPageFileDrop from './TeamPageFileDrop';
 
 import { CommentSortTypes } from '../../sections/TopNav';
 import { TEAM_TIMESTAMP } from '../../../consts/formats';
-import { ENTER_KEY, ESCAPE_KEY, SHIFT_KEY } from '../../../consts/key-codes';
+import { ENTER_KEY, ESCAPE_KEY } from '../../../consts/key-codes';
 import { fetchTeamComments, createComment, makeComment, makeTeamRule, modifyTeam, setComment, setPlayground, setTypeGroup } from '../../../redux/actions';
 import { trackEvent } from '../../../utils/tracking';
 
@@ -239,7 +239,7 @@ class TeamPage extends Component {
       if (teamDescription !== team.description && (keyCode === ENTER_KEY)) {
         trackEvent('text', 'update-team-info');
 
-        event.target.blur();
+        target.blur();
         this.setState({ loading : loading ^ 0x001 }, ()=> {
           this.props.modifyTeam({ description : teamDescription });
         });
@@ -325,6 +325,11 @@ class TeamPage extends Component {
       : (<div className="content-loading">Loading…</div>)}
       <TeamPageFileDrop dragging={(dragging)} onClose={this.handleFileDropClose} />
       {/* <ContentDropModal dragging={(dragging)} textContent={commentContent} onClose={this.handleFileDropClose} /> */}
+
+      <MyAwesomeMenu onClick={({ event, props })=> { console.log('MenuClick', { event, props }); this.props.onPopup({
+        type    : POPUP_TYPE_OK,
+        content : 'Menu Clicked.'
+      });}} />
     </BasePage>);
   }
 }

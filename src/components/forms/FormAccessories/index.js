@@ -6,4 +6,4 @@ export const FormAccessoryAlignment = {
 };
 
 
-export { MinusFormAccessory, PlusFormAccessory } from './FormAccessories';
+export { CodeFormAccessory, MinusFormAccessory, PlusFormAccessory } from './FormAccessories';

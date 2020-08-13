@@ -10,14 +10,16 @@ import TextareaAutosize from 'react-autosize-textarea';
 import { FilePond, registerPlugin } from 'react-filepond';
 import KeyboardEventHandler from 'react-keyboard-event-handler';
 import { connect } from 'react-redux';
+
+import { CodeFormAccessory, FormAccessoryAlignment } from '../../../forms/FormAccessories';
+import { ENTER_KEY } from '../../../../consts/key-codes';
+import { API_ENDPT_URL, CDN_FILEPOND_URL } from '../../../../consts/uris';
 import { createComment, makeComment } from '../../../../redux/actions';
-import btnCode from '../../../../assets/images/ui/btn-code.svg';
 
 import 'filepond/dist/filepond.min.css';
 import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css';
 import './post-styles.css';
 
-import { API_ENDPT_URL, CDN_FILEPOND_URL } from '../../../../consts/uris';
 
 registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview);
 
@@ -28,14 +30,16 @@ class TeamPageFileDrop extends Component {
 
 		this.state = {
       text     : '',
-      focused  : false,
       image    : null,
       loading  : false,
       uploaded : false,
       url      : false,
       code     : false,
+      intro    : true,
       files    : []
-		};
+    };
+
+    this.commentInput = React.createRef();
   }
 
   dataURIFile = (dataURI, filename)=> {
@@ -52,26 +56,64 @@ class TeamPageFileDrop extends Component {
   }
 
 	componentDidUpdate(prevProps, prevState, snapshot) {
-    // console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : this.props, prevState, state : this.state });
+    console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : this.props, prevState, state : this.state });
 
     const { preComment } = this.props;
     const { text, url } = this.state;
 
+    if (preComment) {
+      const isURL = /https?:\/\//i.test(preComment);
+
+      if (!prevProps.preComment) {
+        this.commentInput.focus();
+      }
+
+      if (preComment !== prevProps.preComment) {
+        if (isURL !== url) {
+          this.setState({ url : isURL }, ()=> {
+            if (isURL) {
+              this.onFetchScreenshot(preComment);
+            }
+          });
+        }
+      }
+
+    } else {
+      if (prevProps.preComment) {
+        this.handleResetContent();
+      }
+    }
+
+    /*
     if (preComment && !prevProps.preComment) {
+      this.commentInput.focus();
+
       if (/https?:\/\//i.test(preComment)) {
         this.setState({ url : true });
         this.onFetchScreenshot(preComment);
       }
-    }
 
-    if (!preComment && text.length === 0) {
-      this.setState({ text : (url) ? 'Add a comment to this url…' : 'Add a comment to this image…' });
-
-    } else {
-      if (preComment && text !== preComment) {
+    } else if (preComment && prevProps.preComment) {
+      if (text !== preComment) {
         this.setState({ text : preComment });
       }
     }
+
+    if (!preComment && prevProps.preComment) {
+      this.setState({ text : '' });
+
+    } else {
+      // if (preComment && text !== preComment) {
+      //   this.setState({ text : preComment });
+      // }
+    }
+    */
+  }
+
+  componentWillUnmount() {
+    console.log('%s.componentWillUnmount()', this.constructor.name, { props : this.props, state : this.state });
+
+    this.commentInput = null;
   }
 
 
@@ -93,7 +135,7 @@ class TeamPageFileDrop extends Component {
       uploaded : false,
       url      : false,
       code     : false,
-      focused  : false,
+      intro    : true,
       files    : []
     }, ()=> {
       this.props.createComment(null);
@@ -164,66 +206,52 @@ class TeamPageFileDrop extends Component {
     });
   }
 
+
+  /* handleFilePond = ()=> {
+    console.log('%s.()', this.constructor.name, { ,  });
+  }; */
+
+
+  handleFieldFocus = (event)=> {
+    console.log('%s.handleFieldFocus(event)', this.constructor.name, { event : event.target.value, props : this.props, state : this.state });
+
+    // const { preComment } = this.props;
+    // const { text } = this.state;
+    // const { target } = event;
+  };
+
   handleKeyPress = (event, key)=> {
     console.log('%s.handleKeyPress(event, key)_____', this.constructor.name, { event, key });
 
     const { preComment } = this.props;
     const { files } = this.state;
+    const { keyCode, target } = event;
 
     if (key === 'esc') {
       this.handleResetContent();
 
-    } else if (key === 'space') {
-      this.props.createComment(`${preComment} `);
-
-    } else if (key === 'backspace') {
-      if (preComment.length > 0) {
-        this.props.createComment(preComment.slice(0, -1));
-      }
-
-    } else if (key === 'shift') {
-      if (event.key.toLowerCase() !== key) {
-        this.props.createComment(`${preComment}${event.key}`);
-      }
-
-    } else if (key === 'enter') {
+    } else if ((key === 'meta' || key === 'ctrl') && keyCode === ENTER_KEY) {
       if (preComment.length > 0 || files.length > 0) {
+        target.blur();
         this.handleSubmit();
       }
-
-    } else {
-      const text = `${preComment}${key}`;
-      const urlComment = (/https?:\/\//i.test(text));
-
-      this.props.createComment(text);
-      this.setState({
-        url : urlComment,
-      }, ()=> {
-        if (urlComment) {
-          this.onFetchScreenshot(text);
-        }
-      });
     }
   };
 
-  handleFieldFocus = (event)=> {
-    console.log('%s.handleFieldFocus(event)', this.constructor.name, { event });
-
-    const { focused } = this.state;
-    if (!focused) {
-      this.setState({ focused : true });
-    }
-
+  handleTextChange = (event)=> {
+    console.log('%s.handleTextChange(event)', this.constructor.name, { event : event.target.value, props : this.props, state : this.state });
 
     const { preComment } = this.props;
-    if (!preComment) {
-      this.props.createComment(' ');
+    const { intro } = this.state;
+    const { target } = event;
+
+    if (target.value.length === 2 && target.value.split('').every((i)=> (i === preComment)) && intro) {
+      this.setState({ intro : false });
+
+    } else {
+      this.props.createComment(target.value);
     }
   }
-
-  /* handleFilePond = ()=> {
-    console.log('%s.()', this.constructor.name, { ,  });
-  }; */
 
   handleSubmit = (event=null)=> {
     console.log('%s.handleSubmit(event)', this.constructor.name, { event });
@@ -265,7 +293,7 @@ class TeamPageFileDrop extends Component {
 
 
 	render() {
-    // console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
+    console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
 
     const { dragging, preComment } = this.props;
     const { url, code, uploaded, image, files, text, focused } = this.state;
@@ -277,55 +305,69 @@ class TeamPageFileDrop extends Component {
 
 		return (<div className="team-page-file-drop" data-hidden={(!dragging && files.length === 0 && !preComment)}>
       <div data-file={files.length > 0 || image !== null || preComment !== null}>
-      <KeyboardEventHandler isDisabled={(preComment === null)} handleFocusableElements handleKeys={['alphanumeric', ',', '.', '/', '\\', '-', '[', ']', ';', '\'', '`', '=', '+', '*', 'space', 'backspace', 'shift', 'enter', 'esc']} onKeyEvent={(key, event)=> this.handleKeyPress(event, key)} />
-        {(files.length > 0 || preComment) && (<div className="form-wrapper" data-uploaded={uploaded}>
+        {(files.length > 0 || preComment) && (
           <div className="input-wrapper">
-            <div className="comment-txt" onClick={this.handleFieldFocus} data-focused={focused} data-code={(code)}>{text}</div>
-            {(preComment && !url) && (<img src={btnCode} className="code-button" onClick={this.handleCode} alt="Code" />)}
+            <KeyboardEventHandler isDisabled={(preComment === null)} handleKeys={['ctrl', 'meta', 'enter', 'esc']} onKeyEvent={(key, event)=> this.handleKeyPress(event, key)}>
+              <TextareaAutosize id="comment-txtarea" className="comment-txtarea" placeholder={(url) ? 'Add a comment to this url…' : 'Add a comment to this image…'} value={(!url) ? preComment : ''} onFocus={this.handleFieldFocus} onChange={this.handleTextChange} ref={(el)=> (el) ? this.commentInput = el : null} data-code={(code)} />
+            </KeyboardEventHandler>
+            {(preComment) && (<CodeFormAccessory align={FormAccessoryAlignment.BOTTOM} onClick={this.handleCode} />)}
           </div>
-          <button type="submit" disabled={text.length === 0} onClick={this.handleSubmit}>Submit</button>
+        )}
+
+        {(url) && (<div className="url-wrapper">
+          {preComment}
         </div>)}
 
-        <FilePond
-          server={{
-            url     : CDN_FILEPOND_URL,
-            process : {
-              url : './index.php'
-            }
-          }}
-          // ref={ref => (this.pond = ref)}
-          files={files}
-          className="file-pond-wrapper"
-          allowMultiple={true}
-          maxFiles={3}
-          allowReorder={false}
-          allowReplace={true}
-          allowRevert={true}
-          // appendTo={filePondAttach}
-          itemInsertLocation="after"
-          instantUpload={true}
-          labelIdle=""
-          // iconRemove={null}
-          labelFileProcessingComplete=""
-          labelTapToUndo=""
-          oninit={this.handleInit}
-          onwarning={this.handleFileWarning}
-          onerror={this.handleFileError}
-          oninitfile={this.handleFileInit}
-          onaddfile={this.handleFileAdd}
-          onaddfileprogress={this.handleFileProgress}
-          onprocessfilestart={this.handleFileProcessStart}
-          onprocessfileprogress={this.handleFileProcessProgress}
-          onprocessfile={this.handleProcessedFile}
-          onprocessfiles={this.handleProcessedFiles}
-          onremovefile={this.handleFileRemoved}
-          onupdatefiles={this.handleFilesUpdated}
+        <div className="file-wrapper" data-uploaded={uploaded}>
+          <div className="filename-wrapper">{files.map(({ filename }, i)=> (
+            <div key={i} className="filename">{filename}</div>
+          ))}</div>
 
-          // onupdatefiles={(fileItems)=> {
-          //   console.log('%s.onupdatefiles()', this.constructor.name, { fileItems });
-          //   this.setState({ files: fileItems.map(fileItem => fileItem.file) });
-          // }}
-        />
+          <FilePond
+            server={{
+              url     : CDN_FILEPOND_URL,
+              process : {
+                url : './index.php'
+              }
+            }}
+            // ref={ref => (this.pond = ref)}
+            files={files}
+            className="file-pond-wrapper"
+            allowMultiple={true}
+            maxFiles={3}
+            allowReorder={false}
+            allowReplace={true}
+            allowRevert={true}
+            // appendTo={filePondAttach}
+            itemInsertLocation="after"
+            instantUpload={true}
+            labelIdle=""
+            // iconRemove={null}
+            labelFileProcessingComplete=""
+            labelTapToUndo=""
+            oninit={this.handleInit}
+            onwarning={this.handleFileWarning}
+            onerror={this.handleFileError}
+            oninitfile={this.handleFileInit}
+            onaddfile={this.handleFileAdd}
+            onaddfileprogress={this.handleFileProgress}
+            onprocessfilestart={this.handleFileProcessStart}
+            onprocessfileprogress={this.handleFileProcessProgress}
+            onprocessfile={this.handleProcessedFile}
+            onprocessfiles={this.handleProcessedFiles}
+            onremovefile={this.handleFileRemoved}
+            onupdatefiles={this.handleFilesUpdated}
+
+            // onupdatefiles={(fileItems)=> {
+            //   console.log('%s.onupdatefiles()', this.constructor.name, { fileItems });
+            //   this.setState({ files: fileItems.map(fileItem => fileItem.file) });
+            // }}
+          />
+        </div>
+        <div className="button-wrapper button-wrapper-col">
+          <button type="submit" disabled={text.length === 0} onClick={this.handleSubmit}>Comment</button>
+          <button className="cancel-button" onClick={this.handleResetContent}>Cancel</button>
+        </div>
       </div>
     </div>);
 	}
