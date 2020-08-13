@@ -189,6 +189,15 @@
 	min-height: 34px;
 	max-height: 34px;
 	padding: 8px var(--spacing-10);
+	font-weight: 600;
+
+}
+
+.team-page .content-wrapper .scroll-wrapper .team-wrapper textarea:focus {
+	color: rgba(var(--txtfield-focused-fg-color), 1.0);
+	background-color: rgba(var(--txtfield-focused-bg-color), 1.0);
+	border: none;
+	/* border: 1px solid rgba(var(--txtfield-border-color), 1.0); */
 }
 
 .team-page .content-wrapper .scroll-wrapper .team-wrapper .rules-wrapper .footer .team-page-add-rule-button {

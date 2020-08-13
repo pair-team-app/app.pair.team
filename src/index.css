@@ -71,14 +71,13 @@
 	--txtfield-fg-color: 153, 153, 153; /* #999999 */
 	--txtfield-hover-bg-color: var(-txtfield-bg-color); /* #ffffff */
 	--txtfield-hover-fg-color: var(--txtfield-fg-color); /* #999999 */
-	--txtfield-focused-bg-color: var(-txtfield-bg-color); /* #ffffff */
+	--txtfield-focused-bg-color: 240, 240, 240; /* #f0f0f0 */
 	--txtfield-focused-fg-color: var(--site-fg-color); /* #232323 */
 	--txtfield-disabled-bg-color: var(--disabled-bg-color); /* #cccccc */
 	--txtfield-disabled-fg-color: var(--disabled-fg-color); /* #999999 */
 	--txtfield-invalid-bg-color: var(--txtfield-bg-color); /* #ffffff */
 	--txtfield-invalid-fg-color: var(--invalid-fg-color); /* #ff6f6f */
 	--txtfield-invalid-border-color: var(--invalid-fg-color); /* #ff6f6f */
-
 
 	--border-color: 112, 112, 112; /* 707070 */
 	--overlay-shadow: 2px 2px 6px rgba(var(--border-color), 0.125);
@@ -347,9 +346,9 @@ input:-webkit-autofill:focus, input:-webkit-autofill:hover:focus, input:-webkit-
 }*/
 
 input[type="email"]:focus, input[type="password"]:focus, input[type="text"]:focus, textarea:focus, input[type="email"]:hover:focus, input[type="password"]:hover:focus, input[type="text"]:hover:focus, textarea:hover:focus {
-	/* border: 1px solid rgba(var(--txtfield-focused-bg-color), 1.0); */
-	/* background-color: rgba(var(--txtfield-focused-bg-color), 1.0); */
-	color: rgba(var(--txtfield-focused-fg-color), 1.0);
+	/* border: 1px solid rgba(var(--txtfield-bg-color), 1.0); */
+	/* background-color: rgba(var(--txtfield-bg-color), 1.0); */
+	color: rgba(var(--txtfield-fg-color), 1.0);
 	filter: var(--txtfield-shadow);
 }
 
@@ -394,13 +393,10 @@ sup {
 
 textarea, textarea:hover, textarea:active, textarea:focus:hover, textarea:focus, textarea:disabled, textarea:valid {
 	resize: none;
-	/* color: rgba(var(--txtfield-fg-color), 1.0);
-	background-color: rgba(var(--txtfield-bg-color), 1.0); */
 	font-size: 16px;
 	font-weight: 500;
 	border: none;
 	filter: none;
-	/* border: 1px solid rgba(var(--txtfield-border-color), 1.0); */
 }
 
 ul {
