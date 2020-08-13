@@ -29,6 +29,8 @@
 	--site-fg-color: 35, 35, 35; /* #232323 */
 	--site-lite-fg-color: 153, 153, 153; /* #999999 */
 	--site-selected-color: 47, 88, 255; /* 2f58ff */
+	--orthodox-shadow: 0px 0px var(--spacing-10) rgba(0, 0, 0, 0.1);
+	--orthodox-drop-shadow: drop-shadow(var(--orthodox-shadow));
 
 	--disabled-bg-color: 204, 204, 204; /* #cccccc */
 	--disabled-fg-color: 153, 153, 153; /* #999999 */
@@ -64,9 +66,11 @@
 
 	--overlay-hover-color: 153, 153, 153; /* #999999 */
 	--link-color: var(--site-fg-color); /* #232323 */
+	--link-lite-color:  153, 153, 153; /* #999999 */
+	--link-lite-hover-color:   var(--site-fg-color); /* #232323 */
 	--link-selected-color: var(--site-selected-color); /* #2f58ff */
 
-	--txtfield-shadow: drop-shadow(0px 0px 10px rgba(0, 0, 0, 0.1));
+	--txtfield-shadow: var(--orthodox-drop-shadow);
 	--txtfield-bg-color: 255, 255, 255; /* #ffffff */
 	--txtfield-fg-color: 153, 153, 153; /* #999999 */
 	--txtfield-hover-bg-color: var(-txtfield-bg-color); /* #ffffff */
@@ -119,13 +123,13 @@
 	--spacing-50: 50px;
 
 
-	--transition-duration-none: 0s;
-	--transition-duration-fast: var(--transition-duration-none); /* calc(0.677s * 0.25); */
-	--transition-duration-short: var(--transition-duration-none); /* calc(0.125s * 0.25); */
-	--transition-duration-mid: var(--transition-duration-none); /* calc(0.250s * 0.25); */
-	--transition-duration-long: var(--transition-duration-none); /* calc(0.333s * 0.25); */
-	--transition-duration-slow: var(--transition-duration-none); /* calc(0.785s * 0.25); */
-
+	/* --transition-duration-mult: 0.000; */
+	--transition-duration-mult: 0.125;
+	--transition-duration-fast: calc(0.677s * var(--transition-duration-mult));
+	--transition-duration-short: calc(0.125s * var(--transition-duration-mult));
+	--transition-duration-mid: calc(0.250s * var(--transition-duration-mult));
+	--transition-duration-long: calc(0.333s * var(--transition-duration-mult));
+	--transition-duration-slow: calc(0.785s * var(--transition-duration-mult));
 
 	--expander-arrow-transition: all var(--transition-duration-mid) cubic-bezier(0.4, 1, 0.2, 1);
 	--expander-content-mask-transition: height var(--transition-duration-mid) cubic-bezier(0.2, 0.9, 0.3, 1.0);

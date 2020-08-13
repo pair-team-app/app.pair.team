@@ -1,35 +1,27 @@
 
 .share-popover {
-	width: 348px;;
-	padding: var(--spacing-20);
-	background-color: #ffffff;
-	border-radius: var(--border-radius);
+	width: 268px;
+	margin-top: 0;
 }
 
-.share-popover .url {
-	margin: var(--spacing-10) var(--spacing-20) var(--spacing-20) var(--spacing-20);
-	padding-bottom: var(--spacing-10);
-	font-size: 12px;
-	text-align: center;
-	text-decoration: underline;
-	word-break: break-all;
-	transition: color var(--transition-duration-short) ease-out;
-}
-
-.share-popover .url:hover {
-	cursor: pointer;
-	color: rgba(var(--link-hover-color), 1.0);
-}
-
-.share-popover .form-wrapper {
-	margin-bottom: var(--spacing-10);
-}
-
-.share-popover .form-wrapper form > * {
+.share-popover .copy-wrapper > * {
 	width: 100%;
 	margin-bottom: var(--spacing-20);
 }
 
-.share-popover .form-wrapper form > *:last-child {
-	margin-bottom: 0;
+.share-popover .url {
+	padding: var(--spacing-10);
+	color: rgba(var(--link-lite-color), 1.0);
+	word-break: break-all;
+	transition: color var(--transition-duration-short) ease-out;
+}
+
+.share-popover .url[data-copied="true"], .share-popover .url:hover {
+	color: rgba(var(--link-lite-hover-color), 1.0);
+	text-decoration: underline;
+	cursor: pointer;
+}
+
+.share-popover .cancel-button {
+	width: 100%;
 }

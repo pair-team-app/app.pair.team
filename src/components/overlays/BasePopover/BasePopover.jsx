@@ -3,13 +3,10 @@ import React, { Component } from 'react';
 import './BasePopover.css';
 
 import { TimelineMax, Back, Circ } from 'gsap/TweenMax';
+import KeyboardEventHandler from 'react-keyboard-event-handler';
 import onClickOutside from 'react-onclickoutside';
 
-const INTRO_DURATION = (1/8);
-const OUTRO_DURATION = (1/4);
-const START_LBL = 'START_LBL';
-const END_LBL = 'END_LBL';
-
+import { PopoverDuration, PopoverLabel } from './';
 
 class BasePopover extends Component {
 	constructor(props) {
@@ -18,17 +15,21 @@ class BasePopover extends Component {
 		this.state = {
 			fixed    : true,
 			duration : {
-				intro : INTRO_DURATION,
-				outro : OUTRO_DURATION
+				intro : PopoverDuration.INTRO_DURATION,
+				outro : PopoverDuration.OUTRO_DURATION
 			},
 			position : {
-				x : 0,
-				y : 0
+				x : null,
+				y : null
 			},
-			offset   : null,
+			// offset   : null,
+			offset   : {
+				right  : null,
+				buttom : null
+			},
 			size     : {
-				width  : 0,
-				height : 0
+				width  : null,
+				height : null
 			},
 			intro : true,
 			outro : false
@@ -40,18 +41,21 @@ class BasePopover extends Component {
 	componentDidMount() {
  		// console.log('%s.componentDidMount()', this.constructor.name, this.props, this.state, { ...this.state, ...this.props});
 
+		const { payload } = this.props;
 		const { intro, outro } = { ...this.state, ...this.props };
-		const {
-			fixed = this.state.fixed,
-			duration = this.state.duration,
-			position = this.state.position,
-			offset = this.state.offset,
-			size = this.state.size
-		} = (this.props.payload) ? Object.assign({}, this.state, this.props.payload) : this.state;
+		const { fixed, duration, position, offset, size } = { ...this.state, ...payload };
+
+		// const {
+		// 	fixed = this.state.fixed,
+		// 	duration = this.state.duration,
+		// 	position = this.state.position,
+		// 	offset = this.state.offset,
+		// 	size = this.state.size
+		// } = (this.props.payload) ? Object.assign({}, this.state, this.props.payload) : this.state;
 
 		this.timeline = new TimelineMax();
 		this.setState({ fixed, duration, position, offset, size, intro, outro }, ()=> {
- 			// console.log({ fixed, duration, position, size, intro, outro });
+ 			console.log('%s.componentDidMount()', this.constructor.name, { props : this.props, state : this.state, fixed, duration, position, size, intro, outro });
 			if (intro) {
 				this.onIntro();
 			}
@@ -114,7 +118,7 @@ class BasePopover extends Component {
 
 		const { duration } = this.state;
 		this.timeline = new TimelineMax();
-		this.timeline.addLabel(START_LBL, '0').from(this.wrapper, duration.intro, {
+		this.timeline.addLabel(PopoverLabel.START_LBL, '0').from(this.wrapper, duration.intro, {
 			opacity : 0.0,
 			y       : 5,
 			ease    : Back.easeOut,
@@ -135,7 +139,7 @@ class BasePopover extends Component {
 			scale      : 0.95,
 			ease       : Circ.easeOut,
 			onComplete : this.onOutroComplete
-		}).addLabel(END_LBL);
+		}).addLabel(PopoverLabel.END_LBL);
 	};
 
 	onPosition = ()=> {
@@ -170,20 +174,38 @@ class BasePopover extends Component {
 // 		}
 
 		const { children } = this.props;
-		const { fixed, position, offset, size } = this.state;
+		const { fixed, position, offset, size, outro } = this.state;
 
-		const styles = { ...((!offset) ? {
-			left   : `${position.x}px`,
-			top    : `${position.y}px`
+		console.log('%s.render()', '::::::::__', this.constructor.name, { props : this.props, state : this.state, size : size || null, position : position || null, offset });
+
+		// let prunedObj = {};
+		// for (const k in offset) {
+		// 	if (offset.hasOwnProperty(k)) {
+		// 		const v = offset[k];
+		// 		if (v !== null && v !== undefined) {
+		// 			prunedObj[k] = v;
+		// 		}
+		// 	}
+		// };
+
+
+
+		// console.log('%s.render()', '::::::::__', this.constructor.name, { props : this.props, state : this.state, size : size || null, position : position || null, offset : offset || null, offsetVals : Object.values(offset), prunedObj });
+
+
+		// const styles = { ...((!offset) ? {
+		const styles = { ...((Object.values(offset).every((val)=> (val === null))) ? {
+			left   : `${((position.x || 0) << 0)}px`,
+			top    : `${((position.y || 0) << 0)}px`
 		} : {
-			right  : (isNaN(offset.right)) ? offset.right : `${(offset.right || 0)}px`,
-			bottom : (isNaN(offset.bottom)) ? offset.bottom : `${(offset.bottom || 0)}px`,
+			right  : `${((offset.right || 0) << 0)}px`,
+			bottom : `${((offset.bottom || 0) << 0)}px`,
+			// right  : (isNaN(offset.right)) ? offset.right : `${(offset.right || 0)}px`,
+			// bottom : (isNaN(offset.bottom)) ? offset.bottom : `${(offset.bottom || 0)}px`,
 		}),
-			width  : (size.width * size.height === 0) ? 'fit-content' : `${size.width}px`,
-			height : (size.width * size.height === 0) ? 'fit-content' : `${size.height}px`,
+			width  : (Object.values(size).every((val)=> (val === null))) ? 'fit-content' : `${(size.width << 0)}px`,
+			height : (Object.values(size).every((val)=> (val === null))) ? 'fit-content' : `${(size.height << 0)}px`,
 		};
-
-		console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state, size, position, offset, styles });
 
 
 		// const styles = {
@@ -197,8 +219,11 @@ class BasePopover extends Component {
 //
 		// console.log('::::::::__', { position, offset, styles });
 
-		return (<div className={`base-popover${(fixed) ? ' base-popover-fixed' : ' base-popover-abs'}`} style={styles} ref={(element)=> { this.wrapper = element; }}>
-			<div className="base-popover-content-wrapper">{children}</div>
+		console.log('%s.render()', '::::::::__', this.constructor.name, { props : this.props, state : this.state, size, position, offset, offsetVals : Object.values(offset).every((val)=> (val === null)), styles });
+		return (<div className="base-popover" style={styles} ref={(element)=> { this.wrapper = element; }} data-position={(fixed) ? 'fixed' : 'abs'}>
+			<KeyboardEventHandler isDisabled={(!outro)} handleKeys={['esc']} onKeyEvent={(key, event)=> this.onOutro()}>
+			<div className="content-wrapper">{children}</div>
+			</KeyboardEventHandler>
 		</div>);
 	}
 }
