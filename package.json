@@ -75,7 +75,8 @@
     "reinstall": "rm -rf node_modules && yarn install",
     "rebuild": "yarn reinstall && yarn build",
     "branch": "./bin/branch $1 $2",
-    "branch:daily": "./bin/branch daily $2"
+    "branch:daily": "./bin/branch daily $2",
+    "branch:dev": "./bin/branch dev $2"
   },
   "devDependencies": {
     "babel-plugin-transform-decorators-legacy": "^1.3.5",
