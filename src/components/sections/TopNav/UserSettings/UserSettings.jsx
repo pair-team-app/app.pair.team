@@ -103,7 +103,7 @@ class UserSettings extends Component {
 
 		return (<div className="user-settings" ref={(element)=> { this.wrapper = element; }}>
 			<div className="avatar-wrapper user-settings-avatar-wrapper" onClick={this.handleShowPopover}>
-				<img className="avatar-wrapper-ico user-settings-avatar-ico" src={avatar} alt="Avatar" />
+				<img className="avatar-wrapper-ico avatar-ico" src={avatar} alt="Avatar" />
 			</div>
 
 			{(popover) && (<UserSettingsPopover
@@ -124,17 +124,17 @@ console.log('UserSettingsPopover()', { props });
 	const { position, outro } = props;
 	const payload = {
 		position : {
-			x : position.x - 175,
-			y : position.y + 12
+			x : position.x - 235,
+			y : position.y
 		}
 	};
 
 	return (<BasePopover outro={outro} payload={payload} onOutroComplete={props.onComplete}>
 		<div className="user-settings-popover">
-			<div className="user-settings-item" onClick={(event)=> props.onItemClick(SettingsMenuItemTypes.PROFILE, event)}>Profile</div>
-			<div className="user-settings-item"><NavLink to={NPM_DE_PLAYGROUND} target="_blank" onClick={(event)=> props.onItemClick(SettingsMenuItemTypes.INSTALL, event)}>Install</NavLink></div>
-			<div className="user-settings-item"><NavLink to={GITHUB_DOCS} target="_blank" onClick={(event)=> props.onItemClick(SettingsMenuItemTypes.DOCS, event)}>Support</NavLink></div>
-			<div className="user-settings-item" onClick={(event)=> props.onItemClick(SettingsMenuItemTypes.LOGOUT, event)}>Logout</div>
+			<div className="settings-item" onClick={(event)=> props.onItemClick(SettingsMenuItemTypes.PROFILE, event)}>Profile</div>
+			<div className="settings-item"><NavLink to={NPM_DE_PLAYGROUND} target="_blank" className="user-settings-link" onClick={(event)=> props.onItemClick(SettingsMenuItemTypes.INSTALL, event)}>Install</NavLink></div>
+			<div className="settings-item"><NavLink to={GITHUB_DOCS} target="_blank" className="user-settings-link" onClick={(event)=> props.onItemClick(SettingsMenuItemTypes.DOCS, event)}>Support</NavLink></div>
+			<div className="settings-item" onClick={(event)=> props.onItemClick(SettingsMenuItemTypes.LOGOUT, event)}>Logout</div>
 		</div>
 	</BasePopover>);
 };

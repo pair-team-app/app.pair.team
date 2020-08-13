@@ -189,6 +189,15 @@
 	min-height: 34px;
 	max-height: 34px;
 	padding: 8px var(--spacing-10);
+	font-weight: 600;
+
+}
+
+.team-page .content-wrapper .scroll-wrapper .team-wrapper textarea:focus {
+	color: rgba(var(--txtfield-focused-fg-color), 1.0);
+	background-color: rgba(var(--txtfield-focused-bg-color), 1.0);
+	border: none;
+	/* border: 1px solid rgba(var(--txtfield-border-color), 1.0); */
 }
 
 .team-page .content-wrapper .scroll-wrapper .team-wrapper .rules-wrapper .footer .team-page-add-rule-button {
@@ -248,16 +257,16 @@
 
 .team-page-comments-panel .empty-comments {
 	display: flex;
-	flex-flow: column nowrap;
-	align-content: center;
-	width: 0;
+	justify-content: center;
+	width: 100%;
 	height: 0;
 	color: rgba(var(--site-lite-fg-color), 1.0);
+	font-size: 16px;
 	opacity: 0;
 }
 
 .team-page-comments-panel[data-empty="true"] .empty-comments {
-	width: 100%;
+	height: fit-content;
 	opacity: 1;
 	transition: opacity var(--transition-duration-mid) cubic-bezier(0.5, 0.9, 0.1, 1.0);
 }

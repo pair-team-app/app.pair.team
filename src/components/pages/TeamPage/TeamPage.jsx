@@ -339,7 +339,7 @@ const TeamPageCommentsPanel = (props)=> {
 
 	const { fetching, loading, profile, comments } = props;
   return (<div className="team-page-comments-panel" data-loading={fetching} data-empty={comments.length === 0}>
-    <div className="empty-comments">No Activity</div>
+    <div className="empty-comments">No Comments</div>
 		{(comments.map((comment, i)=> {
 			const vote = (comment.votes.find(({ author, score })=> (author.id === profile.id && score !== 0 )) || null);
 			return (<TeamPageComment key={i} comment={comment}  loading={loading} vote={vote} onReplyKeyPress={props.onReplyKeyPress} />);
