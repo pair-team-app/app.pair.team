@@ -12,12 +12,11 @@ import { POPUP_TYPE_OK } from '../PopupNotification';
 import { API_ENDPT_URL } from '../../../consts/uris';
 import { trackEvent } from '../../../utils/tracking';
 
-
-const cfgPayload = {
+const POSITION = {
   fixed    : false,
   position : {
-    x : -240,
-    y : 0
+    x : -195,
+    y : 5
   }
 };
 
@@ -114,7 +113,7 @@ class SharePopover extends Component {
     console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state, browser : Browsers });
 
     const { url, outro } = this.state;
-    return (<BasePopover outro={outro} payload={cfgPayload} onOutroComplete={this.props.onClose}>
+    return (<BasePopover outro={outro} payload={POSITION} onOutroComplete={this.props.onClose}>
       <div className="share-popover">
         <CopyToClipboard text={url} onCopy={()=> this.handleClipboardCopy(url)}>
           <div className="copy-wrapper">

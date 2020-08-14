@@ -11,6 +11,14 @@ import BasePopover from '../../../overlays/BasePopover';
 import { SettingsMenuItemTypes } from './';
 
 
+const POSITION = {
+	fixed    : false,
+	position : {
+		x : -100,
+		y : 18
+	}
+};
+
 
 class UserSettings extends Component {
 	constructor(props) {
@@ -121,11 +129,13 @@ class UserSettings extends Component {
 const UserSettingsPopover = (props)=> {
 console.log('UserSettingsPopover()', { props });
 
+
 	const { position, outro } = props;
 	const payload = {
+		fixed    : true,
 		position : {
-			x : position.x - 235,
-			y : position.y
+			x : position.x - 240,
+			y : position.y + 10
 		}
 	};
 
