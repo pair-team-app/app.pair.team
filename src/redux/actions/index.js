@@ -139,6 +139,14 @@ export function fetchTeamBuilds(payload=null) {
     const { team, buildID, deviceSlug } = payload;
 
     logFormat('fetchTeamBuilds()', { store : (typeof getState === 'function') ? getState() : getState, typeof : typeof getState }, { payload });
+
+
+    dispatch({
+      type    : TEAM_BUILDS_LOADED,
+      payload : { playgrounds : [] }
+    });
+
+    /*
     axios.post(API_ENDPT_URL, {
       action  : 'TEAM_BUILDS',
       payload : {
@@ -156,7 +164,7 @@ export function fetchTeamBuilds(payload=null) {
         type    : TEAM_BUILDS_LOADED,
         payload : { playgrounds }
       });
-    }).catch((error)=> {});
+    }).catch((error)=> {});*/
   };
 }
 

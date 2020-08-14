@@ -30,7 +30,6 @@ class TeamPage extends Component {
 
     this.state = {
       topSort         : [ ],
-      commentContent  : '',
       codeComment     : false,
       teamDescription : '',
       ruleContent     : '',
@@ -40,7 +39,6 @@ class TeamPage extends Component {
       loading         : 0x000,
       share           : false,
       urlComment      : false,
-      dataURI         : null,
       dragging        : false,
       keyPress        : false
     };
@@ -147,7 +145,7 @@ class TeamPage extends Component {
   }
 
   handleDragEnter = (event)=> {
-    console.log('%s.handleDragEnter()', this.constructor.name, { event });
+    console.log('%s.handleDragEnter()', this.constructor.name, { event, dragging : this.state.dragging });
     event.preventDefault();
 
     const { dragging } = this.state;
@@ -157,7 +155,7 @@ class TeamPage extends Component {
   };
 
   handleDragLeave = (event)=> {
-    console.log('%s.handleDragLeave()', this.constructor.name, { event, client : { x : event.clientX, y : event.clientY }});
+    console.log('%s.handleDragLeave()', this.constructor.name, { event, client : { x : event.clientX, y : event.clientY }, dragging : this.state.dragging});
     event.preventDefault();
 
     const { dragging } = this.state;
@@ -170,13 +168,7 @@ class TeamPage extends Component {
 
   handleFileDropClose = ()=> {
     console.log('%s.handleFileDropClose()', this.constructor.name);
-    this.setState({
-      dragging       : false,
-      commentContent : '',
-      dataURI        : null,
-      codeComment    : false,
-      urlComment     : false
-    });
+    this.setState({ dragging : false });
   };
 
   handleRuleInput = (event)=> {
@@ -323,7 +315,7 @@ class TeamPage extends Component {
         </div>)
 
       : (<div className="content-loading">Loading…</div>)}
-      <TeamPageFileDrop dragging={(dragging)} onClose={this.handleFileDropClose} />
+      <TeamPageFileDrop dragging={(dragging)} onContent={()=> this.setState({ dragging : false })} onClose={this.handleFileDropClose} />
       {/* <ContentDropModal dragging={(dragging)} textContent={commentContent} onClose={this.handleFileDropClose} /> */}
 
       <MyAwesomeMenu onClick={({ event, props })=> { console.log('MenuClick', { event, props }); this.props.onPopup({
