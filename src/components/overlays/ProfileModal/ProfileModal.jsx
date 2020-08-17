@@ -169,7 +169,7 @@ class ProfileModal extends Component {
     return (<BaseOverlay tracking={Modals.PROFILE} outro={outro} filled={true} closeable={true} title={null} onComplete={this.handleComplete}>
       <div className="profile-modal">
         <div className="header-wrapper">
-          <img className="header-logo" src={pairLogo} alt="Logo" />
+          Edit Profile
         </div>
         <div className="form-wrapper">
           <ProfileForm profile={profile} team={team} onCancel={this.handleCancel} onDowngradePlan={this.handleDowngradePlan} onSubmit={this.handleSubmit} />
