@@ -177,7 +177,7 @@ class BasePopover extends Component {
 		const { children } = this.props;
 		const { fixed, position, offset, size, outro } = this.state;
 
-		console.log('%s.render()', '::::::::__', this.constructor.name, { props : this.props, state : this.state, size : size || null, position : position || null, offset });
+		console.log('%s.render()', this.constructor.name, '::::::::__', { props : this.props, state : this.state, size : size || null, position : position || null, offset });
 
 		// let prunedObj = {};
 		// for (const k in offset) {
@@ -220,7 +220,7 @@ class BasePopover extends Component {
 //
 		// console.log('::::::::__', { position, offset, styles });
 
-		console.log('%s.render()', '::::::::__', this.constructor.name, { props : this.props, state : this.state, size, position, offset, offsetVals : Object.values(offset).every((val)=> (val === null)), styles });
+		console.log('%s.render()', this.constructor.name, '::::::::__', { props : this.props, state : this.state, size, position, offset, offsetVals : Object.values(offset).every((val)=> (val === null)), styles });
 		return (<div className="base-popover" style={styles} ref={(element)=> { this.wrapper = element; }} data-position={(fixed) ? 'fixed' : 'abs'}>
 			<KeyboardEventHandler isDisabled={(!outro)} handleKeys={['esc']} onKeyEvent={(key, event)=> this.onOutro()}>
 			<div className="content-wrapper">{children}</div>

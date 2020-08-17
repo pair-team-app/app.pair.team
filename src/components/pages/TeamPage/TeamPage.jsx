@@ -12,7 +12,6 @@ import TextareaAutosize from 'react-autosize-textarea';
 import BasePage from '../BasePage';
 import BaseComment from '../../iterables/BaseComment';
 import TeamPageFileDrop from './TeamPageFileDrop';
-// import ContentDropModal from '../../overlays/ContentDropModal';
 
 import { CommentSortTypes } from '../../sections/TopNav';
 import { TEAM_TIMESTAMP } from '../../../consts/formats';
@@ -113,25 +112,32 @@ class TeamPage extends Component {
 		window.removeEventListener('paste', this.handleClipboardPaste);
 	}
 
-  handleAddRule = (event)=> {
-    console.log('%s.handleAddRule()', this.constructor.name, { event });
+  handleAddRule = (event, key)=> {
+    console.log('%s.handleAddRule()', this.constructor.name, { event, key });
     event.preventDefault();
     event.stopPropagation();
 
+    const { ruleContent, loading } = this.state;
     const { keyCode } = event;
-    if (keyCode === ESCAPE_KEY) {
+
+    if (key === 'esc') {
       this.setState({
         ruleContent : '',
         ruleInput   : false
       });
 
-    } else {
-      trackEvent('text', 'add-team-rule');
-      const { ruleContent, loading } = this.state;
+    } else if (key === 'ctrl' || key === 'meta' || key === 'shift') {
+      if (keyCode === ENTER_KEY) {
+        this.setState({ ruleContent  : `${ruleContent}\n` });
+      }
 
-      this.setState({ loading  : loading ^ 0x010 }, ()=> {
-        this.props.makeTeamRule({ title : ruleContent });
-      });
+    } else {
+      if (ruleContent.length > 0 && (keyCode === ENTER_KEY)) {
+        trackEvent('text', 'add-team-rule');
+        this.setState({ loading  : loading ^ 0x010 }, ()=> {
+          this.props.makeTeamRule({ title : ruleContent });
+        });
+      }
     }
   }
 
@@ -224,8 +230,10 @@ class TeamPage extends Component {
     if (key === 'esc') {
       target.blur();
 
-    } else if (key !== 'meta' && key !== 'ctrl' && key !== 'shift') {
-      this.setState({ teamDescription : `${teamDescription}\n` });
+    } else if (key === 'meta' || key === 'ctrl' || key === 'shift') {
+      if (keyCode === ENTER_KEY) {
+        this.setState({ teamDescription : `${teamDescription}\n` });
+      }
 
     } else {
       if (teamDescription !== team.description && (keyCode === ENTER_KEY)) {
@@ -305,7 +313,7 @@ class TeamPage extends Component {
                 </div>
                 <div className="footer" data-input={ruleInput}>
                   <TeamPageAddRuleButton admin={member.roles.includes('admin')} onClick={this.handleRuleInput} />
-                  <KeyboardEventHandler handleKeys={['enter', 'esc']} handleFocusableElements onKeyEvent={(key, event)=> this.handleAddRule(event)}>
+                  <KeyboardEventHandler handleKeys={['ctrl', 'meta', 'shift', 'enter', 'esc']} handleFocusableElements onKeyEvent={(key, event)=> this.handleAddRule(event, key)}>
                     <TextareaAutosize id="team-add-rule-txtarea" placeholder="" value={ruleContent} onChange={(event)=> this.setState({ ruleContent : event.target.value })} ref={(el)=> this.ruleInput = (el) ? el : null} />
                   </KeyboardEventHandler>
                 </div>
@@ -316,7 +324,6 @@ class TeamPage extends Component {
 
       : (<div className="content-loading">Loading…</div>)}
       <TeamPageFileDrop dragging={(dragging)} onContent={()=> this.setState({ dragging : false })} onClose={this.handleFileDropClose} />
-      {/* <ContentDropModal dragging={(dragging)} textContent={commentContent} onClose={this.handleFileDropClose} /> */}
 
       <MyAwesomeMenu onClick={({ event, props })=> { console.log('MenuClick', { event, props }); this.props.onPopup({
         type    : POPUP_TYPE_OK,
