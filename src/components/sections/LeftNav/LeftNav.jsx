@@ -128,7 +128,7 @@ class LeftNav extends Component {
         <button disabled={(!profile || !profile.validated)} onClick={this.handleCreateTeam}>Create Channel</button>
         <div className="teams-wrapper" data-loading={!teams}>
           <div className="loading">Loading…</div>
-          {(teams && teams.length === 0) && (<div className="header">No Builds</div>)}
+          {(teams && teams.length === 0) && (<div className="header">No Channel Builds</div>)}
 
           {(teams) && (<div className="row">
             {teams.map((team, i)=> (
@@ -144,7 +144,7 @@ class LeftNav extends Component {
         {(teams && teams.length > 0) && (<div className="builds-wrapper" data-loading={(!builds && window.location.pathname !== Pages.CREATE)}>
           <div className="loading">Loading…</div>
           {/* {(teams.length === 0) && (<div className="header">No Builds</div>)} */}
-          {(builds || window.location.pathname === Pages.CREATE) && (<div className="header">{(window.location.pathname === Pages.CREATE || builds.length === 0) ? 'No ' : ''}Builds</div>)}
+          {(builds || window.location.pathname === Pages.CREATE) && (<div className="header">{(window.location.pathname === Pages.CREATE || builds.length === 0) ? 'No ' : ''}Channel Builds</div>)}
           {(builds) && (<div className="row">
             {builds.map((build, i)=> (
               <LeftNavBuild
