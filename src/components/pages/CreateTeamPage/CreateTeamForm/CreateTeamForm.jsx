@@ -19,7 +19,6 @@ class CreateTeamForm extends Component {
       validations  : [false]
     };
   }
-
   componentDidMount() {
     // console.log('%s.componentDidMount()', this.constructor.name, { props : this.props, state : this.state });
   }
