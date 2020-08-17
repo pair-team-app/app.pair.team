@@ -162,15 +162,14 @@ class TopNav extends Component {
 			{/* <div className="col breadcrumb-wrapper">{this.buildBreadcrumbs().map((breadcrumb)=> (breadcrumb))}</div> */}
 			<div className="col col-left"><div className="page-header-wrapper">
 				{(matchPaths.team && !matchPaths.project) && (<TeamPageHeader sort={teamSort} onSortClick={this.handleTeamCommentsSort} />)}
-				{(matchPaths.create) && (<CreateTeamPageHeader />)}
-				{(matchPaths.project) && (<ProjectPageHeader />)}
+				{(matchPaths.create) && (<TopNavPageTitle title="Create" />)}
+				{(matchPaths.project) && (<TopNavPageTitle title="Project" />)}
 			</div></div>
-			<div className="col col-middle">
+			<div className="col col-mid">
         <input type="checkbox" checked={darkThemed} value={darkThemed} onChange={this.props.toggleTheme} />
 			</div>
 			<div className="col col-right">
 				{(profile && !invite) && (<div className="link-wrapper">
-					{/* <TopNavInviteLink onModal={this.props.onModal} /> */}
 					<TopNavShareLink popover={popover} onClick={this.handlePopoverToggle} onPopup={this.props.onPopup} onPopoverClose={this.handlePopoverClose} />
 					<UserSettings onMenuItem={this.handleSettingsItem} onLogout={this.props.onLogout} />
 				</div>)}
@@ -181,60 +180,44 @@ class TopNav extends Component {
 
 
 const TopNavBreadcrumb = (props)=> {
-//   console.log('TopNavBreadcrumb()', { props });
+  console.log('TopNavBreadcrumb()', { props });
 
   const { ind, tot, segment } = props;
   const { type, title, payload } = segment;
-
-  return ((ind < tot)
-		? (<><div className="top-nav-breadcrumb" onClick={(event)=> (ind > 0 && ind < tot) ? props.onClick({ event, type, payload }) : null}>{title}</div>&nbsp;&gt;&nbsp;</>)
-		: (<div className="top-nav-breadcrumb">{title}</div>)
-	);
+  return (<div className="top-nav-breadcrumb" onClick={(event)=> (ind > 0 && ind < tot) ? props.onClick({ event, type, payload }) : null} data-last={(ind < tot)}>{title}</div>);
 };
 
-// const TopNavInviteLink = (props)=> {
-// 	//   console.log('TopNavInviteLink()', { props });
 
-// 	return (<div className="top-nav-invite-link">
-// 		<div className="nav-link" onClick={()=> props.onModal(Modals.INVITE)}>Invite</div>
-// 	</div>);
-// };
+const TopNavPageTitle = (props)=> {
+	console.log('TopNavPageTitle()', { props });
+
+	const { title } = props;
+	return (<div className="top-nav-page-title">{title}</div>);
+};
+
 
 const TopNavShareLink = (props)=> {
 //   console.log('TopNavShareLink()', { props });
 
   const { popover } = props;
-	return (<div className="top-nav-share-link">
-    <div className="nav-link" onClick={props.onClick}>Share</div>
-    {(popover) && (<SharePopover onPopup={props.onPopup} onClose={props.onPopoverClose} />)}
+	return (<div className="top-nav-share-link nav-link" onClick={props.onClick}>
+		Share
+		{(popover) && (<SharePopover onPopup={props.onPopup} onClose={props.onPopoverClose} />)}
 	</div>);
 };
 
-
-const CreateTeamPageHeader = (props)=> {
-	// console.log('CreateTeamPageHeader()', { props });
-
-	return (<div className="create-team-page-header">
-		<div className="title">Create</div>
-	</div>);
-};
 
 const TeamPageHeader = (props)=> {
 	// console.log('TeamPageHeader()', { props });
 
 	const { sort } = props;
 	const { DATE, SCORE } = CommentSortTypes;
-
-	return (<div className="team-page-header">
-		<div className="sort-by-wrapper">
-			<div className="sort-by-link" data-selected={sort === DATE} onClick={()=> props.onSortClick(DATE)}>New</div>
-			<div className="sort-by-link" data-selected={sort === SCORE} onClick={()=> props.onSortClick(SCORE)}>Top</div>
+	return (<div className="team-page-header page-header">
+		<div className="link-wrapper">
+			<div className="nav-link" data-selected={sort === DATE} onClick={()=> props.onSortClick(DATE)}>New</div>
+			<div className="nav-link" data-selected={sort === SCORE} onClick={()=> props.onSortClick(SCORE)}>Top</div>
 		</div>
 	</div>);
-};
-
-const ProjectPageHeader = (props)=> {
-	return (<div className="project-page-header">Project</div>);
 };
 
 
@@ -266,5 +249,5 @@ const mapStateToProps = (state, ownProps)=> {
 };
 
 
-// export default connect(mapStateToProps, mapDispatchToProps)(TopNav);
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(TopNav));
+export default connect(mapStateToProps, mapDispatchToProps)(TopNav);
+// export default withRouter(connect(mapStateToProps, mapDispatchToProps)(TopNav));
