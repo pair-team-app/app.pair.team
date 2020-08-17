@@ -2,6 +2,7 @@
 import React, { Component } from 'react';
 import './CreateTeamForm.css';
 
+import { Strings } from 'lang-js-utils';
 import DummyForm from '../../../forms/DummyForm';
 import { MinusFormAccessory, PlusFormAccessory } from '../../../forms/FormAccessories/FormAccessories';
 
@@ -10,12 +11,12 @@ class CreateTeamForm extends Component {
     super(props);
 
     this.state = {
-      title       : '',
-      description : '',
-      rules       : [''],
-      invites     : [''],
-      changed     : false,
-      validated   : false
+      title        : '',
+      description  : '',
+      rules        : [''],
+      invites      : [''],
+      invitesValid : [true],
+      validations  : [false]
     };
   }
 
@@ -45,16 +46,28 @@ class CreateTeamForm extends Component {
   };
 
   handleInviteChange = (event, ind)=> {
-    console.log('%s.handleInviteChange()', this.constructor.name, { event, ind });
+    // console.log('%s.handleInviteChange()', this.constructor.name, { event, ind });
     this.setState({ invites : this.state.invites.map((invite, i)=> ((i === ind) ? event.target.value : invite)) });
+  };
+
+  handleInviteFocus = (event, ind)=> {
+    console.log('%s.handleInviteFocus()', this.constructor.name, { event, ind });
+
+    const { invitesValid, validations } = this.state;
+		this.setState({
+			invitesValid : invitesValid.map((valid, ii)=> ((ii === ind) ? true : valid)),
+			validations  : validations.map((valid, ii)=> ((ii === ind) ? false : valid ))
+    });
   };
 
   handleInviteRemove = (event, i)=> {
     console.log('%s.handleInviteRemove()', this.constructor.name, { event, i });
 
-    let { invites } = this.state;
+    let { invites, invitesValid, validations } = this.state;
     invites.splice(i, 1);
-    this.setState({ invites });
+    invitesValid.splice(i, 1);
+    validations.splice(i, 1);
+    this.setState({ invites, invitesValid, validations });
   };
 
   handleRuleAppend = ()=> {
@@ -82,19 +95,26 @@ class CreateTeamForm extends Component {
     event.preventDefault();
 
     const { title, description, rules, invites } = this.state;
-    this.props.onSubmit({ title, description,
-      rules   : rules.filter((rule)=> (rule.length > 0)),
-      invites : invites.filter((invite)=> (invite.length > 0))
-    });
+
+    const invitesValid = invites.map((invite)=> (Strings.isEmail(invite)));
+    this.setState({ invitesValid });
+
+    if (invitesValid.filter((valid)=> (valid)).length === invites.length) {
+      this.props.onSubmit({ title, description,
+        rules   : rules.filter((rule)=> (rule.length > 0)),
+        invites : invites.filter((invite)=> (invite.length > 0))
+      });
+
+    } else {
+      this.setState({ validations : new Array(invites.length).fill(true) })
+    }
   };
 
 
   render() {
-    // console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
+    console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
 
-    // const { title, description, rules, invites, validated } = this.state;
-    const { title, description, rules, invites } = this.state;
-
+    const { title, description, rules, invites, invitesValid, validations } = this.state;
     return (<div className="create-team-form">
       <form onSubmit={this.handleSubmit}>
         <DummyForm />
@@ -115,17 +135,17 @@ class CreateTeamForm extends Component {
         <div className="invites-wrapper">
           {(invites.slice(0, -1).map((invite, i)=> (
             <div key={i} className="input-acc-wrapper">
-              <input type="text" name={`invite-${i}`} placeholder="Enter a email address" value={invite} onChange={(event)=> this.handleInviteChange(event, i)} autoComplete="new-password" />
+              <input type={(validations[i]) ? 'email' : 'text'} name={`invite-${i}`} placeholder="Enter a email address" value={invite} onFocus={(event)=> this.handleInviteFocus(event, i)} onChange={(event)=> this.handleInviteChange(event, i)} autoComplete="new-password" />
               <MinusFormAccessory onClick={(event)=> this.handleInviteRemove(event, i)} />
             </div>
           )))}
           <div className="input-acc-wrapper">
-            <input type="text" placeholder="Add Email Address" value={[...invites].pop()} onChange={(event)=> this.handleInviteChange(event, invites.length - 1)} autoComplete="new-password" />
+            <input type={([...validations].pop()) ? 'email' : 'text'} placeholder="Add Email Address" value={[...invites].pop()} onFocus={(event)=> this.handleInviteFocus(event, invites.length - 1)} onChange={(event)=> this.handleInviteChange(event, invites.length - 1)} autoComplete="new-password" />
             <PlusFormAccessory onClick={this.handleInviteAppend} />
           </div>
         </div>
 				<div className="button-wrapper button-wrapper-row">
-				  <button type="submit" disabled={(title.length === 0)} onClick={this.handleSubmit}>Submit</button>
+				  <button type="submit" disabled={(title.length === 0 || (invites.reduce((prev, curr)=> (`${prev}${curr}`), '').length > 0 && invitesValid.length === invitesValid.filter((valid)=> (!valid)).length))} onClick={this.handleSubmit}>Submit</button>
           <button type="button" className="cancel-button" onClick={this.props.onCancel}>Cancel</button>
         </div>
 			</form>

@@ -90,7 +90,7 @@ class InviteForm extends Component {
 		console.log('%s.handleTextChange()', this.constructor.name, { event, i, state : this.state });
 
 	const { emails } = this.state;
-		this.setState({  emails : emails.map((email, ii)=> ((ii === i) ? event.target.value : email)) });
+		this.setState({ emails : emails.map((email, ii)=> ((ii === i) ? event.target.value : email)) });
 	};
 
 
