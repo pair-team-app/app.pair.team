@@ -261,7 +261,7 @@ class App extends Component {
 
       trackEvent('user', 'delete-account');
       this.props.updateUserProfile({ profile : null });
-      this.props.history.push(Pages.HOME);
+      this.props.push(Pages.HOME);
     }).catch((error)=> {});
   };
 

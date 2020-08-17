@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import './TeamPageFileDrop.css';
 
 import axios from 'axios';
+import { push } from 'connected-react-router';
 import FilePondPluginImageExifOrientation from 'filepond-plugin-image-exif-orientation';
 import FilePondPluginImagePreview from 'filepond-plugin-image-preview';
 import { URIs } from 'lang-js-utils';
@@ -58,7 +59,7 @@ class TeamPageFileDrop extends Component {
 	componentDidUpdate(prevProps, prevState, snapshot) {
     console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : this.props, prevState, state : this.state });
 
-    const { preComment } = this.props;
+    const { preComment, pathname, hash } = this.props;
     const { text, url, files, image } = this.state;
 
     if (preComment) {
@@ -77,6 +78,10 @@ class TeamPageFileDrop extends Component {
               this.onFetchScreenshot(preComment);
             }
           });
+        }
+
+        if (!window.location.href.includes(hash)) {
+          this.props.push(`${pathname}${hash}`);
         }
       }
 
@@ -316,7 +321,7 @@ class TeamPageFileDrop extends Component {
 		return (<div className="team-page-file-drop" data-dragging={(dragging)} data-latent={(!dragging && files.length === 0 && !preComment)}>
       <div>
 
-        <div className="input-wrapper" data-hidden={(files.length === 0)}>
+        <div className="input-wrapper" data-hidden={(files.length === 0 && preComment === null)}>
           <KeyboardEventHandler isDisabled={(preComment === null)} handleKeys={['ctrl', 'meta', 'enter', 'esc']} onKeyEvent={(key, event)=> this.handleKeyPress(event, key)}>
             <TextareaAutosize id="comment-txtarea" className="comment-txtarea" disabled={!preComment && files.length === 0} placeholder={(url) ? 'Add a comment to this url…' : 'Add a comment to this image…'} value={(!url) ? (preComment || '') : ''} onFocus={this.handleFieldFocus} onChange={this.handleTextChange} ref={(el)=> (el) ? this.commentInput = el : null} data-code={(code)} />
           </KeyboardEventHandler>
@@ -384,11 +389,14 @@ const mapDispatchToProps = (dispatch)=> {
   return ({
     createComment : (payload)=> dispatch(createComment(payload)),
     makeComment   : (payload)=> dispatch(makeComment(payload)),
+    push          : (payload)=> dispatch(push(payload))
   });
 };
 
 const mapStateToProps = (state, ownProps)=> {
 	return ({
+    hash       : state.router.location.hash,
+    pathname   : state.router.location.pathname,
     preComment : state.comments.preComment,
     comment    : state.comments.comment
   });

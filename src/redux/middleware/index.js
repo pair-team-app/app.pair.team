@@ -98,7 +98,7 @@ export function onMiddleware(store) {
     } else if (type === TEAMS_LOADED) {
       const { profile } = prevState.user;
       const { params } = prevState.path;
-      const { pathname } = prevState.router.location;
+      const { pathname, hash } = prevState.router.location;
 
       const { teams } = payload;
       payload.teams = teams.map((team)=> (reformTeam(team))).sort((i, ii)=> ((i.epoch > ii.epoch) ? -1 : (i.epoch < ii.epoch) ? 1 : 0));
@@ -121,7 +121,7 @@ export function onMiddleware(store) {
         payload.member = member;
 
         // if (!params || params.teamID !== team.id) {
-          dispatch(push(`${Pages.TEAM}/${team.id}--${team.slug}`));
+          dispatch(push(`${Pages.TEAM}/${team.id}--${team.slug}${hash}`));
         // }
 
         const buildID = 0;
@@ -178,7 +178,7 @@ export function onMiddleware(store) {
         //// return (action(dispatch(fetchTeamComments({ team, verbose : true })), store.getState));
 
       } else {
-        const comments = payload.comments.map((comment, i)=> (reformComment(comment, `${Pages.TEAM}/${team.slug}/comments`)));
+        const comments = payload.comments.map((comment, i)=> (reformComment(comment, `${Pages.TEAM}/${team.id}--${team.slug}/comments`)));
 
         payload.team = (team) ? { ...team, comments } : null;
         payload.comments = comments;
@@ -240,21 +240,24 @@ export function onMiddleware(store) {
       delete (payload.bounds);
 
     } else if (type === COMMENT_CREATED) {
+      const { pathname, hash } = prevState.router.location;
+      const { comment } = prevState.comments;
       const { team } = prevState.teams;
+      const { preComment } = payload;
 
       payload.comment = null;
-      dispatch(push(`/team/${team.id}--${team.slug}`));
+      dispatch(push((preComment) ? `/team/${team.id}--${team.slug}/#create` : `/team/${team.id}--${team.slug}`));
 
     } else if (type === COMMENT_ADDED) {
       const { team } = prevState.teams;
 
       payload.team = { ...team,
-        comments : [ ...team.comments, reformComment(payload.comment, `${Pages.TEAM}/${team.slug}/comments`)]
+        comments : [ ...team.comments, reformComment(payload.comment, `${Pages.TEAM}/${team.id}--${team.slug}/comments`)]
       };
 
     } else if (type === COMMENT_UPDATED) {
       const { team } = prevState.teams;
-      const comment = reformComment(payload.comment, `${Pages.TEAM}/${team.slug}/comments`);
+      const comment = reformComment(payload.comment, `${Pages.TEAM}/${team.id}--${team.slug}/comments`);
 
       payload.comment = comment;
       payload.team = { ...team,

@@ -52,7 +52,7 @@
 }
 
 .team-page .content-wrapper .header input.comment-txt {
-	filter: var(--txtfield-shadow);
+	filter: none;
 }
 
 .team-page .content-wrapper .header button {
