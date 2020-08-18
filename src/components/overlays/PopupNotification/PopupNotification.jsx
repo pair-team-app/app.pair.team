@@ -90,7 +90,7 @@ class PopupNotification extends Component {
 
 		console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state, timeline : this.timeline, wrapper : this.wrapper, type, position });
 
-		return (<div className="popup-notification" data-embedded={(position === POPUP_POSITION_EMBEDDED)} style={wrapperStyle} ref={(element)=> { this.wrapper = element; }}>
+		return (<div className="popup-notification" data-embedded={(position === POPUP_POSITION_EMBEDDED)} style={wrapperStyle} ref={(el)=> (el) ? this.wrapper = el : null}>
 			<div className="content" data-type={(type === POPUP_TYPE_OK) ? 'ok' : (type === POPUP_TYPE_ERROR) ? 'error' : 'status'}>
 				{children}
 			</div>

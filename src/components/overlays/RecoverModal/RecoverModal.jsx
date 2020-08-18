@@ -2,6 +2,8 @@
 import React, { Component } from 'react';
 import './RecoverModal.css';
 
+import { NavLink } from 'react-router-dom';
+
 import BaseOverlay from '../BaseOverlay';
 import RecoverForm from '../../forms/RecoverForm';
 import { Modals } from '../../../consts/uris';
@@ -62,8 +64,8 @@ class RecoverModal extends Component {
 					</div>
 
 					<div className="footer-wrapper form-disclaimer">
-						<div onClick={()=> this.handleModal(Modals.REGISTER)}>Don't have an account? Sign Up</div>
-						<div onClick={()=> this.handleModal(Modals.LOGIN)}>Already have an Account? Login</div>
+						<NavLink to="#" onClick={()=> this.handleModal(Modals.REGISTER)}>Don't have an account? Sign Up</NavLink>
+						<NavLink to="#" onClick={()=> this.handleModal(Modals.LOGIN)}>Already have an Account? Login</NavLink>
 					</div>
 				</div>
 			</BaseOverlay>);

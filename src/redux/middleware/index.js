@@ -74,6 +74,7 @@ export function onMiddleware(store) {
 
     } else if (type === USER_PROFILE_UPDATED) {
       const { profile } = payload;
+      const { password } = prevState.user;
 
       cookie.save('user_id', (profile) ? profile.id : '0', { path : '/', sameSite : false });
 
@@ -81,6 +82,7 @@ export function onMiddleware(store) {
         const status = parseInt(payload.status, 16);
         const { id, username, email, state } = profile;
 
+        payload.password = (profile.password || password);
         payload.profile = { ...profile,
           status    : status,
           id        : id << 0,
@@ -88,6 +90,7 @@ export function onMiddleware(store) {
           email     : (Bits.contains(status, 0x10)) ? 'Email Already in Use' : email,
           validated : ((state << 0) === 2)
         };
+        delete (payload.profile['password']);
 
         dispatch(fetchUserTeams({ profile }));
 

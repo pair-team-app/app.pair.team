@@ -34,7 +34,7 @@ class UserSettings extends Component {
 	}
 
 	componentDidMount() {
-		console.log('%s.componentDidMount()', this.constructor.name, { props : this.props, state : this.state });
+		// console.log('%s.componentDidMount()', this.constructor.name, { props : this.props, state : this.state });
 
 		const { hash } = this.props;
 		if (hash === '#settings' && !this.state.popover) {
@@ -43,7 +43,7 @@ class UserSettings extends Component {
 	}
 
 	componentDidUpdate(prevProps, prevState, snapshot) {
-		console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : this.props, prevState, state : this.state });
+		// console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : this.props, prevState, state : this.state });
 		// console.log('%s.componentDidUpdate()', this.constructor.name, { left : shareLink.offsetLeft, top : shareLink.offsetTop });
 
 		const { hash } = this.props;
@@ -57,7 +57,7 @@ class UserSettings extends Component {
 	}
 
 	handleComplete = ()=> {
-		console.log('%s.handleComplete()', this.constructor.name, { state : this.state });
+		// console.log('%s.handleComplete()', this.constructor.name, { state : this.state });
 
 		// window.location.href = window.location.href.replace('#settings', '');
     this.setState({ popover : false }, ()=> {
@@ -103,13 +103,13 @@ class UserSettings extends Component {
 	};
 
 	render() {
-		console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
+		// console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
 
 		const { profile } = this.props;
 		const { avatar } = (profile || { avatar : USER_DEFAULT_AVATAR });
 		const { popover, outro } = this.state;
 
-		return (<div className="user-settings" ref={(element)=> { this.wrapper = element; }}>
+		return (<div className="user-settings" ref={(el)=> (el) ? this.wrapper = el : null}>
 			<div className="avatar-wrapper user-settings-avatar-wrapper" onClick={this.handleShowPopover}>
 				<img className="avatar-wrapper-ico avatar-ico" src={avatar} alt="Avatar" />
 			</div>
@@ -127,7 +127,7 @@ class UserSettings extends Component {
 
 
 const UserSettingsPopover = (props)=> {
-console.log('UserSettingsPopover()', { props });
+// console.log('UserSettingsPopover()', { props });
 
 
 	const { position, outro } = props;

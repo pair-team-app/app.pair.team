@@ -1,10 +1,11 @@
 
-import { USER_PROFILE_ERROR, USER_PROFILE_LOADED, USER_PROFILE_UPDATED } from '../../consts/action-types';
+import { USER_PROFILE_ERROR, USER_PROFILE_LOADED, USER_PROFILE_UPDATED, SET_USER_PROFILE_PASSWORD } from '../../consts/action-types';
 import { LOG_REDUCER_POSTFIX, LOG_REDUCER_PREFIX } from '../../consts/log-ascii';
 
 
 const initialState = {
-  profile : null
+  profile  : null,
+  password : null
 };
 
 
@@ -23,8 +24,12 @@ export default function user(state=initialState, action) {
     return (Object.assign({}, state, { profile }));
 
   } else if (type === USER_PROFILE_UPDATED) {
-    const { profile } = payload;
-    return (Object.assign({}, state, { profile }));
+    const { profile, password } = payload;
+    return (Object.assign({}, state, { profile, password }));
+
+  } else if (type === SET_USER_PROFILE_PASSWORD) {
+    const { password } = payload;
+    return (Object.assign({}, state, { password }));
 
   } else {
     return (state);

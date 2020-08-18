@@ -115,31 +115,14 @@
 	color: #cccccc;
 }
 
-.form-disclaimer > div, .form-disclaimer a:not(:hover) {
+.form-disclaimer a:not(:hover) {
 	text-decoration: none;
 	transition: color var(--transition-duration-short) ease-out;
 }
 
-.form-disclaimer > div:hover, .form-disclaimer a:hover {
+.form-disclaimer a:hover {
 	color: rgba(var(--site-fg-color), 1.0);
-	text-decoration: none;
-	cursor: pointer;
-}
-
-
-.create-team-form-acc {
-  position: absolute;
-  top: 50%;
-  right: 12px;
-  transform: translateY(-50%);
-  width: 24px;
-  height: 24px;
-  opacity: 0.5;
-  transition: opacity var(--transition-duration-short) ease-out;
-}
-
-.create-team-form-acc:hover {
-  opacity: 1;
+	text-decoration: underline;
 	cursor: pointer;
 }
 
@@ -147,18 +130,18 @@
 	position: relative;
 	width: var(--orthodox-ico-size);
 	height: var(--orthodox-ico-size);
-	padding-top: 3px;
-	border: 1px solid rgba(var(--site-fg-color), 1.0);
+	/* padding-top: 3px;
+	border: 1px solid rgba(var(--site-fg-color), 1.0); */
 	border-radius: 50%;
-	font-size: 12px;
-	font-weight: 500;
+	/* font-size: 12px; */
+	/* font-weight: 500; */
 }
 
 .avatar-wrapper > * {
 	position: absolute;
 	top: 50%;
-	left: 50%;
-	transform: translate(-50%, -50%);
+  left: 50%;
+  transform: translate(-50%, -50%);
 	clip-path: circle(8px at center);
 	transition: opacity var(--transition-duration-short) ease-out;
 }
@@ -213,10 +196,6 @@
 }
 
 
-.is-hidden {
-	display: none;
-	visibility: hidden;
-}
 
 
 @media screen and (max-width: 800px) {

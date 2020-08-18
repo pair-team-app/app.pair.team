@@ -37,7 +37,9 @@
 
 .base-overlay .content-wrapper {
 	position: fixed;
+	width: 50%;
 	min-width: 88px;
+	max-width: var(--modal-content-width);
 	min-height: 88px;
 	height: auto;
 	top: 50%;
@@ -76,36 +78,31 @@
 	width: 50%;
 }
 
-.base-overlay .header-wrapper {
+.base-overlay .content-wrapper .header-wrapper {
 	display: flex;
 	justify-content: center;
 	padding-bottom: var(--spacing-20);
 }
 
-.base-overlay .header-logo {
-	width: 88px;
-	height: 88px;
-}
-
-.base-overlay .header-title {
+.base-overlay .content-wrapper .header-wrapper .title {
 	flex: 1 1 auto;
 	margin: auto;
+	font-weight: 700;
 	text-align: left;
 }
 
-.base-overlay .content {
+.base-overlay .content-wrapper .content {
 	overflow: hidden;
 	width: fit-content;
 }
 
-.base-overlay .loader-wrapper {
+.base-overlay .content-wrapper .content .loader-wrapper {
 	margin: var(--spacing-20);
 	min-width: 100%;
 	min-height: 100%;
 }
 
-
-.base-overlay .loader {
+.base-overlay .content-wrapper .content .loader-wrapper .loader {
 	height: 48px;
 	width: 48px;
 	color: #5a5a5a;
@@ -117,7 +114,7 @@
 	animation: loader-rotate 1s linear infinite;
 }
 
-.base-overlay .footer-wrapper {
+.base-overlay .content-wrapper .footer-wrapper {
 	width: 100%;
 	display: flex;
 	flex-direction: column;
@@ -125,7 +122,7 @@
 	margin-top: var(--spacing-20);
 }
 
-.base-overlay .footer-wrapper > * {
+.base-overlay .content-wrapper .footer-wrapper > * {
 	margin: auto;
 	flex: 1 0 0;
 	/*border: 1px dotted #ff00ff;*/

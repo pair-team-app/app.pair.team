@@ -278,7 +278,7 @@ class App extends Component {
   };
 
   handlePopup = (payload)=> {
-    // console.log('%s.handlePopup()', this.constructor.name, payload);
+    console.log('%s.handlePopup()', this.constructor.name, { payload });
     this.setState({ popup : payload });
   };
 

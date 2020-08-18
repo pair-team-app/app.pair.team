@@ -2,6 +2,8 @@
 import React, { Component } from 'react';
 import './ConfirmDialog.css'
 
+import { NavLink } from 'react-router-dom';
+
 import BaseOverlay from '../BaseOverlay';
 import pairLogo from '../../../assets/images/logos/logo-pairurl-310.png';
 
@@ -64,7 +66,7 @@ class ConfirmDialog extends Component {
 					{(buttons && buttons.length > 0) && (<div className="confirm-dialog-footer-wrapper">
 						<button onClick={()=> this.handleClick(true)}>{(buttons) ? buttons[0] : 'OK'}</button>
 						<div className="base-overlay-footer-wrapper form-disclaimer">
-							<div onClick={()=> this.handleClick(false)}>Logout</div>
+							<NavLink to="#" onClick={()=> this.handleClick(false)}>Logout</NavLink>
 						</div>
 					</div>)}
 				</div>

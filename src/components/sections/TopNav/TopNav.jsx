@@ -250,4 +250,3 @@ const mapStateToProps = (state, ownProps)=> {
 
 
 export default connect(mapStateToProps, mapDispatchToProps)(TopNav);
-// export default withRouter(connect(mapStateToProps, mapDispatchToProps)(TopNav));

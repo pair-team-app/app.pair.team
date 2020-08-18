@@ -42,17 +42,17 @@
 .popup-notification .content[data-type="error"] {
 	background-color: rgba(var(--popup-error-bg-color), 1.0);
 	color: rgba(var(--popup-error-fg-color), 1.0);
-	border-color: rgba(var(--popup-error-fg-color), 1.0);
+	border-color: rgba(var(--popup-error-bg-color), 1.0);
 }
 
 .popup-notification .content[data-type="ok"] {
 	background-color: rgba(var(--popup-ok-bg-color), 1.0);
 	color: rgba(var(--popup-ok-fg-color), 1.0);
-	border-color: rgba(var(--popup-ok-fg-color), 1.0);
+	border-color: rgba(var(--popup-ok-bg-color), 1.0);
 }
 
 .popup-notification .content[data-type="status"] {
-	background-color: rgba(var(--site-bg-color), 1.0);
-	color: rgba(var(--popup-ok-fg-color), 1.0);
-	border-color: rgba(var(--site-bg-color), 1.0);
+	background-color: rgba(var(--popup-status-bg-color), 1.0);
+	color: rgba(var(--popup-status-fg-color), 1.0);
+	border-color: rgba(var(--popup-status-bg-color), 1.0);
 }

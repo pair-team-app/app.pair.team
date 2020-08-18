@@ -60,11 +60,13 @@ class BaseOverlay extends Component {
   }
 
   handleClickOutside(event) {
+    console.log('%s.handleClickOutside()', this.constructor.name, { event, props : this.props });
+
     const { closeable } = this.props;
     if (closeable) {
       this.onOutro();
     }
-  }
+  };
 
   handleClose = ()=> {
     // console.log('%s.handleClose()', this.constructor.name, this.props);
@@ -72,7 +74,7 @@ class BaseOverlay extends Component {
   };
 
   handleComplete = ()=> {
-    //     console.log('%s.handleComplete()', this.constructor.name, this.props, this.state);
+    console.log('%s.handleComplete()', this.constructor.name, this.props, this.state);
 
     const { onComplete } = this.props;
     this.setState({ completed: true }, ()=> {
@@ -83,7 +85,7 @@ class BaseOverlay extends Component {
   };
 
   onIntro = ()=> {
-    //     console.log('%s.onIntro()', this.constructor.name, this.props, this.state, this.timeline);
+    console.log('%s.onIntro()', this.constructor.name, this.props, this.state, this.timeline);
 
     const { tracking, delay } = this.props;
     trackOverlay(`open${tracking}`);
@@ -101,7 +103,7 @@ class BaseOverlay extends Component {
   };
 
   onOutro = ()=> {
-    //  console.log('%s.onOutro()', this.constructor.name, this.props, this.state, this.timeline);
+    console.log('%s.onOutro()', this.constructor.name, this.props, this.state, this.timeline);
 
     this.timeline = new TimelineMax();
     this.timeline.to(this.wrapper, OUTRO_DURATION * DURATION_MULT, {
@@ -129,7 +131,7 @@ class BaseOverlay extends Component {
 
     //     console.log('%s.render()', this.constructor.name, { wrapper : (this.wrapper) ? this.wrapper.offsetHeight : null, hAdj });
 
-    // console.log('%s.render()', this.constructor.name, { ...this.props });
+    console.log('%s.render()', this.constructor.name, { ...this.props });
 
     const { type, filled, offset, title, closeable, bordered, children } = this.props;
     const wrapperStyle = {
@@ -137,14 +139,15 @@ class BaseOverlay extends Component {
       transform : (type === OVERLAY_TYPE_POSITION_OFFSET) ? `translate(${offset.x || 0}px, ${offset.y || 0}px)` : null
     };
 
-    return (<div className="base-overlay" data-filled={filled} data-closeable={closeable} onClick={closeable ? this.handleClose : null}>
-      <div className="content-wrapper" data-percent={type === OVERLAY_TYPE_PERCENT_SIZE} data-auto-size={type === OVERLAY_TYPE_AUTO_SIZE} data-auto-scroll={(type !== OVERLAY_TYPE_PERCENT_SIZE && type !== OVERLAY_TYPE_AUTO_SIZE)} style={wrapperStyle} onClick={(event)=> event.stopPropagation()} data-bordered={bordered} ref={(element)=> {this.wrapper = element;}}>
+    return (<div className="base-overlay" data-filled={filled || true} data-closeable={closeable} onClick={(closeable) ? this.handleClose : null}>
+      <div className="content-wrapper" data-percent={type === OVERLAY_TYPE_PERCENT_SIZE} data-auto-size={type === OVERLAY_TYPE_AUTO_SIZE} data-auto-scroll={(type !== OVERLAY_TYPE_PERCENT_SIZE && type !== OVERLAY_TYPE_AUTO_SIZE)} style={wrapperStyle} onClick={(event)=> event.stopPropagation()} data-bordered={bordered} ref={(el)=> (el) ? this.wrapper = el : null}>
         {title && (<div className="header-wrapper">
-          <div className="header-title">{title}</div>
+          <div className="title">{title}</div>
         </div>)}
         <div className="content" style={{ height: hAdj > 88 ? `${hAdj}px` : 'fit-content' }}>
           {children}
         </div>
+        <div className="footer-wrapper"></div>
       </div>
     </div>);
   }

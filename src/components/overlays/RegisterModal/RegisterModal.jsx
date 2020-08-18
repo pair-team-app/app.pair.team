@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import './RegisterModal.css';
 
 import { connect } from 'react-redux';
+import { NavLink } from 'react-router-dom';
 
 import BaseOverlay from '../BaseOverlay';
 import RegisterForm from '../../forms/RegisterForm';
@@ -101,7 +102,7 @@ class RegisterModal extends Component {
 				</div>
 
 				<div className="footer-wrapper form-disclaimer">
-					<div onClick={()=> this.handleModal(Modals.LOGIN)}>Already have an account? Login</div>
+					<NavLink to="#" onClick={()=> this.handleModal(Modals.LOGIN)}>Already have an account? Login</NavLink>
 				</div>
 			</div>
 		</BaseOverlay>);

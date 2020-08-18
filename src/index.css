@@ -18,6 +18,14 @@
 	font-size: var(--base-font-size);
 }
 
+*[data-hidden="true"] {
+	display: none;
+  visibility: hidden;
+  width: 0;
+  height: 0;
+}
+
+
 :root {
 	--orthodox-font-family: 'SF Pro Display', system-ui, -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Ubuntu, 'Segoe UI', Roboto, Arial, sans-serif;
 	--base-font-size: 14px;
@@ -98,10 +106,13 @@
 	--timestamp-color: 153, 153, 153; /* #999999 */
 
 	--popup-ok-bg-color: 214, 139, 139; /* d68b8b */
-	--popup-ok-fg-color: 255, 255, 255; /* #ffffff */
+  --popup-ok-fg-color: 255, 255, 255; /* #ffffff */
+
+  --popup-status-bg-color: var(--popup-ok-bg-color); /* #d68b8b */
+	--popup-status-fg-color: var(--popup-ok-fg-color); /* #ffffff */
 
 	--popup-error-bg-color: var(--popup-ok-bg-color); /* #d68b8b */
-	--popup-error-fg-color: var(--popup-ok-bf-color); /* #ffffff */
+	--popup-error-fg-color: var(--popup-ok-fg-color); /* #ffffff */
 
 	--scroll-track-color: 247, 247, 247; /* #f7f7f7 */
 	--scroll-thumb-color: var(--site-fg-color); /* #232323 */
@@ -111,6 +122,7 @@
 	--orthodox-ico-size: 24px;
 	--left-nav-width: 208px;
 	--playground-comments-width: 228px;
+	--modal-content-width: 540px;
 
 	--spacing-05: 5px;
 	--spacing-10: 10px;
@@ -352,7 +364,8 @@ input:-webkit-autofill:focus, input:-webkit-autofill:hover:focus, input:-webkit-
 input[type="email"]:focus, input[type="password"]:focus, input[type="text"]:focus, textarea:focus, input[type="email"]:hover:focus, input[type="password"]:hover:focus, input[type="text"]:hover:focus, textarea:hover:focus {
 	/* border: 1px solid rgba(var(--txtfield-bg-color), 1.0); */
 	/* background-color: rgba(var(--txtfield-bg-color), 1.0); */
-	color: rgba(var(--txtfield-fg-color), 1.0);
+	/* color: rgba(var(--txtfield-fg-color), 1.0); */
+	color: rgba(var(--txtfield-focused-fg-color), 1.0);
 	filter: var(--txtfield-shadow);
 }
 

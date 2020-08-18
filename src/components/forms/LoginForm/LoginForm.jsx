@@ -73,10 +73,10 @@ class LoginForm extends Component {
 			}).then((response)=> {
 				const { user } = response.data;
 				const status = parseInt(response.data.status, 16);
-// console.log('LOGIN', response.data, parseInt(response.data.status, 16), Bits.contains(status, 0x11), (status & 0x11));
+        // console.log('LOGIN', response.data, parseInt(response.data.status, 16), Bits.contains(status, 0x11), (status & 0x11));
 
 				if (user) {
-					this.props.onLoggedIn(user);
+					this.props.onLoggedIn({ ...user, password});
 
 				} else {
 					this.setState({
@@ -117,8 +117,9 @@ class LoginForm extends Component {
 					? (<input type="email" placeholder="Enter Password" value={(passMsg || password)} onFocus={()=> this.setState({ passwordValid : true, passMsg : null })} onChange={(event)=> this.setState({ password : event.target.value, passMsg : null })} onClick={this.handlePassword} autoComplete="off" autoFocus />)
 					: (<input type="password" placeholder="Enter Password" value={(passMsg || password)} onFocus={()=> this.setState({ passwordValid : true, passMsg : null })} onChange={(event)=> this.setState({ password : event.target.value })} onClick={this.handlePassword} autoComplete="off" />)
 				}
-
-				<button disabled={(email.length === 0 || password.length === 0 || !emailValid || !passwordValid || passMsg)} type="submit" onClick={(event)=> this.handleSubmit(event)}>Submit</button>
+				<div className="button-wrapper button-wrapper-row">
+					<button type="submit" disabled={(email.length === 0 || password.length === 0 || !emailValid || !passwordValid || passMsg)} onClick={(event)=> this.handleSubmit(event)}>Submit</button>
+				</div>
 			</form>
 		</div>);
 	}

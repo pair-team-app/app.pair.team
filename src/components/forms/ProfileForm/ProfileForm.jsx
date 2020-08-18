@@ -2,8 +2,10 @@
 import React, { Component } from 'react';
 import './ProfileForm.css';
 
-
 import { Bits, Strings } from 'lang-js-utils';
+import md5 from 'md5';
+
+import DummyForm from '../DummyForm';
 import { trackEvent } from '../../../utils/tracking';
 import { makeAvatar } from '../../../utils/funcs';
 
@@ -13,9 +15,11 @@ class ProfileForm extends Component {
 		this.state = {
 			email         : (props.profile.email),
 			password      : '',
+			newPassword   : '',
+			newPassword2  : '',
 			emailValid    : true,
 			passwordValid : true,
-			passMsg       : '',
+			passMsg       : null,
 			changed       : false,
 			validated     : false
 		};
@@ -49,55 +53,54 @@ class ProfileForm extends Component {
 		});
 	};
 
-	handlePasswordChange = (event)=> {
-// console.log('%s.handlePasswordChange()', this.constructor.name, { event });
-
-		this.setState({
-			password : event.target.value,
-			passMsg  : '',
-			changed  : true
-		});
-	};
-
 	handlePasswordClick = (event)=> {
 // console.log('%s.handlePasswordClick()', this.constructor.name, { event });
 		event.preventDefault();
 
+    const { password, newPassword, newPassword2, passwordValid } = this.state;
 		this.setState({
-			password      : '',
+			password      : (passwordValid) ? password : '',
+			newPassword   : (newPassword === 'Passwords don\'t match') ? '' : newPassword,
 			passwordValid : true,
-			passMsg       : '',
-			changed       : false
+			passMsg       : null,
+      changed       : false,
+      validated     : false
 		});
 	};
 
 	handleSubmit = (event)=> {
-// console.log('%s.handleSubmit()', this.constructor.name, event, this.state);
-		event.preventDefault();
+    console.log('%s.handleSubmit()', this.constructor.name, { event, props : this.props, state : this.state });
+
+    event.preventDefault();
 
 		const { profile } = this.props;
-		const { email, password, changed } = this.state;
+		const { email, password, newPassword, newPassword2, changed } = this.state;
 		if (changed) {
-			trackEvent('button', 'profile-update');
+      const emailValid = Strings.isEmail(email);
+      const passwordValid = (md5(password) === profile.password);
 
-			// 		const emailValid = (email.includes('@')) ? Strings.isEmail(email) : (email.length > 0);
-			const emailValid = Strings.isEmail(email);
-			const passwordValid = true;//(password.length > 0);
+      if (emailValid && passwordValid && (newPassword === newPassword2)) {
+        trackEvent('button', 'profile-update');
 
-			this.setState({
-				email         : (emailValid) ? email : 'Email Address or Username Invalid',
-				passMsg       : (passwordValid) ? '' : 'Password Invalid',
-				emailValid    : emailValid,
-				passwordValid : passwordValid,
-				validated     : true
-			}, ()=> {
-				if (emailValid && passwordValid) {
-					const { id } = profile;
-					const avatar = (!Strings.compare(Strings.firstChar(email), Strings.firstChar(profile.email), false)) ? makeAvatar(email) : profile.avatar;
+        const { id } = profile;
+        const avatar = (!Strings.compare(Strings.firstChar(email), Strings.firstChar(profile.email), false)) ? makeAvatar(email) : profile.avatar;
 
-					this.props.onSubmit({ id, email, password, avatar, username : email });
-				}
-			});
+        this.props.onSubmit({ id, email, avatar,
+          username : email,
+          password : newPassword
+        });
+
+      } else {
+        this.setState({
+          email         : (emailValid) ? email : 'Email Address or Username Invalid',
+          passMsg       : (passwordValid) ? '' : 'Password Invalid',
+          newPassword   : (newPassword === newPassword2) ? newPassword : 'Passwords don\'t match',
+          newPassword2  : (newPassword === newPassword2) ? newPassword2 : '',
+          emailValid    : emailValid,
+          passwordValid : passwordValid,
+          validated     : true
+        });
+      }
 		}
 	};
 
@@ -105,33 +108,22 @@ class ProfileForm extends Component {
 	render() {
 // console.log('%s.render()', this.constructor.name, this.props, this.state);
 
-		const { email, password } = this.state;
-// 		const { emailValid, passwordValid } = this.state;
-		const { emailValid, changed, validated } = this.state;
+		const { email, password, newPassword, newPassword2, passMsg } = this.state;
+		const { emailValid, passwordValid, changed, validated } = this.state;
 
 		return (
 			<div className="profile-form">
 				<form onSubmit={this.handleSubmit}>
-					<input name="email" style={{ display : 'none' }} />
-					<input type="password" name="password" style={{ display : 'none' }} />
+          <DummyForm />
+					<input type={(validated) ? 'email' : 'text'} placeholder="Change Email Address" value={email} onFocus={()=> this.setState({ email : (emailValid) ? email : '', emailValid : true, validated : false })} onChange={this.handleEmailChange} autoComplete="new-password" required={(validated)} />
+					<input type={(passMsg) ? 'email' : 'password'} placeholder="Current Password" value={(passMsg || password)} onChange={(event)=> this.setState({ password : event.target.value, passMsg : null })} onClick={this.handlePasswordClick} autoComplete="new-password" />
+					<input type={(validated && newPassword !== newPassword2) ? 'email' : 'password'} placeholder="New Password" value={newPassword} onChange={(event)=> this.setState({ newPassword : event.target.value, passMsg : null })} onClick={this.handlePasswordClick} autoComplete="new-password" required={(validated)} />
+					<input type="password" placeholder="Confirm New Password" value={newPassword2} onChange={(event)=> this.setState({ newPassword2 : event.target.value, passMsg : null })} onClick={this.handlePasswordClick} autoComplete="new-password" />
 
-					{(validated)
-						? (<div className="form-acc-wrapper">
-								<input type="email" placeholder="Change Email Address" value={email} onFocus={()=> this.setState({ email : (emailValid) ? email : '', emailValid : true, validated : false })} onChange={this.handleEmailChange} autoComplete="new-password" required />
-              	{/* <div className="form-accessory" onClick={this.props.onDowngradePlan}>Change</div> */}
-						</div>)
-						: (<div className="form-acc-wrapper">
-								<input type="text" placeholder="Change Email Address" value={email} onFocus={()=> this.setState({ email : (emailValid) ? email : '', emailValid : true, validated : false })} onChange={this.handleEmailChange} autoComplete="new-password" />
-              	{/* <div className="form-accessory" onClick={this.props.onDowngradePlan}>Change</div> */}
-						</div>)
-					}
-          <div className="form-acc-wrapper">
-						<input type="password" placeholder="Change Password" value={password} onChange={this.handlePasswordChange} onClick={this.handlePasswordClick} autoComplete="new-password" />
-            {/* <div className="form-accessory" onClick={this.props.onDowngradePlan}>Change</div> */}
-					</div>
 
-					<div className="button-wrapper-col stripe-form-button-wrapper">
-            <button disabled={!changed || email.length === 0 || !emailValid} type="submit" onClick={this.handleSubmit}>Submit</button>
+					<div className="button-wrapper button-wrapper-row">
+            <button type="submit" disabled={!changed || email.length === 0 || !emailValid || !passwordValid || (newPassword.length > 0 && newPassword !== newPassword2)} onClick={(event)=> this.handleSubmit(event)}>Submit</button>
+						<button className="cancel-button" onClick={this.props.onCancel}>Cancel</button>
 						{/*<button disabled={(email.length === 0 || !emailValid || !passwordValid)} type="submit" onClick={this.handleSubmit}>Update</button>*/}
 					</div>
 				</form>

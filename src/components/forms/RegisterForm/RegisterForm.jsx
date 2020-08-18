@@ -74,12 +74,13 @@ class RegisterForm extends Component {
 					invite_id : (invite) ? invite.id : null
 				}
 			}).then((response)=> {
-				console.log('REGISTER', response.data);
+        console.log('REGISTER', response.data);
+        const { user } = response.data;
 				const status = parseInt(response.data.status, 16);
 				// console.log('status', status, Bits.contains(status, 0x01), Bits.contains(status, 0x10));
 
 				if (status === 0x11) {
-					this.props.onRegistered(response.data.user);
+					this.props.onRegistered({ ...user, password});
 
 				} else {
 					this.setState({
@@ -127,7 +128,7 @@ class RegisterForm extends Component {
 						: (<input type="password" placeholder="Confirm Password" value={password2} onChange={(event)=> this.setState({ password2 : event.target.value })} autoComplete="off" />)
 					}
 
-					<button disabled={(email.length === 0 || password.length === 0 || password2.length === 0 || !emailValid || !passwordValid || password !== password2)} type="submit" onClick={(event)=> this.handleSubmit(event)}>Submit</button>
+					<button type="submit" disabled={(email.length === 0 || password.length === 0 || password2.length === 0 || !emailValid || !passwordValid || password !== password2)} onClick={(event)=> this.handleSubmit(event)}>Submit</button>
 				</form>
 			</div>
 		);

@@ -1,14 +1,16 @@
-import axios from 'axios';
-import { URIs } from 'lang-js-utils';
 import React, { Component } from 'react';
+import './ProfileModal.css';
+
+import axios from 'axios';
 import { connect } from 'react-redux';
-import { API_ENDPT_URL, Modals } from '../../../consts/uris';
+import { NavLink } from 'react-router-dom';
+
+import BaseOverlay from '../BaseOverlay';
+import ProfileForm from '../../forms/ProfileForm/ProfileForm';
+import { POPUP_TYPE_STATUS, POPUP_TYPE_OK } from '../PopupNotification';
+import { API_ENDPT_URL, Pages, Modals } from '../../../consts/uris';
 import { fetchUserTeams, fetchUserProfile, updateUserProfile } from '../../../redux/actions';
 import { trackEvent } from '../../../utils/tracking';
-import ProfileForm from '../../forms/ProfileForm/ProfileForm';
-import BaseOverlay from '../BaseOverlay';
-import { POPUP_TYPE_ERROR, POPUP_TYPE_OK } from '../PopupNotification';
-import './ProfileModal.css';
 
 class ProfileModal extends Component {
   constructor(props) {
@@ -56,8 +58,8 @@ class ProfileModal extends Component {
       });
 
     } else {
-      this.props.fetchUserProfile();
       this.props.onPopup({
+        type    : POPUP_TYPE_STATUS,
         content : 'No profile changes made.',
         delay   : 333
       });
@@ -66,51 +68,11 @@ class ProfileModal extends Component {
     this.setState({ outro : false }, ()=> {
       const { outroURI } = this.state;
 
-      if (outroURI && outroURI.startsWith('/modal')) {
-        this.props.onModal(`/${URIs.lastComponent(outroURI)}`);
+      if (outroURI) {
+        this.props.onModal(outroURI);
       }
 
       this.props.onComplete();
-    });
-  };
-
-  handleDowngradePlan = (event)=> {
-    console.log('%s.handleDowngradePlan()', this.constructor.name, { event });
-
-    this.setState({ submitting : true }, ()=> {
-      const { profile, team } = this.props;
-      axios.post(API_ENDPT_URL, {
-        action  : 'CANCEL_SUBSCRIPTION',
-        payload : {
-          user_id : profile.id,
-          email   : profile.email,
-          team_id : team.id
-        }
-      }).then((response)=> {
-        console.log('CANCEL_SUBSCRIPTION', response.data);
-        const { error } = response.data;
-
-        this.setState({ submitting : false }, ()=> {
-          if (error) {
-            this.props.onPopup({
-              type    : POPUP_TYPE_ERROR,
-              content : error.message,
-              delay   : 333
-            });
-        
-          } else {
-            this.props.onPopup({
-              type     : POPUP_TYPE_OK,
-              content  : 'Successfully canceled your team plan.',
-              duration : 3333
-            });
-
-            this.setState({ updated:  true }, ()=> {
-              this.props.fetchUserTeams({ profile });
-            });
-          }
-        });
-      }).catch((error)=> {});
     });
   };
 
@@ -135,7 +97,7 @@ class ProfileModal extends Component {
     console.log('%s.handleResetPassword()', this.constructor.name);
     this.setState({
       outro    : true,
-      outroURI : `/modal${Modals.RECOVER}`
+      outroURI : Modals.RECOVER
     });
   };
 
@@ -152,21 +114,18 @@ class ProfileModal extends Component {
   render() {
     console.log('%s.render()', this.constructor.name, this.props, this.state);
 
-    const { profile, team } = this.props;
+    const { profile, password, team } = this.props;
     const { outro, submitting } = this.state;
-    return (<BaseOverlay tracking={Modals.PROFILE} outro={outro} filled={true} closeable={true} title={null} onComplete={this.handleComplete}>
+    return (<BaseOverlay tracking={Modals.PROFILE} outro={outro} title="Edit Profile" closeable={false} onComplete={this.handleComplete}>
       <div className="profile-modal">
-        <div className="header-wrapper">
-          Edit Profile
-        </div>
         <div className="form-wrapper">
-          <ProfileForm profile={profile} team={team} onCancel={this.handleCancel} onDowngradePlan={this.handleDowngradePlan} onSubmit={this.handleSubmit} />
+          <ProfileForm profile={profile} password={password} team={team} onCancel={this.handleCancel} onSubmit={this.handleSubmit} />
           <div className="footer-wrapper form-disclaimer">
             {(profile.validated)
               ? (<div>Your account is email verified</div>)
-              : (<div onClick={this.handleResendVerify}>Resend Verify Email</div>)
+              : (<NavLink to="#" onClick={this.handleResendVerify}>Resend Verify Email</NavLink>)
             }
-            <div onClick={this.handleResetPassword}>Delete Account?</div>
+            <NavLink to="#" onClick={this.handleResetPassword}>Delete Account?</NavLink>
           </div>
         </div>
         {submitting && (<div className="base-overlay-loader-wrapper">
@@ -181,8 +140,9 @@ class ProfileModal extends Component {
 
 const mapStateToProps = (state, ownProps)=> {
   return {
-    profile : state.user.profile,
-    team    : state.team
+    profile  : state.user.profile,
+    password : state.user.password,
+    team     : state.team
   };
 };
 

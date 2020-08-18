@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import './LoginModal.css';
 
 import { connect } from 'react-redux';
+import { NavLink } from 'react-router-dom';
 
 import BaseOverlay from '../BaseOverlay';
 import LoginForm from '../../forms/LoginForm';
@@ -97,8 +98,8 @@ class LoginModal extends Component {
 				</div>
 
 				<div className="footer-wrapper form-disclaimer">
-					<div onClick={()=> this.handleModal(Modals.REGISTER)}>Don't have an account? Sign Up</div>
-					<div onClick={()=> this.handleModal(Modals.RECOVER)}>Forgot Password</div>
+					<NavLink to="#" onClick={()=> this.handleModal(Modals.REGISTER)}>Don't have an account? Sign Up</NavLink>
+					<NavLink to="#" onClick={()=> this.handleModal(Modals.RECOVER)}>Forgot Password</NavLink>
 				</div>
 			</div>
 		</BaseOverlay>);

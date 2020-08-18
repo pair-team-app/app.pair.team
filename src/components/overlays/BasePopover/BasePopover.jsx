@@ -221,7 +221,7 @@ class BasePopover extends Component {
 		// console.log('::::::::__', { position, offset, styles });
 
 		console.log('%s.render()', this.constructor.name, '::::::::__', { props : this.props, state : this.state, size, position, offset, offsetVals : Object.values(offset).every((val)=> (val === null)), styles });
-		return (<div className="base-popover" style={styles} ref={(element)=> { this.wrapper = element; }} data-position={(fixed) ? 'fixed' : 'abs'}>
+		return (<div className="base-popover" style={styles} ref={(el)=> (el) ? this.wrapper = el : null} data-position={(fixed) ? 'fixed' : 'abs'}>
 			<KeyboardEventHandler isDisabled={(!outro)} handleKeys={['esc']} onKeyEvent={(key, event)=> this.onOutro()}>
 			<div className="content-wrapper">{children}</div>
 			</KeyboardEventHandler>
