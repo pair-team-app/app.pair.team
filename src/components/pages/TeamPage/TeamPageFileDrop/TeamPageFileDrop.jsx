@@ -65,7 +65,7 @@ class TeamPageFileDrop extends Component {
     if (preComment) {
       const isURL = /https?:\/\//i.test(preComment);
 
-      if (preComment !== prevProps.preComment) {
+      if (preComment !== prevProps.preComment && preComment !== ' ') {
         this.commentInput.focus();
 
         if (files.length > 0 || image !== null) {
@@ -152,13 +152,19 @@ class TeamPageFileDrop extends Component {
 
   handleFileInit = (file)=> {
     console.log('%s.handleFileInit(file)', this.constructor.name, { file });
+    // this.props.createComment('≈');
   };
 
 
   // processes the first file
-  handleFileAdd = (file)=> {
-    console.log('%s.handleFileAdd(file)', this.constructor.name, { file });
+  handleFileAdd = (error, file)=> {
+    console.log('%s.handleFileAdd(file)', this.constructor.name, { error, file });
     // File has been processed
+
+    const { pathname, hash } = this.props;
+    if (hash.length === 0) {
+      this.props.push(`${pathname}#create`);
+    }
   };
 
   handleFileProgress = (file, progress)=> {
@@ -322,9 +328,9 @@ class TeamPageFileDrop extends Component {
       <div>
 
         <div className="input-wrapper" data-hidden={(files.length === 0 && preComment === null)}>
-          <KeyboardEventHandler isDisabled={(preComment === null)} handleKeys={['ctrl', 'meta', 'enter', 'esc']} onKeyEvent={(key, event)=> this.handleKeyPress(event, key)}>
-            <TextareaAutosize id="comment-txtarea" className="comment-txtarea" disabled={!preComment && files.length === 0} placeholder={(url) ? 'Add a comment to this url…' : 'Add a comment to this image…'} value={(!url) ? (preComment || '') : ''} onFocus={this.handleFieldFocus} onChange={this.handleTextChange} ref={(el)=> (el) ? this.commentInput = el : null} data-code={(code)} />
-          </KeyboardEventHandler>
+          <KeyboardEventHandler isDisabled={(files.length === 0 && preComment === null)} handleFocusableElements={true} handleKeys={['ctrl', 'meta', 'enter', 'esc']} onKeyEvent={(key, event)=> this.handleKeyPress(event, key)} />
+            <TextareaAutosize id="comment-txtarea" className="comment-txtarea" placeholder={(url) ? 'Add a comment to this url…' : 'Add a comment to this image…'} value={(!url) ? (preComment || '') : ''} onFocusCapture={this.handleFieldFocus} onChange={this.handleTextChange} ref={(el)=> (el) ? this.commentInput = el : null} data-code={(code)} />
+          {/* </KeyboardEventHandler> */}
           {(preComment) && (<CodeFormAccessory align={FormAccessoryAlignment.BOTTOM} onClick={this.handleCode} />)}
         </div>
 
@@ -376,7 +382,7 @@ class TeamPageFileDrop extends Component {
         </div>
         <div className="url-wrapper" data-hidden={!url}>{preComment}</div>
         <div className="button-wrapper button-wrapper-col">
-          <button type="submit" disabled={text.length === 0} onClick={this.handleSubmit}>Comment</button>
+          <button type="submit" disabled={text.length === 0 && files.length === 0} onClick={this.handleSubmit}>Comment</button>
           <button className="cancel-button" onClick={this.handleResetContent}>Cancel</button>
         </div>
       </div>

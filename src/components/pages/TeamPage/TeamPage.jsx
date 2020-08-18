@@ -272,7 +272,7 @@ class TeamPage extends Component {
     // console.log('%s.render()', this.constructor.name, { infoLoading, rulesLoading, commentsLoading });
     // console.log('%s.render()', this.constructor.name, { infoLoading, rulesLoading, commentsLoading });
 
-    return (<BasePage { ...this.props } className="team-page" data-file-drop={(dragging || (preComment !== null))}>
+    return (<BasePage { ...this.props } className="team-page" data-file-drop={(window.location.href.includes('#create'))}>
       {(profile && team && member)
       ? (<div className="content-wrapper">
           <KeyboardEventHandler handleKeys={['alphanumeric']} onKeyEvent={(key, event)=> this.handlePageKeyPress(event, key)} />
