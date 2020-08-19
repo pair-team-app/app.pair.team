@@ -43,6 +43,10 @@ export default function comments(state=initialState, action) {
     const { preComment, comment } = payload;
     return (Object.assign({}, state, { preComment, comment }));
 
+  } else if (type === '@@router/LOCATION_CHANGE') {
+    const { preComment, comment } = payload;
+    return (Object.assign({}, state, { preComment, comment }));
+
   } else {
     return (state);
   }

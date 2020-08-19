@@ -68,9 +68,6 @@ class UserSettings extends Component {
 
 				} else if (itemType !== SettingsMenuItemTypes.DOCS && itemType !== SettingsMenuItemTypes.INSTALL) {
 					this.props.onMenuItem(itemType);
-
-				} else {
-					// this.props.push(window.location.pathname.replace('#settings', ''));
 				}
 			}
 

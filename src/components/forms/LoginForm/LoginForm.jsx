@@ -119,6 +119,7 @@ class LoginForm extends Component {
 				}
 				<div className="button-wrapper button-wrapper-row">
 					<button type="submit" disabled={(email.length === 0 || password.length === 0 || !emailValid || !passwordValid || passMsg)} onClick={(event)=> this.handleSubmit(event)}>Submit</button>
+          <button type="button" className="cancel-button" onClick={this.props.onCancel}>Cancel</button>
 				</div>
 			</form>
 		</div>);

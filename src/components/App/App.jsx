@@ -7,7 +7,7 @@ import { push } from 'connected-react-router';
 import { Browsers } from 'lang-js-utils';
 import cookie from 'react-cookies';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
+// import { withRouter } from 'react-router-dom';
 
 import Routes from '../helpers/Routes';
 import AlertDialog from '../overlays/AlertDialog';
@@ -59,13 +59,7 @@ class App extends Component {
 
     // console.log('[:][:][:][:][:][:][:][:][:][:]', makeAvatar('M'));
 
-    const { profile, location } = this.props;
-    if (location.pathname.startsWith(Pages.INVITE)) {
-      if (profile) {
-        this.onLogout();
-      }
-    }
-
+    const { profile, location, hash } = this.props;
     if (!Browsers.isOnline()) {
       this.handlePopup({
         type     : POPUP_TYPE_OK,
@@ -73,6 +67,13 @@ class App extends Component {
         delay    : 125,
         duration : 2350
       });
+
+    } else {
+      if (location.pathname.startsWith(Pages.INVITE)) {
+        if (profile) {
+          this.onLogout();
+        }
+      }
     }
 
     window.onpopstate = (event)=> {
@@ -96,30 +97,6 @@ class App extends Component {
       trackPageview();
     }
 
-
-    // modal routes
-    if (hash.length > 0 && prevProps.hash !== hash) {
-
-      // recover modal
-      if (hash === Modals.RECOVER) {
-        this.onToggleModal(Modals.RECOVER);
-      }
-
-      // profile modal
-      if (hash === Modals.PROFILE) {
-        this.onToggleModal(Modals.PROFILE);
-      }
-
-      // login
-      if (hash === Modals.LOGIN) {
-        this.onToggleModal(Modals.LOGIN);
-      }
-
-      // register
-      if (hash === Modals.REGISTER) {
-        this.onToggleModal(Modals.REGISTER);
-      }
-    }
 
     // has internet
     if (Browsers.isOnline()) {
@@ -162,17 +139,34 @@ class App extends Component {
       }
 
 
-      // not logged in
-      if (!profile) {
+      if (hash.length > 0) {
+        // recover modal
+        if (hash === Modals.RECOVER && !modals.recover) {
+          this.onToggleModal(Modals.RECOVER);
+        }
 
-        // show login first
-        if ((cookie.load('user_id') << 0) === 0 && !modals.login && !modals.register && !modals.recover) {
+        // profile modal
+        if (hash === Modals.PROFILE && !modals.profile) {
+          this.onToggleModal(Modals.PROFILE);
+        }
+
+        // login
+        if (hash === Modals.LOGIN && !modals.login) {
           this.onToggleModal(Modals.LOGIN);
         }
 
+        // register
+        if (hash === Modals.REGISTER && !modals.register) {
+          this.onToggleModal(Modals.REGISTER);
+        }
+      }
+
+
+
 
       // logged in
-      } else {
+      if (profile) {
+
         // dismiss modals after login
         if (modals.login) {
           this.onToggleModal(Modals.LOGIN, false);
@@ -181,13 +175,6 @@ class App extends Component {
         if (modals.register) {
           this.onToggleModal(Modals.REGISTER, false);
         }
-
-        // if (!prevProps.profile) {
-        //   if (hash === '#profile') {
-        //     this.onToggleModal(Modals.PROFILE);
-        //   }
-        // }
-
 
         // payment modal
         if (team && team.type === 'free' && !modals.stripe && !modals.profile) {
@@ -225,14 +212,15 @@ class App extends Component {
 
       // outros from history
       if (hash !== prevProps.hash && prevProps.hash.length !== 0) {
-        if (prevProps.hash === Modals.PROFILE) {
-          this.onToggleModal(Modals.PROFILE, false);
-        }
+        // if (prevProps.hash === Modals.PROFILE) {
+        //   this.onToggleModal(Modals.PROFILE, false, (hash.length === 0));
+        // }
 
-        if (prevProps.hash === Modals.RECOVER) {
-          this.onToggleModal(Modals.RECOVER, false);
-        }
+        // if (prevProps.hash === Modals.RECOVER) {
+        //   this.onToggleModal(Modals.RECOVER, false, (hash.length === 0));
+        // }
       }
+    } else {
 
     }
   }
@@ -261,7 +249,7 @@ class App extends Component {
 
       trackEvent('user', 'delete-account');
       this.props.updateUserProfile({ profile : null });
-      this.props.push(Pages.HOME);
+      // this.props.push(Pages.HOME);
     }).catch((error)=> {});
   };
 
@@ -434,9 +422,8 @@ class App extends Component {
 
         {(modals.payment) && (<AlertDialog
 				  title='Payment Processed'
-				  tracking={Modals.PAYMENT}
+				  tracking={Modals.PAYMENT}>
 				  onComplete={()=> { this.onToggleModal(Modals.PAYMENT, false); this.props.history.replace(`${Pages.TEAM}/${team.id}--${team.slug}`) }}>
-				  Your team <strong>{team.title} - [{team.id}]</strong> is now a paid {purchase.type} plan.
 			  </AlertDialog>)}
 
 			  {(popup) && (<PopupNotification
@@ -481,4 +468,5 @@ const mapDispatchToProps = (dispatch)=> {
 };
 
 // export default connect(mapStateToProps, mapDispatchToProps)(App);
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(App));
+// export default withRouter(connect(mapStateToProps, mapDispatchToProps)(App));
+export default connect(mapStateToProps, mapDispatchToProps)(App);

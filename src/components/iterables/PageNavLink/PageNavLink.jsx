@@ -2,35 +2,36 @@
 import React from 'react';
 import './PageNavLink.css';
 
-import { URIs } from 'lang-js-utils';
 import { NavLink } from 'react-router-dom';
-
 import { trackEvent, trackOutbound } from '../../../utils/tracking';
 
 
 function PageNavLink(props) {
-	const { title, url } = props.navLink;
-	const extURL = (/^\/url/i.test(url));
+  console.log('PageNavLink()', { props });
 
-	const handleOpenURI = (event, uri)=> {
+	const { children, to } = props;
+	const extURL = (/^http?s:\/\//i.test(to));
+
+	const handleExternalURL = (event)=> {
+    console.log('PageNavLink().handleExternalURL', { event, this : { ...this } });
+
 		event.preventDefault();
 
-		const url = uri.split('/').slice(2).join('/');
-		trackEvent('link', url);
-
-		trackOutbound(url, ()=> {
-			window.open(url);
+		trackEvent('link', to);
+		trackOutbound(to, ()=> {
+			window.open(to);
 			props.onClick(event);
 		});
 	};
 
 	return (<NavLink
-		to={(extURL) ? url : `/${URIs.lastComponent(url)}`}
+		to={to}
 		target={(extURL) ? '_blank' : '_self'}
 		className="page-nav-link"
 		activeClassName="page-nav-link-selected"
-		onClick={(event)=> (extURL) ? handleOpenURI(event, url) : props.onClick(event) }>
-		{title}
+		onClick={(event)=> (extURL) ? handleExternalURL(event, to) : props.onClick(event, to) }
+    data-selected={false}>
+		{children}
 	</NavLink>);
 }
 

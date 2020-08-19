@@ -5,7 +5,8 @@ import './StripeModal.css';
 import { loadStripe } from '@stripe/stripe-js';
 import { Strings } from 'lang-js-utils';
 import { connect } from 'react-redux';
-import { NavLink, withRouter } from 'react-router-dom';
+// import { NavLink, withRouter } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 
 import BaseOverlay from '../BaseOverlay';
 import { POPUP_TYPE_ERROR } from '../PopupNotification';
@@ -136,4 +137,4 @@ const mapStateToProps = (state, ownProps)=> {
 };
 
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(StripeModal));
+export default connect(mapStateToProps, mapDispatchToProps)(StripeModal);

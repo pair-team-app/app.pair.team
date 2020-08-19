@@ -1,9 +1,12 @@
 
 .login-modal {
-	max-width: var(--modal-content-width);
-	padding: var(--spacing-10) 0 var(--spacing-05) 0;
 }
 
 .login-modal .form-wrapper {
-	/* width: 348px; */
+
+}
+
+
+ .login-modal > .foooter-wrapper {
+  margin: 0;
 }

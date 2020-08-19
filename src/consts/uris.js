@@ -1,7 +1,8 @@
 
 
 export const Modals = {
-	COOKIES   : '#cookies',
+  COOKIES   : '#cookies',
+  FILE_DROP : '#create',
 	DISABLE   : '#disable',
 	EXPIRED   : '#expired',
 	INVITE    : '#invite',

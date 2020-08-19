@@ -106,3 +106,8 @@
 	margin-right: var(--spacing-05);
 	content: ' >';
 }
+
+
+.top-nav-share-link {
+  position: relative;
+}

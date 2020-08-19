@@ -21,6 +21,7 @@ if (typeof cookie.load('cookies') === 'undefined') {
 
 ReactDOM.render(
 	<Provider store={store}>
+		{/* <ConnectedRouter history={history}> */}
 		<ConnectedRouter history={history}>
 			{/* <ScrollToTop props={{ scrollableElement }}> */}
 				<Route path="/" render={(routeProps)=> <App { ...routeProps } />} />

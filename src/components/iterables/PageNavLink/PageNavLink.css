@@ -1,14 +1,18 @@
 
 .page-nav-link {
-	width: fit-content;
-	letter-spacing: 0.2px;
+  width: fit-content;
+  color: rgba(var(--link-alt-color), 1.0);
+  letter-spacing: 0.2px;
 }
 
-.page-nav-link:not(:last-child) {
-	margin-right: var(--spacing-20);
+.page-nav-link:hover, a:hover.page-nav-link {
+  color: rgba(var(--link-alt-color), 1.0);
+  text-decoration: underline;
+  cursor: pointer;
 }
 
-.page-nav-link-selected, a.page-nav-link-selected {
+.page-nav-link[data-selected="true"], .page-nav-link[data-selected="true"]:hover, a.page-nav-link[data-selected="true"], a:hover.page-nav-link[data-selected="true"] {
 	color: rgba(var(--link-selected-color), 1.0);
-	text-decoration: underline;
+  text-decoration: none;
+  cursor: default;
 }

@@ -4,7 +4,8 @@ import './TopNav.css';
 import { push } from 'connected-react-router';
 import { connect } from 'react-redux';
 import { Strings } from 'lang-js-utils';
-import { matchPath, withRouter } from 'react-router-dom';
+// import { matchPath, withRouter } from 'react-router-dom';
+import { matchPath } from 'react-router-dom';
 
 import { BreadcrumbTypes, CommentSortTypes } from './';
 import UserSettings, { SettingsMenuItemTypes} from './UserSettings';

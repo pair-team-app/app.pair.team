@@ -2,10 +2,12 @@
 import React, { Component } from 'react';
 import './RecoverModal.css';
 
-import { NavLink } from 'react-router-dom';
+import { goBack } from 'connected-react-router';
+import { connect } from 'react-redux';
 
 import BaseOverlay from '../BaseOverlay';
 import RecoverForm from '../../forms/RecoverForm';
+import PageNavLink from '../../iterables/PageNavLink';
 import { Modals } from '../../../consts/uris';
 
 
@@ -21,7 +23,7 @@ class RecoverModal extends Component {
 
 	componentDidUpdate(prevProps, prevState, snapshot) {
 // console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : this.props, prevState, state : this.state });
-	}
+  }
 
 	handleComplete = ()=> {
 		console.log('%s.handleComplete()', this.constructor.name);
@@ -59,18 +61,16 @@ class RecoverModal extends Component {
 				onComplete={this.handleComplete}>
 
 				<div className="recover-modal">
-					<div className="form-wrapper">
-						<RecoverForm onSubmitted={(event)=> { event.preventDefault(); this.handleComplete(); }} />
+          <div className="link-wrapper">
+						Looking for <PageNavLink to={Modals.REGISTER} onClick={this.handleModal}>Sign Up</PageNavLink> or <PageNavLink to={Modals.LOGIN} onClick={this.handleModal}>Login</PageNavLink>?
 					</div>
 
-					<div className="footer-wrapper form-disclaimer">
-						<NavLink to="#" onClick={()=> this.handleModal(Modals.REGISTER)}>Don't have an account? Sign Up</NavLink>
-						<NavLink to="#" onClick={()=> this.handleModal(Modals.LOGIN)}>Already have an Account? Login</NavLink>
+					<div className="form-wrapper">
+						<RecoverForm onCancel={this.props.goBack} onSubmitted={(event)=> { event.preventDefault(); this.handleComplete(); }} />
 					</div>
 				</div>
 			</BaseOverlay>);
 	}
 }
 
-
-export default (RecoverModal);
+export default connect(null, { goBack })(RecoverModal);

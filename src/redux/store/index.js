@@ -1,5 +1,5 @@
 
-import { routerMiddleware } from 'connected-react-router';
+import { push, routerMiddleware } from 'connected-react-router';
 import { createBrowserHistory } from 'history';
 import cookie from 'react-cookies';
 import { applyMiddleware, createStore } from 'redux';
@@ -10,7 +10,8 @@ import { fetchComponentTypes, fetchDevices, fetchProducts, fetchUserProfile } fr
 import rootReducer from '../reducers/index';
 import { onMiddleware } from '../middleware'
 
-import { SET_TEAM, SET_PLAYGROUND, SET_COMMENT, COMMENT_CREATED } from '../../consts/action-types';
+import { SET_ROUTE_PATH, SET_TEAM, SET_PLAYGROUND, SET_COMMENT, COMMENT_CREATED } from '../../consts/action-types';
+import { Modals, Pages } from '../../consts/uris.js';
 
 export const history = createBrowserHistory();
 
@@ -18,8 +19,8 @@ export const history = createBrowserHistory();
 const createLogActionStackTraceMiddleware = (actionTypes=[])=> {
   const logActionStackTraceMiddleware = (storeAPI)=> (next)=> (action)=> {
     if(action.type && actionTypes.includes(action.type)) {
-    	// console.log('[|:|] Store', storeAPI.getState());
-      console.trace('[:|:] "%s" %s', action.type, action);
+    	console.log('[|:|] Store', storeAPI.getState());
+      console.trace('[:|:]', 'TYPE:["%s"] ACTION:[%s] NEXT:[%s] ', action.type, action, next, '[:|:]');
     }
 
     return (next(action));
@@ -29,7 +30,7 @@ const createLogActionStackTraceMiddleware = (actionTypes=[])=> {
 };
 
 
-const stackTraceMiddleware = createLogActionStackTraceMiddleware([SET_TEAM, SET_PLAYGROUND, SET_COMMENT, COMMENT_CREATED]);
+const stackTraceMiddleware = createLogActionStackTraceMiddleware(['@@router/LOCATION_CHANGE', SET_ROUTE_PATH, SET_TEAM, SET_PLAYGROUND, SET_COMMENT, COMMENT_CREATED]);
 
 
 // const store = createStore(rootReducer, compose(applyMiddleware(onMiddleware, thunk, stackTraceMiddleware)));
@@ -37,7 +38,8 @@ const store = createStore(rootReducer(history), composeWithDevTools(applyMiddlew
 
 
 if (typeof cookie.load('user_id') === 'undefined') {
-	cookie.save('user_id', '0', { path : '/', sameSite : false });
+  cookie.save('user_id', '0', { path : '/', sameSite : false });
+  store.dispatch(push(`${Pages.TEAM}${Modals.REGISTER}`));
 
 } else {
 	store.dispatch(fetchUserProfile());

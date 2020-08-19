@@ -3,7 +3,6 @@ import React, { Component } from 'react';
 import './TeamPageFileDrop.css';
 
 import axios from 'axios';
-import { push } from 'connected-react-router';
 import FilePondPluginImageExifOrientation from 'filepond-plugin-image-exif-orientation';
 import FilePondPluginImagePreview from 'filepond-plugin-image-preview';
 import { URIs } from 'lang-js-utils';
@@ -78,10 +77,6 @@ class TeamPageFileDrop extends Component {
               this.onFetchScreenshot(preComment);
             }
           });
-        }
-
-        if (!window.location.href.includes(hash)) {
-          this.props.push(`${pathname}${hash}`);
         }
       }
 
@@ -160,11 +155,6 @@ class TeamPageFileDrop extends Component {
   handleFileAdd = (error, file)=> {
     console.log('%s.handleFileAdd(file)', this.constructor.name, { error, file });
     // File has been processed
-
-    const { pathname, hash } = this.props;
-    if (hash.length === 0) {
-      this.props.push(`${pathname}#create`);
-    }
   };
 
   handleFileProgress = (file, progress)=> {
@@ -394,8 +384,7 @@ class TeamPageFileDrop extends Component {
 const mapDispatchToProps = (dispatch)=> {
   return ({
     createComment : (payload)=> dispatch(createComment(payload)),
-    makeComment   : (payload)=> dispatch(makeComment(payload)),
-    push          : (payload)=> dispatch(push(payload))
+    makeComment   : (payload)=> dispatch(makeComment(payload))
   });
 };
 

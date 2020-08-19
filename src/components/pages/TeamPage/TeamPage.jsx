@@ -6,7 +6,7 @@ import { Strings } from 'lang-js-utils';
 import { Menu, Item, Separator, Submenu, MenuProvider } from 'react-contexify';
 import KeyboardEventHandler from 'react-keyboard-event-handler';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
+// import { withRouter } from 'react-router-dom';
 import TextareaAutosize from 'react-autosize-textarea';
 
 import BasePage from '../BasePage';
@@ -425,4 +425,5 @@ const mapStateToProps = (state, ownProps)=> {
   });
 };
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(TeamPage));
+// export default withRouter(connect(mapStateToProps, mapDispatchToProps)(TeamPage));
+export default connect(mapStateToProps, mapDispatchToProps)(TeamPage);

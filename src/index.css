@@ -75,7 +75,8 @@
 	--overlay-hover-color: 153, 153, 153; /* #999999 */
 	--link-color: var(--site-fg-color); /* #232323 */
 	--link-lite-color:  153, 153, 153; /* #999999 */
-	--link-lite-hover-color:   var(--site-fg-color); /* #232323 */
+  --link-lite-hover-color:   var(--site-fg-color); /* #232323 */
+  --link-alt-color:  var(--site-selected-color); /* #2f58ff */
 	--link-selected-color: var(--site-selected-color); /* #2f58ff */
 
 	--txtfield-shadow: var(--orthodox-drop-shadow);
@@ -290,6 +291,10 @@ fieldset {
   border: none;
 }
 
+
+form > *:not(:last-child):not(.dummy-form) {
+	margin-bottom: var(--spacing-20);
+}
 
 form .input-acc-wrapper {
 	position: relative;

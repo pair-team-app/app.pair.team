@@ -96,7 +96,7 @@ class Routes extends Component {
           onPopup={this.props.onPopup} { ...props} />
       } /> */}
 
-      <Route path={Pages.WILDCARD}><Redirect to={Pages.TEAM} /></Route>
+      {/* <Route path={Pages.WILDCARD}><Redirect to={Pages.TEAM} /></Route> */}
     </Switch>);
   }
 }

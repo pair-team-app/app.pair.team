@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import './ProjectPage.css';
 
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
+// import { withRouter } from 'react-router-dom';
 
 import BasePage from '../BasePage';
 // import BaseComment from '../../iterables/BaseComment';
@@ -148,4 +148,4 @@ const mapStateToProps = (state, ownProps)=> {
   };
 };
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(ProjectPage));
+export default connect(mapStateToProps, mapDispatchToProps)(ProjectPage);

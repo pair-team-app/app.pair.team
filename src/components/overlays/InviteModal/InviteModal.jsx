@@ -4,7 +4,7 @@ import './InviteModal.css';
 
 import { URIs } from 'lang-js-utils';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
+// import { withRouter } from 'react-router-dom';
 
 import BaseOverlay from '../BaseOverlay';
 import InviteForm from '../../forms/InviteForm';
@@ -129,4 +129,5 @@ const mapStateToProps = (state, ownProps)=> {
 	});
 };
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(InviteModal));
+// export default withRouter(connect(mapStateToProps, mapDispatchToProps)(InviteModal));
+export default connect(mapStateToProps, mapDispatchToProps)(InviteModal);

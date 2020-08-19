@@ -127,8 +127,10 @@ class RegisterForm extends Component {
 						? (<input type="email" placeholder="Confirm Password" value={passMsg} onChange={(event)=> this.setState({ password2 : event.target.value })} autoComplete="off" required />)
 						: (<input type="password" placeholder="Confirm Password" value={password2} onChange={(event)=> this.setState({ password2 : event.target.value })} autoComplete="off" />)
 					}
-
-					<button type="submit" disabled={(email.length === 0 || password.length === 0 || password2.length === 0 || !emailValid || !passwordValid || password !== password2)} onClick={(event)=> this.handleSubmit(event)}>Submit</button>
+          <div className="button-wrapper button-wrapper-row">
+					  <button type="submit" disabled={(email.length === 0 || password.length === 0 || password2.length === 0 || !emailValid || !passwordValid || password !== password2)} onClick={(event)=> this.handleSubmit(event)}>Submit</button>
+            <button type="button" className="cancel-button" onClick={this.props.onCancel}>Cancel</button>
+          </div>
 				</form>
 			</div>
 		);

@@ -2,12 +2,13 @@
 import React, { Component } from 'react';
 import './RegisterModal.css';
 
+import { goBack } from 'connected-react-router';
 import { connect } from 'react-redux';
-import { NavLink } from 'react-router-dom';
 
 import BaseOverlay from '../BaseOverlay';
-import RegisterForm from '../../forms/RegisterForm';
 import { POPUP_TYPE_ERROR } from '../PopupNotification';
+import RegisterForm from '../../forms/RegisterForm';
+import PageNavLink from '../../iterables/PageNavLink';
 import { Modals } from '../../../consts/uris';
 import { modifyInvite, updateUserProfile } from '../../../redux/actions';
 import { trackEvent } from '../../../utils/tracking';
@@ -38,13 +39,13 @@ class RegisterModal extends Component {
 	}
 
 	handleComplete = ()=> {
-		console.log('%s.handleComplete()', this.constructor.name);
+		console.log('%s.handleComplete()', this.constructor.name, { props : this.props, state : this.state });
 
 		const { outroURI } = this.state;
 		this.setState({ outro : false }, ()=> {
 			this.props.onComplete();
 
-			if (outroURI && outroURI.startsWith('#')) {
+			if (outroURI) {
 				this.props.onModal(outroURI, true, false);
 			}
 		});
@@ -59,8 +60,8 @@ class RegisterModal extends Component {
 		});
 	};
 
-	handleModal = (uri)=> {
-// console.log('%s.handleModal()', this.constructor.name, uri);
+	handleModal = (event, uri)=> {
+    console.log('%s.handleModal()', this.constructor.name, { event, uri });
 
 		this.setState({
 			outro    : true,
@@ -80,7 +81,7 @@ class RegisterModal extends Component {
 	};
 
 	render() {
-// console.log('%s.render()', this.constructor.name, this.props, this.state);
+    console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
 
 		const { invite } = this.props;
 		const { outro } = this.state;
@@ -94,15 +95,17 @@ class RegisterModal extends Component {
 
 			<div className="register-modal">
 				{(invite) && (<div className="title-wrapper">{invite.team_title}</div>)}
+        <div className="link-wrapper">
+          Already have an account? <PageNavLink to={Modals.LOGIN} onClick={this.handleModal}>Login</PageNavLink>
+        </div>
 				<div className="form-wrapper">
 					<RegisterForm
 						invite={invite}
-						onCancel={(event)=> { event.preventDefault(); this.handleComplete(); }}
+						onCancel={this.props.goBack}
 						onRegistered={this.handleRegistered} />
 				</div>
 
 				<div className="footer-wrapper form-disclaimer">
-					<NavLink to="#" onClick={()=> this.handleModal(Modals.LOGIN)}>Already have an account? Login</NavLink>
 				</div>
 			</div>
 		</BaseOverlay>);
@@ -113,7 +116,8 @@ class RegisterModal extends Component {
 const mapDispatchToProps = (dispatch)=> {
 	return ({
 		modifyInvite      : (payload)=> dispatch(modifyInvite(payload)),
-		updateUserProfile : (payload)=> dispatch(updateUserProfile(payload))
+    updateUserProfile : (payload)=> dispatch(updateUserProfile(payload)),
+    goBack            : (payload)=> dispatch(goBack(payload))
 	});
 };
 

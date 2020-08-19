@@ -1,9 +1,7 @@
 
 .register-modal {
-	max-width: var(--modal-content-width);
 	padding: var(--spacing-10) 0 var(--spacing-05) 0;
 }
 
 .register-modal .form-wrapper {
-	width: 348px;
 }

@@ -2,12 +2,13 @@
 import React, { Component } from 'react';
 import './LoginModal.css';
 
+import { goBack } from 'connected-react-router';
 import { connect } from 'react-redux';
-import { NavLink } from 'react-router-dom';
 
 import BaseOverlay from '../BaseOverlay';
-import LoginForm from '../../forms/LoginForm';
 import { POPUP_TYPE_ERROR } from '../PopupNotification';
+import LoginForm from '../../forms/LoginForm';
+import PageNavLink from '../../iterables/PageNavLink';
 import { Modals } from '../../../consts/uris';
 import { modifyInvite, updateUserProfile } from '../../../redux/actions';
 import { trackEvent } from '../../../utils/tracking';
@@ -90,16 +91,15 @@ class LoginModal extends Component {
 			onComplete={this.handleComplete}>
 
 			<div className="login-modal">
+        <div className="link-wrapper">
+          Don't have an account? <PageNavLink to={Modals.REGISTER} onClick={this.handleModal}>Sign Up</PageNavLink> or <PageNavLink to={Modals.RECOVER} onClick={this.handleModal}>Forgot Password</PageNavLink>
+				</div>
+
 				<div className="form-wrapper">
 					<LoginForm
 						invite={invite}
-						onCancel={(event)=> { event.preventDefault(); this.handleComplete(); }}
+						onCancel={this.props.goBack}
 						onLoggedIn={this.handleLoggedIn} />
-				</div>
-
-				<div className="footer-wrapper form-disclaimer">
-					<NavLink to="#" onClick={()=> this.handleModal(Modals.REGISTER)}>Don't have an account? Sign Up</NavLink>
-					<NavLink to="#" onClick={()=> this.handleModal(Modals.RECOVER)}>Forgot Password</NavLink>
 				</div>
 			</div>
 		</BaseOverlay>);
@@ -110,7 +110,8 @@ class LoginModal extends Component {
 const mapDispatchToProps = (dispatch)=> {
 	return ({
 		modifyInvite      : (payload)=> dispatch(modifyInvite(payload)),
-		updateUserProfile : (payload)=> dispatch(updateUserProfile(payload))
+    updateUserProfile : (payload)=> dispatch(updateUserProfile(payload)),
+    goBack            : (payload)=> dispatch(goBack(payload))
 	});
 
 };

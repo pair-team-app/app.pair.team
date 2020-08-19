@@ -3,8 +3,9 @@ import React, { Component } from 'react';
 import './CreateTeamPage.css';
 
 import { Strings } from 'lang-js-utils';
+import { goBack } from 'connected-react-router';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
+// import { withRouter } from 'react-router-dom';
 
 import BasePage from '../BasePage';
 // import CreateTeamForm from './CreateTeamForm';
@@ -108,6 +109,8 @@ class CreateTeamPage extends Component {
   };
 
   render() {
+    console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
+
     const { profile } = this.props;
     return (<BasePage { ...this.props } className="create-team-page">
       {(profile) && (<CreateTeamForm { ...this.state}
@@ -121,7 +124,7 @@ class CreateTeamPage extends Component {
         onInviteFocus={this.handleInviteFocus}
         onInviteRemove={this.handleInviteRemove}
         onSubmit={this.handleSubmit}
-        onCancel={this.props.history.goBack}
+        onCancel={this.props.goBack}
       />)}
     </BasePage>);
   }
@@ -172,7 +175,8 @@ const CreateTeamForm = (props)=> {
 
 const mapDispatchToProps = (dispatch)=> {
   return ({
-    makeTeam : (payload)=> dispatch(makeTeam(payload))
+    makeTeam : (payload)=> dispatch(makeTeam(payload)),
+    goBack   : (payload)=> dispatch(goBack(payload))
   });
 };
 
@@ -182,4 +186,5 @@ const mapStateToProps = (state, ownProps)=> {
   });
 };
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(CreateTeamPage));
+// export default withRouter(connect(mapStateToProps, mapDispatchToProps)(CreateTeamPage));
+export default connect(mapStateToProps, mapDispatchToProps)(CreateTeamPage);

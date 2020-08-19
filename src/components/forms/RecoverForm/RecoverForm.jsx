@@ -65,14 +65,22 @@ class RecoverForm extends Component {
 			<form onSubmit={this.handleSubmit}>
 				<DummyForm />
 				{(validated)
-					? (<input type="email" placeholder="Enter Email Address" value={email} onFocus={()=> this.setState({ email : (emailValid) ? email : '', emailValid : true, passMsg : null, validated : false })} onChange={(event)=> this.setState({ email : event.target.value })} autoComplete="new-password" autoFocus />)
-					: (<input type="text" placeholder="Enter Email Address" value={email} onFocus={()=> this.setState({ email : (emailValid) ? email : '', emailValid : true, passMsg : null, validated : false })} onChange={(event)=> this.setState({ email : event.target.value })} autoComplete="new-password" />)
+					? (<input type="email" placeholder="Enter Work Email Address" value={email} onFocus={()=> this.setState({ email : (emailValid) ? email : '', emailValid : true, passMsg : null, validated : false })} onChange={(event)=> this.setState({ email : event.target.value })} autoComplete="new-password" autoFocus />)
+					: (<input type="text" placeholder="Enter Work Email Address" value={email} onFocus={()=> this.setState({ email : (emailValid) ? email : '', emailValid : true, passMsg : null, validated : false })} onChange={(event)=> this.setState({ email : event.target.value })} autoComplete="new-password" />)
 				}
 
-				<button disabled={(email.length === 0 || !emailValid)} type="submit" onClick={(event)=> this.handleSubmit(event)}>Submit</button>
+        <div className="button-wrapper button-wrapper-row">
+          <button type="submit" disabled={(email.length === 0 || !emailValid)} onClick={this.handleSubmit}>Submit</button>
+          <button type="button" className="cancel-button" onClick={this.props.onCancel}>Cancel</button>
+        </div>
+				{/* <button disabled={(email.length === 0 || !emailValid)} type="submit" onClick={(event)=> this.handleSubmit(event)}>Submit</button> */}
 			</form>
 		</div>);
 	}
 }
 
-export default RecoverForm;
+
+
+
+
+export default (RecoverForm);
