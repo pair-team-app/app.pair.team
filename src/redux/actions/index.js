@@ -528,14 +528,6 @@ export function modifyTeam(payload) {
 }
 
 
-export function setEntryHash(payload) {
-  logFormat('setEntryHash()', null, payload);
-
-  const { hash } = payload;
-  return { payload : { hash }, type : SET_ENTRY_HASH };
-}
-
-
 export function setInvite(payload) {
   logFormat('setInvite()', null, payload);
   const invite = payload;
