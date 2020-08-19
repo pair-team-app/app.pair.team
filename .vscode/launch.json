@@ -10,7 +10,7 @@
       "reAttach": false,
       "profileDir": "/Users/mattholcombe/Library/Application Support/Firefox/Profiles/1spydc8c.default-debug",
       "name": "Launch Firefox on localhost:3000",
-      "url": "http://localhost:3000/team/pairurl-com",
+      "url": "http://localhost:3000/team#login",
       "webRoot": "${workspaceFolder}",
       "pathMappings": [
         {
@@ -25,9 +25,17 @@
       "reAttach": false,
       "profileDir": "/Users/mattholcombe/Library/Application Support/Firefox/Profiles/1spydc8c.default-debug",
       "name": "Launch Firefox on 192.168.1.50:3000",
-      "url": "http://192.168.1.50:3000/team",
+      "url": "http://192.168.1.50:3000/team#login",
       "webRoot": "${workspaceFolder}",
       "pathMappings": [
+        {
+          "url": "moz-extension://2dbba05c-0889-a44a-afef-ef7ac8ae2e55/inject",
+          "path": "${workspaceFolder}/src/redux/middleware"
+        },
+        {
+          "url": "moz-extension://2dbba05c-0889-a44a-afef-ef7ac8ae2e55/inject",
+          "path": "${workspaceFolder}/src/redux/middleware"
+        },
         {
           "url": "moz-extension://0fe61bde-c36b-8944-956f-5dacb1f1f855/inject",
           "path": "${workspaceFolder}/src"
@@ -38,7 +46,7 @@
       "name": "Launch Chrome",
       "type": "chrome",
       "request": "launch",
-      "url": "http://localhost:3000/team/pairurl-com",
+      "url": "http://localhost:3000/team/#login",
       "webRoot": "${workspaceFolder}/src",
       "sourceMapPathOverrides": {
         "webpack:///src/*": "${webRoot}/*"
