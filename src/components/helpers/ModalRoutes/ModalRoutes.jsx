@@ -119,7 +119,7 @@ class ModalRoutes extends Component {
       />)}
 
       {(expired) && (<AlertDialog
-        title='Invite Expired'
+        title="Invite Expired"
         tracking={Modals.EXPIRED}
         onComplete={()=> this.props.onComplete(Modals.EXPIRED)}>
         This invite has expired.
