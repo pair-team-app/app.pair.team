@@ -20,7 +20,7 @@ const createLogActionStackTraceMiddleware = (actionTypes=[])=> {
   const logActionStackTraceMiddleware = (storeAPI)=> (next)=> (action)=> {
     if(action.type && actionTypes.includes(action.type)) {
     	console.log('[|:|] Store', storeAPI.getState());
-      console.trace('[:|:]', 'TYPE:[”%s“] ACTION:[%s] NEXT:[%s] ', action.type, action, next, '[:|:]');
+      console.trace('[:|:]%s', 'TYPE:[”%s“] ACTION:[%s] NEXT:[%s] ', action.type, action, next, '[:|:]');
     }
 
     return (next(action));
@@ -39,19 +39,21 @@ const store = createStore(rootReducer(history), composeWithDevTools(applyMiddlew
 
 if (typeof cookie.load('user_id') === 'undefined') {
   cookie.save('user_id', '0', { path : '/', sameSite : false });
-  // const { pathname, hash } = store.getState().router.location;
+  const { pathname, hash } = store.getState().router.location;
 
-  // if ([Modals.LOGIN, Modals.REGISTER, Modals.RECOVER].filter((modal)=> (hash === modal)).length === 0)
-  // store.dispatch(push(`${Pages.TEAM}${Modals.REGISTER}`));
+  console.log('-_-+-_', 'STORE SAYS SHOW MODAL!!!!', { store} )
+  if ([Modals.LOGIN, Modals.REGISTER, Modals.RECOVER].filter((modal)=> (hash === modal)).length === 0) {
+    store.dispatch(push(`${Pages.TEAM}${Modals.REGISTER}`));
+  }
 
-} else {
+// } else {
   // if ((cookie.load('user_id') << 0) !== 0) {
-    store.dispatch(fetchUserProfile());
   // }
 }
 
-store.dispatch(fetchComponentTypes());
-store.dispatch(fetchDevices());
-store.dispatch(fetchProducts());
+store.dispatch(fetchUserProfile());
+// store.dispatch(fetchComponentTypes());
+// store.dispatch(fetchDevices());
+// store.dispatch(fetchProducts());
 
 export default store;

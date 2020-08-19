@@ -45,7 +45,8 @@ class App extends Component {
         profile  : false,
         recover  : false,
         register : false,
-        stripe   : false
+        stripe   : false,
+        dropFile : false
       }
     };
 
@@ -60,6 +61,8 @@ class App extends Component {
     // console.log('[:][:][:][:][:][:][:][:][:][:]', makeAvatar('M'));
 
     const { profile, location, hash } = this.props;
+    const { modals } = this.state;
+
     if (!Browsers.isOnline()) {
       this.handlePopup({
         type     : POPUP_TYPE_OK,
@@ -73,6 +76,10 @@ class App extends Component {
         if (profile) {
           this.onLogout();
         }
+      }
+
+      if (hash.length !== 0) {
+        this.onEntryModal(hash, modals);
       }
     }
 
@@ -95,6 +102,10 @@ class App extends Component {
     // url changed
     if (prevProps.location.pathname !== pathname) {
       trackPageview();
+    }
+
+    if (hash && hash.length !== 0 && prevProps.location.hash !== hash) {
+      this.onEntryModal(hash, modals);
     }
 
 
@@ -139,27 +150,7 @@ class App extends Component {
       }
 
 
-      if (hash.length > 0) {
-        // recover modal
-        if (hash === Modals.RECOVER && !modals.recover) {
-          this.onToggleModal(Modals.RECOVER);
-        }
 
-        // profile modal
-        if (hash === Modals.PROFILE && !modals.profile) {
-          this.onToggleModal(Modals.PROFILE);
-        }
-
-        // login
-        if (hash === Modals.LOGIN && !modals.login) {
-          this.onToggleModal(Modals.LOGIN);
-        }
-
-        // register
-        if (hash === Modals.REGISTER && !modals.register) {
-          this.onToggleModal(Modals.REGISTER);
-        }
-      }
 
 
 
@@ -288,6 +279,23 @@ class App extends Component {
   handleUpdateUser = (profile)=> {
     console.log('%s.handleUpdateUser()', this.constructor.name, { profile });
     this.props.updateUserProfile({ profile, remote : true });
+  };
+
+  onEntryModal = (hash, modals) => {
+    console.log('%s.onEntryModal()', this.constructor.name, { props : this, state : this.state, hash, modals });
+
+    if (hash === Modals.RECOVER && !modals.recover) {
+      this.onToggleModal(Modals.RECOVER);
+
+    } else if (hash === Modals.REGISTER && !modals.register) {
+      this.onToggleModal(Modals.REGISTER);
+    } else if (hash === Modals.LOGIN && !modals.login) {
+      this.onToggleModal(Modals.LOGIN);
+    } else if (hash === Modals.PROFILE && !modals.profile) {
+      this.onToggleModal(Modals.PROFILE);
+    } else if (hash === Modals.FILE_DROP && !modals.fileDrop) {
+      this.onToggleModal(Modals.FILE_DROP);
+    }
   };
 
   onToggleModal = (uri, show=true, clear=true)=> {
