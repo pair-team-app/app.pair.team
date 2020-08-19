@@ -20,7 +20,7 @@ const createLogActionStackTraceMiddleware = (actionTypes=[])=> {
   const logActionStackTraceMiddleware = (storeAPI)=> (next)=> (action)=> {
     if(action.type && actionTypes.includes(action.type)) {
     	console.log('[|:|] Store', storeAPI.getState());
-      console.trace('[:|:]', 'TYPE:["%s"] ACTION:[%s] NEXT:[%s] ', action.type, action, next, '[:|:]');
+      console.trace('[:|:]', 'TYPE:[”%s“] ACTION:[%s] NEXT:[%s] ', action.type, action, next, '[:|:]');
     }
 
     return (next(action));
@@ -39,10 +39,15 @@ const store = createStore(rootReducer(history), composeWithDevTools(applyMiddlew
 
 if (typeof cookie.load('user_id') === 'undefined') {
   cookie.save('user_id', '0', { path : '/', sameSite : false });
-  store.dispatch(push(`${Pages.TEAM}${Modals.REGISTER}`));
+  // const { pathname, hash } = store.getState().router.location;
+
+  // if ([Modals.LOGIN, Modals.REGISTER, Modals.RECOVER].filter((modal)=> (hash === modal)).length === 0)
+  // store.dispatch(push(`${Pages.TEAM}${Modals.REGISTER}`));
 
 } else {
-	store.dispatch(fetchUserProfile());
+  // if ((cookie.load('user_id') << 0) !== 0) {
+    store.dispatch(fetchUserProfile());
+  // }
 }
 
 store.dispatch(fetchComponentTypes());
