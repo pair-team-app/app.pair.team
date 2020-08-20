@@ -384,7 +384,7 @@ class App extends Component {
     console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
     // console.log('%s.render()', this.constructor.name, this.state.modals);
 
-    const { darkThemed, profile, team, purchase } = this.props;
+    const { darkThemed, profile, team } = this.props;
     const { popup, modals } = this.state;
 
     return (<div className="site-wrapper" data-theme={(darkThemed) ? 'dark' : 'light'} data-devin-matty={MATTY_DEVIN_THEME}>
@@ -462,7 +462,7 @@ class App extends Component {
 
         {(modals.payment) && (<AlertDialog
 				  title='Payment Processed'
-				  tracking={Modals.PAYMENT}>
+				  tracking={Modals.PAYMENT}
 				  onComplete={()=> { this.onToggleModal(Modals.PAYMENT, false); this.props.history.replace(`${Pages.TEAM}/${team.id}--${team.slug}`) }}>
 			  </AlertDialog>)}
 

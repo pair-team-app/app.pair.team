@@ -35,7 +35,7 @@ class LeftNav extends Component {
   componentDidUpdate(prevProps, prevState, snapshot) {
     // console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : this.props, prevState, state : this.state });
 
-    const { teams, team, playgrounds } = this.props;
+    const { playgrounds } = this.props;
     const { builds } = this.state;
 
     // if (playgrounds && (!builds || prevProps.playgrounds !== playgrounds)) {
@@ -143,7 +143,6 @@ class LeftNav extends Component {
 
         {(teams && teams.length > 0) && (<div className="builds-wrapper" data-loading={(!builds && window.location.pathname !== Pages.CREATE)}>
           <div className="loading">Loading…</div>
-          {/* {(teams.length === 0) && (<div className="header">No Builds</div>)} */}
           {(builds || window.location.pathname === Pages.CREATE) && (<div className="header">{(window.location.pathname === Pages.CREATE || builds.length === 0) ? 'No ' : ''}Channel Builds</div>)}
           {(builds) && (<div className="row">
             {builds.map((build, i)=> (

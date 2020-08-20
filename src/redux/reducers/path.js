@@ -1,5 +1,5 @@
 
-import { SET_ENTRY_HASH, SET_ROUTE_PATH } from '../../consts/action-types';
+import { SET_ROUTE_PATH } from '../../consts/action-types';
 import { LOG_REDUCER_POSTFIX, LOG_REDUCER_PREFIX } from '../../consts/log-ascii';
 
 

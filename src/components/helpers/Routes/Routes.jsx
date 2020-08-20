@@ -34,9 +34,6 @@ class Routes extends Component {
   render() {
     console.log('%s.render()', this.constructor.name, { state : this.state, props : this.props });
 
-
-    const { profile, pathname, hash, state } = this.props;
-
     return (<Switch>
       <Route exact path={Pages.HOME}><Redirect to={Pages.TEAM} /></Route>
 
@@ -107,15 +104,6 @@ class Routes extends Component {
 }
 
 
-const mapStateToProps = (state, ownProps)=> {
-	return ({
-    profile  : state.user.profile,
-		pathname : state.router.location.pathname,
-		hash     : state.router.location.hash,
-		state    : state.router.location.state
-	});
-};
-
-
-export default connect(mapStateToProps)(Routes);
+export default (Routes);
+// export default connect(mapStateToProps)(Routes);
 // export default withRouter(Routes);

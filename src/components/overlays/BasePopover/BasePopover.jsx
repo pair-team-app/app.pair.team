@@ -145,7 +145,7 @@ class BasePopover extends Component {
 	onPosition = ()=> {
 //  console.log('%s.onPosition()', this.constructor.name, this.state.position);
 
-    const { duration, position } = this.state;
+    // const { duration, position } = this.state;
     // this.timeline = new TimelineMax();
     // this.timeline.to(this.wrapper, duration.outro, { ...position,
     //   ease : Circ.easeOut,

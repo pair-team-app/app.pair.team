@@ -318,10 +318,10 @@ class TeamPageFileDrop extends Component {
       <div>
 
         <div className="input-wrapper" data-hidden={(files.length === 0 && preComment === null)}>
-          {/* <KeyboardEventHandler isDisabled={(files.length === 0 && preComment === null)} handleFocusableElements={true} handleKeys={['ctrl', 'meta', 'enter', 'esc']} onKeyEvent={(key, event)=> this.handleKeyPress(event, key)} /> */}
+          <KeyboardEventHandler isDisabled={(files.length === 0 && preComment === null)} handleFocusableElements handleKeys={['ctrl', 'meta', 'enter', 'esc']} onKeyEvent={(key, event)=> this.handleKeyPress(event, key)}>
           {/* <KeyboardEventHandler isDisabled={(files.length === 0 && preComment === null)} handleKeys={['ctrl', 'meta', 'enter', 'esc']} onKeyEvent={(key, event)=> this.handleKeyPress(event, key)}> */}
             <TextareaAutosize id="comment-txtarea" className="comment-txtarea" placeholder={(url) ? 'Add a comment to this url…' : 'Add a comment to this image…'} value={(!url) ? (preComment || '') : ''} onFocusCapture={this.handleFieldFocus} onChange={this.handleTextChange} ref={(el)=> (el) ? this.commentInput = el : null} data-code={(code)} />
-          {/* </KeyboardEventHandler> */}
+          </KeyboardEventHandler>
           {(preComment) && (<CodeFormAccessory align={FormAccessoryAlignment.BOTTOM} onClick={this.handleCode} />)}
         </div>
 

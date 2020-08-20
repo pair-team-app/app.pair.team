@@ -15,7 +15,7 @@ import TeamPageFileDrop from './TeamPageFileDrop';
 
 import { CommentSortTypes } from '../../sections/TopNav';
 import { TEAM_TIMESTAMP } from '../../../consts/formats';
-import { ENTER_KEY, ESCAPE_KEY } from '../../../consts/key-codes';
+import { ENTER_KEY } from '../../../consts/key-codes';
 import { fetchTeamComments, createComment, makeComment, makeTeamRule, modifyTeam, setComment, setPlayground, setTypeGroup } from '../../../redux/actions';
 import { trackEvent } from '../../../utils/tracking';
 
@@ -264,7 +264,7 @@ class TeamPage extends Component {
 
   render() {
     console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
-    const { profile, team, member, sort, preComment } = this.props;
+    const { profile, team, member, sort } = this.props;
     const { teamDescription, ruleContent, ruleInput, fetching, loading, dragging } = this.state;
 
     const infoLoading = Boolean(((loading << 0) & 0x001) === 0x001);

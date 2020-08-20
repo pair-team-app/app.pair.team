@@ -8,7 +8,7 @@ import BaseOverlay from '../BaseOverlay';
 import ProfileForm from '../../forms/ProfileForm/ProfileForm';
 import PageNavLink from '../../iterables/PageNavLink';
 import { POPUP_TYPE_STATUS, POPUP_TYPE_OK } from '../PopupNotification';
-import { API_ENDPT_URL, Pages, Modals } from '../../../consts/uris';
+import { API_ENDPT_URL, Modals } from '../../../consts/uris';
 import { fetchUserTeams, fetchUserProfile, updateUserProfile } from '../../../redux/actions';
 import { trackEvent } from '../../../utils/tracking';
 

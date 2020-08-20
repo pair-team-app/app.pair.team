@@ -12,7 +12,6 @@ import { COMMENT_TIMESTAMP } from '../../../consts/formats';
 import { USER_DEFAULT_AVATAR } from '../../../consts/uris';
 import { makeComment, setComment, makeVote, modifyComment } from '../../../redux/actions';
 import { trackEvent } from '../../../utils/tracking';
-import btnCode from '../../../assets/images/ui/btn-code.svg';
 
 class BaseComment extends Component {
   constructor(props) {
@@ -174,7 +173,7 @@ const BaseCommentContent = (props)=> {
 	// console.log('BaseComment.BaseCommentContent()', { props });
 
 	const { comment, replyContent, codeFormat, preComment } = props;
-	const { author, types, content, format } = comment;
+	const { types, content, format } = comment;
 
 	return (<div className="base-comment-content">
 

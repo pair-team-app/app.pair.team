@@ -40,7 +40,6 @@ export const SET_TEAM = 'SET_TEAM';
 export const SET_INVITE = 'SET_INVITE';
 export const SET_TEAM_COMMENTS_SORT = 'SET_TEAM_COMMENTS_SORT';
 
-export const SET_ENTRY_HASH = 'SET_ENTRY_HASH';
 export const SET_ROUTE_PATH = 'SET_ROUTE_PATH';
 
 export const TOGGLE_AX = 'TOGGLE_AX';
