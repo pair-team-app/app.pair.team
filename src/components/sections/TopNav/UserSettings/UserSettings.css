@@ -1,5 +1,9 @@
 
 
+.user-settings {
+	position: relative;
+}
+
 .user-settings .avatar-ico {
 	transition: opacity var(--transition-duration-short) ease-out;
 }
@@ -11,7 +15,7 @@
 
 
 .user-settings-popover {
-	position: relative;
+	/* position: relative; */
 	display: flex;
 	flex-flow: column nowrap;
 	align-items: center;

@@ -11,14 +11,13 @@ import BasePopover from '../../../overlays/BasePopover';
 import { SettingsMenuItemTypes } from './';
 
 
-const POSITION = {
-	fixed    : false,
-	position : {
-		x : -100,
-		y : 18
-	}
+const POPOVER_PAYLOAD = {
+  fixed    : false,
+  position : {
+    x : -238,
+    y : 0
+  }
 };
-
 
 class UserSettings extends Component {
 	constructor(props) {
@@ -29,8 +28,6 @@ class UserSettings extends Component {
 			outro    : false,
 			itemType : null
 		};
-
-		this.wrapper = React.createRef();
 	}
 
 	componentDidMount() {
@@ -106,13 +103,12 @@ class UserSettings extends Component {
 		const { avatar } = (profile || { avatar : USER_DEFAULT_AVATAR });
 		const { popover, outro } = this.state;
 
-		return (<div className="user-settings" ref={(el)=> (el) ? this.wrapper = el : null}>
+		return (<div className="user-settings">
 			<div className="avatar-wrapper" onClick={this.handleShowPopover}>
 				<img className="avatar-ico" src={avatar} alt="Avatar" />
 			</div>
 
 			{(popover) && (<UserSettingsPopover
-				position={{ x : this.wrapper.offsetLeft + 208, y : this.wrapper.offsetTop }}
 				outro={outro}
 				onItemClick={this.handleItemClick}
 				onClose={()=> this.setState({ popover : false })}
@@ -127,16 +123,8 @@ const UserSettingsPopover = (props)=> {
 // console.log('UserSettingsPopover()', { props });
 
 
-	const { position, outro } = props;
-	const payload = {
-		fixed    : true,
-		position : {
-			x : position.x - 240,
-			y : position.y + 10
-		}
-	};
-
-	return (<BasePopover outro={outro} payload={payload} onOutroComplete={props.onComplete}>
+	const { outro } = props;
+	return (<BasePopover outro={outro} payload={POPOVER_PAYLOAD} onOutroComplete={props.onComplete}>
 		<div className="user-settings-popover">
 			<div className="settings-item" onClick={(event)=> props.onItemClick(SettingsMenuItemTypes.PROFILE, event)}>Profile</div>
 			<div className="settings-item"><NavLink to={NPM_DE_PLAYGROUND} target="_blank" className="user-settings-link" onClick={(event)=> props.onItemClick(SettingsMenuItemTypes.INSTALL, event)}>Install</NavLink></div>
