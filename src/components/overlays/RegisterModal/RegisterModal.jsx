@@ -96,7 +96,7 @@ class RegisterModal extends Component {
 			<div className="register-modal">
 				{(invite) && (<div className="title-wrapper">{invite.team_title}</div>)}
         <div className="link-wrapper">
-          Already have an account? <PageNavLink to={Modals.LOGIN} onClick={this.handleModal}>Login</PageNavLink>
+          <span>Already have an account? <PageNavLink to={Modals.LOGIN} onClick={this.handleModal}>Login</PageNavLink></span>
         </div>
 				<div className="form-wrapper">
 					<RegisterForm
@@ -105,8 +105,7 @@ class RegisterModal extends Component {
 						onRegistered={this.handleRegistered} />
 				</div>
 
-				<div className="footer-wrapper form-disclaimer">
-				</div>
+				<div className="footer-wrapper form-disclaimer"></div>
 			</div>
 		</BaseOverlay>);
 	}

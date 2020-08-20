@@ -94,7 +94,7 @@ class App extends Component {
     console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : this.props, prevState, state : this.state, snapshot });
     // console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props, this.state.modals);
 
-    const { location, hash, profile, team, purchase, invite } = this.props;
+    const { location, profile, team, purchase, invite, urlHistory } = this.props;
     const { pathname } = location;
     const { modals } = this.state;
 
@@ -104,8 +104,9 @@ class App extends Component {
       trackPageview();
     }
 
-    if (hash && hash.length !== 0 && prevProps.location.hash !== hash) {
-      this.onEntryModal(hash, modals);
+    const hash = (urlHistory && urlHistory.length > 0) ? [ ...urlHistory].pop() : '';
+    if (urlHistory.length === 1) {
+      // this.onEntryModal(urlHistory.hash, modals);
     }
 
 
@@ -148,11 +149,6 @@ class App extends Component {
           this.onToggleModal(Modals.EXPIRED);
         }
       }
-
-
-
-
-
 
 
       // logged in
@@ -203,13 +199,25 @@ class App extends Component {
 
       // outros from history
       if (hash !== prevProps.hash && prevProps.hash.length !== 0) {
-        // if (prevProps.hash === Modals.PROFILE) {
-        //   this.onToggleModal(Modals.PROFILE, false, (hash.length === 0));
-        // }
+        if (prevProps.hash === Modals.PROFILE && modals.profile) {
+          this.onToggleModal(Modals.PROFILE, false, (hash.length === 0));
+        }
 
-        // if (prevProps.hash === Modals.RECOVER) {
-        //   this.onToggleModal(Modals.RECOVER, false, (hash.length === 0));
-        // }
+        if (prevProps.hash === Modals.RECOVER && modals.recover) {
+          this.onToggleModal(Modals.RECOVER, false, (hash.length === 0));
+        }
+
+        if (prevProps.hash === Modals.FILE_DROP && modals.fileDrop) {
+          this.onToggleModal(Modals.FILE_DROP, false, (hash.length === 0));
+        }
+
+        if (prevProps.hash === Modals.LOGIN && modals.login) {
+          this.onToggleModal(Modals.LOGIN, false, (hash.length === 0));
+        }
+
+        if (prevProps.hash === Modals.REGISTER && modals.register) {
+          this.onToggleModal(Modals.REGISTER, false, (hash.length === 0));
+        }
       }
     } else {
 
@@ -284,15 +292,20 @@ class App extends Component {
   onEntryModal = (hash, modals) => {
     console.log('%s.onEntryModal()', this.constructor.name, { props : this, state : this.state, hash, modals });
 
+    const { profile } = this.props;
+
     if (hash === Modals.RECOVER && !modals.recover) {
       this.onToggleModal(Modals.RECOVER);
 
     } else if (hash === Modals.REGISTER && !modals.register) {
       this.onToggleModal(Modals.REGISTER);
+
     } else if (hash === Modals.LOGIN && !modals.login) {
       this.onToggleModal(Modals.LOGIN);
-    } else if (hash === Modals.PROFILE && !modals.profile) {
+
+    } else if (hash === Modals.PROFILE && !modals.profile && profile) {
       this.onToggleModal(Modals.PROFILE);
+
     } else if (hash === Modals.FILE_DROP && !modals.fileDrop) {
       this.onToggleModal(Modals.FILE_DROP);
     }
@@ -458,7 +471,8 @@ const mapStateToProps = (state, ownProps)=> {
     typeGroup      : state.builds.typeGroup,
     comment        : state.comments.comment,
     matchPath      : state.matchPath,
-    hash           : state.router.location.hash
+    hash           : state.router.location.hash,
+    urlHistory     : state.path.urlHistory
   };
 };
 

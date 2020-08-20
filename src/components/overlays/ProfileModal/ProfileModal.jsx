@@ -3,10 +3,10 @@ import './ProfileModal.css';
 
 import axios from 'axios';
 import { connect } from 'react-redux';
-import { NavLink } from 'react-router-dom';
 
 import BaseOverlay from '../BaseOverlay';
 import ProfileForm from '../../forms/ProfileForm/ProfileForm';
+import PageNavLink from '../../iterables/PageNavLink';
 import { POPUP_TYPE_STATUS, POPUP_TYPE_OK } from '../PopupNotification';
 import { API_ENDPT_URL, Pages, Modals } from '../../../consts/uris';
 import { fetchUserTeams, fetchUserProfile, updateUserProfile } from '../../../redux/actions';
@@ -118,15 +118,15 @@ class ProfileModal extends Component {
     const { outro, submitting } = this.state;
     return (<BaseOverlay tracking={Modals.PROFILE} outro={outro} title="Edit Profile" closeable={false} onComplete={this.handleComplete}>
       <div className="profile-modal">
+        <div className="link-wrapper"><span>
+          {(profile.validated)
+              ? (<div>Your account is email verified</div>)
+              : (<PageNavLink to="#" onClick={this.handleResendVerify}>Resend Verify Email</PageNavLink>)
+            }
+            <PageNavLink to="#" onClick={this.handleResetPassword}>Delete Account?</PageNavLink>
+        </span></div>
         <div className="form-wrapper">
           <ProfileForm profile={profile} password={password} team={team} onCancel={this.handleCancel} onSubmit={this.handleSubmit} />
-          <div className="footer-wrapper form-disclaimer">
-            {(profile.validated)
-              ? (<div>Your account is email verified</div>)
-              : (<NavLink to="#" onClick={this.handleResendVerify}>Resend Verify Email</NavLink>)
-            }
-            <NavLink to="#" onClick={this.handleResetPassword}>Delete Account?</NavLink>
-          </div>
         </div>
         {submitting && (<div className="base-overlay-loader-wrapper">
           {/*{(true) && (<div className="base-overlay-loader-wrapper">*/}

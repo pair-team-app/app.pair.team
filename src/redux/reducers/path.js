@@ -4,8 +4,8 @@ import { LOG_REDUCER_POSTFIX, LOG_REDUCER_PREFIX } from '../../consts/log-ascii'
 
 
 const initialState = {
-  params : null,
-  hash   : null
+  params     : null,
+  urlHistory : null
 };
 
 
@@ -19,9 +19,9 @@ export default function user(state=initialState, action) {
   const { type, payload } = action;
   logFormat(state, action);
 
-  if (type === SET_ENTRY_HASH) {
-    const { hash } = payload;
-    return (Object.assign({}, state, { hash }));
+  if (type === '@@router/LOCATION_CHANGE') {
+    const { urlHistory } = payload;
+    return (Object.assign({}, state, { urlHistory }));
 
   } else if (type === SET_ROUTE_PATH) {
     const { params } = payload;

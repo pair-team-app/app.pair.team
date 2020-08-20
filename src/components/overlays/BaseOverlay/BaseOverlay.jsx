@@ -10,7 +10,7 @@ import ResizeObserver from 'react-resize-observer';
 import { trackOverlay } from '../../../utils/tracking';
 import { OVERLAY_TYPE_AUTO_SIZE, OVERLAY_TYPE_PERCENT_SIZE, OVERLAY_TYPE_POSITION_OFFSET } from './';
 
-const DURATION_MULT = 0.5;
+const DURATION_MULT = 0.0;
 const INTRO_DURATION = (1 / 8);
 const OUTRO_DURATION = (1 / 4);
 

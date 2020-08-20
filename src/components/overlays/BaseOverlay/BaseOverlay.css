@@ -114,14 +114,14 @@
 }
 
 .base-overlay .content .link-wrapper {
-  width: 100%;
-  margin-bottom: 20px;
-  /* border: 1px dotted #00ff00; */
+	display: flex;
+	flex-flow: column nowrap;
+  /* border: 1px dotted #ffff00; */
 }
 
-.base-overlay .content .link-wrapper > * {
-	margin: auto;
-	flex: 1 0 0;
+.base-overlay .content .link-wrapper > *span {
+	flex: 1 0 auto;
+	/* border: 1px dashed #00ff00; */
 }
 
 .base-overlay .content-wrapper .content .loader-wrapper {

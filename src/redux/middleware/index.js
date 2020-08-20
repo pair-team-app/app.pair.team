@@ -15,7 +15,6 @@ import { makeAvatar } from '../../utils/funcs';
 import { reformComment, reformPlayground, reformRule, reformTeam, reformInvite } from '../../utils/reform';
 
 
-
 const logFormat = ({ store, action, next, event })=> {
   if (action && typeof action !== 'function' && action.type !== UPDATE_MOUSE_COORDS) {
     const { type, payload } = action;
@@ -63,8 +62,6 @@ export function onMiddleware(store) {
       cookie.save('user_id', (profile) ? profile.id : '0', { path : '/', sameSite : false });
 
       if (profile) {
-          dispatch(push(existingModal(hash) ? `${pathname}` : pathname ));
-
         payload.profile = { ...profile,
           id        : id << 0,
           status    : 0x00,
@@ -73,6 +70,10 @@ export function onMiddleware(store) {
         };
 
         dispatch(fetchUserTeams({ profile }));
+
+        // if (showingEntryModal(hash)) {
+        //   dispatch(replace(pathname));
+        // }
       }
 
     } else if (type === USER_PROFILE_UPDATED) {
@@ -361,6 +362,8 @@ export function onMiddleware(store) {
       }
 
     } else if (type === '@@router/LOCATION_CHANGE') {
+      const { urlHistory } = prevState.path;
+
       const { state } = prevState.router.location;
       const { profile } = prevState.user;
       const { teams } = prevState.teams;
@@ -399,9 +402,11 @@ export function onMiddleware(store) {
       payload.preComment = null;
 
 
-      payload.location = { ...payload.location,
-        state : (!state || state === undefined) ? null : state
-      }
+      payload.urlHistory = (urlHistory) ? [ ...urlHistory, { ...payload.location, state : null }] : [{ ...payload.location, state : null }];
+
+      //++ payload.location = { ...payload.location,
+      //++   state : (!state || state === undefined) ? null : state
+      //++ }
 
       // state = (state === undefined) ? null : state;
 
@@ -433,9 +438,10 @@ export function onMiddleware(store) {
       if (isFirstRendering) {
         console.log('\\\\\\\\\\\\\\\\\\\\', 'FIRST LOCATION RENDER', { pathname, hash, cookie : ((cookie.load('user_id') << 0) === 0) }, '\\\\\\\\\\\\\\\\\\\\');
 
-        payload.location = { ...location,
-          state : { ...location, state : null }
-        };
+        payload.urlHistory = [{ ...payload.location, state : null }];
+        //++ payload.location = { ...location,
+        //++   state : { ...location, state : null }
+        //++ };
 
         // dispatch(setRoutePath({
         //   params : {
@@ -452,7 +458,7 @@ export function onMiddleware(store) {
 
 
 
-        if ((cookie.load('user_id') << 0 === 0) && !existingModal(hash)) {
+        if ((cookie.load('user_id') << 0 === 0) && !showingEntryModal(hash)) {
           dispatch(push(`${Pages.TEAM}${Modals.LOGIN}`));
         }
 
@@ -500,13 +506,29 @@ export function onMiddleware(store) {
           if (!isFirstRendering) {
 
             // has history
-            if (state !== null && state.length >= 1) {
+            /*if (state !== null && state.length >= 1) {
               // const prevLocation = [ ...payload.location.state].pop();
               const prevLocation = state.pop();
 
               // replace with history
               if (location.key !== prevLocation.key) {
                 payload.location = prevLocation;
+              }
+
+            // no history
+            } else {
+
+            }*/
+
+
+
+            if (payload.urlHistory !== null && payload.urlHistory.length >= 1) {
+              // const prevLocation = [ ...payload.location.state].pop();
+              const prevURL = payload.uri.pop();
+
+              // replace with history
+              if (location.key !== prevURL.key) {
+                payload.location = prevURL;
               }
 
             // no history
@@ -535,22 +557,23 @@ export function onMiddleware(store) {
             //   }
             // }));
 
-            if (state !== null && state.length >= 1) {
-              const prevLocation = [ ...state].pop();
+            // if ((state !== null || state === undefined) && state.length >= 1) {
+              // const prevLocation = [ ...state].pop();
               // return (dispatch(push(prevLocation)));
               // push(prevLocation));
 
               // push the prev location
               // const redirLocation = (parseInt(cookie.load('user_id')) > 0 || profile) ? `${Pages.TEAM}${hash}` : `${Pages.TEAM}${Modals.LOGIN}`
               // return (dispatch(push(redirLocation)));
-            }
+            // }
           }
 
 
 
           // push last location onto state
           payload.location = { ...location,
-            state : Arrays.pruneObjDupKeys((!state) ? [{ ...location, state : null }] : [ ...state, { ...prevState.router.location }], 'key')
+            // state : Arrays.pruneObjDupKeys((!state) ? [{ ...location, state : null }] : [ ...state, { ...prevState.router.location }], 'key')
+            state : Arrays.pruneObjDupKeys((!urlHistory) ? [{ ...location, state : null }] : [ ...urlHistory, { ...prevState.router.location }], 'key')
           };
 
         } else if (action === 'REPLACE') {
@@ -561,7 +584,7 @@ export function onMiddleware(store) {
       }
 
       // passed url params
-      console.log('///-///', 'ROUTER CHANGE', { pathname, hash }, '///-///');
+      console.log('///-///', 'ROUTER CHANGE', { pathname, hash, urlHistory }, '///-///');
 
       // logged in
       if (profile) {
@@ -617,8 +640,8 @@ export function onMiddleware(store) {
         // }
       }
 
-      console.log(':|:=-=:|:', '√ TEAM PAGE YO!!!', ':|:=-=:|:', { profile, team : payload.team, pathname, hash, modals : existingModal(hash) })
-      if (profile && state && !payload.team && state.length === 1 && pathname === Pages.TEAM && [Modals.LOGIN, Modals.REGISTER, Modals.RECOVER].filter((modal)=> (payload.hash === modal)).length === 0) {
+      if (profile && urlHistory && !payload.team && urlHistory.length === 1 && pathname === Pages.TEAM && !showingEntryModal(hash)) {
+      console.log(':|:=-=:|:', 'STILL AINT GOT A TEAM TEAM PAGE YO!!!', ':|:=-=:|:', { profile, team : payload.team, pathname, hash, modals : showingEntryModal(hash) })
 
       }
 
@@ -667,15 +690,16 @@ export function onMiddleware(store) {
 }
 
 
+export const showingEntryModal = (hash)=> {
+  return (([Modals.LOGIN, Modals.RECOVER, Modals.REGISTER].filter((modal)=> (hash === modal)).lengh === 0));
+};
+
+
 
 const replaceArrayElement = (array, element, override={})=> {
   return (array.map((item)=> ((item.id === element.id) ? element : { ...item, ...override })));
 };
 
-
-const existingModal = (hash)=> {
-  return (([Modals.LOGIN, Modals.RECOVER, Modals.REGISTER].filter((modal)=> (hash === modal)).lengh === 0));
-};
 
 const pageParamCheck = (pathname, { createPath, teamPath, projPath }={}, overrides={ exact : false, strict : false })=> {
   let matchBits = 0x000;

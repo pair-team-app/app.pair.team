@@ -7,8 +7,9 @@ import { composeWithDevTools } from 'redux-devtools-extension/developmentOnly';
 import thunk from 'redux-thunk';
 
 import { fetchComponentTypes, fetchDevices, fetchProducts, fetchUserProfile } from '../actions';
+import * as actionCreators from '../actions';
 import rootReducer from '../reducers/index';
-import { onMiddleware } from '../middleware'
+import { onMiddleware, showingEntryModal } from '../middleware'
 
 import { SET_ROUTE_PATH, SET_TEAM, SET_PLAYGROUND, SET_COMMENT, COMMENT_CREATED } from '../../consts/action-types';
 import { Modals, Pages } from '../../consts/uris.js';
@@ -33,8 +34,14 @@ const createLogActionStackTraceMiddleware = (actionTypes=[])=> {
 const stackTraceMiddleware = createLogActionStackTraceMiddleware(['@@router/LOCATION_CHANGE', SET_ROUTE_PATH, SET_TEAM, SET_PLAYGROUND, SET_COMMENT, COMMENT_CREATED]);
 
 
-// const store = createStore(rootReducer, compose(applyMiddleware(onMiddleware, thunk, stackTraceMiddleware)));
-const store = createStore(rootReducer(history), composeWithDevTools(applyMiddleware(routerMiddleware(history), onMiddleware, thunk, stackTraceMiddleware)));
+
+const composeEnhancers = composeWithDevTools({ actionCreators, trace : true, traceLimit : 32 }) // const store = createStore(rootReducer, compose(applyMiddleware(onMiddleware, thunk, stackTraceMiddleware)));
+const store = createStore(rootReducer(history), composeEnhancers(applyMiddleware(routerMiddleware(history), onMiddleware, thunk, stackTraceMiddleware)));
+
+
+
+// -- orf
+// const store = createStore(rootReducer(history), composeWithDevTools(applyMiddleware(routerMiddleware(history), onMiddleware, thunk, stackTraceMiddleware)));
 
 
 if (typeof cookie.load('user_id') === 'undefined') {
@@ -42,7 +49,7 @@ if (typeof cookie.load('user_id') === 'undefined') {
   const { pathname, hash } = store.getState().router.location;
 
   console.log('-_-+-_', 'STORE SAYS SHOW MODAL!!!!', { store} )
-  if ([Modals.LOGIN, Modals.REGISTER, Modals.RECOVER].filter((modal)=> (hash === modal)).length === 0) {
+  if (!showingEntryModal(hash)) {
     store.dispatch(push(`${Pages.TEAM}${Modals.REGISTER}`));
   }
 
@@ -52,8 +59,8 @@ if (typeof cookie.load('user_id') === 'undefined') {
 }
 
 store.dispatch(fetchUserProfile());
-// store.dispatch(fetchComponentTypes());
-// store.dispatch(fetchDevices());
-// store.dispatch(fetchProducts());
+store.dispatch(fetchComponentTypes());
+store.dispatch(fetchDevices());
+store.dispatch(fetchProducts());
 
 export default store;

@@ -92,7 +92,7 @@ class LoginModal extends Component {
 
 			<div className="login-modal">
         <div className="link-wrapper">
-          Don't have an account? <PageNavLink to={Modals.REGISTER} onClick={this.handleModal}>Sign Up</PageNavLink> or <PageNavLink to={Modals.RECOVER} onClick={this.handleModal}>Forgot Password</PageNavLink>
+          <span>Don't have an account? <PageNavLink to={Modals.REGISTER} onClick={this.handleModal}>Sign Up</PageNavLink> or <PageNavLink to={Modals.RECOVER} onClick={this.handleModal}>Forgot Password</PageNavLink></span>
 				</div>
 
 				<div className="form-wrapper">
@@ -101,6 +101,7 @@ class LoginModal extends Component {
 						onCancel={this.props.goBack}
 						onLoggedIn={this.handleLoggedIn} />
 				</div>
+				<div className="footer-wrapper form-disclaimer"></div>
 			</div>
 		</BaseOverlay>);
 	}
