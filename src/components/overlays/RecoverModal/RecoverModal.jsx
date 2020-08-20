@@ -38,8 +38,8 @@ class RecoverModal extends Component {
 		});
 	};
 
-	handleModal = (uri)=> {
-		console.log('%s.handleModal()', this.constructor.name, { uri });
+	handleModal = (event, uri)=> {
+		console.log('%s.handleModal()', this.constructor.name, { event, uri });
 		this.setState({
 			outro    : true,
 			outroURI : uri

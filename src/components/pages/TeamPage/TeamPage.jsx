@@ -90,9 +90,9 @@ class TeamPage extends Component {
       // this.setState({ loading : loading ^ 0x010 });
 
       this.setState({
-        ruleInput : false,
+        ruleInput   : false,
         ruleContent : '',
-        loading : loading ^ 0x010
+        loading     : loading ^ 0x010
       });
     }
 
@@ -134,10 +134,33 @@ class TeamPage extends Component {
     } else {
       if (ruleContent.length > 0 && (keyCode === ENTER_KEY)) {
         trackEvent('text', 'add-team-rule');
-        this.setState({ loading  : loading ^ 0x010 }, ()=> {
+        this.setState({ loading : loading ^ 0x010 }, ()=> {
           this.props.makeTeamRule({ title : ruleContent });
+          this.setState({ ruleInput : false });
         });
       }
+    }
+  }
+
+  handleRuleInput = (event=null)=> {
+    // console.log('%s.handleRuleInput()', this.constructor.name, { event });
+
+    const { member } = this.props;
+    if (member.roles.includes('admin')) {
+      trackEvent('button', 'add-rule');
+
+      this.ruleInput.focus();
+      this.setState({
+        ruleContent : '',
+        ruleInput   : true
+      });
+
+    } else {
+      this.props.onPopup({
+        type     : POPUP_TYPE_ERROR,
+        content  : 'You don\'t have access to edit this team\'s rules',
+        duration : 2000
+      });
     }
   }
 
@@ -176,28 +199,6 @@ class TeamPage extends Component {
     console.log('%s.handleFileDropClose()', this.constructor.name);
     this.setState({ dragging : false });
   };
-
-  handleRuleInput = (event)=> {
-    // console.log('%s.handleRuleInput()', this.constructor.name, { event });
-
-    const { member } = this.props;
-    if (member.roles.includes('admin')) {
-      trackEvent('button', 'add-rule');
-
-      this.ruleInput.focus();
-      this.setState({
-        ruleContent : '',
-        ruleInput   : true
-      });
-
-    } else {
-      this.props.onPopup({
-        type     : POPUP_TYPE_ERROR,
-        content  : 'You don\'t have access to edit this team\'s rules',
-        duration : 2000
-      });
-    }
-  }
 
   handlePageKeyPress = (event, key)=> {
     console.log('%s.handlePageKeyPress()', this.constructor.name, { event, target : event.target, attribs : { elementID : event.target.id, className : event.target.className, attribs : event.target.getAttributeNames(), hasOverride : (event.target.getAttributeNames().findIndex((attrib)=> (attrib === 'data-keypress-override')) !== -1) }, key });
@@ -262,14 +263,14 @@ class TeamPage extends Component {
   }
 
   render() {
-    // console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
+    console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
     const { profile, team, member, sort, preComment } = this.props;
     const { teamDescription, ruleContent, ruleInput, fetching, loading, dragging } = this.state;
 
     const infoLoading = Boolean(((loading << 0) & 0x001) === 0x001);
     const rulesLoading = Boolean(((loading << 0) & 0x010) === 0x010);
     const commentsLoading = Boolean(((loading << 0) & 0x100) === 0x100);
-    // console.log('%s.render()', this.constructor.name, { infoLoading, rulesLoading, commentsLoading });
+    console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state, infoLoading, rulesLoading, commentsLoading });
     // console.log('%s.render()', this.constructor.name, { infoLoading, rulesLoading, commentsLoading });
 
     return (<BasePage { ...this.props } className="team-page" data-file-drop={(window.location.href.includes('#create'))}>
@@ -278,7 +279,7 @@ class TeamPage extends Component {
           <KeyboardEventHandler handleKeys={['alphanumeric']} onKeyEvent={(key, event)=> this.handlePageKeyPress(event, key)} />
           <div className="header" data-loading={Boolean((fetching & 0x010) === 0x010)}>
             <input type="text" className="comment-txt" placeholder="Typing or Pasting anything…" value="" onChange={(event)=> this.handlePageKeyPress(event, event.target.value)} />
-            <button disabled={true}>Comment</button>
+            <button className="comment-button">Comment</button>
           </div>
 
           <div className="scroll-wrapper">
@@ -294,7 +295,7 @@ class TeamPage extends Component {
             </div>
 
             <div className="team-wrapper" data-fetching={Boolean((fetching & 0x010) === 0x010)}>
-              <div className="about-wrapper" data-loading={infoLoading}>
+              <div className="about-wrapper" data-processing={infoLoading}>
                 <MenuProvider id="menu_id" className="menu-provider">
                   <div className="header">About</div>
                 </MenuProvider>
@@ -306,13 +307,14 @@ class TeamPage extends Component {
                   <div className="timestamp">CREATED {team.added.format(TEAM_TIMESTAMP)}</div>
                 </div>
               </div>
-              <div className="rules-wrapper"  data-loading={rulesLoading}>
+              <div className="rules-wrapper" data-processing={rulesLoading}>
                 <div className="header">Rules</div>
                 <div className="content">
-                  {(team.rules.map((rule, i)=> (<TeamPageRule key={i} rule={rule} ind={(i+1)} />)))}
+                  {(team.rules.map((rule, i)=> (<TeamPageRule key={i} rule={rule} ind={(i+1)} skeleton={false} />)))}
+                  {(rulesLoading) && (<TeamPageRule key={-1} rule={{ title : ruleContent, content : null }} ind={(team.rules.length + 1)} skeleton={true} />)}
                 </div>
-                <div className="footer" data-input={ruleInput}>
-                  <TeamPageAddRuleButton admin={member.roles.includes('admin')} onClick={this.handleRuleInput} />
+                <div className="input-wrapper" data-input={ruleInput}>
+                  <TeamPageAddRuleButton admin={member.roles.includes('admin')} disabled={rulesLoading} onClick={this.handleRuleInput} />
                   <KeyboardEventHandler handleKeys={['ctrl', 'meta', 'shift', 'enter', 'esc']} handleFocusableElements onKeyEvent={(key, event)=> this.handleAddRule(event, key)}>
                     <TextareaAutosize id="team-add-rule-txtarea" placeholder="" value={ruleContent} onChange={(event)=> this.setState({ ruleContent : event.target.value })} ref={(el)=> this.ruleInput = (el) ? el : null} />
                   </KeyboardEventHandler>
@@ -359,20 +361,17 @@ const TeamPageComment = (props)=> {
 const TeamPageRule = (props)=> {
   // console.log('TeamPageRule()', { props });
 
-  const { rule, ind } = props;
+  const { rule, ind, skeleton } = props;
   const { title, content } = rule;
   const text = `${ind}. ${title}${(content) ? `\n${content}` : ''}`;
-
-  return (<div className="team-page-rule">
-    {text}
-  </div>);
+  return (<div className="team-page-rule" data-skeleton={skeleton}>{text}</div>);
 };
 
 const TeamPageAddRuleButton = (props)=> {
   // console.log('TeamPageAddRuleButton()', { props });
-  const { admin } = props;
+  const { admin, disabled } = props;
 
-  return (<button className="quiet-button team-page-add-rule-button" onClick={props.onClick} data-admin={admin}>
+  return (<button disabled={disabled} className="quiet-button team-page-add-rule-button" onClick={props.onClick} data-admin={admin}>
     <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
       <rect x="7" width="2" height="16" fill="#CCCCCC"/>
       <rect x="16" y="7" width="2" height="16" transform="rotate(90 16 7)" fill="#CCCCCC"/>

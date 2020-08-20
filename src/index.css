@@ -25,6 +25,10 @@
   height: 0;
 }
 
+*[data-processing="true"], *:hover[data-processing="true"] {
+	cursor: progress;
+}
+
 
 :root {
 	--orthodox-font-family: 'SF Pro Display', system-ui, -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Ubuntu, 'Segoe UI', Roboto, Arial, sans-serif;
@@ -206,8 +210,8 @@ a:active {
 
 button {
 	padding: 14px;
-  border: 1px solid rgba(var(--btn-bg-color), 1.0);
 	border-radius: var(--border-radius);
+  border: 1px solid rgba(var(--btn-bg-color), 1.0);
   background-color: rgba(var(--btn-bg-color), 1.0);
   color: rgba(var(--btn-fg-color), 1.0);
 	font-family: var(--orthodox-font-family);

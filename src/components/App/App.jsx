@@ -195,10 +195,28 @@ class App extends Component {
 
           this.props.history.replace(Pages.CREATE);
         }
+
+
+      // not logged in
+      } else {
+        // outros from history
+        // if (hash !== prevProps.hash && prevProps.hash.length !== 0) {
+        //   if (prevProps.hash === Modals.RECOVER && modals.recover) {
+        //     this.onToggleModal(Modals.RECOVER, false, (hash.length === 0));
+        //   }
+
+        //   if (prevProps.hash === Modals.LOGIN && modals.login) {
+        //     this.onToggleModal(Modals.LOGIN, false, (hash.length === 0));
+        //   }
+
+        //   if (prevProps.hash === Modals.REGISTER && modals.register) {
+        //     this.onToggleModal(Modals.REGISTER, false, (hash.length === 0));
+        //   }
+        // }
       }
 
       // outros from history
-      if (hash !== prevProps.hash && prevProps.hash.length !== 0) {
+      if (hash.length === 0 && hash !== prevProps.hash && prevProps.hash.length !== 0) {
         if (prevProps.hash === Modals.PROFILE && modals.profile) {
           this.onToggleModal(Modals.PROFILE, false, (hash.length === 0));
         }
@@ -219,6 +237,7 @@ class App extends Component {
           this.onToggleModal(Modals.REGISTER, false, (hash.length === 0));
         }
       }
+
     } else {
 
     }

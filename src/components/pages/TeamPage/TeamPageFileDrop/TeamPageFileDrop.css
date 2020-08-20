@@ -33,7 +33,7 @@
 
 
 .team-page-file-drop > div > * {
-  display: flex;
+  /* display: flex; */
   width: 100%;
   border: 1px solid #00ffff;
 }
@@ -54,6 +54,7 @@
 
 .team-page-file-drop .input-wrapper {
   position: relative;
+  height: fit-content;
 }
 
 .team-page-file-drop .input-wrapper > span {
@@ -65,7 +66,8 @@
 .team-page-file-drop .input-wrapper .comment-txtarea, .team-page-file-drop .input-wrapper .comment-txtarea:hover {
   width: 100%;
   min-height: 51px;
-  padding: 15px;
+  height: 100%;
+  padding: 0;
   background-color: rgba(var(--site-bg-color), 1.0);
   color: rgba(var(--site-fg-color), 1.0);
   border: 1px solid rgba(var(--site-bg-color), 1.0);
@@ -89,6 +91,7 @@
   align-items: flex-start;
   justify-content: flex-start;
   height: 100%;
+  /* flex: 1 1 0; */
 }
 
 .team-page-file-drop .file-wrapper > * {

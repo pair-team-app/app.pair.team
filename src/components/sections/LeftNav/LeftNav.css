@@ -43,6 +43,7 @@
 	font-size: 10px;
 	font-weight: 700;
 	color: rgba(var(--site-lite-fg-color), 1.0);
+	text-transform: uppercase;
 	opacity: 1;
 	transition: opacity var(--transition-duration-short) ease-out;
 }

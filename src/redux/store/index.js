@@ -50,7 +50,7 @@ if (typeof cookie.load('user_id') === 'undefined') {
 
   console.log('-_-+-_', 'STORE SAYS SHOW MODAL!!!!', { store} )
   if (!showingEntryModal(hash)) {
-    store.dispatch(push(`${Pages.TEAM}${Modals.REGISTER}`));
+    store.dispatch(push(`${Pages.TEAM}${Modals.LOGIN}`));
   }
 
 // } else {

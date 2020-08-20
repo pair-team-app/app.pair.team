@@ -60,6 +60,13 @@
 	margin-left: var(--spacing-10);
 }
 
+.team-page .content-wrapper .header button:hover, .team-page .content-wrapper .header button:active {
+	border: 1px solid rgba(var(--btn-bg-color), 1.0);
+  background-color: rgba(var(--btn-bg-color), 1.0);
+  color: rgba(var(--btn-fg-color), 1.0);
+	cursor: default;
+}
+
 .team-page .content-wrapper .scroll-wrapper {
 	position: absolute;
 	display: flex;
@@ -171,14 +178,14 @@
 
 
 
-.team-page .content-wrapper .scroll-wrapper .team-wrapper .rules-wrapper .footer {
+.team-page .content-wrapper .scroll-wrapper .team-wrapper .rules-wrapper .input-wrapper {
 	display: flex;
 	flex-wrap: column nowrap;
 	justify-content: center; /* h-align */
 	align-items: center;
 }
 
-.team-page .content-wrapper .scroll-wrapper .team-wrapper .rules-wrapper .footer > * {
+.team-page .content-wrapper .scroll-wrapper .team-wrapper .rules-wrapper .input-wrapper > * {
 	display: flex;
 	flex: 1 1 0;
 	transition: width var(--transition-duration-fast) cubic-bezier(0.4, 0, 0.2, 1.0), opacity var(--transition-duration-fast) cubic-bezier(0.4, 0, 0.2, 1);
@@ -200,14 +207,14 @@
 	/* border: 1px solid rgba(var(--txtfield-border-color), 1.0); */
 }
 
-.team-page .content-wrapper .scroll-wrapper .team-wrapper .rules-wrapper .footer .team-page-add-rule-button {
+.team-page .content-wrapper .scroll-wrapper .team-wrapper .rules-wrapper .input-wrapper .team-page-add-rule-button {
 	min-width: 100%;
 	padding: var(--spacing-10);
 	justify-content: center;
 	border: none;
 }
 
-.team-page .content-wrapper .scroll-wrapper .team-wrapper .rules-wrapper .footer .team-page-add-rule-button[data-admin="false"]:hover {
+.team-page .content-wrapper .scroll-wrapper .team-wrapper .rules-wrapper .input-wrapper .team-page-add-rule-button[data-admin="false"]:hover {
 	background-color: rgba(var(--quiet-btn-bg-color), 1.0);
 	color: rgba(var(--quiet-btn-fg-color), 1.0);
 	cursor: not-allowed;
@@ -215,20 +222,20 @@
 }
 
 
-.team-page .content-wrapper .scroll-wrapper .team-wrapper .rules-wrapper .footer[data-input="false"] button {
+.team-page .content-wrapper .scroll-wrapper .team-wrapper .rules-wrapper .input-wrapper[data-input="false"] button {
 	width: 100%;
 	opacity: 1;
 	z-index: 2;
 }
 
-.team-page .content-wrapper .scroll-wrapper .team-wrapper .rules-wrapper .footer[data-input="false"] > span { /*, .team-page .content-wrapper .team-wrapper .rules-wrapper .footer[data-input="false"] > span > * {*/
+.team-page .content-wrapper .scroll-wrapper .team-wrapper .rules-wrapper .input-wrapper[data-input="false"] > span {
 	width: 0;
 	padding: 0;
 	opacity: 0;
 	z-index: 1;
 }
 
-.team-page .content-wrapper .scroll-wrapper .team-wrapper .rules-wrapper .footer[data-input="true"] button {
+.team-page .content-wrapper .scroll-wrapper .team-wrapper .rules-wrapper .input-wrapper[data-input="true"] button {
 	display: none;
 	width: 0;
 	min-width: 0;
@@ -237,13 +244,13 @@
 	z-index: 1;
 }
 
-.team-page .content-wrapper .scroll-wrapper .team-wrapper .rules-wrapper .footer[data-input="true"] > span {
+.team-page .content-wrapper .scroll-wrapper .team-wrapper .rules-wrapper .input-wrapper[data-input="true"] > span {
 	width: 100%;
 	opacity: 1;
 	z-index: 2;
 }
 
-.team-page .content-wrapper .scroll-wrapper .team-wrapper .about-wrapper[data-loading="true"] textarea, .team-page .content-wrapper .scroll-wrapper .team-wrapper .rules-wrapper[data-loading="true"] .footer > span {
+.team-page .content-wrapper .scroll-wrapper .team-wrapper .about-wrapper[data-processing="true"] textarea, .team-page .content-wrapper .scroll-wrapper .team-wrapper .rules-wrapper[data-processing="true"] .input-wrapper {
 	background-color: rgba(var(--disabled-bg-color), 0.5);
 	opacity: 0.5;
 	cursor: progress;
@@ -283,6 +290,7 @@
 .team-page-rule {
 	display: flex;
 	min-width: 100%;
+	min-height: 36px;
 	align-items: center;
 	padding: var(--spacing-10);
 	background-color: rgba(var(--site-bg-color), 1.0);
@@ -290,4 +298,9 @@
 	/* border: 1px solid rgba(var(--txtfield-border-color), 1.0); */
 	border-radius: var(--border-radius);
 	word-break: break-all;
+	transition: color var(--transition-duration-short) ease-out;
+}
+
+.team-page-rule[data-skeleton="true"] {
+	color: rgba(var(--site-fg-color), 0.5);
 }

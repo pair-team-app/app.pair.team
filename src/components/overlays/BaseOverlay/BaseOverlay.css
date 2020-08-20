@@ -116,6 +116,7 @@
 .base-overlay .content .link-wrapper {
 	display: flex;
 	flex-flow: column nowrap;
+	margin-bottom: var(--spacing-20);
   /* border: 1px dotted #ffff00; */
 }
 
