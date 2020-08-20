@@ -90,6 +90,7 @@ class BaseComment extends Component {
 
 		trackEvent('button', 'reply-comment', comment.id);
 
+		event.target.blur();
     event.preventDefault();
     event.stopPropagation();
 
@@ -145,10 +146,10 @@ const BaseCommentVote = (props=> {
 
 
 const BaseCommentHeader = (props)=> {
-	// console.log('BaseComment.BaseCommentHeader()', { props });
+	console.log('BaseComment.BaseCommentHeader()', { props });
 
-	const { profile, ind, comment } = props;
-	const { author } = comment;
+	const { profile, comment } = props;
+	const { author, timestamp } = comment;
 	// const { roles } = author;
 
 	const handleDelete = (event)=> {
@@ -157,12 +158,12 @@ const BaseCommentHeader = (props)=> {
 	};
 
 	return (<div className="base-comment-header">
-		<div className="icon-wrapper">
-			{(ind >= 0) && (<div className="icon avatar-wrapper"><div>{ind}</div></div>)}
-			<div className="icon avatar-wrapper"><img src={(!author.avatar) ? USER_DEFAULT_AVATAR : author.avatar} alt={author.username} data-id={author.id} /></div>
+		<div className="avatar-wrapper">
+			<img className="avatar-ico" src={(!author.avatar) ? USER_DEFAULT_AVATAR : author.avatar} alt={author.username} data-id={author.id} />
 		</div>
-		<div className="spacer" />
-		<div className="link-wrapper">
+		<div className="info-wrapper">
+			{/* <div className="timestamp" dangerouslySetInnerHTML={{ __html : timestamp.format(COMMENT_TIMESTAMP).replace(/(\d{1,2})(\w{2}) @/, (match, p1, p2)=> (`${p1}<sup>${p2}</sup> @`)) }} /> */}
+			<div className="timestamp">Commented @ {timestamp.format(COMMENT_TIMESTAMP)}</div>
 			{(profile.id === author.id) && (<div className="link" onClick={handleDelete}>Delete</div>)}
 		</div>
 	</div>);
@@ -173,14 +174,15 @@ const BaseCommentContent = (props)=> {
 	// console.log('BaseComment.BaseCommentContent()', { props });
 
 	const { comment, replyContent, codeFormat, preComment } = props;
-	const { author, types, content, format, timestamp } = comment;
+	const { author, types, content, format } = comment;
 
 	return (<div className="base-comment-content">
-		<div className="timestamp" dangerouslySetInnerHTML={{ __html : timestamp.format(COMMENT_TIMESTAMP).replace(/(\d{1,2})(\w{2}) @/, (match, p1, p2)=> (`${p1}<sup>${p2}</sup> @`)) }} />
-		{(content) && (<div className="content" dangerouslySetInnerHTML={{ __html : content.replace(author.username, `<span class="txt-bold">${author.username}</span>`) }} data-format={format} />)}
+
+		{(content) && (<div className="content" data-format={format}>{content}</div>)}
 		{(comment.state !== 'closed' && types.find((type)=> (type === 'op'))) && (<div className="reply-form">
 			<KeyboardEventHandler handleKeys={['enter', `esc`]} isDisabled={(preComment !== null)} onKeyEvent={(key, event)=> props.onReplyKeyPress(event, key)}>
-			<input type="text" placeholder="Reply…" value={replyContent} onFocus={props.onReplyFocus} onChange={props.onTextChange} data-code={codeFormat} autoComplete="new-password" /></KeyboardEventHandler>
+				<input type="text" placeholder="Reply…" value={replyContent} onFocus={props.onReplyFocus} onChange={props.onTextChange} data-code={codeFormat} autoComplete="new-password" />
+			</KeyboardEventHandler>
 			{/* <img src={btnCode} className="code-button" onClick={props.onCodeToggle} alt="Code" /> */}
 		</div>)}
 

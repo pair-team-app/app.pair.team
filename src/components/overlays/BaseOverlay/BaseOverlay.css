@@ -57,8 +57,7 @@
   /* position: relative; */
   width: 100%;
   height: 100%;
-  padding: var(--spacing-10);
-	/* padding: var(--spacing-20); */
+  /* padding: var(--spacing-10); */
 	overflow: hidden;
 	transform-style: preserve-3d;
 	transform-style: flat;
@@ -117,12 +116,18 @@
 	display: flex;
 	flex-flow: column nowrap;
 	margin-bottom: var(--spacing-20);
+	padding-left: var(--spacing-10);
   /* border: 1px dotted #ffff00; */
 }
 
 .base-overlay .content .link-wrapper > *span {
 	flex: 1 0 auto;
 	/* border: 1px dashed #00ff00; */
+}
+
+
+.base-overlay .content-wrapper .content form {
+	padding: 0 var(--spacing-10);
 }
 
 .base-overlay .content-wrapper .content .loader-wrapper {

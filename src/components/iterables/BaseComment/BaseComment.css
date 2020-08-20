@@ -31,65 +31,43 @@
 
 .base-comment-header {
 	display: flex;
-	flex-wrap: nowrap;
-	justify-content: center; /* h-align */
+	flex-flow: column nowrap;
+	justify-content: flex-start; /* h-align */
 	align-items: flex-start; /* v-align */
 	width: 100%;
 	margin-bottom: 20px;
 	padding-left: 30px;
+	border: 1px dotted #ff00ff;
 }
 
-.base-comment-header > * {
-	margin: auto;
-	/*border: 1px dotted #ff00ff;*/
-}
-
-.base-comment-header .icon-wrapper {
-	flex: 1 1 auto;
+.base-comment-header .info-wrapper {
 	display: flex;
+	flex-wrap: nowrap;
+	margin-top: var(--spacing-10);
+	font-size: 12px;
 }
 
-.base-comment-header .spacer {
-	flex: 10 0 0;
-	margin: auto;
+.base-comment-header .info-wrapper > *:first-child {
+	margin-right: var(--spacing-10);
 }
 
-.base-comment-header .link-wrapper {
-	flex: 1 1 auto;
-	text-align: right;
+.base-comment-header .info-wrapper .timestamp {
+	color: rgba(var(--timestamp-color), 1.0);
 }
 
-.link-wrapper .link {
-	font-size: 10px;
-	color: rgba(var(--link-color), 1.0);
+.base-comment-header .info-wrapper .link {
+	color: rgba(var(--link-alt-color), 1.0);
 	text-align: right;
 	transition: color var(--transition-duration-short) ease-out;
 }
 
-.link-wrapper .link:hover {
-	color: rgba(var(--link-hover-color), 1.0);
+.base-comment-header .info-wrapper .link:hover {
+	color: rgba(var(--link-alt-color), 1.0);
+	text-decoration: underline;
 	cursor: pointer;
 }
 
 
-.base-comment-header .icon {
-	text-align: center;
-}
-
-.base-comment-header .icon:not(:last-child) {
-	margin-right: var(--spacing-05);
-}
-
-.base-comment-header .icon > * {
-	/* opacity: 0.875; */
-	transition: filter var(--transition-duration-short) ease-out;
-	filter: brightness(100%);
-}
-
-.base-comment-header .icon > *:hover {
-	opacity: 1.0;
-	filter: brightness(100%);
-}
 
 .base-comment .comment-body {
 	display: flex;
@@ -188,12 +166,6 @@
 .comment-body .base-comment-content .reply-form > .code-button:hover {
 	opacity: 1;
   cursor: pointer;
-}
-
-.base-comment .timestamp {
-	margin-bottom: 10px;
-	font-size: 12px;
-	color: rgba(var(--timestamp-color), 1.0);
 }
 
 .base-comment .content {

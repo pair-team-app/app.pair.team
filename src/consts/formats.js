@@ -2,7 +2,7 @@
 import jsonSize from 'json-size';
 
 
-export const COMMENT_TIMESTAMP = 'MMM Do @ h:mma';
+export const COMMENT_TIMESTAMP = 'MMM Do, h:mma';
 export const BUILD_TIMESTAMP = 'DD-MMM';
 export const TEAM_TIMESTAMP = 'DD-MM-YYYY';
 // export const MOMENT_TIMESTAMP = 'DD-MMM-YYYY';

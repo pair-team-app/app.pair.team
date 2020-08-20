@@ -107,8 +107,8 @@ class UserSettings extends Component {
 		const { popover, outro } = this.state;
 
 		return (<div className="user-settings" ref={(el)=> (el) ? this.wrapper = el : null}>
-			<div className="avatar-wrapper user-settings-avatar-wrapper" onClick={this.handleShowPopover}>
-				<img className="avatar-wrapper-ico avatar-ico" src={avatar} alt="Avatar" />
+			<div className="avatar-wrapper" onClick={this.handleShowPopover}>
+				<img className="avatar-ico" src={avatar} alt="Avatar" />
 			</div>
 
 			{(popover) && (<UserSettingsPopover
