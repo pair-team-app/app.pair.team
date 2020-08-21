@@ -140,7 +140,7 @@ class TeamPage extends Component {
         });
       }
     }
-  }
+  };
 
   handleRuleInput = (event=null)=> {
     // console.log('%s.handleRuleInput()', this.constructor.name, { event });
@@ -162,7 +162,7 @@ class TeamPage extends Component {
         duration : 2000
       });
     }
-  }
+  };
 
   handleClipboardPaste = (event)=> {
     console.log('%s.handleClipboardPaste()', this.constructor.name, { event, data : event.clipboardData.getData('Text') });
@@ -246,7 +246,7 @@ class TeamPage extends Component {
         });
       }
     }
-  }
+  };
 
   handleTeamFocus = (event)=> {
     console.log('%s.handleTeamFocus()', this.constructor.name, { event });
@@ -260,7 +260,7 @@ class TeamPage extends Component {
       });
       event.target.blur();
     }
-  }
+  };
 
   render() {
     console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });

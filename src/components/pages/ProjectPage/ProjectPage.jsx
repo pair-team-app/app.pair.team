@@ -6,7 +6,6 @@ import { connect } from 'react-redux';
 // import { withRouter } from 'react-router-dom';
 
 import BasePage from '../BasePage';
-// import BaseComment from '../../iterables/BaseComment';
 import { setComment, setComponent, setPlayground } from '../../../redux/actions';
 
 
@@ -49,7 +48,6 @@ class ProjectPage extends Component {
     console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
 
     const { playground, component } = this.props;
-
     return (<BasePage { ...this.props } className="project-page" data-comments={(window.location.href.includes('/comments'))}>
       {(!playground) && (<div>Project page loading...</div>)}
       {(playground && Object.keys(playground).length > 1) && (<div className="view-wrapper" data-grid={(component === null)}>
@@ -87,7 +85,7 @@ const ProjectViewsGrid = (props)=> {
       <img src={null} alt="" />
     </div>))}
   </div>);
-}
+};
 
 
 const ProjectPageCommentsList = (props)=> {
@@ -99,7 +97,7 @@ const ProjectPageCommentsList = (props)=> {
       {([ ...comments, ...comments, ...comments].map((comment, i)=> (<ProjectPageCommentsListComment key={i} comment={comment} />)))}
     </div>
   </div>);
-}
+};
 
 const ProjectPageCommentsListComment = (props)=> {
   console.log('ProjectPageCommentsListComment()', { props });
@@ -108,7 +106,7 @@ const ProjectPageCommentsListComment = (props)=> {
   return (<div className="project-page-comments-list-comment">
     [{comment.id}] {comment.content} - @{comment.author.username}
   </div>);
-}
+};
 
 
 const ProjectViewItem = (props)=> {
@@ -116,7 +114,7 @@ const ProjectViewItem = (props)=> {
   return (<div className="project-view-item" onClick={props.onClick}>
     <img src={null} alt="" />
   </div>);
-}
+};
 
 const ProjectViewCommentMarker = (props)=> {
   console.log('ProjectViewCommentMarker()', { props });
@@ -131,21 +129,21 @@ const ProjectViewCommentMarker = (props)=> {
 };
 
 const mapDispatchToProps = (dispatch)=> {
-  return {
+  return ({
     setComment    : (payload)=> dispatch(setComment(payload)),
     setComponent  : (payload)=> dispatch(setComponent(payload)),
     setPlayground : (payload)=> dispatch(setPlayground(payload)),
-  };
+  });
 };
 
 const mapStateToProps = (state, ownProps)=> {
-  return {
+  return ({
     comment    : state.comments.comment,
     params     : state.path,
     component  : state.builds.component,
     profile    : state.user.profile,
     playground : state.builds.playground
-  };
+  });
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ProjectPage);

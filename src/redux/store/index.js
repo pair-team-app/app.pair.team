@@ -36,7 +36,8 @@ const stackTraceMiddleware = createLogActionStackTraceMiddleware(['@@router/LOCA
 
 
 const composeEnhancers = composeWithDevTools({ actionCreators, trace : true, traceLimit : 32 }) // const store = createStore(rootReducer, compose(applyMiddleware(onMiddleware, thunk, stackTraceMiddleware)));
-const store = createStore(rootReducer(history), composeEnhancers(applyMiddleware(routerMiddleware(history), onMiddleware, thunk, stackTraceMiddleware)));
+// const store = createStore(rootReducer(history), composeEnhancers(applyMiddleware(routerMiddleware(history), onMiddleware, thunk, stackTraceMiddleware)));
+const store = createStore(rootReducer(history), composeEnhancers(applyMiddleware(routerMiddleware(history), onMiddleware, thunk)));
 
 
 

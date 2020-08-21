@@ -328,19 +328,20 @@ export function onMiddleware(store) {
       payload.playground = (playground) ? { ...playground,
         selected : true
       } : null;
+
       payload.playgrounds = (playgrounds) ? playgrounds.map((item)=> ((playground && item.id === playground.id) ? payload.playground : { ...item,
         selected : false
       })) : null;
 
       if (payload.playground) {
-        // dispatch(push(`/team/${team.id}--${team.slug}/project/${payload.playground.buildID}--${payload.playground.slug}/${payload.playground.device.slug}`));
+        dispatch(push(`${Pages.TEAM}/${team.id}--${team.slug}/project/${payload.playground.buildID}--${payload.playground.slug}/${payload.playground.device.slug}`));
       }
 
     } else if (type === SET_TYPE_GROUP) {
     } else if (type === SET_COMPONENT) {
-      const { component } = payload;
-      const { team } = prevState.teams;
-      const { playground } = prevState.builds;
+      // const { component } = payload;
+      // const { team } = prevState.teams;
+      // const { playground } = prevState.builds;
 
       if (payload.component) {
         // dispatch(push(`/team/${team.id}--${team.slug}/project/${playground.buildID}--${playground.slug}/${playground.device.slug}/${component.id}`));
@@ -400,7 +401,6 @@ export function onMiddleware(store) {
       payload.member= null;
       payload.comment = null;
       payload.preComment = null;
-
 
       payload.urlHistory = (urlHistory) ? [ ...urlHistory, { ...payload.location, state : null }] : [{ ...payload.location, state : null }];
 
@@ -506,25 +506,9 @@ export function onMiddleware(store) {
           if (!isFirstRendering) {
 
             // has history
-            /*if (state !== null && state.length >= 1) {
-              // const prevLocation = [ ...payload.location.state].pop();
-              const prevLocation = state.pop();
-
-              // replace with history
-              if (location.key !== prevLocation.key) {
-                payload.location = prevLocation;
-              }
-
-            // no history
-            } else {
-
-            }*/
-
-
-
             if (payload.urlHistory !== null && payload.urlHistory.length >= 1) {
               // const prevLocation = [ ...payload.location.state].pop();
-              const prevURL = payload.uri.pop();
+              const prevURL = payload.urlHistory.pop();
 
               // replace with history
               if (location.key !== prevURL.key) {

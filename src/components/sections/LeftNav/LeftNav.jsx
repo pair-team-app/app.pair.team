@@ -75,7 +75,7 @@ class LeftNav extends Component {
       this.props.setTeam(null);
       this.props.push(Pages.CREATE);
     });
-  }
+  };
 
   handleDeviceRenderClick = (deviceRender)=> {
     console.log('%s.handleDeviceRenderClick()', this.constructor.name, { deviceRender });
@@ -95,7 +95,7 @@ class LeftNav extends Component {
       this.props.setTeam(team);
       this.props.setPlayground(null);
     });
-  }
+  };
 
 
   onPopulateBuildTree = ()=> {
@@ -199,24 +199,24 @@ const LeftNavTeam = (props)=> {
 
 
 const mapStateToProps = (state, ownProps)=> {
-  return {
+  return ({
     invite      : state.teams.invite,
     team        : state.teams.team,
     teams       : state.teams.teams,
     playgrounds : state.builds.playgrounds,
     playground  : state.builds.playground,
     profile     : state.user.profile
-  };
+  });
 };
 
 const mapDispatchToProps = (dispatch)=> {
-  return {
+  return ({
     fetchBuildPlaygrounds : (payload)=> dispatch(fetchBuildPlaygrounds(payload)),
     setComponent          : (payload)=> dispatch(setComponent(payload)),
     setPlayground         : (payload)=> dispatch(setPlayground(payload)),
     setTeam               : (payload)=> dispatch(setTeam(payload)),
     push                  : (payload)=> dispatch(push(payload))
-  };
+  });
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(LeftNav);
