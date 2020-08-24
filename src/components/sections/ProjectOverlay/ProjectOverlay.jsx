@@ -35,8 +35,12 @@ class ProjectOverlay extends Component {
 
     const { playground, component } = this.props;
     return (<div className="project-overlay">
-      <div className="header-wrapper"></div>
-      <div className="content-wrapper"></div>
+      <div className="header-wrapper">HEADER</div>
+      <div className="content-wrapper">
+        <div className="comments-wrapper">
+          {(component.comments.map((comment, i)=> (<ProjectViewCommentMarker key={i} ind={(i+1)} comment={comment} onClick={this.handleCommentMarkerClick} />)))}
+        </div>
+      </div>
     </div>);
   }
 }
