@@ -17,9 +17,10 @@ import PopupNotification, { POPUP_TYPE_OK } from '../overlays/PopupNotification'
 import ProfileModal from '../overlays/ProfileModal';
 import RecoverModal from '../overlays/RecoverModal';
 import RegisterModal from '../overlays/RegisterModal';
-import StripeModal from '../overlays/StripeModal';
+import StripeModal from '../overlays/StripeModal'
 import LeftNav from '../sections/LeftNav';
 import TopNav from '../sections/TopNav';
+import ProjectOverlay from '../sections/ProjectOverlay';
 
 import { API_ENDPT_URL, Modals, Pages } from '../../consts/uris';
 import { fetchUserTeams, fetchUserProfile, fetchInvite, setPlayground, modifyInvite, paidStripeSession, updateUserProfile } from '../../redux/actions';
@@ -384,7 +385,7 @@ class App extends Component {
     console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
     // console.log('%s.render()', this.constructor.name, this.state.modals);
 
-    const { darkThemed, profile, team } = this.props;
+    const { darkThemed, profile, team, component } = this.props;
     const { popup, modals } = this.state;
 
     return (<div className="site-wrapper" data-theme={(darkThemed) ? 'dark' : 'light'} data-devin-matty={MATTY_DEVIN_THEME}>
@@ -393,6 +394,10 @@ class App extends Component {
         <TopNav darkTheme={darkThemed} onToggleTheme={this.handleThemeToggle} onLogout={this.handleLogout} onModal={this.onToggleModal} onPopup={this.handlePopup} />
 		    <Routes onLogout={this.handleLogout} onModal={this.onToggleModal} onPopup={this.handlePopup} { ...this.props } />
 	    </div>
+
+      {(component) && (<ProjectOverlay>
+
+      </ProjectOverlay>)}
 
 		  <div className='modal-wrapper'>
         {/* <ModalRoutes modals={modals} onComplete={this.handeModalComplete} /> */}
@@ -488,6 +493,7 @@ const mapStateToProps = (state, ownProps)=> {
     playgrounds    : state.builds.playgrounds,
     playground     : state.builds.playground,
     typeGroup      : state.builds.typeGroup,
+    component      : state.builds.component,
     comment        : state.comments.comment,
     matchPath      : state.matchPath,
     hash           : state.router.location.hash,

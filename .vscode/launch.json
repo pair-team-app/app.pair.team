@@ -22,7 +22,7 @@
     {
       "type": "firefox",
       "request": "launch",
-      "reAttach": false,
+      "reAttach": true,
       "profileDir": "/Users/mattholcombe/Library/Application Support/Firefox/Profiles/1spydc8c.default-debug",
       "name": "Launch Firefox on 192.168.1.50:3000",
       "url": "http://192.168.1.50:3000/team#login",

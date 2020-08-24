@@ -9,8 +9,8 @@
 
 .project-page .view-wrapper {
 	position: fixed;
-	top: 64px;
-	left: var(--left-nav-width);
+	/* top: 64px; */
+	/* left: var(--left-nav-width); */
 	width: calc(100vw - (var(--left-nav-width) + var(--project-comments-width)));
 	height: calc(100vh - 64px);
 	transition: width var(--transition-duration-long) var(--transition-duration-short) cubic-bezier(0.4, 0, 0.2, 1), height var(--transition-duration-long) var(--transition-duration-short) cubic-bezier(0.4, 0, 0.2, 1);
@@ -41,6 +41,7 @@
 
 .project-views-grid > *:hover {
 	cursor: pointer;
+	filter: brightness(75%);
 }
 
 
@@ -103,8 +104,6 @@
 	height: 1080px;
 	background-color: #cccccc;
 }
-
-
 
 .project-page-comments-list {
 	position: fixed;

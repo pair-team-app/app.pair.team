@@ -59,22 +59,10 @@ class ProjectPage extends Component {
           </div>
         </div>)}
       </div>)}
-      {(playground && component) && (<ProjectPageCommentsList comments={component.comments} />)}
-      {(playground) && (<ProjectPageFooter component={component} />)}
+      {/* {(playground && component) && (<ProjectPageCommentsList comments={component.comments} />)} */}
     </BasePage>);
   }
 }
-
-
-const ProjectPageFooter = (props)=> {
-  console.log('ProjectPageFooter()', { props });
-
-  const { component } = props;
-  return (<div className="project-page-footer">
-    Project {(component) ? 'Details' : 'Views'} Footer
-  </div>);
-};
-
 
 const ProjectViewsGrid = (props)=> {
   console.log('ProjectViewsGrid()', { props });
