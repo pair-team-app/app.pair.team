@@ -1,5 +1,5 @@
 
-import { BUILD_PLAYGROUNDS_LOADED, COMPONENT_TYPES_LOADED, DEVICES_LOADED, SET_COMPONENT, SET_PLAYGROUND, SET_TEAM, TEAM_BUILDS_LOADED } from '../../consts/action-types';
+import { BUILD_PLAYGROUNDS_LOADED, COMPONENT_TYPES_LOADED, DEVICES_LOADED, SET_COMPONENT, SET_PLAYGROUND, SET_TEAM, TEAM_BUILDS_LOADED, SET_COMMENT } from '../../consts/action-types';
 import { LOG_REDUCER_POSTFIX, LOG_REDUCER_PREFIX } from '../../consts/log-ascii';
 
 const initialState = {
@@ -11,6 +11,7 @@ const initialState = {
   typeGroup      : null,
   components     : [],
   component      : null,
+  comment        : null,
   device         : null
 };
 
@@ -56,6 +57,10 @@ export default function builds(state=initialState, action) {
   } else if (type === SET_COMPONENT) {
     const { component } = payload;
     return (Object.assign({}, state, { component }));
+
+  } else if (type === SET_COMMENT) {
+    const { comment } = payload;
+    return (Object.assign({}, state, { comment }));
 
   } else if (type === '@@router/LOCATION_CHANGE') {
     const { playgrounds, playground, component } = payload;

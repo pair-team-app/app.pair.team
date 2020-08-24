@@ -37,6 +37,7 @@ class ProjectOverlay extends Component {
     return (<div className="project-overlay">
       <div className="header-wrapper">HEADER</div>
       <div className="content-wrapper">
+        <img src={component.images.pop()} width="960" height="540" />
         <div className="comments-wrapper">
           {(component.comments.map((comment, i)=> (<ProjectViewCommentMarker key={i} ind={(i+1)} comment={comment} onClick={this.handleCommentMarkerClick} />)))}
         </div>
@@ -47,10 +48,14 @@ class ProjectOverlay extends Component {
 
 
 const ProjectViewCommentMarker = (props)=> {
-  console.log('ProjectViewCommentMarker()', { props });
+  // console.log('ProjectViewCommentMarker()', { props });
 
   const { comment, ind } = props;
-  return (<div className="project-view-comment-marker" onClick={()=> props.onClick(comment)} style={{
+  const { position } = comment;
+  return (<div className="project-view-comment-marker" onClick={()=> props.onClick(comment)} style={(position) ? {
+    top  : `${position.y}px`,
+    left : `${position.x}px`
+  } : {
     top  : '100px',
     left : '100px'
   }}>

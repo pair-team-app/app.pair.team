@@ -145,7 +145,7 @@ const BaseCommentVote = (props=> {
 
 
 const BaseCommentHeader = (props)=> {
-	console.log('BaseComment.BaseCommentHeader()', { props });
+	// console.log('BaseComment.BaseCommentHeader()', { props });
 
 	const { profile, comment } = props;
 	const { author, timestamp } = comment;

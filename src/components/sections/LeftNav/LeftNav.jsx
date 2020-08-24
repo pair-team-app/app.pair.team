@@ -165,7 +165,7 @@ class LeftNav extends Component {
 
 
 const LeftNavBuild = (props)=> {
-  console.log('LeftNavBuild()', { props });
+  // console.log('LeftNavBuild()', { props });
 
   const { build } = props;
 	const { id, title, expanded, selected, renders } = build;

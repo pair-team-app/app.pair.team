@@ -52,14 +52,7 @@ class ProjectPage extends Component {
       {(!playground) && (<div>Project page loading...</div>)}
       {(playground && Object.keys(playground).length > 1) && (<div className="view-wrapper" data-grid={(component === null)}>
         {(!component) && (<ProjectViewsGrid components={playground.components} onGridItemClick={this.handleGridItemClick} />)}
-        {(component) && (<div className="view-item-wrapper">
-          <ProjectViewItem components={component} onClick={this.handleViewClick} />
-          <div className="view-item-comments-wrapper">
-            {(component.comments.map((comment, i)=> (<ProjectViewCommentMarker key={i} ind={(i+1)} comment={comment} onClick={this.handleCommentMarkerClick} />)))}
-          </div>
-        </div>)}
       </div>)}
-      {/* {(playground && component) && (<ProjectPageCommentsList comments={component.comments} />)} */}
     </BasePage>);
   }
 }
@@ -75,46 +68,6 @@ const ProjectViewsGrid = (props)=> {
   </div>);
 };
 
-
-const ProjectPageCommentsList = (props)=> {
-  console.log('ProjectPageCommentsList()', { props });
-
-  const { comments } = props;
-  return (<div className="project-page-comments-list" data-collapsed={(!window.location.href.includes('/comments'))}>
-    <div className="item-wrapper">
-      {([ ...comments, ...comments, ...comments].map((comment, i)=> (<ProjectPageCommentsListComment key={i} comment={comment} />)))}
-    </div>
-  </div>);
-};
-
-const ProjectPageCommentsListComment = (props)=> {
-  console.log('ProjectPageCommentsListComment()', { props });
-
-  const { comment } = props;
-  return (<div className="project-page-comments-list-comment">
-    [{comment.id}] {comment.content} - @{comment.author.username}
-  </div>);
-};
-
-
-const ProjectViewItem = (props)=> {
-  console.log('ProjectViewItem()', { props });
-  return (<div className="project-view-item" onClick={props.onClick}>
-    <img src={null} alt="" />
-  </div>);
-};
-
-const ProjectViewCommentMarker = (props)=> {
-  console.log('ProjectViewCommentMarker()', { props });
-
-  const { comment, ind } = props;
-  return (<div className="project-view-comment-marker" onClick={()=> props.onClick(comment)} style={{
-    top  : '100px',
-    left : '100px'
-  }}>
-    <div>{ind}</div>
-  </div>);
-};
 
 const mapDispatchToProps = (dispatch)=> {
   return ({
