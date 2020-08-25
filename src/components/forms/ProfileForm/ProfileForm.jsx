@@ -57,7 +57,7 @@ class ProfileForm extends Component {
 // console.log('%s.handlePasswordClick()', this.constructor.name, { event });
 		event.preventDefault();
 
-    const { password, newPassword, newPassword2, passwordValid } = this.state;
+    const { password, newPassword, passwordValid } = this.state;
 		this.setState({
 			password      : (passwordValid) ? password : '',
 			newPassword   : (newPassword === 'Passwords don\'t match') ? '' : newPassword,

@@ -109,6 +109,9 @@ export function onMiddleware(store) {
       const { params } = prevState.path;
       const { pathname, hash } = prevState.router.location;
 
+      payload.team = null;
+      payload.member = null;
+
       const { teams } = payload;
       payload.teams = teams.map((team)=> (reformTeam(team))).sort((i, ii)=> ((i.epoch > ii.epoch) ? -1 : (i.epoch < ii.epoch) ? 1 : 0));
 
@@ -136,10 +139,6 @@ export function onMiddleware(store) {
         const buildID = 0;
         const deviceSlug = '';
         dispatch(fetchTeamBuilds({ team : payload.team, buildID, deviceSlug }));
-
-      } else {
-        payload.team = null;
-        payload.member = null;
       }
 
     } else if (type === TEAM_LOGO_LOADED) {
@@ -153,7 +152,6 @@ export function onMiddleware(store) {
       const { team } = prevState.teams;
       const { devices, componentTypes } = prevState.builds;
 
-
       const playgrounds = [ ...payload.playgrounds].map((playground)=> (reformPlayground(playground, devices, componentTypes, team)));
       payload.playgrounds = playgrounds;//.sort((i, ii)=> ((i.id < ii.id) ? 1 : (i.id > ii.id) ? -1 : 0));
       payload.playground = null;
@@ -161,7 +159,7 @@ export function onMiddleware(store) {
       if (params) {
         if (params.buildID) {
           const playground = { ...playgrounds.find(({ buildID, device })=> (buildID === params.buildID && device.slug === params.deviceSlug)), selected : true };
-          console.log('______________________', { playground });
+          // console.log('______________________', { playground });
           payload.playground = { ...playground, selected : true };
 
           payload.playgrounds = playgrounds.map((item)=> ((playground && item.id === playground.id) ? payload.playground : { ...item,
@@ -193,6 +191,7 @@ export function onMiddleware(store) {
         payload.comments = comments;
         // payload.comments = [ ...prevState.comments, ...comments].map((comment, i, arr)=> ((arr.find(({ id }, ii)=> (i === ii))) ? comment : null));
       }
+
     } else if (type === BUILD_PLAYGROUNDS_LOADED) {
       const { devices, componentTypes } = prevState.builds;
       const { team } = prevState.teams;
@@ -427,75 +426,28 @@ export function onMiddleware(store) {
 
      // duplicate router change, ABORT
      if (!isFirstRendering && payload.location.state && state && pathname === [ ...payload.location.state].pop().pathname && hash === [ ...payload.location.state].pop().hash) {
-       console.log('[|:|]=-=-=-=-=-=ABORT-ROUTE=-=-=-=-=-=-=[%s]=-=(%03d)', action, (state) ? state.length : null, { isFirstRendering, cookie : ((cookie.load('user_id') << 0) === 0), pathname, hash, state, profile, createMatch, teamMatch, projectMatch });
+       console.log('[|:|]=-=-=-=-=-=ABORT-ROUTE=-=-=-=-=-=-=[%s]=-=(%d)', action, (state) ? state.length : 0, { isFirstRendering, cookie : ((cookie.load('user_id') << 0) === 0), pathname, hash, state, profile, createMatch, teamMatch, projectMatch });
 
       //  dispatch (next(action));
      }
 
-      console.log('[|:|]=-=-=-=-=-=LOCATION=-=-=-=-=-=-=[%s]=-=(%03d)', action, (state) ? state.length : null, { isFirstRendering, cookie : ((cookie.load('user_id') << 0) === 0), pathname, hash, state, profile, createMatch, teamMatch, projectMatch });
+      console.log('[|:|]=-=-=-=-=-=LOCATION=-=-=-=-=-=-=[%s]=-=(%d)', action, (state) ? state.length : 0, { isFirstRendering, cookie : ((cookie.load('user_id') << 0) === 0), pathname, hash, state, profile, createMatch, teamMatch, projectMatch });
 
       if (isFirstRendering) {
         console.log('\\\\\\\\\\\\\\\\\\\\', 'FIRST LOCATION RENDER', { pathname, hash, cookie : ((cookie.load('user_id') << 0) === 0) }, '\\\\\\\\\\\\\\\\\\\\');
 
         payload.urlHistory = [{ ...payload.location, state : null }];
-        //++ payload.location = { ...location,
-        //++   state : { ...location, state : null }
-        //++ };
-
-        // dispatch(setRoutePath({
-        //   params : {
-        //     teamID       : null,
-        //     teamSlug     : null,
-        //     buildID      : null,
-        //     projectSlug  : null,
-        //     deviceSlug   : null,
-        //     componentID  : null,
-        //     comments     : null,
-        //     commentID    : null
-        //   }
-        // }));
-
-
 
         if ((cookie.load('user_id') << 0 === 0) && !showingEntryModal(hash)) {
           dispatch(push(`${Pages.TEAM}${Modals.LOGIN}`));
         }
-
-        // // if (!teamMatch && !projectMatch) {
-        // if ((cookie.load('user_id') << 0 === 0)) {
-        //   dispatch(push(`${Pages.TEAM}${Modals.LOGIN}`));
-        // }
-
-
-
-
-        //      {
-        //       // return (dispatch(replace(`${Pages.TEAM}${Modals.LOGIN}`)));
-
-        //     }
       }
 
-
-      console.log('_________::::::::]',' LOCATION HISTORY', '[::::::::_________', { payloadLocState : payload.location.state, prevLocState : state });
+      console.log('[::::||::::]',' LOCATION HISTORY', '[::::||::::]', { payloadLocState : payload.location.state, prevLocState : state });
 
       // abort and return to team root w/ existing
       if (!pathname.startsWith(Pages.TEAM) && !pathname.startsWith(Pages.CREATE)) {
         console.log('///-///', 'NOT TEAM PAGE', { pathname, hash }, '///-///');
-
-        // dispatch(setRoutePath({
-        //   params : {
-        //     teamID       : null,
-        //     teamSlug     : null,
-        //     buildID      : null,
-        //     projectSlug  : null,
-        //     deviceSlug   : null,
-        //     componentID  : null,
-        //     comments     : null,
-        //     commentID    : null
-        //   }
-        // }));
-        // dispatch(push(`${Pages.TEAM}/non-team${hash}`));
-        // return (dispatch(push(`${Pages.TEAM}${hash}`)));
       }
 
       if (!isFirstRendering && profile) {

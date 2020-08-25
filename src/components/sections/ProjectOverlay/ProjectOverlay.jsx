@@ -37,7 +37,7 @@ class ProjectOverlay extends Component {
     return (<div className="project-overlay">
       <div className="header-wrapper">HEADER</div>
       <div className="content-wrapper">
-        <img src={component.images.pop()} width="960" height="540" />
+        <img src={component.images.pop()} width="960" height="540" alt={playground.title} />
         <div className="comments-wrapper">
           {(component.comments.map((comment, i)=> (<ProjectViewCommentMarker key={i} ind={(i+1)} comment={comment} onClick={this.handleCommentMarkerClick} />)))}
         </div>

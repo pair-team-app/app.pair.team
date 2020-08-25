@@ -11,24 +11,24 @@ import * as actionCreators from '../actions';
 import rootReducer from '../reducers/index';
 import { onMiddleware, showingEntryModal } from '../middleware'
 
-import { SET_ROUTE_PATH, SET_TEAM, SET_PLAYGROUND, SET_COMMENT, COMMENT_CREATED } from '../../consts/action-types';
+// import { SET_ROUTE_PATH, SET_TEAM, SET_PLAYGROUND, SET_COMMENT, COMMENT_CREATED } from '../../consts/action-types';
 import { Modals, Pages } from '../../consts/uris.js';
 
 export const history = createBrowserHistory();
 
 
-const createLogActionStackTraceMiddleware = (actionTypes=[])=> {
-  const logActionStackTraceMiddleware = (storeAPI)=> (next)=> (action)=> {
-    if(action.type && actionTypes.includes(action.type)) {
-    	console.log('[|:|] Store', storeAPI.getState());
-      console.trace('[:|:]%s', 'TYPE:[”%s“] ACTION:[%s] NEXT:[%s] ', action.type, action, next, '[:|:]');
-    }
+// const createLogActionStackTraceMiddleware = (actionTypes=[])=> {
+//   const logActionStackTraceMiddleware = (storeAPI)=> (next)=> (action)=> {
+//     if(action.type && actionTypes.includes(action.type)) {
+//     	console.log('[|:|] Store', storeAPI.getState());
+//       console.trace('[:|:]%s', 'TYPE:[”%s“] ACTION:[%s] NEXT:[%s] ', action.type, action, next, '[:|:]');
+//     }
 
-    return (next(action));
-  };
+//     return (next(action));
+//   };
 
-  return (logActionStackTraceMiddleware);
-};
+//   return (logActionStackTraceMiddleware);
+// };
 
 
 // const stackTraceMiddleware = createLogActionStackTraceMiddleware(['@@router/LOCATION_CHANGE', SET_ROUTE_PATH, SET_TEAM, SET_PLAYGROUND, SET_COMMENT, COMMENT_CREATED]);
