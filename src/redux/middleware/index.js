@@ -337,12 +337,12 @@ export function onMiddleware(store) {
 
     } else if (type === SET_TYPE_GROUP) {
     } else if (type === SET_COMPONENT) {
-      // const { component } = payload;
-      // const { team } = prevState.teams;
-      // const { playground } = prevState.builds;
+      const { component } = payload;
+      const { team } = prevState.teams;
+      const { playground } = prevState.builds;
 
-      if (payload.component) {
-        // dispatch(push(`/team/${team.id}--${team.slug}/project/${playground.buildID}--${playground.slug}/${playground.device.slug}/${component.id}`));
+      if (component) {
+        dispatch(push(`${Pages.TEAM}/${team.id}--${team.slug}/project/${playground.buildID}--${playground.slug}/${playground.device.slug}/${component.id}`));
       }
 
     } else if (type === SET_COMMENT) {
@@ -353,7 +353,7 @@ export function onMiddleware(store) {
 
       if (comment) {
         if (playground) {
-          // dispatch(push(`/team/${team.id}--${team.slug}/project/${playground.buildID}--${playground.slug}/${playground.device.slug}/${component.id}/comments/${comment.id}`));
+          dispatch(push(`${Pages.TEAM}/${team.id}--${team.slug}/project/${playground.buildID}--${playground.slug}/${playground.device.slug}/${component.id}/comments/${comment.id}`));
 
         } else {
           dispatch(push(`${Pages.TEAM}/${team.id}--${team.slug}/comments/${comment.id}`));

@@ -17,9 +17,12 @@
 }
 
 .project-overlay .content-wrapper {
-  position: relative;
+  position: absolute;
+  top: 0;
   width: 100%;
-  height: calc(100vh - 110px);
+  height: 100vh;
+  padding-top: 110px;
+  overflow: auto;
 }
 
 .project-overlay .content-wrapper .project-view-comment-marker {
@@ -33,5 +36,6 @@
   left: 0;
   width: 100%;
   height: calc(100vh - 110px);
+  padding-top: 110px;
 }
 
