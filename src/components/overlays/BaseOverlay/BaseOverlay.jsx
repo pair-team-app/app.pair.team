@@ -129,14 +129,6 @@ class BaseOverlay extends Component {
     // const { x, y, width, height } = rect;
   };
 
-  onResized = (event, { node, size, handle }) => {
-    console.log(('<:]]:> %s.onResized()', this.constructor.name), { event, node, size, handle }, '<:]]:>');
-
-    // const { bounds } = { ...this.state,
-    //   playground : { ...bounds.playground, size }
-    // };
-  };
-
   render() {
     // console.log('%s.render()', this.constructor.name, this.props, this.state, this.timeline, (this.wrapper) ? this.wrapper.currentTarget : null);
 

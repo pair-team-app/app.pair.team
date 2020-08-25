@@ -132,7 +132,7 @@ class ModalRoutes extends Component {
         closeable={true}
         onConfirmed={this.handleDisableAccount}
         onComplete={()=> this.props.onComplete(Modals.DISABLE)}>
-        Are you sure you wish to delete your account? You won't be able to log back in, plus your playgrounds & comments will be removed. Additionally, you will be dropped from your team.
+        Are you sure you wish to delete your account? You won't be able to log back in, plus your teams & comments will be removed. Additionally, you will be dropped from your team.
       </ConfirmDialog>)}
 
       {(noAccess) && (<ConfirmDialog

@@ -3,15 +3,13 @@ import './TopNav.css';
 
 import { push } from 'connected-react-router';
 import { connect } from 'react-redux';
-import { Strings } from 'lang-js-utils';
-// import { matchPath, withRouter } from 'react-router-dom';
 import { matchPath } from 'react-router-dom';
 
-import { BreadcrumbTypes, CommentSortTypes } from './';
+import { CommentSortTypes } from './';
 import UserSettings, { SettingsMenuItemTypes} from './UserSettings';
 import { RoutePaths } from '../../helpers/Routes';
 import SharePopover from '../../overlays/SharePopover';
-import { Modals, Pages } from '../../../consts/uris';
+import { Modals } from '../../../consts/uris';
 import { setTeamCommentsSort, toggleTheme } from '../../../redux/actions';
 
 
@@ -80,13 +78,6 @@ class TopNav extends Component {
 	}
 
 
-	handleBreadcrumbClick = ({ event, type, payload })=> {
- 		console.log('%s.handleBreadcrumbClick()', this.constructor.name, { event, type, payload });
-
-    event.preventDefault();
-    this.props.onBreadCrumbClick({ type, payload });
-	};
-
 	handleDeviceChange = (event)=> {
 		console.log('%s.handleDeviceChange()', this.constructor.name, { event : event.target });
 	};
@@ -118,40 +109,6 @@ class TopNav extends Component {
 		console.log('%s.handleTeamCommentsSort()', this.constructor.name, { sort });
 		this.props.setTeamCommentsSort({ sort });
 	};
-
-	buildBreadcrumbs = ()=> {
-    // console.log('%s.buildBreadcrumbs()', this.constructor.name, this.props, { matchPath : this.props.matchPath, match : this.props.match });
-
-    const { matchPath, playground, typeGroup, component, comment, location } = this.props;
-    const { teamSlug, buildID, projectSlug, deviceSlug, typeGroupSlug, componentID, commentID } = matchPath.params;
-
-		let path = `${Pages.PROJECT}/${teamSlug}/${projectSlug}/${buildID}`;
-
-		const segments = [
-			{ type : BreadcrumbTypes.DEVICE, title : deviceSlug, path : deviceSlug, payload : playground },
-      (typeGroup && typeGroupSlug) ? { type : BreadcrumbTypes.TYPE_GROUP, title : Strings.capitalize(typeGroup.key), path : typeGroupSlug, payload : typeGroup } : null,
-      (typeGroup && component && componentID) ? { type : BreadcrumbTypes.COMPONENT, title : component.title, path : componentID, payload : component } : null,
-      //(accessibility) ? { type : BreadcrumbTypes.ACCESSIBILITY, title : 'accessibility' , path : 'accessibility', payload : null } : null,
-      (component && location.pathname.includes('/comments')) ? { type : BreadcrumbTypes.COMMENTS, title : 'comments', path : 'comments', payload : null } : null,
-      (component && comment && commentID) ? { type : BreadcrumbTypes.COMMENT, title : commentID, path : commentID, payload : comment } : null
-    ].filter((segment)=> (segment !== null));
-
-
-    const breadcrumbs = [];
-    Object.keys(segments).forEach((key, i)=> {
-			breadcrumbs.push(<TopNavBreadcrumb
-				key={i}
-				ind={i}
-				tot={Object.keys(segments).length - 1}
-				path={`${path}/${segments[key].path}`}
-				segment={segments[key]}
-				onClick={this.handleBreadcrumbClick}
-			/>);
-		});
-
-    return (breadcrumbs);
-	};
-
 
 	render() {
 		// console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
@@ -232,20 +189,12 @@ const mapDispatchToProps = (dispatch)=> {
 
 const mapStateToProps = (state, ownProps)=> {
 	return ({
-    darkThemed  : state.darkThemed,
-		devices     : state.builds.devices,
-		invite      : state.teams.invite,
-		playgrounds : state.builds.playgrounds,
-		playground  : state.builds.playground,
-		profile     : state.user.profile,
-		team        : state.teams.team,
-		teamSort    : state.teams.sort,
-		typeGroup   : state.typeGroup,
-		component   : state.builds.component,
-		comment     : state.comments.comment,
-		matchPath   : state.matchPath,
-		hash        : state.router.location.hash,
-		pathname    : state.router.location.pathname
+    darkThemed : state.darkThemed,
+		invite     : state.teams.invite,
+		profile    : state.user.profile,
+		teamSort   : state.teams.sort,
+		hash       : state.router.location.hash,
+		pathname   : state.router.location.pathname
 	});
 };
 

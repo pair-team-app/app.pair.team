@@ -6,7 +6,7 @@ import KeyboardEventHandler from 'react-keyboard-event-handler';
 import { Menu, Item, MenuProvider } from 'react-contexify';
 import { connect } from 'react-redux';
 
-import { setComment, setComponent, setPlayground } from '../../../redux/actions';
+import { setComment, setComponent } from '../../../redux/actions';
 
 
 class ProjectOverlay extends Component {
@@ -44,7 +44,7 @@ class ProjectOverlay extends Component {
   render() {
     console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
 
-    const { playground, component } = this.props;
+    const { component } = this.props;
     return (<div className="project-overlay">
       <div className="header-wrapper">HEADER</div>
       <div className="content-wrapper"><KeyboardEventHandler handleKeys={['esc']} onKeyEvent={(key, event)=> this.handleKeyPress(event, key)} />
@@ -95,19 +95,16 @@ const AddCommentMenu = (props)=> {
 
 const mapDispatchToProps = (dispatch)=> {
   return ({
-    setComment    : (payload)=> dispatch(setComment(payload)),
-    setComponent  : (payload)=> dispatch(setComponent(payload)),
-    setPlayground : (payload)=> dispatch(setPlayground(payload)),
+    setComment   : (payload)=> dispatch(setComment(payload)),
+    setComponent : (payload)=> dispatch(setComponent(payload)),
   });
 };
 
 const mapStateToProps = (state, ownProps)=> {
   return ({
-    comment    : state.comments.comment,
-    params     : state.path,
-    component  : state.builds.component,
-    profile    : state.user.profile,
-    playground : state.builds.playground
+    comment   : state.comments.comment,
+    component : state.builds.component,
+    profile   : state.user.profile,
   });
 };
 
