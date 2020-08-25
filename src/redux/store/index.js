@@ -31,7 +31,7 @@ const createLogActionStackTraceMiddleware = (actionTypes=[])=> {
 };
 
 
-const stackTraceMiddleware = createLogActionStackTraceMiddleware(['@@router/LOCATION_CHANGE', SET_ROUTE_PATH, SET_TEAM, SET_PLAYGROUND, SET_COMMENT, COMMENT_CREATED]);
+// const stackTraceMiddleware = createLogActionStackTraceMiddleware(['@@router/LOCATION_CHANGE', SET_ROUTE_PATH, SET_TEAM, SET_PLAYGROUND, SET_COMMENT, COMMENT_CREATED]);
 
 
 
@@ -47,7 +47,7 @@ const store = createStore(rootReducer(history), composeEnhancers(applyMiddleware
 
 if (typeof cookie.load('user_id') === 'undefined') {
   cookie.save('user_id', '0', { path : '/', sameSite : false });
-  const { pathname, hash } = store.getState().router.location;
+  const { hash } = store.getState().router.location;
 
   console.log('-_-+-_', 'STORE SAYS SHOW MODAL!!!!', { store} )
   if (!showingEntryModal(hash)) {

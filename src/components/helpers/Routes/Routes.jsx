@@ -2,8 +2,6 @@
 import React, { Component } from 'react';
 import { RoutePaths } from './';
 
-// import { Route, Switch, withRouter } from 'react-router-dom';
-import { connect } from 'react-redux';
 import { Redirect, Route, Switch } from 'react-router-dom';
 
 import BasePage from '../../pages/BasePage';
@@ -90,14 +88,6 @@ class Routes extends Component {
           />
       } />
 
-      {/* <Route
-        path={RoutePaths.PROJECT}
-        render={({ props })=> <PlaygroundPage
-          onLogout={this.props.onLogout}
-          onModal={(uri, payload)=> this.props.onModal(uri, true, payload)}
-          onPopup={this.props.onPopup} { ...props} />
-      } /> */}
-
       {/* <Route path={Pages.WILDCARD}><Redirect to={Pages.TEAM} /></Route> */}
     </Switch>);
   }
@@ -105,5 +95,3 @@ class Routes extends Component {
 
 
 export default (Routes);
-// export default connect(mapStateToProps)(Routes);
-// export default withRouter(Routes);

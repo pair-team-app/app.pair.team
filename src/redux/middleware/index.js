@@ -100,7 +100,6 @@ export function onMiddleware(store) {
 
       } else {
         if (prevState.user) {
-          // return (dispatch(push(`${Pages.TEAM}${Modals.LOGIN}`)));
           dispatch(push(`${Pages.TEAM}${Modals.LOGIN}`));
         }
       }
