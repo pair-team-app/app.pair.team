@@ -39,3 +39,25 @@
   padding-top: 110px;
 }
 
+.add-comment-menu {
+  width: 268px;
+  padding: 10px;
+  border-radius: var(--border-radius);
+  box-shadow: var(--orthodox-shadow);
+	/* filter: var(--orthodox-drop-shadow); */
+}
+
+.add-comment-menu .form-wrapper {
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+
+.add-comment-menu .form-wrapper .comment-txt:focus {
+  box-shadow: none;
+  filter: none;
+}
+
+.add-comment-menu .button-wrapper > *:not(:last-child) {
+  margin-bottom: 10px;
+}
