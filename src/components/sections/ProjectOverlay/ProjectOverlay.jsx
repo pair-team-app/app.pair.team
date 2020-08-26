@@ -93,7 +93,7 @@ class ProjectOverlay extends Component {
         <img src={component.images.pop()} alt={component.title} />
         <MenuProvider id="menu_id" className="menu-provider">
           <div className="comments-wrapper">
-            {(component.comments.filter(({ types })=> (types.includes('op'))).map((comment, i)=> (<ProjectViewCommentMarker key={i} ind={(i+1)} comment={comment} activeComment={this.props.comment} onClick={this.handleCommentMarkerClick} />)))}
+            {(component.comments.filter(({ types })=> (types.includes('op'))).map((comment, i)=> (<ProjectViewComment key={i} ind={(i+1)} comment={comment} activeComment={this.props.comment} onClick={this.handleCommentMarkerClick} onClose={()=>null} />)))}
           </div>
         </MenuProvider>
       </div>
@@ -103,42 +103,36 @@ class ProjectOverlay extends Component {
   }
 }
 
+const ProjectViewComment = (props)=> {
+  // console.log('ProjectViewComment()', { props });
 
-const ProjectViewCommentMarker = (props)=> {
-  // console.log('ProjectViewCommentMarker()', { props });
-
-  const { comment, ind, activeComment } = props;
+  const { ind, comment, activeComment } = props;
   const { position } = comment;
-  return (<div className="project-view-comment-marker" onClick={()=> props.onClick(comment)} style={(position) ? {
+
+  const payload = {
+    fixed    : true,
+    position : { ...position,
+      x : position.x + 30,
+      y : position.y + 110
+    }
+  };
+
+  const style = (position) ? {
     top  : `${position.y}px`,
     left : `${position.x}px`
   } : {
     top  : '10px',
     left : '10px'
-  }}>
-    <div>{ind}</div>
-    {/* {(activeComment && activeComment.id === comment.id) && (<ProjectViewComment ind={ind} comment={comment} onClose={()=>null} />)} */}
-    {(activeComment && activeComment.id === comment.id) && (<BaseComment ind={ind} comment={comment} onDelete={props.onDelete} />)}
-  </div>);
-};
-
-const ProjectViewComment = (props)=> {
-  // console.log('ProjectViewComment()', { props });
-
-  const { ind, comment, outro } = props;
-  const payload = {
-    fixed    : false,
-    position : {
-      x : 1,
-      y : 1
-    }
   };
 
-  return (<BasePopover outro={false} payload={payload} onOutroComplete={()=> props.onClose(comment)}>
-    <div className="playground-comment-popover">
-      <BaseComment ind={ind} comment={comment} onDelete={props.onDelete} />
-    </div>
-  </BasePopover>);
+  return (<div className="project-view-comment">
+    {(activeComment && activeComment.id === comment.id) && (<BasePopover outro={false} payload={payload} onOutroComplete={()=> props.onClose(comment)}>
+      <div className="project-view-comment-bubble">
+        <BaseComment ind={ind} comment={comment} onDelete={props.onDelete} />
+      </div>
+    </BasePopover>)}
+    <div className="project-view-comment-marker" onClick={()=> props.onClick(comment)} style={style}><div>{ind}</div></div>
+  </div>);
 };
 
 
@@ -156,6 +150,7 @@ const AddCommentMenu = (props)=> {
     </div>
   </Menu>);
 };
+
 
 const mapDispatchToProps = (dispatch)=> {
   return ({
