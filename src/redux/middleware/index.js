@@ -294,10 +294,17 @@ export function onMiddleware(store) {
 
     } else if (type === COMMENT_ADDED) {
       const { team } = prevState.teams;
+      const { component } = prevState.builds;
 
       payload.team = { ...team,
         comments : [ ...team.comments, reformComment(payload.comment, `${Pages.TEAM}/${team.id}--${team.slug}/comments`)]
       };
+
+      if (component) {
+        payload.component = { ...component,
+          comments : [reformComment(payload.comment, `${Pages.TEAM}/${team.id}--${team.slug}/comments`), ...component.comments]
+        }
+      }
 
     } else if (type === COMMENT_UPDATED) {
       const { team } = prevState.teams;

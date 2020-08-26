@@ -6,6 +6,8 @@ import KeyboardEventHandler from 'react-keyboard-event-handler';
 import { Menu, Item, MenuProvider } from 'react-contexify';
 import { connect } from 'react-redux';
 
+import BaseComment from '../../iterables/BaseComment';
+import BasePopover from '../../overlays/BasePopover';
 import { setComment, setComponent, makeComment } from '../../../redux/actions';
 
 
@@ -29,15 +31,22 @@ class ProjectOverlay extends Component {
   }
 
   handleAddComment = (event=null)=> {
-    console.log('handleAddComment()', { event });
+    // console.log('handleAddComment()', { event : event.target.parentElement.parentElement.parentElement });
+
+    const { top, left } = event.target.parentElement.parentElement.parentElement.style;
+    const position = {
+      x : (left.replace('px', '') << 0) - 10,
+      y : (top.replace('px', '') << 0) - 120
+    }
 
     const { profile, component } = this.props;
     const { comment } = this.state;
 
+    console.log('handleAddComment()', { position });
+
     if (comment.text.length > 0) {
-      this.props.makeComment({
+      this.props.makeComment({ position,
         comment      : null,
-        position     : null,
         content      : comment.text,
         user_id      : profile.id,
         team_id      : 0,
@@ -45,14 +54,14 @@ class ProjectOverlay extends Component {
         format       : 'text'
       });
     }
-  }
+  };
 
   handleAddCommentText = (text)=> {
     console.log('handleAddCommentText()', { text });
     const { comment } = this.state;
 
     this.setState({ comment : { ...comment, text }})
-  }
+  };
 
   handleCommentMarkerClick = (comment)=> {
     console.log('handleCommentMarkerClick()', { comment });
@@ -84,7 +93,7 @@ class ProjectOverlay extends Component {
         <img src={component.images.pop()} alt={component.title} />
         <MenuProvider id="menu_id" className="menu-provider">
           <div className="comments-wrapper">
-            {(component.comments.filter(({ types })=> (types.includes('op'))).map((comment, i)=> (<ProjectViewCommentMarker key={i} ind={(i+1)} comment={comment} onClick={this.handleCommentMarkerClick} />)))}
+            {(component.comments.filter(({ types })=> (types.includes('op'))).map((comment, i)=> (<ProjectViewCommentMarker key={i} ind={(i+1)} comment={comment} activeComment={this.props.comment} onClick={this.handleCommentMarkerClick} />)))}
           </div>
         </MenuProvider>
       </div>
@@ -98,18 +107,40 @@ class ProjectOverlay extends Component {
 const ProjectViewCommentMarker = (props)=> {
   // console.log('ProjectViewCommentMarker()', { props });
 
-  const { comment, ind } = props;
+  const { comment, ind, activeComment } = props;
   const { position } = comment;
   return (<div className="project-view-comment-marker" onClick={()=> props.onClick(comment)} style={(position) ? {
     top  : `${position.y}px`,
     left : `${position.x}px`
   } : {
-    top  : '100px',
-    left : '100px'
+    top  : '10px',
+    left : '10px'
   }}>
     <div>{ind}</div>
+    {/* {(activeComment && activeComment.id === comment.id) && (<ProjectViewComment ind={ind} comment={comment} onClose={()=>null} />)} */}
+    {(activeComment && activeComment.id === comment.id) && (<BaseComment ind={ind} comment={comment} onDelete={props.onDelete} />)}
   </div>);
 };
+
+const ProjectViewComment = (props)=> {
+  // console.log('ProjectViewComment()', { props });
+
+  const { ind, comment, outro } = props;
+  const payload = {
+    fixed    : false,
+    position : {
+      x : 1,
+      y : 1
+    }
+  };
+
+  return (<BasePopover outro={false} payload={payload} onOutroComplete={()=> props.onClose(comment)}>
+    <div className="playground-comment-popover">
+      <BaseComment ind={ind} comment={comment} onDelete={props.onDelete} />
+    </div>
+  </BasePopover>);
+};
+
 
 const AddCommentMenu = (props)=> {
   console.log('AddCommentMenu()', { props });
