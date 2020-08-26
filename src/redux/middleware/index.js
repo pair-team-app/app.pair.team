@@ -106,7 +106,7 @@ export function onMiddleware(store) {
 
     } else if (type === TEAMS_LOADED) {
       const { profile } = prevState.user;
-      const { params } = prevState.path;
+      // const { params } = prevState.path;
       const { pathname, hash } = prevState.router.location;
 
       payload.team = null;
@@ -115,15 +115,32 @@ export function onMiddleware(store) {
       const { teams } = payload;
       payload.teams = teams.map((team)=> (reformTeam(team))).sort((i, ii)=> ((i.epoch > ii.epoch) ? -1 : (i.epoch < ii.epoch) ? 1 : 0));
 
+      // match params
       const createMatch = matchPath(pathname, {
         path   : RoutePaths.CREATE,
         exact  : false,
         strict : false
       });
 
+      const projectMatch = matchPath(pathname, {
+        path   : RoutePaths.PROJECT,
+        exact  : true,
+        strict : true
+      });
+
+      const teamMatch = matchPath(pathname, {
+        path   : RoutePaths.TEAM,
+        exact  : true,
+        strict : true
+      });
+
+      const { params } = (projectMatch || (teamMatch || { params : null }));
       if (!createMatch && payload.teams.length > 0) {
-        const team = (params) ? (payload.teams.find(({ id })=> (id === params.teamID)) || [ ...payload.teams].shift()) : [ ...payload.teams].shift();
+        // const team = (params) ? (payload.teams.find(({ id })=> (id === params.teamID)) || [ ...payload.teams].shift()) : [ ...payload.teams].shift();
+        const team = (params) ? (payload.teams.find(({ id })=> (id === (params.teamID << 0))) || [ ...payload.teams].shift()) : [ ...payload.teams].shift();
         payload.team = team;
+
+        console.log('______________________', { params, team });
 
         payload.teams = payload.teams.map((item)=> ({ ...item,
           selected : (team && item.id === team.id)
@@ -132,7 +149,8 @@ export function onMiddleware(store) {
         const member = team.members.find(({ id })=> (id === profile.id));
         payload.member = member;
 
-        if (!params || params.teamID !== team.id || params.teamSlug !== team.slug) {
+        if (!params || (params.teamID << 0) !== team.id || params.teamSlug !== team.slug) {
+        // if (!params) {
           dispatch(replace(`${Pages.TEAM}/${team.id}--${team.slug}${hash}`));
         }
 
@@ -148,17 +166,35 @@ export function onMiddleware(store) {
       payload.team = { ...team, logo : logo.replace(/\\n/g, '', logo) };
 
     } else if (type === TEAM_BUILDS_LOADED) {
-      const { params } = prevState.path;
+      // const { params } = prevState.path;
       const { team } = prevState.teams;
+      const { pathname } = prevState.router.location;
       const { devices, componentTypes } = prevState.builds;
+
+      // match params
+      const teamMatch = matchPath(pathname, {
+        path   : RoutePaths.TEAM,
+        exact  : true,
+        strict : true
+      });
+
+      const projectMatch = matchPath(pathname, {
+        path   : RoutePaths.PROJECT,
+        exact  : true,
+        strict : true
+      });
+
 
       const playgrounds = [ ...payload.playgrounds].map((playground)=> (reformPlayground(playground, devices, componentTypes, team)));
       payload.playgrounds = playgrounds;//.sort((i, ii)=> ((i.id < ii.id) ? 1 : (i.id > ii.id) ? -1 : 0));
       payload.playground = null;
 
+      const { params } = (projectMatch || (teamMatch || { params : null }));
+      console.log('______________________', { params });
+
       if (params) {
         if (params.buildID) {
-          const playground = { ...playgrounds.find(({ buildID, device })=> (buildID === params.buildID && device.slug === params.deviceSlug)), selected : true };
+          const playground = { ...playgrounds.find(({ buildID, device })=> (buildID === (params.buildID << 0) && device.slug === params.deviceSlug)), selected : true };
           // console.log('______________________', { playground });
           payload.playground = { ...playground, selected : true };
 
@@ -167,7 +203,7 @@ export function onMiddleware(store) {
           }));
 
           if (playground && params.componentID) {
-            const component = { ...playground.components.find(({ id })=> (id === params.componentID)), selected : true };
+            const component = { ...playground.components.find(({ id })=> (id === (params.componentID << 0))), selected : true };
             payload.component = component;
           }
         }
@@ -401,28 +437,6 @@ export function onMiddleware(store) {
       payload.preComment = null;
 
       payload.urlHistory = (urlHistory) ? [ ...urlHistory, { ...payload.location, state : null }] : [{ ...payload.location, state : null }];
-
-      //++ payload.location = { ...payload.location,
-      //++   state : (!state || state === undefined) ? null : state
-      //++ }
-
-      // state = (state === undefined) ? null : state;
-
-      /*
-      // push prev location to state
-      if (action === 'PUSH') {
-        payload.location = { ...location,
-          state : Arrays.pruneObjDupKeys((!state) ? [{ ...location, state : null }] : [ ...state, { ...prevState.router.location }], 'key')
-        };
-
-      // pull off top location
-      } else if (action === 'POP') {
-        payload.location = { ...location,
-          state : (state) ? [ ...state].splice(0, state.length -1) : null
-        };
-      }
-      */
-
 
      // duplicate router change, ABORT
      if (!isFirstRendering && payload.location.state && state && pathname === [ ...payload.location.state].pop().pathname && hash === [ ...payload.location.state].pop().hash) {

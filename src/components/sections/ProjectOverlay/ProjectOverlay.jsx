@@ -89,7 +89,7 @@ class ProjectOverlay extends Component {
         </MenuProvider>
       </div>
 
-      <AddCommentMenu comment={comment} onTextChange={this.handleAddCommentText} onSubmit={this.handleAddComment} />
+      <AddCommentMenu comment={comment} onTextChange={this.handleAddCommentText} onSubmit={this.handleAddComment} onClick={({ event, props })=> console.log('MenuClick', { event, props })} />
     </div>);
   }
 }
@@ -115,7 +115,6 @@ const AddCommentMenu = (props)=> {
   console.log('AddCommentMenu()', { props });
 
   const { comment } = props;
-
   return (<Menu id="menu_id" className="add-comment-menu">
     <div className="form-wrapper">
       <input type="text" className="comment-txt" placeholder="Add Comment" value={comment.text} onChange={(event)=> props.onTextChange(event.target.value)} autoFocus />
@@ -126,7 +125,6 @@ const AddCommentMenu = (props)=> {
     </div>
   </Menu>);
 };
-
 
 const mapDispatchToProps = (dispatch)=> {
   return ({
