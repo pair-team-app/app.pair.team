@@ -195,9 +195,8 @@ export function onMiddleware(store) {
       if (params) {
         if (params.buildID) {
           const playground = { ...playgrounds.find(({ buildID, device })=> (buildID === (params.buildID << 0) && device.slug === params.deviceSlug)), selected : true };
-          // console.log('______________________', { playground });
-          payload.playground = { ...playground, selected : true };
 
+          payload.playground = { ...playground, selected : true };
           payload.playgrounds = playgrounds.map((item)=> ((playground && item.id === playground.id) ? payload.playground : { ...item,
             selected : false
           }));

@@ -8,8 +8,6 @@ const initialState = {
   builds         : null,
   playgrounds    : null,
   playground     : null,
-  typeGroup      : null,
-  components     : [],
   component      : null,
   comment        : null,
   device         : null

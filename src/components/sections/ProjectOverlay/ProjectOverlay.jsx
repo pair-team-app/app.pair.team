@@ -90,7 +90,7 @@ class ProjectOverlay extends Component {
     return (<div className="project-overlay">
       <div className="header-wrapper">HEADER</div>
       <div className="content-wrapper"><KeyboardEventHandler handleKeys={['enter', 'esc']} handleFocusableElements onKeyEvent={(key, event)=> this.handleKeyPress(event, key)} />
-        <img src={component.images.pop()} alt={component.title} />
+        <img src={[...component.images].pop()} alt={component.title} />
         <MenuProvider id="menu_id" className="menu-provider">
           <div className="comments-wrapper">
             {(component.comments.filter(({ types })=> (types.includes('op'))).map((comment, i)=> (<ProjectViewComment key={i} ind={(i+1)} comment={comment} activeComment={this.props.comment} onClick={this.handleCommentMarkerClick} onClose={()=>null} />)))}
