@@ -63,7 +63,7 @@ const ProjectViewsGrid = (props)=> {
   const { components } = props;
   return (<div className="project-views-grid">
     {components.map((component, i)=> (<div key={i} className="view-grid-item" onClick={()=> props.onGridItemClick(component)}>
-      <img src={null} alt="" />
+      <img src={[...component.images].shift()} alt={component.title} />
     </div>))}
   </div>);
 };
