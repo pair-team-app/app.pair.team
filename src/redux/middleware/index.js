@@ -414,6 +414,7 @@ export function onMiddleware(store) {
       const { state } = prevState.router.location;
       const { profile } = prevState.user;
       const { teams } = prevState.teams;
+      const { playgrounds } = prevState.builds;
       const { preComment, commment } = prevState.comments;
 
       const { action, isFirstRendering, location } = payload;
@@ -447,6 +448,10 @@ export function onMiddleware(store) {
       payload.member= null;
       payload.comment = null;
       payload.preComment = null;
+
+      payload.playgrounds = playgrounds;
+      payload.playground = prevState.builds.playground;
+      payload.component =  prevState.builds.component;
 
       payload.urlHistory = (urlHistory) ? [ ...urlHistory, { ...payload.location, state : null }] : [{ ...payload.location, state : null }];
 
@@ -545,10 +550,20 @@ export function onMiddleware(store) {
       }
 
       // passed url params
-      console.log('///-///', 'ROUTER CHANGE', { pathname, hash, urlHistory }, '///-///');
+      console.log('///-///', 'ROUTER CHANGE', { playgrounds }, { pathname, hash, urlHistory }, '///-///');
 
       // logged in
       if (profile) {
+
+        if (!isFirstRendering && projectMatch) {
+          const playground = (playgrounds.find((playground)=> (playground.buildID === (projectMatch.params.buildID << 0) && playground.device.slug === projectMatch.params.deviceSlug)) || null);
+          const component = (playground && projectMatch.params.componentID) ? (playground.components.find(({ id })=> (id === (projectMatch.params.componentID << 0))) || null) : null;
+          const comment = (component && projectMatch.params.commentID) ? (component.comments.find(({ id })=> (id === (projectMatch.params.commentID << 0))) || null) : null;
+
+          payload.playground = playground;
+          payload.component = component;
+          payload.comment = comment;
+        }
 
         // on team page
         if (teamMatch) {

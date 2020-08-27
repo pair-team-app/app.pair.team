@@ -79,7 +79,7 @@ const mapDispatchToProps = (dispatch)=> {
 
 const mapStateToProps = (state, ownProps)=> {
   return ({
-    comment    : state.comments.comment,
+    comment    : state.builds.comment,
     params     : state.path,
     component  : state.builds.component,
     profile    : state.user.profile,

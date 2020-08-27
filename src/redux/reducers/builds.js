@@ -73,14 +73,14 @@ export default function builds(state=initialState, action) {
     return (Object.assign({}, state, { comment }));
 
   } else if (type === '@@router/LOCATION_CHANGE') {
-    const { playgrounds, playground, component } = payload;
+    const { playgrounds, playground, component, comment } = payload;
 
-    if (playgrounds && playground) {
-      return (Object.assign({}, state, { playgrounds, playground, component }));
+    // if (playgrounds && playground) {
+      return (Object.assign({}, state, { playgrounds, playground, component, comment }));
 
-    } else {
-      return (state);
-    }
+    // } else {
+    //   return (state);
+    // }
 
   } else {
     return (state);
