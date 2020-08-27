@@ -205,6 +205,11 @@ export function onMiddleware(store) {
           if (playground && params.componentID) {
             const component = { ...playground.components.find(({ id })=> (id === (params.componentID << 0))), selected : true };
             payload.component = component;
+
+            if (component && params.comments && params.commentID) {
+              const comment = component.comments.find(({ id })=> (id === (params.commentID << 0)));
+              payload.comment = (comment || null);
+            }
           }
         }
       }

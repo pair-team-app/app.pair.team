@@ -37,7 +37,7 @@
 	width: 100%;
 	margin-bottom: 20px;
 	padding-left: 30px;
-	border: 1px dotted #ff00ff;
+	/* border: 1px dotted #ff00ff; */
 }
 
 .base-comment-header .info-wrapper {

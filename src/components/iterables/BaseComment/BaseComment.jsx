@@ -176,9 +176,8 @@ const BaseCommentContent = (props)=> {
 	const { types, content, format } = comment;
 
 	return (<div className="base-comment-content">
-
 		{(content) && (<div className="content" data-format={format}>{content}</div>)}
-		{(comment.state !== 'closed' && types.find((type)=> (type === 'op'))) && (<div className="reply-form">
+		{(comment.state !== 'closed' && types.includes('team') && types.includes('op')) && (<div className="reply-form">
 			<KeyboardEventHandler handleKeys={['enter', `esc`]} isDisabled={(preComment !== null)} onKeyEvent={(key, event)=> props.onReplyKeyPress(event, key)}>
 				<input type="text" placeholder="Reply…" value={replyContent} onFocus={props.onReplyFocus} onChange={props.onTextChange} data-code={codeFormat} autoComplete="new-password" />
 			</KeyboardEventHandler>

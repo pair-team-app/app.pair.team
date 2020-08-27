@@ -110,10 +110,10 @@ const ProjectViewComment = (props)=> {
   const { position } = comment;
 
   const payload = {
-    fixed    : true,
+    fixed    : false,
     position : { ...position,
       x : position.x + 30,
-      y : position.y + 110
+      y : position.y + 0
     }
   };
 
@@ -162,7 +162,7 @@ const mapDispatchToProps = (dispatch)=> {
 
 const mapStateToProps = (state, ownProps)=> {
   return ({
-    comment   : state.comments.comment,
+    comment   : state.builds.comment,
     component : state.builds.component,
     profile   : state.user.profile,
   });
