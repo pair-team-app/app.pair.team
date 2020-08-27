@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import './ProjectOverlay.css';
 
 import KeyboardEventHandler from 'react-keyboard-event-handler';
-import { Menu, Item, MenuProvider } from 'react-contexify';
+import { Menu, MenuProvider } from 'react-contexify';
 import { connect } from 'react-redux';
 
 import BaseComment from '../../iterables/BaseComment';

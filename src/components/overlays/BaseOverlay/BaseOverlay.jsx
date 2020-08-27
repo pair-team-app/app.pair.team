@@ -1,18 +1,18 @@
 import React, { Component } from 'react';
 import './BaseOverlay.css';
 
-import { Back, Circ, TimelineMax } from 'gsap/TweenMax';
+// import { Back, Circ, TimelineMax } from 'gsap/TweenMax';
 import { Resizable } from 're-resizable';
 import onClickOutside from 'react-onclickoutside';
-import { ResizableBox } from 'react-resizable';
-import ResizeObserver from 'react-resize-observer';
+// import { ResizableBox } from 'react-resizable';
+// import ResizeObserver from 'react-resize-observer';
 
 import { trackOverlay } from '../../../utils/tracking';
-import { OVERLAY_TYPE_AUTO_SIZE, OVERLAY_TYPE_PERCENT_SIZE, OVERLAY_TYPE_POSITION_OFFSET } from './';
+// import { OVERLAY_TYPE_AUTO_SIZE, OVERLAY_TYPE_PERCENT_SIZE, OVERLAY_TYPE_POSITION_OFFSET } from './';
 
-const DURATION_MULT = 0.0;
-const INTRO_DURATION = (1 / 8);
-const OUTRO_DURATION = (1 / 4);
+// const DURATION_MULT = 0.0;
+// const INTRO_DURATION = (1 / 8);
+// const OUTRO_DURATION = (1 / 4);
 
 class BaseOverlay extends Component {
   constructor(props) {
@@ -136,7 +136,7 @@ class BaseOverlay extends Component {
       this.timeline.seek(0);
     }
 
-    let hAdj = 88;
+    // let hAdj = 88;
     // 		if (this.wrapper) {
     // 			hAdj = (this.wrapper.offsetHeight % 2 !== 0) ? Math.round(this.wrapper.offsetHeight * 0.5) * 2 : this.wrapper.offsetHeight;
     // 		}
@@ -145,17 +145,18 @@ class BaseOverlay extends Component {
 
     console.log('%s.render()', this.constructor.name, { ...this.props, window : { width : document.documentElement.clientWidth, height : document.documentElement.clientHeight }, target : (this.wrapper) ? this.wrapper.getBoundingClientRect() : null });
 
-    const { type, filled, offset, title, closeable, bordered, children } = this.props;
-    const wrapperStyle = {
-      height    : 'auto',
-      transform : (type === OVERLAY_TYPE_POSITION_OFFSET) ? `translate(${offset.x || 0}px, ${offset.y || 0}px)` : null
-    };
+    // const { type, filled, offset, title, closeable, bordered, children } = this.props;
+    const { filled, title, closeable, bordered, children } = this.props;
+    // const wrapperStyle = {
+    //   height    : 'auto',
+    //   transform : (type === OVERLAY_TYPE_POSITION_OFFSET) ? `translate(${offset.x || 0}px, ${offset.y || 0}px)` : null
+    // };
 
-    const { width, height } = { width : document.documentElement.clientWidth, height : document.documentElement.clientHeight };
-    let size = {
-      width  : Math.min(Math.max((this.wrapper) ? this.wrapper.getBoundingClientRect().width : 0, width * 0.5), 500),
-      height : Math.min(Math.max((this.wrapper) ? this.wrapper.getBoundingClientRect().height : 0, height * 0.85), 500),
-    };
+    // const { width, height } = { width : document.documentElement.clientWidth, height : document.documentElement.clientHeight };
+    // let size = {
+    //   width  : Math.min(Math.max((this.wrapper) ? this.wrapper.getBoundingClientRect().width : 0, width * 0.5), 500),
+    //   height : Math.min(Math.max((this.wrapper) ? this.wrapper.getBoundingClientRect().height : 0, height * 0.85), 500),
+    // };
 
 
     return (<div className="base-overlay" data-filled={filled || true} data-closeable={closeable} onClick={(closeable) ? this.handleClose : null}>

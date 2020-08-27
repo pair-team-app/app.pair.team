@@ -58,8 +58,11 @@ class TeamPageFileDrop extends Component {
 	componentDidUpdate(prevProps, prevState, snapshot) {
     console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : this.props, prevState, state : this.state });
 
-    const { preComment, pathname, hash } = this.props;
-    const { text, url, files, image } = this.state;
+    // const { preComment, pathname, hash } = this.props;
+    // const { text, url, files, image } = this.state;
+
+    const { preComment } = this.props;
+    const { url, files, image } = this.state;
 
     if (preComment) {
       const isURL = /https?:\/\//i.test(preComment);
@@ -255,8 +258,9 @@ class TeamPageFileDrop extends Component {
   handleTextChange = (event)=> {
     console.log('%s.handleTextChange(event)', this.constructor.name, { event : event.target.value, props : this.props, state : this.state });
 
-    const { preComment } = this.props;
-    const { intro, text } = this.state;
+    // const { preComment } = this.props;
+    // const { intro, text } = this.state;
+    const { intro } = this.state;
     const { target } = event;
 
     if (!intro) {
@@ -307,7 +311,7 @@ class TeamPageFileDrop extends Component {
     console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
 
     const { dragging, preComment } = this.props;
-    const { url, code, uploaded, image, files, text, focused } = this.state;
+    const { url, code, uploaded, image, files, text } = this.state;
 
     // const cdnHeaders = {
     //   'Content-Type' : 'multipart/form-data',

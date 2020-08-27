@@ -136,16 +136,6 @@ class TopNav extends Component {
 	}
 }
 
-
-const TopNavBreadcrumb = (props)=> {
-  console.log('TopNavBreadcrumb()', { props });
-
-  const { ind, tot, segment } = props;
-  const { type, title, payload } = segment;
-  return (<div className="top-nav-breadcrumb" onClick={(event)=> (ind > 0 && ind < tot) ? props.onClick({ event, type, payload }) : null} data-last={(ind < tot)}>{title}</div>);
-};
-
-
 const TopNavPageTitle = (props)=> {
 	console.log('TopNavPageTitle()', { props });
 

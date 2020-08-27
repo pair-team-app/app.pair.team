@@ -119,7 +119,7 @@ class LeftNav extends Component {
   render() {
     console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
 
-    const { teams, invite, profile } = this.props;
+    const { teams, profile } = this.props;
     const { builds } = this.state;
 
     return (<div className="left-nav">
@@ -200,7 +200,6 @@ const LeftNavTeam = (props)=> {
 
 const mapStateToProps = (state, ownProps)=> {
   return ({
-    invite      : state.teams.invite,
     team        : state.teams.team,
     teams       : state.teams.teams,
     playgrounds : state.builds.playgrounds,
