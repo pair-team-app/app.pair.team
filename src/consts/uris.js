@@ -46,9 +46,9 @@ if (process.env.NODE_ENV === 'development') {
 	const CDN_VER = 'v1';
 
 	endpts = {
-		API_ENDPT_URL    : `https://api.pairurl.com/current/gateway.php`,
-		CDN_FILEPOND_URL : `https://cdn.pairurl.com/vendor/filepond-php/`,
-		CDN_UPLOAD_URL   : `https://cdn.pairurl.com/${CDN_VER}/upload.php`
+		API_ENDPT_URL    : `https://api.pair.team/current/gateway.php`,
+		CDN_FILEPOND_URL : `https://cdn.pair.team/vendor/filepond-php/`,
+		CDN_UPLOAD_URL   : `https://cdn.pair.team/${CDN_VER}/upload.php`
 	};
 }
 
