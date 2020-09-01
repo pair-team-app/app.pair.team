@@ -24,6 +24,16 @@ import './post-styles.css';
 registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview);
 
 
+// const extractURLs = (val)=> {
+//   const matches = val.match(new RegExp('(?:(?:https?|ftp)://)(?:\\S+(?::\\S*)?@)?(?:(?!(?:10|127)(?:\\.\\d{1,3}){3})(?!(?:169\\.254|192\\.168)(?:\\.\\d{1,3}){2})(?!172\\.(?:1[6-9]|2\\d|3[0-1])(?:\\.\\d{1,3}){2})(?:[1-9]\\d?|1\\d\\d|2[01]\\d|22[0-3])(?:\\.(?:1?\\d{1,2}|2[0-4]\\d|25[0-5])){2}(?:\\.(?:[1-9]\\d?|1\\d\\d|2[0-4]\\d|25[0-4]))|(?:(?:[a-z\\u00a1-\\uffff0-9]-*)*[a-z\\u00a1-\\uffff0-9]+)(?:\\.(?:[a-z\\u00a1-\\uffff0-9]-*)*[a-z\\u00a1-\\uffff0-9]+)*(?:\\.(?:[a-z\\u00a1-\\uffff]{2,})))(?::\\d{2,5})?(?:/\\S*)?', 'ig'));
+//   if (!matches) {
+//     return ([]);
+//   }
+
+//   return (matches.filter((value, index)=> (matches.indexOf(value) === index)));
+// };
+
+
 class TeamPageFileDrop extends Component {
 	constructor(props) {
 		super(props);
@@ -65,7 +75,10 @@ class TeamPageFileDrop extends Component {
     const { url, files, image } = this.state;
 
     if (preComment) {
-      const isURL = /https?:\/\//i.test(preComment);
+      // const isURL = /https?:\/\//i.test(preComment);
+      const urls = URIs.extractURLs(preComment);
+
+      console.log('________', { urls });
 
       if (preComment !== prevProps.preComment && preComment !== ' ') {
         this.commentInput.focus();
@@ -74,9 +87,9 @@ class TeamPageFileDrop extends Component {
           this.props.onContent();
         }
 
-        if (isURL !== url) {
-          this.setState({ url : isURL }, ()=> {
-            if (isURL) {
+        if ([...urls].shift() !== url && !url) {
+          this.setState({ url : [...urls].shift() }, ()=> {
+            if (urls.length > 0) {
               this.onFetchScreenshot(preComment);
             }
           });
@@ -291,16 +304,15 @@ class TeamPageFileDrop extends Component {
   onFetchScreenshot = (text)=> {
     console.log('%s.onFetchScreenshot(text)', this.constructor.name, { text });
 
-    const url = text.match(/https?:\/\/.+ ?/i).shift().split(' ').shift();
+    // const url = text.match(/https?:\/\/.+ ?/i).shift().split(' ').shift();
+    const url = URIs.extractURLs(text).shift();
     axios.post(API_ENDPT_URL, {
       action  : 'SCREENSHOT_URL',
       payload : { url }
     }).then((response)=> {
       const { image } = response.data;
       console.log('SCREENSHOT_URL', { data : response.data });
-      this.setState({
-        image : image.cdn
-      }, ()=> {
+      this.setState({ image : image.cdn }, ()=> {
         this.dataURIFile(image.data, URIs.lastComponent(image.src));
       });
     });
@@ -320,11 +332,9 @@ class TeamPageFileDrop extends Component {
 
 		return (<div className="team-page-file-drop" data-dragging={(dragging)} data-latent={(!dragging && files.length === 0 && !preComment)}>
       <div>
-
         <div className="input-wrapper" data-hidden={(files.length === 0 && preComment === null)}>
           <KeyboardEventHandler isDisabled={(files.length === 0 && preComment === null)} handleFocusableElements handleKeys={['ctrl', 'meta', 'enter', 'esc']} onKeyEvent={(key, event)=> this.handleKeyPress(event, key)}>
-          {/* <KeyboardEventHandler isDisabled={(files.length === 0 && preComment === null)} handleKeys={['ctrl', 'meta', 'enter', 'esc']} onKeyEvent={(key, event)=> this.handleKeyPress(event, key)}> */}
-            <TextareaAutosize id="comment-txtarea" className="comment-txtarea" placeholder={(url) ? 'Add a comment to this url…' : 'Add a comment to this image…'} value={(!url) ? (preComment || '') : ''} onFocusCapture={this.handleFieldFocus} onChange={this.handleTextChange} ref={(el)=> (el) ? this.commentInput = el : null} data-code={(code)} />
+            <TextareaAutosize id="comment-txtarea" className="comment-txtarea" placeholder={(url) ? 'Add a comment to this url…' : 'Add a comment to this image…'} value={(!url) ? (preComment || '') : preComment.replace(url, '')} onFocusCapture={this.handleFieldFocus} onChange={this.handleTextChange} ref={(el)=> (el) ? this.commentInput = el : null} data-code={(code)} />
           </KeyboardEventHandler>
           {(preComment) && (<CodeFormAccessory align={FormAccessoryAlignment.BOTTOM} onClick={this.handleCode} />)}
         </div>
@@ -375,7 +385,7 @@ class TeamPageFileDrop extends Component {
             // }}
           />
         </div>
-        <div className="url-wrapper" data-hidden={!url}>{preComment}</div>
+        <div className="url-wrapper" data-hidden={!url}>{url}</div>
         <div className="button-wrapper button-wrapper-col">
           <button type="submit" disabled={text.length === 0 && files.length === 0} onClick={this.handleSubmit}>Comment</button>
           <button className="cancel-button" onClick={this.handleResetContent}>Cancel</button>
