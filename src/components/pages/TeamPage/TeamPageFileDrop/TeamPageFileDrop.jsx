@@ -6,9 +6,10 @@ import axios from 'axios';
 import FilePondPluginImageExifOrientation from 'filepond-plugin-image-exif-orientation';
 import FilePondPluginImagePreview from 'filepond-plugin-image-preview';
 import { URIs } from 'lang-js-utils';
-import TextareaAutosize from 'react-autosize-textarea';
+// import TextareaAutosize from 'react-autosize-textarea';
 import { FilePond, registerPlugin } from 'react-filepond';
 import KeyboardEventHandler from 'react-keyboard-event-handler';
+import ReactQuill from 'react-quill';
 import { connect } from 'react-redux';
 
 import { CodeFormAccessory, FormAccessoryAlignment } from '../../../forms/FormAccessories';
@@ -18,6 +19,7 @@ import { createComment, makeComment } from '../../../../redux/actions';
 
 import 'filepond/dist/filepond.min.css';
 import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css';
+import 'react-quill/dist/quill.snow.css';
 import './post-styles.css';
 
 
@@ -246,8 +248,10 @@ class TeamPageFileDrop extends Component {
         text  : target.value
       });
     }
+  };
 
-
+  handleChange = (value)=> {
+    this.setState({ text : value });
   };
 
   handleKeyPress = (event, key)=> {
@@ -318,7 +322,6 @@ class TeamPageFileDrop extends Component {
     });
   };
 
-
 	render() {
     console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
 
@@ -334,7 +337,8 @@ class TeamPageFileDrop extends Component {
       <div>
         <div className="input-wrapper" data-hidden={(files.length === 0 && preComment === null)}>
           <KeyboardEventHandler isDisabled={(files.length === 0 && preComment === null)} handleFocusableElements handleKeys={['ctrl', 'meta', 'enter', 'esc']} onKeyEvent={(key, event)=> this.handleKeyPress(event, key)}>
-            <TextareaAutosize id="comment-txtarea" className="comment-txtarea" placeholder={(url) ? 'Add a comment to this url…' : 'Add a comment to this image…'} value={(!url) ? (preComment || '') : preComment.replace(url, '')} onFocusCapture={this.handleFieldFocus} onChange={this.handleTextChange} ref={(el)=> (el) ? this.commentInput = el : null} data-code={(code)} />
+            <ReactQuill value={this.state.text} onChange={this.handleChange} ref={(el)=> (el) ? this.commentInput = el : null} data-code={(code)} />
+            {/* <TextareaAutosize id="comment-txtarea" className="comment-txtarea" placeholder={(url) ? 'Add a comment to this url…' : 'Add a comment to this image…'} value={(!url) ? (preComment || '') : preComment.replace(url, '')} onFocusCapture={this.handleFieldFocus} onChange={this.handleTextChange} ref={(el)=> (el) ? this.commentInput = el : null} data-code={(code)} /> */}
           </KeyboardEventHandler>
           {(preComment) && (<CodeFormAccessory align={FormAccessoryAlignment.BOTTOM} onClick={this.handleCode} />)}
         </div>

@@ -425,7 +425,7 @@ textarea, textarea:hover, textarea:active, textarea:focus:hover, textarea:focus,
 	filter: none;
 }
 
-ul {
+/* ul {
 	margin: var(--spacing-10) var(--spacing20);
 	padding-left: var(--spacing-10);
 	list-style-type: square;
@@ -453,7 +453,7 @@ ul > li:last-child {
 
 ul > li:not(:last-child) {
 	margin-bottom: var(--spacing-10);
-}
+} */
 
 
 
