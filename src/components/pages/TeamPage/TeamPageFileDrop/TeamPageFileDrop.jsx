@@ -14,7 +14,7 @@ import { connect } from 'react-redux';
 
 import { CodeFormAccessory, FormAccessoryAlignment } from '../../../forms/FormAccessories';
 import { ENTER_KEY } from '../../../../consts/key-codes';
-import { API_ENDPT_URL, CDN_FILEPOND_URL } from '../../../../consts/uris';
+import { API_ENDPT_URL, CDN_FILEPOND_URL, Modals } from '../../../../consts/uris';
 import { createComment, makeComment } from '../../../../redux/actions';
 
 import 'filepond/dist/filepond.min.css';
@@ -44,7 +44,6 @@ class TeamPageFileDrop extends Component {
       text     : '',
       image    : null,
       loading  : false,
-      uploaded : false,
       url      : false,
       code     : false,
       intro    : true,
@@ -152,7 +151,6 @@ class TeamPageFileDrop extends Component {
       text     : '',
       image    : null,
       loading  : false,
-      uploaded : false,
       url      : false,
       code     : false,
       intro    : true,
@@ -181,11 +179,8 @@ class TeamPageFileDrop extends Component {
 
   handleFileProcessStart = (file)=> {
     console.log('%s.handleFileProcessStart(file)', this.constructor.name, { file });
-    this.setState({
-      loading  : true,
-      uploaded : false
-    }, ()=> {
-        this.props.onContent();
+    this.setState({ loading : true }, ()=> {
+      this.props.onContent();
     });
   };
 
@@ -195,10 +190,6 @@ class TeamPageFileDrop extends Component {
 
   handleProcessedFile = (error, file)=> {
     console.log('%s.handleProcessedFile(error, output)', this.constructor.name, { error, file });
-    this.setState({
-      loading  : false,
-      uploaded : true
-    });
   };
 
   handleProcessedFiles = ()=> {
@@ -225,6 +216,7 @@ class TeamPageFileDrop extends Component {
   handleFilesUpdated = (fileItems)=> {
     console.log('%s.handleFilesUpdated(fileItems)', this.constructor.name, { fileItems });
     this.setState({ files : fileItems.map(({ file })=> (file)) }, ()=> {
+      this.props.onContent();
       // this.props.onClose();
     });
   }
@@ -302,6 +294,8 @@ class TeamPageFileDrop extends Component {
       format   : (code) ? 'code' : 'text'
     });
 
+
+
     this.handleResetContent();
   };
 
@@ -326,24 +320,31 @@ class TeamPageFileDrop extends Component {
     console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
 
     const { dragging, preComment } = this.props;
-    const { url, code, uploaded, image, files, text } = this.state;
+    const { url, code, image, files, text } = this.state;
 
     // const cdnHeaders = {
     //   'Content-Type' : 'multipart/form-data',
     //   'Accept'       : 'application/json'
     // };
 
+    const toolbar = [
+      ['bold', 'italic', 'underline', 'strike'],
+      ['link', 'code-block'],
+      ['clean']
+    ];
+
 		return (<div className="team-page-file-drop" data-dragging={(dragging)} data-latent={(!dragging && files.length === 0 && !preComment)}>
       <div>
-        <div className="input-wrapper" data-hidden={(files.length === 0 && preComment === null)}>
-          <KeyboardEventHandler isDisabled={(files.length === 0 && preComment === null)} handleFocusableElements handleKeys={['ctrl', 'meta', 'enter', 'esc']} onKeyEvent={(key, event)=> this.handleKeyPress(event, key)}>
+        <div className="input-wrapper" data-hidden={(files.length === 0)}>
+          <KeyboardEventHandler isDisabled={(files.length === 0)} handleFocusableElements handleKeys={['ctrl', 'meta', 'enter', 'esc']} onKeyEvent={(key, event)=> this.handleKeyPress(event, key)}>
+            {/* <ReactQuill modules={{ toolbar }} value={this.state.text} onChange={this.handleChange} ref={(el)=> (el) ? this.commentInput = el : null} data-code={(code)} /> */}
             <ReactQuill value={this.state.text} onChange={this.handleChange} ref={(el)=> (el) ? this.commentInput = el : null} data-code={(code)} />
             {/* <TextareaAutosize id="comment-txtarea" className="comment-txtarea" placeholder={(url) ? 'Add a comment to this url…' : 'Add a comment to this image…'} value={(!url) ? (preComment || '') : preComment.replace(url, '')} onFocusCapture={this.handleFieldFocus} onChange={this.handleTextChange} ref={(el)=> (el) ? this.commentInput = el : null} data-code={(code)} /> */}
           </KeyboardEventHandler>
           {(preComment) && (<CodeFormAccessory align={FormAccessoryAlignment.BOTTOM} onClick={this.handleCode} />)}
         </div>
 
-        <div className="file-wrapper" data-file={(files.length > 0 || image !== null)} data-uploaded={uploaded} data-hidden={false}>
+        <div className="file-wrapper" data-file={(files.length > 0 || image !== null)} data-file={(files.length > 0)} data-hidden={false}>
           <div className="filename-wrapper">{files.map(({ filename }, i)=> (
             <div key={i} className="filename">{filename}</div>
           ))}</div>
@@ -352,7 +353,10 @@ class TeamPageFileDrop extends Component {
             server={{
               url     : CDN_FILEPOND_URL,
               process : {
-                url : './index.php'
+                url     : './index.php',
+                onload  : (response) => console.log('___________', 'onload', { response }),
+                onerror : (response) => console.log('___________', 'onerror', response.data),
+                ondata  : (formData) => console.log('___________', 'ondata', { formData })
               }
             }}
             // ref={ref => (this.pond = ref)}
@@ -365,7 +369,7 @@ class TeamPageFileDrop extends Component {
             allowRevert={true}
             // appendTo={filePondAttach}
             itemInsertLocation="after"
-            instantUpload={true}
+            instantUpload={false}
             labelIdle=""
             // iconRemove={null}
             labelFileProcessingComplete=""
@@ -383,6 +387,9 @@ class TeamPageFileDrop extends Component {
             onremovefile={this.handleFileRemoved}
             onupdatefiles={this.handleFilesUpdated}
 
+            imagePreviewHeight={122}
+            imagePreviewTransparencyIndicator="grid"
+
             // onupdatefiles={(fileItems)=> {
             //   console.log('%s.onupdatefiles()', this.constructor.name, { fileItems });
             //   this.setState({ files: fileItems.map(fileItem => fileItem.file) });
@@ -391,7 +398,7 @@ class TeamPageFileDrop extends Component {
         </div>
         <div className="url-wrapper" data-hidden={!url}>{url}</div>
         <div className="button-wrapper button-wrapper-col">
-          <button type="submit" disabled={text.length === 0 && files.length === 0} onClick={this.handleSubmit}>Comment</button>
+          <button type="submit" disabled={text.length === 0} onClick={this.handleSubmit}>Comment</button>
           <button className="cancel-button" onClick={this.handleResetContent}>Cancel</button>
         </div>
       </div>

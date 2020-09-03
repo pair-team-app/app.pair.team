@@ -2,6 +2,7 @@
 import React, { Component } from 'react';
 import './TeamPage.css';
 
+import { push } from 'connected-react-router';
 import { Strings } from 'lang-js-utils';
 import { Menu, Item, Separator, Submenu, MenuProvider } from 'react-contexify';
 import KeyboardEventHandler from 'react-keyboard-event-handler';
@@ -16,6 +17,7 @@ import TeamPageFileDrop from './TeamPageFileDrop';
 import { CommentSortTypes } from '../../sections/TopNav';
 import { TEAM_TIMESTAMP } from '../../../consts/formats';
 import { ENTER_KEY } from '../../../consts/key-codes';
+import { Modals } from '../../../consts/uris';
 import { fetchTeamComments, createComment, makeComment, makeTeamRule, modifyTeam, setComment, setPlayground, setTypeGroup } from '../../../redux/actions';
 import { trackEvent } from '../../../utils/tracking';
 
@@ -171,7 +173,7 @@ class TeamPage extends Component {
     if (preComment) {
       this.props.createComment(preComment);
     }
-  }
+  };
 
   handleDragEnter = (event)=> {
     console.log('%s.handleDragEnter()', this.constructor.name, { event, dragging : this.state.dragging });
@@ -180,6 +182,10 @@ class TeamPage extends Component {
     const { dragging } = this.state;
     if (!dragging) {
       this.setState({ dragging : true });
+    }
+
+    if (!window.location.href.includes(Modals.FILE_DROP)) {
+      this.props.push(`${window.location.pathname}${Modals.FILE_DROP}`);
     }
   };
 
@@ -191,6 +197,7 @@ class TeamPage extends Component {
     const { clientX, clientY } = event;
 
     if (dragging && (clientX + clientY === 0)) {
+    // if (dragging) {
       this.setState({ dragging : false });
     }
   };
@@ -346,7 +353,7 @@ const TeamPageCommentsPanel = (props)=> {
 			return (<TeamPageComment key={i} comment={comment}  loading={loading} vote={vote} onReplyKeyPress={props.onReplyKeyPress} />);
 		}))}
 	</div>);
-}
+};
 
 
 const TeamPageComment = (props)=> {
@@ -408,7 +415,8 @@ const mapDispatchToProps = (dispatch)=> {
     modifyTeam        : (payload)=> dispatch(modifyTeam(payload)),
     setPlayground     : (payload)=> dispatch(setPlayground(payload)),
     setTypeGroup      : (payload)=> dispatch(setTypeGroup(payload)),
-    setComment        : (payload)=> dispatch(setComment(payload))
+    setComment        : (payload)=> dispatch(setComment(payload)),
+    push              : (payload)=> dispatch(push(payload))
   });
 };
 
