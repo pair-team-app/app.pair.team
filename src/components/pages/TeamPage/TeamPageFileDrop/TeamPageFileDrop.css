@@ -84,6 +84,16 @@
   font-size: 30px;
 }
 
+.team-page-file-drop .url-wrapper a {
+  color: rgba(var(--site-selected-color), 1.0);
+}
+
+.team-page-file-drop .url-wrapper a:hover {
+  color: rgba(var(--site-selected-color), 1.0);
+  text-decoration: underline;
+}
+
+
 .team-page-file-drop .file-wrapper {
   display: flex;
   flex-flow: column nowrap;

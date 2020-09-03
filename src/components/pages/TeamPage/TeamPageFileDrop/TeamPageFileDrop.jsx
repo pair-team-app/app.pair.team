@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import './TeamPageFileDrop.css';
 
 import axios from 'axios';
+import { push } from 'connected-react-router';
 import FilePondPluginImageExifOrientation from 'filepond-plugin-image-exif-orientation';
 import FilePondPluginImagePreview from 'filepond-plugin-image-preview';
 import { URIs } from 'lang-js-utils';
@@ -20,6 +21,8 @@ import { createComment, makeComment } from '../../../../redux/actions';
 import 'filepond/dist/filepond.min.css';
 import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css';
 import 'react-quill/dist/quill.snow.css';
+// import 'react-quill/dist/quill.bubble.css';
+// import 'react-quill/dist/quill.core.css';
 import './post-styles.css';
 
 
@@ -74,6 +77,12 @@ class TeamPageFileDrop extends Component {
 
     const { preComment } = this.props;
     const { url, files, image } = this.state;
+
+    if (image) {
+      if (!window.location.href.includes(Modals.FILE_DROP)) {
+        this.props.push(`${window.location.pathname}${Modals.FILE_DROP}`);
+      }
+    }
 
     if (preComment) {
       // const isURL = /https?:\/\//i.test(preComment);
@@ -288,8 +297,9 @@ class TeamPageFileDrop extends Component {
     }
 
     const { preComment, comment } = this.props;
-    const { image, code } = this.state;
+    const { image, code, url } = this.state;
     this.props.makeComment({ image,
+      link     : (url || null),
       comment  : comment,
 			content  : preComment,
       position : (comment) ? comment.position : null,
@@ -312,7 +322,9 @@ class TeamPageFileDrop extends Component {
     }).then((response)=> {
       const { image } = response.data;
       console.log('SCREENSHOT_URL', { data : response.data });
-      this.setState({ image : image.cdn }, ()=> {
+      this.setState({ url,
+        image : image.cdn,
+      }, ()=> {
         this.dataURIFile(image.data, URIs.lastComponent(image.src));
       });
     });
@@ -339,9 +351,8 @@ class TeamPageFileDrop extends Component {
       <div>
         <div className="input-wrapper" data-hidden={(files.length === 0 && !preComment)}>
           <KeyboardEventHandler isDisabled={(files.length === 0 && !preComment)} handleFocusableElements handleKeys={['ctrl', 'meta', 'enter', 'esc']} onKeyEvent={(key, event)=> this.handleKeyPress(event, key)}>
-            {/* <ReactQuill modules={{ toolbar }} value={this.state.text} onChange={this.handleChange} ref={(el)=> (el) ? this.commentInput = el : null} data-code={(code)} /> */}
-            <ReactQuill placeholder={(url) ? 'Add a comment to this url…' : (image !== null) ? 'Add a comment to this image…' : 'Add a comment…'} value={(!url) ? (preComment || '') : preComment.replace(url, '')} onFocusCapture={this.handleFieldFocus} onChange={this.handleTextChange} ref={(el)=> (el) ? this.commentInput = el : null} data-code={(code)} autoFocus />
-            {/* <TextareaAutosize id="comment-txtarea" className="comment-txtarea" placeholder={(url) ? 'Add a comment to this url…' : 'Add a comment to this image…'} value={(!url) ? (preComment || '') : preComment.replace(url, '')} onFocusCapture={this.handleFieldFocus} onChange={this.handleTextChange} ref={(el)=> (el) ? this.commentInput = el : null} data-code={(code)} /> */}
+            {/* <ReactQuill theme="bubble" modules={{ toolbar }} placeholder={(url) ? 'Add a comment to this url…' : (image !== null) ? 'Add a comment to this image…' : 'Add a comment…'} value={(!url) ? (preComment || '') : preComment.replace(url, '')} onFocusCapture={this.handleFieldFocus} onChange={this.handleTextChange} ref={(el)=> (el) ? this.commentInput = el : null} data-code={(code)} /> */}
+            <ReactQuill placeholder={(url) ? 'Add a comment to this url…' : (image !== null) ? 'Add a comment to this image…' : 'Add a comment…'} value={(!url) ? (preComment || '') : (preComment) ? preComment.replace(url, '') : ''} onFocusCapture={this.handleFieldFocus} onChange={this.handleTextChange} ref={(el)=> (el) ? this.commentInput = el : null} data-code={(code)} />
           </KeyboardEventHandler>
           {/* {(preComment) && (<CodeFormAccessory align={FormAccessoryAlignment.BOTTOM} onClick={this.handleCode} />)} */}
         </div>
@@ -398,7 +409,7 @@ class TeamPageFileDrop extends Component {
             // }}
           />
         </div>
-        <div className="url-wrapper" data-hidden={!url}>{url}</div>
+        <div className="url-wrapper" data-hidden={!url} dangerouslySetInnerHTML={{ __html : `<a href="${url}" target="_blank">${url}</a>`}}></div>
         <div className="button-wrapper button-wrapper-col">
           <button type="submit" disabled={text.length === 0} onClick={this.handleSubmit}>Comment</button>
           <button className="cancel-button" onClick={this.handleResetContent}>Cancel</button>
@@ -412,7 +423,8 @@ class TeamPageFileDrop extends Component {
 const mapDispatchToProps = (dispatch)=> {
   return ({
     createComment : (payload)=> dispatch(createComment(payload)),
-    makeComment   : (payload)=> dispatch(makeComment(payload))
+    makeComment   : (payload)=> dispatch(makeComment(payload)),
+    push          : (payload)=> dispatch(push(payload))
   });
 };
 

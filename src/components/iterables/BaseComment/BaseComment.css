@@ -142,6 +142,7 @@
 	flex-wrap: nowrap;
 	align-items: flex-start;
 	width: 100%;
+	font-size: 30px;
 }
 
 .comment-body .base-comment-content .reply-form {
@@ -168,9 +169,13 @@
   cursor: pointer;
 }
 
-.base-comment .content {
-	font-size: 30px;
-	text-align: justify;
+.base-comment .link a {
+  color: rgba(var(--site-selected-color), 1.0);
+}
+
+.base-comment .link a:hover {
+  color: rgba(var(--site-selected-color), 1.0);
+  text-decoration: underline;
 }
 
 .base-comment .content[data-format="code"] {
