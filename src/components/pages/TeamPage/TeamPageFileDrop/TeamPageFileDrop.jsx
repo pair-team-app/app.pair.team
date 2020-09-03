@@ -54,6 +54,7 @@ class TeamPageFileDrop extends Component {
     };
 
     this.commentInput = React.createRef();
+    this.filePond = React.createRef();
   }
 
   dataURIFile = (dataURI, filename)=> {
@@ -407,6 +408,8 @@ class TeamPageFileDrop extends Component {
             //   console.log('%s.onupdatefiles()', this.constructor.name, { fileItems });
             //   this.setState({ files: fileItems.map(fileItem => fileItem.file) });
             // }}
+
+            ref={(el=> (el) ? this.filePond = el : null)}
           />
         </div>
         <div className="url-wrapper" data-hidden={!url} dangerouslySetInnerHTML={{ __html : `<a href="${url}" target="_blank">${url}</a>`}}></div>
