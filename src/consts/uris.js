@@ -39,7 +39,8 @@ if (process.env.NODE_ENV === 'development') {
 		// API_ENDPT_URL    : `http://192.168.1.50:1215/current/gateway.php`,
 		API_ENDPT_URL    : `http://api.pairurl.devlocal/current/gateway.php`,
 		CDN_FILEPOND_URL : `http://cdn.pairurl.devlocal/vendor/filepond-php/`,
-		CDN_UPLOAD_URL   : `http://cdn.pairurl.devlocal/${CDN_VER}/upload.php`
+		CDN_UPLOAD_URL   : `https://cdn.pair.team/upload.php`
+		// CDN_UPLOAD_URL   : `http://cdn.pairurl.devlocal/${CDN_VER}/upload.php`
 	};
 
 } else {
@@ -48,7 +49,7 @@ if (process.env.NODE_ENV === 'development') {
 	endpts = {
 		API_ENDPT_URL    : `https://api.pair.team/current/gateway.php`,
 		CDN_FILEPOND_URL : `https://cdn.pair.team/vendor/filepond-php/`,
-		CDN_UPLOAD_URL   : `https://cdn.pair.team/${CDN_VER}/upload.php`
+		CDN_UPLOAD_URL   : `https://cdn.pair.team/upload.php`
 	};
 }
 

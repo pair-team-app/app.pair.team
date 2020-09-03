@@ -4,6 +4,7 @@ import './TeamPageFileDrop.css';
 
 import axios from 'axios';
 import { push } from 'connected-react-router';
+import FilePondPluginFileEncode from 'filepond-plugin-file-encode';
 import FilePondPluginImageExifOrientation from 'filepond-plugin-image-exif-orientation';
 import FilePondPluginImagePreview from 'filepond-plugin-image-preview';
 import { URIs } from 'lang-js-utils';
@@ -26,7 +27,7 @@ import 'react-quill/dist/quill.snow.css';
 import './post-styles.css';
 
 
-registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview);
+registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview, FilePondPluginFileEncode);
 
 
 // const extractURLs = (val)=> {
@@ -50,7 +51,8 @@ class TeamPageFileDrop extends Component {
       url      : false,
       code     : false,
       intro    : true,
-      files    : []
+      files    : [],
+      fileURI  : null
     };
 
     this.commentInput = React.createRef();
@@ -179,6 +181,7 @@ class TeamPageFileDrop extends Component {
   handleFileAdd = (error, file)=> {
     console.log('%s.handleFileAdd(file)', this.constructor.name, { error, file });
     // File has been processed
+    this.setState({ fileURI : file.getFileEncodeDataURL() });
   };
 
   handleFileProgress = (file, progress)=> {
