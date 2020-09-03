@@ -382,35 +382,6 @@ li > p:last-child {
 	margin-bottom: var(--spacing-20);
 }
 
-p {
-	margin: 0;
-  line-height: var(--spacing-30);
-}
-
-p:not(:last-child) {
-	margin-bottom: var(--spacing-20);
-}
-
-p:last-child {
-  margin-bottom: 35px;
-}
-
-p > a {
-	text-decoration: underline;
-	/*text-decoration-style: dashed;*/
-	text-decoration-skip: objects spaces edges box-decoration;
-	text-decoration-color: rgba(var(--link-color), 1.0);
-	transition: text-decoration-color var(--transition-duration-short) ease-in;
-}
-
-p > a:hover {
-	color: rgba(var(--link-color), 1.0);
-	text-decoration-color: rgba(var(--link-color), 0.33);
-}
-
-p.list-title {
-	margin-bottom: var(--spacing-10);
-}
 
 sup {
 	font-size: 8px;

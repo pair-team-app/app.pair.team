@@ -79,8 +79,6 @@ class TeamPageFileDrop extends Component {
       // const isURL = /https?:\/\//i.test(preComment);
       const urls = URIs.extractURLs(preComment);
 
-      console.log('________', { urls });
-
       if (preComment !== prevProps.preComment && preComment !== ' ') {
         this.commentInput.focus();
 
@@ -264,16 +262,20 @@ class TeamPageFileDrop extends Component {
     }
   };
 
-  handleTextChange = (event)=> {
-    console.log('%s.handleTextChange(event)', this.constructor.name, { event : event.target.value, props : this.props, state : this.state });
+  handleTextChange = (value)=> {
+    console.log('%s.handleTextChange(event)', this.constructor.name, { value, props : this.props, state : this.state });
 
     // const { preComment } = this.props;
     // const { intro, text } = this.state;
     const { intro } = this.state;
-    const { target } = event;
+    // const { target } = event;
+
+    if (value === '<p><br></p>') {
+      this.handleResetContent();
+    }
 
     if (!intro) {
-      this.props.createComment(target.value);
+      this.props.createComment(value);
     }
   }
 
@@ -335,13 +337,13 @@ class TeamPageFileDrop extends Component {
 
 		return (<div className="team-page-file-drop" data-dragging={(dragging)} data-latent={(!dragging && files.length === 0 && !preComment)}>
       <div>
-        <div className="input-wrapper" data-hidden={(files.length === 0)}>
-          <KeyboardEventHandler isDisabled={(files.length === 0)} handleFocusableElements handleKeys={['ctrl', 'meta', 'enter', 'esc']} onKeyEvent={(key, event)=> this.handleKeyPress(event, key)}>
+        <div className="input-wrapper" data-hidden={(files.length === 0 && !preComment)}>
+          <KeyboardEventHandler isDisabled={(files.length === 0 && !preComment)} handleFocusableElements handleKeys={['ctrl', 'meta', 'enter', 'esc']} onKeyEvent={(key, event)=> this.handleKeyPress(event, key)}>
             {/* <ReactQuill modules={{ toolbar }} value={this.state.text} onChange={this.handleChange} ref={(el)=> (el) ? this.commentInput = el : null} data-code={(code)} /> */}
-            <ReactQuill value={this.state.text} onChange={this.handleChange} ref={(el)=> (el) ? this.commentInput = el : null} data-code={(code)} />
+            <ReactQuill placeholder={(url) ? 'Add a comment to this url…' : (image !== null) ? 'Add a comment to this image…' : 'Add a comment…'} value={(!url) ? (preComment || '') : preComment.replace(url, '')} onFocusCapture={this.handleFieldFocus} onChange={this.handleTextChange} ref={(el)=> (el) ? this.commentInput = el : null} data-code={(code)} autoFocus />
             {/* <TextareaAutosize id="comment-txtarea" className="comment-txtarea" placeholder={(url) ? 'Add a comment to this url…' : 'Add a comment to this image…'} value={(!url) ? (preComment || '') : preComment.replace(url, '')} onFocusCapture={this.handleFieldFocus} onChange={this.handleTextChange} ref={(el)=> (el) ? this.commentInput = el : null} data-code={(code)} /> */}
           </KeyboardEventHandler>
-          {(preComment) && (<CodeFormAccessory align={FormAccessoryAlignment.BOTTOM} onClick={this.handleCode} />)}
+          {/* {(preComment) && (<CodeFormAccessory align={FormAccessoryAlignment.BOTTOM} onClick={this.handleCode} />)} */}
         </div>
 
         <div className="file-wrapper" data-file={(files.length > 0 || image !== null)} data-file={(files.length > 0)} data-hidden={false}>

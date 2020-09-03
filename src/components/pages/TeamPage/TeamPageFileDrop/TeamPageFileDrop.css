@@ -27,7 +27,7 @@
   align-items: flex-start;
   justify-content: flex-start;
   height: 100%;
-  border: 1px dotted #ff00ff;
+  /* border: 1px dotted #ff00ff; */
 }
 
 
@@ -35,7 +35,7 @@
   display: flex;
   /* flex: 1 1 0; */
   width: 100%;
-  border: 1px solid #00ffff;
+  /* border: 1px solid #00ffff; */
 }
 
 .team-page-file-drop[data-dragging="false"] > div > *:not(:last-child)[data-hidden="false"] {
@@ -68,8 +68,8 @@
   padding: 0;
   background-color: rgba(var(--site-bg-color), 1.0);
   color: rgba(var(--site-fg-color), 1.0);
-  border: 1px solid rgba(var(--site-bg-color), 1.0);
-  border: 1px dashed #00ff00;
+  /* border: 1px solid rgba(var(--site-bg-color), 1.0); */
+  /* border: 1px dashed #00ff00; */
   font-size: 30px;
   font-weight: 600;
   transition: background-color var(--transition-duration-short) ease-out, color var(--transition-duration-short) ease-out;
@@ -103,7 +103,7 @@
 }
 
 .team-page-file-drop .file-wrapper .filename-wrapper .filename {
-  background-color: #00ffff;
+  /* background-color: #00ffff; */
 }
 
 .team-page-file-drop .file-wrapper .filepond--wrapper {
