@@ -16,7 +16,7 @@ import { connect } from 'react-redux';
 
 import { CodeFormAccessory, FormAccessoryAlignment } from '../../../forms/FormAccessories';
 import { ENTER_KEY } from '../../../../consts/key-codes';
-import { API_ENDPT_URL, CDN_FILEPOND_URL, Modals } from '../../../../consts/uris';
+import { API_ENDPT_URL, CDN_FILEPOND_URL, CDN_UPLOAD_URL, Modals } from '../../../../consts/uris';
 import { createComment, makeComment } from '../../../../redux/actions';
 
 import 'filepond/dist/filepond.min.css';
@@ -45,14 +45,13 @@ class TeamPageFileDrop extends Component {
 		super(props);
 
 		this.state = {
-      text     : '',
-      image    : null,
-      loading  : false,
-      url      : false,
-      code     : false,
-      intro    : true,
-      files    : [],
-      fileURI  : null
+      text    : '',
+      image   : null,
+      loading : false,
+      url     : false,
+      code    : false,
+      intro   : true,
+      files   : []
     };
 
     this.commentInput = React.createRef();
@@ -81,14 +80,13 @@ class TeamPageFileDrop extends Component {
     const { preComment } = this.props;
     const { url, files, image } = this.state;
 
-    if (image) {
+    if (files.length > 0) {
       if (!window.location.href.includes(Modals.FILE_DROP)) {
         this.props.push(`${window.location.pathname}${Modals.FILE_DROP}`);
       }
     }
 
     if (preComment) {
-      // const isURL = /https?:\/\//i.test(preComment);
       const urls = URIs.extractURLs(preComment);
 
       if (preComment !== prevProps.preComment && preComment !== ' ') {
@@ -112,31 +110,6 @@ class TeamPageFileDrop extends Component {
         this.handleResetContent();
       }
     }
-
-    /*
-    if (preComment && !prevProps.preComment) {
-      this.commentInput.focus();
-
-      if (/https?:\/\//i.test(preComment)) {
-        this.setState({ url : true });
-        this.onFetchScreenshot(preComment);
-      }
-
-    } else if (preComment && prevProps.preComment) {
-      if (text !== preComment) {
-        this.setState({ text : preComment });
-      }
-    }
-
-    if (!preComment && prevProps.preComment) {
-      this.setState({ text : '' });
-
-    } else {
-      // if (preComment && text !== preComment) {
-      //   this.setState({ text : preComment });
-      // }
-    }
-    */
   }
 
   componentWillUnmount() {
@@ -158,30 +131,31 @@ class TeamPageFileDrop extends Component {
   handleResetContent = (event)=> {
     console.log('%s.handleResetContent(event)', this.constructor.name, { event });
     this.setState({
-      text     : '',
-      image    : null,
-      loading  : false,
-      url      : false,
-      code     : false,
-      intro    : true,
-      files    : []
+      text    : '',
+      image   : null,
+      loading : false,
+      url     : false,
+      code    : false,
+      intro   : true,
+      files   : []
     }, ()=> {
       this.props.createComment(null);
       this.props.onClose();
     });
   }
 
-  handleFileInit = (file)=> {
-    console.log('%s.handleFileInit(file)', this.constructor.name, { file });
-    // this.props.createComment('≈');
+
+  handleFileAdd = (error, file)=> {
+    console.log('%s.handleFileAdd(file)', this.constructor.name, { error, image : this.state.image, file : file.getFileEncodeDataURL() });
+
+    const { image } = this.state;
+    if (!image) {
+      this.onUploadFile(file.filename, file.getFileEncodeDataURL());
+    }
   };
 
-
-  // processes the first file
-  handleFileAdd = (error, file)=> {
-    console.log('%s.handleFileAdd(file)', this.constructor.name, { error, file });
-    // File has been processed
-    this.setState({ fileURI : file.getFileEncodeDataURL() });
+  handleFileInit = (file)=> {
+    console.log('%s.handleFileInit(file)', this.constructor.name, { image : this.state.image, file });
   };
 
   handleFileProgress = (file, progress)=> {
@@ -334,6 +308,23 @@ class TeamPageFileDrop extends Component {
     });
   };
 
+  onUploadFile = (filename, dataURI)=> {
+    console.log('%s.onUploadFile(filenme, dataURI)', this.constructor.name, { filename, dataURI });
+
+    const { profile, team } = this.props;
+    axios.post(CDN_UPLOAD_URL, {
+      action  : 'ADD_FILE',
+      payload : { filename,
+        rel_path : `${team.id}/${profile.id}`,
+        data_uri : dataURI
+      }
+    }).then((response)=> {
+      const { cdn } = response.data;
+      console.log('ADD_FILE', { data : response.data });
+      this.setState({ image : cdn });
+    });
+  };
+
 	render() {
     console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
 
@@ -439,7 +430,9 @@ const mapStateToProps = (state, ownProps)=> {
     hash       : state.router.location.hash,
     pathname   : state.router.location.pathname,
     preComment : state.comments.preComment,
-    comment    : state.comments.comment
+    comment    : state.comments.comment,
+    profile    : state.user.profile,
+    team       : state.teams.team
   });
 };
 
