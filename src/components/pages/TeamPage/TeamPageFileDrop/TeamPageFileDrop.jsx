@@ -267,7 +267,7 @@ class TeamPageFileDrop extends Component {
   }
 
   handleSubmit = (event=null)=> {
-    console.log('%s.handleSubmit(event)', this.constructor.name, { event });
+    console.log('%s.handleSubmit(event)', this.constructor.name, { event, props : this.props, state : this.state });
 
     if (event) {
       event.preventDefault();
