@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import './BaseComment.css';
 import { VOTE_ACTION_DOWN, VOTE_ACTION_RETRACT, VOTE_ACTION_UP } from './index';
 
-import 'emoji-mart/css/emoji-mart.css';
+import { URIs } from 'lang-js-utils';
 import FontAwesome from 'react-fontawesome';
 import KeyboardEventHandler from 'react-keyboard-event-handler';
 import { connect } from 'react-redux';
@@ -13,6 +13,7 @@ import { USER_DEFAULT_AVATAR } from '../../../consts/uris';
 import { makeComment, setComment, makeVote, modifyComment } from '../../../redux/actions';
 import { trackEvent } from '../../../utils/tracking';
 
+import 'emoji-mart/css/emoji-mart.css';
 class BaseComment extends Component {
   constructor(props) {
     super(props);
@@ -173,10 +174,11 @@ const BaseCommentContent = (props)=> {
 	// console.log('BaseComment.BaseCommentContent()', { props });
 
 	const { comment, replyContent, codeFormat, preComment } = props;
-	const { types, content, format, link } = comment;
+	const { types, format, content, image, link } = comment;
 
 	return (<div className="base-comment-content">
 		{(content) && (<div className="content" data-format={format}>{content}</div>)}
+		{(image) && (<div className="image"><img src={image} alt={URIs.lastComponent(image)} /></div>)}
 		{(link) && (<div className="link" dangerouslySetInnerHTML={{ __html : `<a href="${link}" target="_blank">${link}</a>`}}></div>)}
 		{(comment.state !== 'closed' && types.includes('team') && types.includes('op')) && (<div className="reply-form">
 			<KeyboardEventHandler handleKeys={['enter', `esc`]} isDisabled={(preComment !== null)} onKeyEvent={(key, event)=> props.onReplyKeyPress(event, key)}>
