@@ -408,7 +408,7 @@ class TeamPageFileDrop extends Component {
         </div>
         <div className="url-wrapper" data-hidden={!url} dangerouslySetInnerHTML={{ __html : `<a href="${url}" target="_blank">${url}</a>`}}></div>
         <div className="button-wrapper button-wrapper-col">
-          <button type="submit" disabled={text.length === 0} onClick={this.handleSubmit}>Comment</button>
+          <button type="submit" disabled={text.length === 0 && !image} onClick={this.handleSubmit}>Comment</button>
           <button className="cancel-button" onClick={this.handleResetContent}>Cancel</button>
         </div>
       </div>
