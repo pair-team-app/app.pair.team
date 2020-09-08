@@ -284,8 +284,6 @@ class TeamPageFileDrop extends Component {
       format   : (code) ? 'code' : 'text'
     });
 
-
-
     this.handleResetContent();
   };
 
@@ -330,11 +328,6 @@ class TeamPageFileDrop extends Component {
 
     const { dragging, preComment } = this.props;
     const { url, code, image, files, text } = this.state;
-
-    // const cdnHeaders = {
-    //   'Content-Type' : 'multipart/form-data',
-    //   'Accept'       : 'application/json'
-    // };
 
     const toolbar = [
       ['bold', 'italic', 'underline', 'strike'],
