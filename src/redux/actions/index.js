@@ -619,13 +619,13 @@ export function updateUserProfile(payload) {
   logFormat('updateUserProfile()', null, payload);
 
   const { profile, remote } = payload;
-  if (profile) {
-    if (profile.hasOwnProperty('password') && profile.password === '') {
-      delete (profile.password);
-    }
-  }
+  // if (profile) {
+  //   if (profile.hasOwnProperty('password') && profile.password === '') {
+  //     delete (profile.password);
+  //   }
+  // }
 
-  if (remote === undefined || remote === false) {
+  if (remote === null || remote === undefined || remote === false) {
     return (dispatch)=> {
       dispatch({
         type    : USER_PROFILE_UPDATED,
@@ -653,8 +653,7 @@ export function updateUserProfile(payload) {
         }).catch((error)=> {});
 
       } else {
-        cookie.save('user_id', '0', { path : '/', sameSite : false });
-
+        // cookie.save('user_id', '0', { path : '/', sameSite : false });
         dispatch({
           type    : USER_PROFILE_UPDATED,
           payload : { profile : null }

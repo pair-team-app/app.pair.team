@@ -1,6 +1,7 @@
 
 
 // import moment from 'moment';
+import CryptoJS from 'crypto-js';
 import { Arrays, Bits } from 'lang-js-utils';
 import { push, replace } from 'connected-react-router';
 import cookie from 'react-cookies';
@@ -57,7 +58,7 @@ export function onMiddleware(store) {
     } else if (type === USER_PROFILE_LOADED) {
       // const { pathname, hash } = prevState.router.location;
       const { profile } = payload;
-      const { id, state } = profile;
+      const { id, state, password } = profile;
 
       cookie.save('user_id', (profile) ? profile.id : '0', { path : '/', sameSite : false });
 
@@ -74,7 +75,8 @@ export function onMiddleware(store) {
 
     } else if (type === USER_PROFILE_UPDATED) {
       const { profile } = payload;
-      const { password } = prevState.user;
+      // const { password } = prevState.user;
+      const { password } = profile;
 
       cookie.save('user_id', (profile) ? profile.id : '0', { path : '/', sameSite : false });
 
@@ -82,16 +84,15 @@ export function onMiddleware(store) {
         const status = parseInt(payload.status, 16);
         const { id, username, email, state } = profile;
 
-        payload.password = (profile.password || password);
         payload.profile = { ...profile,
           status    : status,
           id        : id << 0,
           username  : (Bits.contains(status, 0x01)) ? 'Username Already in Use' : username,
           email     : (Bits.contains(status, 0x10)) ? 'Email Already in Use' : email,
+          password  : CryptoJS.MD5(payload.password).toString(),
           validated : ((state << 0) === 2)
         };
 
-        delete (payload.profile['password']);
         dispatch(fetchUserTeams({ profile }));
 
       } else {

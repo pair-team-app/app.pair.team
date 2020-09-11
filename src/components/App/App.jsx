@@ -4,7 +4,9 @@ import './App.css';
 
 import axios from 'axios';
 import { push } from 'connected-react-router';
+import CryptoJS from 'crypto-js';
 import { Browsers } from 'lang-js-utils';
+import md5 from 'md5';
 import cookie from 'react-cookies';
 import { connect } from 'react-redux';
 // import { withRouter } from 'react-router-dom';
@@ -17,7 +19,7 @@ import PopupNotification, { POPUP_TYPE_OK } from '../overlays/PopupNotification'
 import ProfileModal from '../overlays/ProfileModal';
 import RecoverModal from '../overlays/RecoverModal';
 import RegisterModal from '../overlays/RegisterModal';
-import StripeModal from '../overlays/StripeModal'
+import StripeModal from '../overlays/StripeModal';
 import LeftNav from '../sections/LeftNav';
 import TopNav from '../sections/TopNav';
 import ProjectOverlay from '../sections/ProjectOverlay';
@@ -60,6 +62,7 @@ class App extends Component {
     trackPageview();
 
     // console.log('[:][:][:][:][:][:][:][:][:][:]', makeAvatar('M'));
+    // console.log('[:][:][:][:][:][:][:][:][:][:]', { md5 : md5('dope911t'), CryptoJS : CryptoJS.MD5('dope911t').toString() });
 
     const { profile, location, hash } = this.props;
     const { modals } = this.state;

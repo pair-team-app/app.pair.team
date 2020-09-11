@@ -2,8 +2,9 @@
 import React, { Component } from 'react';
 import './ProfileForm.css';
 
+import CryptoJS from 'crypto-js';
 import { Bits, Strings } from 'lang-js-utils';
-import md5 from 'md5';
+// import md5 from 'md5';
 
 import DummyForm from '../DummyForm';
 import { trackEvent } from '../../../utils/tracking';
@@ -26,13 +27,14 @@ class ProfileForm extends Component {
 	}
 
 	componentDidUpdate(prevProps, prevState, snapshot) {
-// console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props, prevState, this.state, snapshot);
+		console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props, prevState, this.state, snapshot);
 
 		const { profile } = this.props;
 		const { email, password, status } = profile;
-		const { validated } = this.state;
+		const { newPassword, newPassword2, validated } = this.state;
 
-		const changed = (this.state.email !== email || this.state.password !== password);
+		// const changed = (this.state.email !== email || CryptoJS.MD5(this.state.password).toString() !== password);
+		const changed = (this.state.email !== email || newPassword.length > 0 || newPassword2.length > 0);
 		if (changed !== this.state.changed) {
 			this.setState({ changed });
 		}
@@ -40,7 +42,7 @@ class ProfileForm extends Component {
 		if (profile !== prevProps.profile && status !== 0x00 && validated) {
 			this.setState({ email, password,
 				emailValid : !Bits.contains(status, 0x10),
-				changed    : false
+				// changed    : false
 			});
 		}
 	}
@@ -69,26 +71,43 @@ class ProfileForm extends Component {
 	};
 
 	handleSubmit = (event)=> {
-    console.log('%s.handleSubmit()', this.constructor.name, { event, props : this.props, state : this.state });
+    console.log('%s.handleSubmit()', this.constructor.name, { event, props : this.props, state : this.state, passwdMD5 : CryptoJS.MD5(this.state.password).toString() });
 
     event.preventDefault();
+		event.stopPropagation();
 
 		const { profile } = this.props;
 		const { email, password, newPassword, newPassword2, changed } = this.state;
+
+		console.log('%s.handleSubmit()', this.constructor.name, { event, props : this.props, state : this.state, passwdMD5 : CryptoJS.MD5(this.state.password).toString(), passwdProfile : profile.password });
+
+
 		if (changed) {
       const emailValid = Strings.isEmail(email);
-      const passwordValid = (md5(password) === profile.password);
+      // const passwordValid = (md5(password) === profile.password);
+      const passwordValid = (password.length > 0 && newPassword === newPassword2);
 
-      if (emailValid && passwordValid && (newPassword === newPassword2)) {
+      if (emailValid && passwordValid) {
         trackEvent('button', 'profile-update');
 
         const { id } = profile;
         const avatar = (!Strings.compare(Strings.firstChar(email), Strings.firstChar(profile.email), false)) ? makeAvatar(email) : profile.avatar;
 
-        this.props.onSubmit({ id, email, avatar,
-          username : email,
-          password : newPassword
-        });
+				this.setState({
+					password      : '',
+					newPassword   : '',
+					newPassword2  : '',
+					changed       : false,
+					validated     : false,
+					emailValid    : true,
+					passwordValid : true
+				}, ()=> {
+					this.props.onSubmit({ id, email, avatar,
+						username : email,
+						password : newPassword
+					});
+				});
+
 
       } else {
         this.setState({
@@ -106,8 +125,9 @@ class ProfileForm extends Component {
 
 
 	render() {
-// console.log('%s.render()', this.constructor.name, this.props, this.state);
+		console.log('%s.render()', this.constructor.name, { props : this.props, state : { ...this.state, password : CryptoJS.MD5(this.state.password).toString() }});
 
+		const { profile } = this.props;
 		const { email, password, newPassword, newPassword2, passMsg } = this.state;
 		const { emailValid, passwordValid, changed, validated } = this.state;
 
@@ -122,7 +142,7 @@ class ProfileForm extends Component {
 
 
 					<div className="button-wrapper button-wrapper-row">
-            <button type="submit" disabled={!changed || email.length === 0 || !emailValid || !passwordValid || (newPassword.length > 0 && newPassword !== newPassword2)} onClick={(event)=> this.handleSubmit(event)}>Submit</button>
+            <button type="submit" disabled={!changed || email.length === 0 || !emailValid || !passwordValid || (CryptoJS.MD5(password).toString() !== profile.password)} onClick={(event)=> this.handleSubmit(event)}>Submit</button>
 						<button className="cancel-button" onClick={this.props.onCancel}>Cancel</button>
 						{/*<button disabled={(email.length === 0 || !emailValid || !passwordValid)} type="submit" onClick={this.handleSubmit}>Update</button>*/}
 					</div>

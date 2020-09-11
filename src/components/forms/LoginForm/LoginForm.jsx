@@ -67,7 +67,7 @@ class LoginForm extends Component {
 
 			axios.post(API_ENDPT_URL, {
 				action  : 'LOGIN',
-				payload : { email, password, username,
+				payload : { email, username, password,
 					invite_id : (invite) ? invite.id : null
 				}
 			}).then((response)=> {
@@ -76,7 +76,7 @@ class LoginForm extends Component {
         // console.log('LOGIN', response.data, parseInt(response.data.status, 16), Bits.contains(status, 0x11), (status & 0x11));
 
 				if (user) {
-					this.props.onLoggedIn({ ...user, password});
+					this.props.onLoggedIn({ ...user });
 
 				} else {
 					this.setState({
@@ -114,7 +114,7 @@ class LoginForm extends Component {
 				}
 
 				{(passMsg)
-					? (<input type="email" placeholder="Enter Password" value={(passMsg || password)} onFocus={()=> this.setState({ passwordValid : true, passMsg : null })} onChange={(event)=> this.setState({ password : event.target.value, passMsg : null })} onClick={this.handlePassword} autoComplete="off" autoFocus />)
+					? (<input type="email" placeholder="Enter Password" disabled={(invite !== null)} value={(passMsg || password)} onFocus={()=> this.setState({ passwordValid : true, passMsg : null })} onChange={(event)=> this.setState({ password : event.target.value, passMsg : null })} onClick={this.handlePassword} autoComplete="off" autoFocus />)
 					: (<input type="password" placeholder="Enter Password" value={(passMsg || password)} onFocus={()=> this.setState({ passwordValid : true, passMsg : null })} onChange={(event)=> this.setState({ password : event.target.value })} onClick={this.handlePassword} autoComplete="off" />)
 				}
 				<div className="button-wrapper button-wrapper-row">

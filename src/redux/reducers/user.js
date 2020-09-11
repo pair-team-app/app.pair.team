@@ -4,8 +4,7 @@ import { LOG_REDUCER_POSTFIX, LOG_REDUCER_PREFIX } from '../../consts/log-ascii'
 
 
 const initialState = {
-  profile  : null,
-  password : null
+  profile : null
 };
 
 
@@ -24,12 +23,14 @@ export default function user(state=initialState, action) {
     return (Object.assign({}, state, { profile }));
 
   } else if (type === USER_PROFILE_UPDATED) {
-    const { profile, password } = payload;
-    return (Object.assign({}, state, { profile, password }));
+    const { profile } = payload;
+    return (Object.assign({}, state, { profile }));
 
   } else if (type === SET_USER_PROFILE_PASSWORD) {
+    const { profile } = state;
     const { password } = payload;
-    return (Object.assign({}, state, { password }));
+
+    return (Object.assign({}, state, { profile : { ...profile, password } }));
 
   } else {
     return (state);

@@ -13,6 +13,7 @@
     "buffer-to-stream": "^1.0.0",
     "connected-react-router": "^6.8.0",
     "copy-to-clipboard": "^3.2.0",
+    "crypto-js": "^4.0.0",
     "emoji-mart": "^3.0.0",
     "favicongrab": "^1.0.0",
     "filepond": "^4.17.1",
