@@ -130,6 +130,8 @@ class TeamPageFileDrop extends Component {
 
   handleResetContent = (event)=> {
     console.log('%s.handleResetContent(event)', this.constructor.name, { event });
+
+    this.props.createComment(null);
     this.setState({
       text    : '',
       image   : null,
@@ -139,7 +141,6 @@ class TeamPageFileDrop extends Component {
       intro   : true,
       files   : []
     }, ()=> {
-      this.props.createComment(null);
       this.props.onClose();
     });
   }
@@ -336,12 +337,11 @@ class TeamPageFileDrop extends Component {
     ];
 
 		return (<div className="team-page-file-drop" data-dragging={(dragging)} data-latent={(!dragging && files.length === 0 && !preComment)}>
+      <KeyboardEventHandler isDisabled={(files.length === 0 && !preComment && !image)} handleFocusableElements handleKeys={['ctrl', 'meta', 'enter', 'esc']} onKeyEvent={(key, event)=> this.handleKeyPress(event, key)} />
       <div>
         <div className="input-wrapper" data-hidden={(files.length === 0 && !preComment)}>
-          <KeyboardEventHandler isDisabled={(files.length === 0 && !preComment)} handleFocusableElements handleKeys={['ctrl', 'meta', 'enter', 'esc']} onKeyEvent={(key, event)=> this.handleKeyPress(event, key)}>
             {/* <ReactQuill theme="bubble" modules={{ toolbar }} placeholder={(url) ? 'Add a comment to this url…' : (image !== null) ? 'Add a comment to this image…' : 'Add a comment…'} value={(!url) ? (preComment || '') : preComment.replace(url, '')} onFocusCapture={this.handleFieldFocus} onChange={this.handleTextChange} ref={(el)=> (el) ? this.commentInput = el : null} data-code={(code)} /> */}
             <ReactQuill placeholder={(url) ? 'Add a comment to this url…' : (image !== null) ? 'Add a comment to this image…' : 'Add a comment…'} value={(!url) ? (preComment || '') : (preComment) ? preComment.replace(url, '') : ''} onFocusCapture={this.handleFieldFocus} onChange={this.handleTextChange} ref={(el)=> (el) ? this.commentInput = el : null} data-code={(code)} />
-          </KeyboardEventHandler>
           {/* {(preComment) && (<CodeFormAccessory align={FormAccessoryAlignment.BOTTOM} onClick={this.handleCode} />)} */}
         </div>
 
