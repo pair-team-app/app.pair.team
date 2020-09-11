@@ -11,9 +11,9 @@
 *.iml
 *.ipr
 
-
 /.history
 /.tours
+
 
 #-- npm --#
 /node_modules
@@ -29,6 +29,9 @@ yarn-error.log
 #-- production --#
 /build
 
+
+#-- debugger profiles --#
+/etc/profiles
 
 #-- temp --#
 /.cache

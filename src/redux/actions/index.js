@@ -356,9 +356,11 @@ export function makeTeam(payload) {
 
     axios.post(API_ENDPT_URL, {
       action  : 'CREATE_TEAM',
-      payload : { title, description, rules, invites,
+      payload : { title, description,
         user_id : profile.id,
-        image   : null
+        image   : null,
+        rules   : (rules.length > 0) ? rules : null,
+        invites : (invites.length > 0) ? invites : null
       }
     }).then((response)=> {
       console.log(API_RESPONSE_PREFIX, 'CREATE_TEAM', response.data, response.data.team);

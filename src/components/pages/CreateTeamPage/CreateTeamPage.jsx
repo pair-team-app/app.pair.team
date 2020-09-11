@@ -92,19 +92,26 @@ class CreateTeamPage extends Component {
     console.log('%s.handleSubmit()', this.constructor.name, { event });
     event.preventDefault();
 
-    const { title, description, rules, invites } = this.state;
+    const { title, description } = this.state;
+    const rules = this.state.rules.filter((rule)=> (rule.length > 0));
+    const invites = this.state.invites.filter((invite)=> (invite.length > 0));
 
-    const invitesValid = invites.map((invite)=> (Strings.isEmail(invite)));
-    this.setState({ invitesValid });
-
+    // const invitesValid = invites.map((invite)=> (Strings.isEmail(invite) || invite.length === 0));
+    const invitesValid = (invites.length === 0) ? [] : invites.map((invite)=> (Strings.isEmail(invite)));
     if (invitesValid.filter((valid)=> (valid)).length === invites.length) {
-      this.props.makeTeam({ title, description,
-        rules   : rules.filter((rule)=> (rule.length > 0)),
-        invites : invites.filter((invite)=> (invite.length > 0))
-      });
+
+
+        // if ((invites.map((invite)=> (invite.length === 0) ? '' : invite).reduce((acc, val)=> ((!val) ? acc : `${acc}${val}`), '').length > 0) && invitesValid.filter((valid)=> (valid)).length === invites.length) {
+        // if ((invites.map((invite)=> (invite.length === 0) ? '' : invite).reduce((acc, val)=> ((!val) ? acc : `${acc}${val}`), '').length > 0) && invitesValid.filter((valid)=> (valid)).length === invites.length) {
+        this.props.makeTeam({ title, description, rules, invites });
+        this.setState({
+          rules        : [''],
+          invites      : [''],
+          invitesValid : [true]
+        });
 
     } else {
-      this.setState({ validations : new Array(invites.length).fill(true) })
+      this.setState({ validations : new Array(invites.length).fill(true) });
     }
   };
 
@@ -182,7 +189,8 @@ const mapDispatchToProps = (dispatch)=> {
 
 const mapStateToProps = (state, ownProps)=> {
   return ({
-    profile : state.user.profile
+    profile : state.user.profile,
+    teams   : state.user.teams
   });
 };
 

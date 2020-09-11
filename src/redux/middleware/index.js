@@ -252,6 +252,7 @@ export function onMiddleware(store) {
       payload.member = member;
 
       // dispatch(fetchUserTeams({ profile }));
+      // dispatch(push(`${Pages.TEAM}/${payload.team.id}--${payload.team.slug}`));
       dispatch(push(`${Pages.TEAM}/${payload.team.id}--${payload.team.slug}`));
 
     } else if (type === UPDATE_MOUSE_COORDS) {
