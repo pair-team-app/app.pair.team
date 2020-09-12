@@ -90,7 +90,7 @@ class TeamPageFileDrop extends Component {
       const urls = URIs.extractURLs(preComment);
 
       if (preComment !== prevProps.preComment && preComment !== ' ') {
-        this.commentInput.focus();
+        // this.commentInput.focus();
 
         if (files.length > 0 || image !== null) {
           this.props.onContent();
@@ -229,6 +229,8 @@ class TeamPageFileDrop extends Component {
     }
      : null, props : this.props, state : this.state, intro : this.state.intro, preComment : this.props.preComment, editorContents : this.commentInput.getEditorContents() });
 
+    return true;
+
     if (event) {
       const { preComment } = this.props;
       const { intro } = this.state;
@@ -244,7 +246,7 @@ class TeamPageFileDrop extends Component {
           // this.commentInput.setSelectionRange(0, preComment.length);
           // this.commentInput.setEditorSelection(preComment.length - 1, preComment.length);
           // this.commentInput.setEditorSelection(0, 0);
-          // this.commentInput.focus();
+          this.commentInput.focus();
         });
 
       } else {
@@ -266,15 +268,24 @@ class TeamPageFileDrop extends Component {
     } : null, props : this.props, state : this.state });
 
     const { intro } = this.state;
-    if (intro) { return }
 
-    if (value === '<p><br></p>') {
-      this.handleResetContent();
+    // if (this.commentInput) {
+    //   this.commentInput.focus();
+    // }
+
+    if (intro) {
+      this.commentInput.focus();
+      return
     }
 
-    this.props.createComment(value);
+    // if (value === '<p><br></p>') {
+    //   this.handleResetContent();
+    // }
+
+    // this.props.createComment(value);
     // this.props.createComment(value.replace(/\<p\>(.+)\<\/p\>/g, '$1'));
-    // this.setState({ text : value });
+    // this.setState({ text : value }, ()=> {
+    // });
   };
 
   handleKeyPress = (event, key)=> {
@@ -304,11 +315,12 @@ class TeamPageFileDrop extends Component {
     }
 
     const { preComment, comment } = this.props;
-    const { image, code, url } = this.state;
+    const { text, image, code, url } = this.state;
     this.props.makeComment({ image,
       link     : (url || null),
       comment  : comment,
-			content  : preComment,
+			content  : this.commentInput.getEditorContents(),
+			// content  : preComment,
       position : (comment) ? comment.position : null,
       format   : (code) ? 'code' : 'text'
     });
@@ -353,7 +365,7 @@ class TeamPageFileDrop extends Component {
   };
 
 	render() {
-    console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
+    console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state, commentInput : (this.commentInput) ? this.commentInput : null });
 
     const { dragging, preComment } = this.props;
     const { url, code, image, files, text } = this.state;
@@ -376,7 +388,8 @@ class TeamPageFileDrop extends Component {
             value={(!url) ? (preComment || '') : (preComment) ? preComment.replace(url, '') : ''}
             onChange={this.handleTextChange}
             // onEditorChangeText={(value, delta, source, editor)=> console.log('TeamPageFileDrop', 'onEditorChangeText', { value, delta, source, editor })}
-            onFocus={this.handleFieldFocus}
+            // onFocus={this.handleFieldFocus}
+            autoFocus
             ref={(el)=> (el) ? this.commentInput = el : null}
             data-code={(code)} />
           {/* {(preComment) && (<CodeFormAccessory align={FormAccessoryAlignment.BOTTOM} onClick={this.handleCode} />)} */}
@@ -438,7 +451,8 @@ class TeamPageFileDrop extends Component {
         </div>
         <div className="url-wrapper" data-hidden={!url} dangerouslySetInnerHTML={{ __html : `<a href="${url}" target="_blank">${url}</a>`}}></div>
         <div className="button-wrapper button-wrapper-col">
-          <button type="submit" disabled={text.length === 0 && !image} onClick={this.handleSubmit}>Comment</button>
+          {/* <button type="submit" disabled={(this.commentInput) ? this.commentInput.getEditorContents().length === 0  : false && !image} onClick={this.handleSubmit}>Comment</button> */}
+          <button type="submit" disabled={!image && false} onClick={this.handleSubmit}>Comment</button>
           <button className="cancel-button" onClick={this.handleResetContent}>Cancel</button>
         </div>
       </div>
