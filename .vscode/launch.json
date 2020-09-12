@@ -7,13 +7,28 @@
     {
       "type": "firefox",
       "request": "launch",
-      "reAttach": false,
-      "keepProfileChanges": false,
-      "profile": "${workspaceFolder}",
+      "reAttach": true,
+      "profileDir": "${workspaceFolder}/etc/profiles/firefox-debug",
       "name": "Launch Firefox on localhost:3000",
       "url": "http://localhost:3000/team#login",
       "webRoot": "${workspaceFolder}",
       "pathMappings": [
+        {
+          "url": "file:///Volumes/Labor/projects/sites/pairurl.com/src",
+          "path": "${workspaceFolder}/src"
+        },
+        {
+          "url": "moz-extension://2dbba05c-0889-a44a-afef-ef7ac8ae2e55/inject",
+          "path": "${workspaceFolder}/src/redux/middleware"
+        },
+        {
+          "url": "moz-extension://2dbba05c-0889-a44a-afef-ef7ac8ae2e55/inject",
+          "path": "${workspaceFolder}/src/redux/middleware"
+        },
+        {
+          "url": "file:///Volumes/Labor/projects/sites/pairurl.com/src",
+          "path": "${workspaceFolder}/src/**/*"
+        },
         {
           "url": "moz-extension://0fe61bde-c36b-8944-956f-5dacb1f1f855/inject",
           "path": "${workspaceFolder}/src/redux/middleware"
@@ -34,12 +49,8 @@
           "path": "${workspaceFolder}/src/redux/middleware"
         },
         {
-          "url": "moz-extension://2dbba05c-0889-a44a-afef-ef7ac8ae2e55/inject",
-          "path": "${workspaceFolder}/src/redux/middleware"
-        },
-        {
           "url": "moz-extension://0fe61bde-c36b-8944-956f-5dacb1f1f855/inject",
-          "path": "${workspaceFolder}/src"
+          "path": "${workspaceFolder}/src/**/*"
         }
       ]
     },
@@ -53,7 +64,7 @@
         "webpack:///src/*": "${webRoot}/*"
       },
       "skipFiles": [
-        "node_modules/**/*.js"
+        "/**/node_modules/**/*.js"
       ]
     },
     {
