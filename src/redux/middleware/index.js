@@ -8,7 +8,7 @@ import cookie from 'react-cookies';
 import { matchPath } from 'react-router-dom';
 
 import { RoutePaths } from '../../components/helpers/Routes';
-import { fetchTeamBuilds, fetchUserTeams, setRoutePath } from '../actions';
+import { fetchTeamBuilds, fetchUserTeams, setRoutePath, setTeam } from '../actions';
 import { STRIPE_SESSION_PAID, BUILD_PLAYGROUNDS_LOADED, INVITE_LOADED, COMMENT_CREATED, COMMENT_ADDED, COMMENT_UPDATED, COMMENT_VOTED, DEVICES_LOADED, SET_COMMENT, SET_COMPONENT, SET_PLAYGROUND, SET_TEAM, SET_TYPE_GROUP, TEAM_BUILDS_LOADED, TEAM_COMMENTS_LOADED, TEAMS_LOADED, TEAM_LOGO_LOADED, TEAM_RULES_UPDATED, TEAM_CREATED, TEAM_UPDATED, UPDATE_MOUSE_COORDS, UPDATE_RESIZE_BOUNDS, USER_PROFILE_LOADED, USER_PROFILE_UPDATED } from '../../consts/action-types';
 import { LOG_MIDDLEWARE_POSTFIX, LOG_MIDDLEWARE_PREFIX } from '../../consts/log-ascii';
 import { Modals, Pages } from '../../consts/uris';
@@ -245,15 +245,16 @@ export function onMiddleware(store) {
       const { teams } = prevState.teams;
       const { team } = payload;
 
-      payload.team = reformTeam(team);
-      payload.teams = [{ ...team, selected : true }, ...teams.map((item)=> ({ ...item, selected : false }))];
+      console.log('_________ CREATE_TEAM', { payload });
+
+      payload.team = reformTeam(team, { selected : true });
+      payload.teams = [payload.team, ...teams.map((item)=> ({ ...item, selected : false }))];
 
       const member = payload.team.members.find(({ id })=> (id === profile.id));
       payload.member = member;
 
       // dispatch(fetchUserTeams({ profile }));
-      // dispatch(push(`${Pages.TEAM}/${payload.team.id}--${payload.team.slug}`));
-      dispatch(push(`${Pages.TEAM}/${payload.team.id}--${payload.team.slug}`));
+      // dispatch(setTeam(team));
 
     } else if (type === UPDATE_MOUSE_COORDS) {
       const { speed } = prevState.mouse;
@@ -390,16 +391,22 @@ export function onMiddleware(store) {
       }
 
     } else if (type === '@@router/LOCATION_CHANGE') {
-      const { urlHistory } = prevState.path;
-
-      const { state } = prevState.router.location;
+      const { router } = prevState;
       const { profile } = prevState.user;
       const { teams } = prevState.teams;
       const { playgrounds } = prevState.builds;
       const { preComment } = prevState.comments;
+      const { urlHistory } = prevState.path;
 
       const { action, isFirstRendering, location } = payload;
+      const { state } = router.location;
       const { pathname, hash } = location;
+
+      if (urlHistory && pathname === [ ...urlHistory].pop().pathname && hash === [ ...urlHistory].pop().hash) {
+        return;
+        // dispatch(next(action));
+        //  dispatch(replace(`${router.location.pathname}${router.location.hash}`));
+      }
 
       // match params
       const teamMatch = matchPath(pathname, {
@@ -629,8 +636,13 @@ export function onMiddleware(store) {
 
     next(action);
 
-    // const postState = store.getState();
-    // const { devices, componentTypes, team } = postState;
+    const postState = store.getState();
+    const { devices, componentTypes, team } = postState;
+
+    if (type === TEAM_CREATED) {
+      const { team } = payload;
+      dispatch(setTeam(team));
+    }
 
     logFormat({ store, action, next, meta : 'POST [==>' });
   });

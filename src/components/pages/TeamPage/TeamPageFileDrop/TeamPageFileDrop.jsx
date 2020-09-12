@@ -214,22 +214,67 @@ class TeamPageFileDrop extends Component {
 
 
   handleFieldFocus = (event)=> {
-    console.log('%s.handleFieldFocus(event)', this.constructor.name, { event : event.target.value, props : this.props, state : this.state });
-
-    // const { preComment } = this.props;
-    const { intro } = this.state;
-    const { target } = event;
-
-    if (intro) {
-      this.setState({
-        intro : false,
-        text  : target.value
-      });
+    // console.log('%s.handleFieldFocus(event)', this.constructor.name, { event, commentInput : { ...this.commentInput }, props : this.props, state : this.state });
+    console.log('%s.handleFieldFocus(event)', this.constructor.name, { event, commentInput : (this.commentInput) ? {
+    // console.log('%s.handleFieldFocus(event)', this.constructor.name, { event, commentInput : (this.commentInput) ? { ...this.commentInput }
+    // {
+      editor : this.commentInput.editor,
+      getEditorContents : this.commentInput.getEditorContents(),
+      isControlled : this.commentInput.isControlled(),
+      isDelta : this.commentInput.isDelta(),
+      props : this.commentInput.props,
+      state : this.commentInput.state,
+      // getInitialState : this.commentInput.getInitialState(),
+      // isDelta : this.commentInput.isDelta()
     }
+     : null, props : this.props, state : this.state, intro : this.state.intro, preComment : this.props.preComment, editorContents : this.commentInput.getEditorContents() });
+
+    if (event) {
+      const { preComment } = this.props;
+      const { intro } = this.state;
+      const { index, length } = event;
+
+      if (intro) {
+        this.setState({
+          intro : false,
+          text  : ''//target.value
+        }, ()=> {
+          // this.commentInput.target.value();
+
+          // this.commentInput.setSelectionRange(0, preComment.length);
+          // this.commentInput.setEditorSelection(preComment.length - 1, preComment.length);
+          // this.commentInput.setEditorSelection(0, 0);
+          // this.commentInput.focus();
+        });
+
+      } else {
+        this.props.createComment((this.commentInput) ? (!this.commentInput.getEditorContents().startsWith('<p>')) ? `<p>${this.commentInput.getEditorContents()}</p>` : this.commentInput.getEditorContents() : null);
+      }
+    }
+
+    // this.props.createComment((this.commentInput) ? this.commentInput.getEditorContents().replace(/\<p\>(.+)\<\/p\>/g, '$1') : null);
   };
 
-  handleChange = (value)=> {
-    this.setState({ text : value });
+  handleTextChange = (value)=> {
+    console.log('%s.handleTextChange(value)', this.constructor.name, { value, commentInput : (this.commentInput) ? {
+      editor            : this.commentInput.editor,
+      getEditorContents : this.commentInput.getEditorContents(),
+      isControlled      : this.commentInput.isControlled(),
+      isDelta           : this.commentInput.isDelta(value),
+      props             : this.commentInput.props,
+      state             : this.commentInput.state,
+    } : null, props : this.props, state : this.state });
+
+    const { intro } = this.state;
+    if (intro) { return }
+
+    if (value === '<p><br></p>') {
+      this.handleResetContent();
+    }
+
+    this.props.createComment(value);
+    // this.props.createComment(value.replace(/\<p\>(.+)\<\/p\>/g, '$1'));
+    // this.setState({ text : value });
   };
 
   handleKeyPress = (event, key)=> {
@@ -249,23 +294,6 @@ class TeamPageFileDrop extends Component {
       }
     }
   };
-
-  handleTextChange = (value)=> {
-    console.log('%s.handleTextChange(event)', this.constructor.name, { value, props : this.props, state : this.state });
-
-    // const { preComment } = this.props;
-    // const { intro, text } = this.state;
-    const { intro } = this.state;
-    // const { target } = event;
-
-    if (value === '<p><br></p>') {
-      this.handleResetContent();
-    }
-
-    if (!intro) {
-      this.props.createComment(value);
-    }
-  }
 
   handleSubmit = (event=null)=> {
     console.log('%s.handleSubmit(event)', this.constructor.name, { event, props : this.props, state : this.state });
@@ -341,7 +369,16 @@ class TeamPageFileDrop extends Component {
       <div>
         <div className="input-wrapper" data-hidden={(files.length === 0 && !preComment)}>
             {/* <ReactQuill theme="bubble" modules={{ toolbar }} placeholder={(url) ? 'Add a comment to this url…' : (image !== null) ? 'Add a comment to this image…' : 'Add a comment…'} value={(!url) ? (preComment || '') : preComment.replace(url, '')} onFocusCapture={this.handleFieldFocus} onChange={this.handleTextChange} ref={(el)=> (el) ? this.commentInput = el : null} data-code={(code)} /> */}
-            <ReactQuill placeholder={(url) ? 'Add a comment to this url…' : (image !== null) ? 'Add a comment to this image…' : 'Add a comment…'} value={(!url) ? (preComment || '') : (preComment) ? preComment.replace(url, '') : ''} onFocusCapture={this.handleFieldFocus} onChange={this.handleTextChange} ref={(el)=> (el) ? this.commentInput = el : null} data-code={(code)} />
+            {/* <ReactQuill placeholder={(url) ? 'Add a comment to this url…' : (image !== null) ? 'Add a comment to this image…' : 'Add a comment…'} value={(!url) ? (preComment || '') : (preComment) ? preComment.replace(url, '') : ''} onFocus={this.handleFieldFocus} onChange={this.handleTextChange} ref={(el)=> (el) ? this.commentInput = el : null} data-code={(code)} autoFocus /> */}
+            {/* <ReactQuill onEditorChangeText={(value, delta, source, editor)=> console.log('TeamPageFileDrop', 'onEditorChangeText', { value, delta, source, editor })} contentEditable="true" onBeforeInput={(event)=> console.log('TeamPageFileDrop', 'onBeforeInput', { event })} beforeInput={(event)=> console.log('TeamPageFileDrop', 'beforeInput', { event })} placeholder={(url) ? 'Add a comment to this url…' : (image !== null) ? 'Add a comment to this image…' : 'Add a comment…'} value={(!url) ? (preComment || '') : (preComment) ? preComment.replace(url, '') : ''} onFocus={this.handleFieldFocus} onChange={this.handleTextChange} ref={(el)=> (el) ? this.commentInput = el : null} data-code={(code)} /> */}
+            <ReactQuill
+            placeholder={(url) ? 'Add a comment to this url…' : (image !== null) ? 'Add a comment to this image…' : 'Add a comment…'}
+            value={(!url) ? (preComment || '') : (preComment) ? preComment.replace(url, '') : ''}
+            onChange={this.handleTextChange}
+            // onEditorChangeText={(value, delta, source, editor)=> console.log('TeamPageFileDrop', 'onEditorChangeText', { value, delta, source, editor })}
+            onFocus={this.handleFieldFocus}
+            ref={(el)=> (el) ? this.commentInput = el : null}
+            data-code={(code)} />
           {/* {(preComment) && (<CodeFormAccessory align={FormAccessoryAlignment.BOTTOM} onClick={this.handleCode} />)} */}
         </div>
 

@@ -4,7 +4,6 @@ import './ProfileForm.css';
 
 import CryptoJS from 'crypto-js';
 import { Bits, Strings } from 'lang-js-utils';
-// import md5 from 'md5';
 
 import DummyForm from '../DummyForm';
 import { trackEvent } from '../../../utils/tracking';
@@ -84,7 +83,7 @@ class ProfileForm extends Component {
 
 		if (changed) {
       const emailValid = Strings.isEmail(email);
-      // const passwordValid = (md5(password) === profile.password);
+      // const passwordValid = (CryptoJS.MD(password).toString() === profile.password);
       const passwordValid = (password.length > 0 && newPassword === newPassword2);
 
       if (emailValid && passwordValid) {

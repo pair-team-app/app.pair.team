@@ -6,7 +6,6 @@ import axios from 'axios';
 import { push } from 'connected-react-router';
 import CryptoJS from 'crypto-js';
 import { Browsers } from 'lang-js-utils';
-import md5 from 'md5';
 import cookie from 'react-cookies';
 import { connect } from 'react-redux';
 // import { withRouter } from 'react-router-dom';
@@ -62,7 +61,7 @@ class App extends Component {
     trackPageview();
 
     // console.log('[:][:][:][:][:][:][:][:][:][:]', makeAvatar('M'));
-    // console.log('[:][:][:][:][:][:][:][:][:][:]', { md5 : md5('dope911t'), CryptoJS : CryptoJS.MD5('dope911t').toString() });
+    // console.log('[:][:][:][:][:][:][:][:][:][:]', { CryptoJSMD5 : CryptoJS.MD5('dope911t').toString() });
 
     const { profile, location, hash } = this.props;
     const { modals } = this.state;
