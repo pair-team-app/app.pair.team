@@ -89,6 +89,10 @@ class TeamPageFileDrop extends Component {
     if (preComment) {
       const urls = URIs.extractURLs(preComment);
 
+      if (!prevProps.preComment) {
+        this.setState({ intro : false });
+      }
+
       if (preComment !== prevProps.preComment && preComment !== ' ') {
         // this.commentInput.focus();
 
@@ -278,9 +282,9 @@ class TeamPageFileDrop extends Component {
       return
     }
 
-    // if (value === '<p><br></p>') {
-    //   this.handleResetContent();
-    // }
+    if (value === '<p><br></p>') {
+      this.handleResetContent();
+    }
 
     // this.props.createComment(value);
     // this.props.createComment(value.replace(/\<p\>(.+)\<\/p\>/g, '$1'));
