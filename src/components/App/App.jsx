@@ -56,7 +56,7 @@ class App extends Component {
   }
 
   componentDidMount() {
-    console.log('%s.componentDidMount()', this.constructor.name, { props : this.props, state : this.state });
+    console.log('%s.componentDidMount()', this.constructor.name, { props : this.props, state : this.state, cookie : (cookie.load('user_id') << 0) });
     trackEvent('site', 'load');
     trackPageview();
 
@@ -75,6 +75,24 @@ class App extends Component {
       });
 
     } else {
+      const { hash } = this.props.location;
+      const { modals } = this.state;
+
+      if (hash.length > 0 && (cookie.load('user_id') << 0) === 0) {
+        // intros to site
+        if (hash === Modals.LOGIN) {
+          this.onToggleModal(Modals.LOGIN);
+        }
+
+        if (hash === Modals.RECOVER) {
+          this.onToggleModal(Modals.RECOVER);
+        }
+
+        if (hash === Modals.REGISTER) {
+          this.onToggleModal(Modals.REGISTER);
+        }
+      }
+
       if (location.pathname.startsWith(Pages.INVITE)) {
         if (profile) {
           this.onLogout();
@@ -202,24 +220,36 @@ class App extends Component {
 
       // not logged in
       } else {
-        // outros from history
-        // if (hash !== prevProps.hash && prevProps.hash.length !== 0) {
-        //   if (prevProps.hash === Modals.RECOVER && modals.recover) {
-        //     this.onToggleModal(Modals.RECOVER, false, (hash.length === 0));
-        //   }
 
-        //   if (prevProps.hash === Modals.LOGIN && modals.login) {
-        //     this.onToggleModal(Modals.LOGIN, false, (hash.length === 0));
-        //   }
 
-        //   if (prevProps.hash === Modals.REGISTER && modals.register) {
-        //     this.onToggleModal(Modals.REGISTER, false, (hash.length === 0));
-        //   }
-        // }
+        // intros from history
+        if (prevProps.hash !== this.props.hash && this.props.hash.length !== 0) {
+
+
+          if (this.props.hash === Modals.PROFILE && !modals.profile) {
+            this.onToggleModal(Modals.PROFILE);
+          }
+
+          if (this.props.hash === Modals.LOGIN && !modals.login) {
+            this.onToggleModal(Modals.LOGIN);
+          }
+
+          if (this.props.hash === Modals.REGISTER && !modals.register) {
+            this.onToggleModal(Modals.REGISTER);
+          }
+
+          if (this.props.hash === Modals.RECOVER && !modals.recover) {
+            this.onToggleModal(Modals.RECOVER);
+          }
+
+          if (this.props.hash === Modals.FILE_DROP && !modals.fileDrop) {
+            this.onToggleModal(Modals.FILE_DROP);
+          }
+        }
       }
 
       // outros from history
-      if (hash.length === 0 && hash !== prevProps.hash && prevProps.hash.length !== 0) {
+      if (hash.length === 0 && hash !== prevProps.hash && prevProps.hash.length !== 0 && hash.length === 0) {
         if (prevProps.hash === Modals.PROFILE && modals.profile) {
           this.onToggleModal(Modals.PROFILE, false, (hash.length === 0));
         }
@@ -499,7 +529,8 @@ const mapStateToProps = (state, ownProps)=> {
     comment        : state.comments.comment,
     matchPath      : state.matchPath,
     hash           : state.router.location.hash,
-    urlHistory     : state.path.urlHistory
+    urlHistory     : state.path.urlHistory,
+    router         : state.router
   };
 };
 

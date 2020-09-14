@@ -1,5 +1,10 @@
 
 
+export const Popovers = {
+  SETTINGS : '#settings',
+  SHARE    : '#share'
+};
+
 export const Modals = {
   COOKIES   : '#cookies',
   FILE_DROP : '#create',

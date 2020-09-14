@@ -5,7 +5,7 @@ import './UserSettings.css';
 import { push } from 'connected-react-router';
 import { connect } from 'react-redux';
 import { NavLink } from 'react-router-dom';
-import { GITHUB_DOCS, NPM_DE_PLAYGROUND, USER_DEFAULT_AVATAR } from '../../../../consts/uris';
+import { GITHUB_DOCS, NPM_DE_PLAYGROUND, USER_DEFAULT_AVATAR, Modals, Pages, Popovers } from '../../../../consts/uris';
 import { trackOutbound } from '../../../../utils/tracking';
 import BasePopover from '../../../overlays/BasePopover';
 import { SettingsMenuItemTypes } from './';
@@ -44,31 +44,36 @@ class UserSettings extends Component {
 		// console.log('%s.componentDidUpdate()', this.constructor.name, { left : shareLink.offsetLeft, top : shareLink.offsetTop });
 
 		const { hash } = this.props;
-		if ((hash === '#settings') && !this.state.popover) {
+		if ((hash === Popovers.SETTINGS) && !this.state.popover) {
 			this.setState({ popover : true });
 		}
 
-		if (hash !== '#settings' && this.state.popover) {
+		if (hash !== Popovers.SETTINGS && this.state.popover) {
 			this.setState({ popover : false });
 		}
 	}
 
 	handleComplete = ()=> {
-		// console.log('%s.handleComplete()', this.constructor.name, { state : this.state });
+		console.log('%s.handleComplete()', this.constructor.name, { props : this.props, state : this.state });
 
 		// window.location.href = window.location.href.replace('#settings', '');
+
     this.setState({ popover : false }, ()=> {
 			const { itemType } = this.state;
 			if (itemType) {
 				if (itemType === SettingsMenuItemTypes.LOGOUT) {
+					this.props.push(`${Pages.TEAM}${Modals.LOGIN}`);
 					this.props.onLogout();
 
 				} else if (itemType !== SettingsMenuItemTypes.DOCS && itemType !== SettingsMenuItemTypes.INSTALL) {
 					this.props.onMenuItem(itemType);
+					this.props.push(window.location.pathname.replace(Popovers.SETTINGS, ''));
 				}
 			}
 
-			this.props.push(window.location.pathname.replace('#settings', ''));
+			// if (profile) {
+				// this.props.push((profile) ? window.location.pathname.replace(Popovers.SETTINGS, '') : `${Pages.TEAM}${Modals.LOGIN}`);
+			// }
 		});
 	};
 

@@ -8,11 +8,12 @@ import thunk from 'redux-thunk';
 
 import { fetchComponentTypes, fetchDevices, fetchProducts, fetchUserProfile } from '../actions';
 import * as actionCreators from '../actions';
+import { onMiddleware, onMiddlewarePost, showingEntryModal } from '../middleware';
 import rootReducer from '../reducers/index';
-import { onMiddleware, showingEntryModal } from '../middleware'
 
 // import { SET_ROUTE_PATH, SET_TEAM, SET_PLAYGROUND, SET_COMMENT, COMMENT_CREATED } from '../../consts/action-types';
 import { Modals, Pages } from '../../consts/uris.js';
+import { LOG_STORE_PREFIX, LOG_STORE_POSTFIX } from '../../consts/log-ascii';
 
 export const history = createBrowserHistory();
 
@@ -35,7 +36,7 @@ export const history = createBrowserHistory();
 
 
 
-const composeEnhancers = composeWithDevTools({ actionCreators, trace : true, traceLimit : 32 }) // const store = createStore(rootReducer, compose(applyMiddleware(onMiddleware, thunk, stackTraceMiddleware)));
+const composeEnhancers = composeWithDevTools({ actionCreators, trace : true, traceLimit : 32 }); // const store = createStore(rootReducer, compose(applyMiddleware(onMiddleware, thunk, stackTraceMiddleware)));
 // const store = createStore(rootReducer(history), composeEnhancers(applyMiddleware(routerMiddleware(history), onMiddleware, thunk, stackTraceMiddleware)));
 const store = createStore(rootReducer(history), composeEnhancers(applyMiddleware(routerMiddleware(history), onMiddleware, thunk)));
 
@@ -45,21 +46,21 @@ const store = createStore(rootReducer(history), composeEnhancers(applyMiddleware
 // const store = createStore(rootReducer(history), composeWithDevTools(applyMiddleware(routerMiddleware(history), onMiddleware, thunk, stackTraceMiddleware)));
 
 
-if (typeof cookie.load('user_id') === 'undefined') {
-  cookie.save('user_id', '0', { path : '/', sameSite : false });
+console.log(LOG_STORE_PREFIX, '-=-=-=STORE INIT=-=-=-', { store : store.getState(), cookie : (typeof cookie.load('user_id')) }, LOG_STORE_POSTFIX);
+if (typeof cookie.load('user_id') === 'undefined' || (cookie.load('user_id') << 0) === 0) {
+  console.log(LOG_STORE_PREFIX, 'cookie UNDEFINED', LOG_STORE_POSTFIX);
+  // cookie.save('user_id', '0', { path : '/', sameSite : false });
   const { hash } = store.getState().router.location;
 
-  console.log('-_-+-_', 'STORE SAYS SHOW MODAL!!!!', { store} )
+  console.log(LOG_STORE_PREFIX, 'STORE SAYS SHOW MODAL!!!!', { store : store.getState(), modal : showingEntryModal(hash) }, LOG_STORE_POSTFIX);
   if (!showingEntryModal(hash)) {
     store.dispatch(push(`${Pages.TEAM}${Modals.LOGIN}`));
   }
 
-// } else {
-  // if ((cookie.load('user_id') << 0) !== 0) {
-  // }
+} else {
+  store.dispatch(fetchUserProfile());
 }
 
-store.dispatch(fetchUserProfile());
 store.dispatch(fetchComponentTypes());
 store.dispatch(fetchDevices());
 store.dispatch(fetchProducts());

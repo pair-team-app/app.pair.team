@@ -26,7 +26,7 @@ class LoginModal extends Component {
 	}
 
 	componentDidUpdate(prevProps, prevState, snapshot) {
-// console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : this.props, prevState, state : this.state });
+		console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : this.props, prevState, state : this.state });
 
 		const { profile } = this.props;
 		if (!prevProps.profile && profile) {
@@ -77,7 +77,7 @@ class LoginModal extends Component {
 
 
 	render() {
-		// console.log('%s.render()', this.constructor.name, {props : this.props, state : this.state });
+		console.log('%s.render()', this.constructor.name, {props : this.props, state : this.state });
 
 		const { invite } = this.props;
 		const { outro } = this.state;
