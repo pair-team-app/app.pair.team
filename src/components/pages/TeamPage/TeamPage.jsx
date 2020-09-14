@@ -238,7 +238,7 @@ class TeamPage extends Component {
     if (key === 'esc') {
       target.blur();
 
-    } else if (key === 'meta' || key === 'ctrl' || key === 'shift') {
+    } else if (key === 'meta' || key === 'ctrl') {
       if (keyCode === ENTER_KEY) {
         this.setState({ teamDescription : `${teamDescription}\n` });
       }
@@ -306,7 +306,7 @@ class TeamPage extends Component {
                 <MenuProvider id="menu_id" className="menu-provider">
                   <div className="header">About</div>
                 </MenuProvider>
-                <div className="content"><KeyboardEventHandler handleKeys={['ctrl', 'meta', 'shift', 'enter', 'esc']} onKeyEvent={(key, event)=> this.handleUpdateTeamDescription(event, key)}>
+                <div className="content"><KeyboardEventHandler handleKeys={['ctrl', 'meta', 'enter', 'esc']} onKeyEvent={(key, event)=> this.handleUpdateTeamDescription(event, key)}>
                   <TextareaAutosize id="team-info-txtarea" className="team-info-txtarea" placeholder="Describe your team" value={teamDescription} onFocusCapture={this.handleTeamFocus} onFocus={(e)=> console.log('=+=+=+=+=+=+=', 'onFocus', { e })} onChange={(event)=> this.setState({ teamDescription : event.target.value })} data-admin={member.roles.includes('admin')} data-keypress-override="true" />
                 </KeyboardEventHandler></div>
                 <div className="footer">
@@ -322,7 +322,7 @@ class TeamPage extends Component {
                 </div>
                 <div className="input-wrapper" data-input={ruleInput}>
                   <TeamPageAddRuleButton admin={member.roles.includes('admin')} disabled={rulesLoading} onClick={this.handleRuleInput} />
-                  <KeyboardEventHandler handleKeys={['ctrl', 'meta', 'shift', 'enter', 'esc']} handleFocusableElements onKeyEvent={(key, event)=> this.handleAddRule(event, key)}>
+                  <KeyboardEventHandler handleKeys={['ctrl', 'meta', 'enter', 'esc']} handleFocusableElements onKeyEvent={(key, event)=> this.handleAddRule(event, key)}>
                     <TextareaAutosize id="team-add-rule-txtarea" placeholder="" value={ruleContent} onChange={(event)=> this.setState({ ruleContent : event.target.value })} ref={(el)=> this.ruleInput = (el) ? el : null} />
                   </KeyboardEventHandler>
                 </div>
