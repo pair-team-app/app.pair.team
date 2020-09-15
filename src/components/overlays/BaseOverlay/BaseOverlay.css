@@ -92,7 +92,7 @@
 .base-overlay .content-wrapper .header-wrapper {
 	display: flex;
 	justify-content: center;
-	padding-bottom: var(--spacing-20);
+	/* padding-bottom: var(--spacing-20); */
 }
 
 .base-overlay .content-wrapper .header-wrapper .title {
@@ -105,6 +105,7 @@
 
 .base-overlay .content-wrapper .content {
 	overflow: hidden;
+	padding-top: 20px;
   /* padding: var(--spacing-10) 0; */
 }
 

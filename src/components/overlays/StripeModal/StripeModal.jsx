@@ -104,18 +104,20 @@ class StripeModal extends Component {
 			<div className="stripe-modal">
 				<div className="header-wrapper"><h4>
 					Your domain has reached {userCount} {Strings.pluralize('Member', userCount)} users.<br />
-					To continue using Pair, please subscribe:<br />
-					Monthly - <span className="price">$10</span> per month per user (<span className="price">${members.length * 10}</span> total)< br />
-					Yearly - <span className="price">$8</span> per month per user (<span className="price">${(members.length * 8) * 12}</span> total)< br />
+					To continue using Pair, please subscribe:
+					<ul>
+						<li>Monthly - <span className="price">$10</span> per month per user (<span className="price">${members.length * 10}</span> total)< br /></li>
+						<li>Yearly - <span className="price">$8</span> per month per user (<span className="price">${(members.length * 8) * 12}</span> total)< br /></li>
+					</ul>
 				</h4></div>
-				<div>
+				<div className="button-wrapper button-wrapper-col">
 					<button onClick={(event)=> this.handleSubmit(event, products[0])}>Monthly</button>
 					<button onClick={(event)=> this.handleSubmit(event, products[1])}>Yearly</button>
+				</div>
 
-					<div className="form-disclaimer">
+				<div className="form-disclaimer">
 						<NavLink to="https://spectrum.chat/pair" target="_blank" onClick={(event)=> this.handleURL(event, 'https://spectrum.chat/pair')}>Need More details about our Plans?</NavLink>
 					</div>
-				</div>
 			</div>
 		</BaseOverlay>);
 	}

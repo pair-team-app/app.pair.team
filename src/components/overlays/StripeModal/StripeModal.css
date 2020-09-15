@@ -1,17 +1,42 @@
 
-.stripe-modal {
-	position: relative;
-	min-width: 360px;
-	width: 360px;
-	max-width: 360px;
-	border: 1px dashed #ff00ff;
+.base-overlay .header-wrapper {
+	font-size: 30px;
 }
 
-.stripe-modal .header-wrapper {
-	padding: 0 0 var(--spacing-10) 0;
+.base-overlay .content-wrapper .header-wrapper {
+	justify-content: flex-start;
+}
+
+.stripe-modal {
+	position: relative;
+	min-width: 488px;
+	width: 488px;
+	max-width: 360px;
+}
+
+.stripe-modal > .header-wrapper {
+	margin-top: -20px;
+	align-items: flex-start;
+	font-size: var(--base-font-size);
 	letter-spacing: 0.2px;
+}
+
+.stripe-modal > .header-wrapper ul {
+	margin: 0;
 }
 
 .stripe-modal .price {
 	font-weight: 600;
+}
+
+.stripe-modal .form-disclaimer {
+	padding-top: 20px;
+}
+
+.stripe-modal .button-wrapper {
+	justify-content: space-around;
+}
+
+.stripe-modal .button-wrapper button {
+	min-width: calc(50% - 20px);
 }
