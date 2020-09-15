@@ -77,7 +77,8 @@ export function onMiddleware(store) {
 
     } else if (type === USER_PROFILE_UPDATED) {
       const { profile } = payload;
-      // const { password } = prevState.user;
+      const { user } = prevState;
+      const { hash } = prevState.router.location;
 
       if (profile) {
         cookie.save('user_id', profile.id, { path : '/', sameSite : false });
@@ -99,8 +100,14 @@ export function onMiddleware(store) {
 
         dispatch(fetchUserTeams({ profile }));
 
+        if (!user.profile) {
+          if (showingEntryModal(hash)) {
+            dispatch(push(window.location.pathname));
+          }
+        }
+
       } else {
-        if (prevState.user) {
+        if (user.profile) {
           cookie.remove('user_id');
           dispatch(push(`${Pages.TEAM}${Modals.LOGIN}`));
         }
@@ -288,16 +295,24 @@ export function onMiddleware(store) {
 
     } else if (type === COMMENT_ADDED) {
       const { team } = prevState.teams;
-      const { component } = prevState.builds;
+      const { playgrounds, playground, component } = prevState.builds;
+
+      const { comment } = payload;
 
       payload.team = { ...team,
-        comments : [ ...team.comments, reformComment(payload.comment, `${Pages.TEAM}/${team.id}--${team.slug}/comments`)]
+        comments : [ ...team.comments, reformComment(comment, `${Pages.TEAM}/${team.id}--${team.slug}/comments`)]
       };
 
       if (component) {
         payload.component = { ...component,
-          comments : [reformComment(payload.comment, `${Pages.TEAM}/${team.id}--${team.slug}/comments`), ...component.comments]
+          comments : [reformComment(comment, `${Pages.TEAM}/${team.id}--${team.slug}/comments`), ...component.comments]
         }
+
+        payload.playground = { ...playground,
+          components : playground.components.map((item)=> (item.id === component.id) ? payload.component : item)
+        };
+
+        payload.playgrounds = playgrounds.map((item)=> (item.id === playground.id) ? payload.playground : item);
       }
 
     } else if (type === COMMENT_UPDATED) {
@@ -305,9 +320,9 @@ export function onMiddleware(store) {
       const comment = reformComment(payload.comment, `${Pages.TEAM}/${team.id}--${team.slug}/comments`);
 
       payload.comment = comment;
-      payload.team = { ...team,
+      payload.team = (comment.types.includes('team')) ? { ...team,
         comments : (comment.state === 'deleted') ? team.comments.filter(({ id })=> (id !== comment.id)) : [ ...team.comments.filter(({ id })=> (id !== comment.id)), payload.comment]
-      };
+      } : team;
 
     } else if (type === STRIPE_SESSION_PAID) {
       payload.team = reformTeam(payload.team);
@@ -605,8 +620,7 @@ export function onMiddleware(store) {
       }
 
       if (profile && urlHistory && !payload.team && urlHistory.length === 1 && pathname === Pages.TEAM && !showingEntryModal(hash, router.location.hash)) {
-      console.log(':|:=-=:|:', 'STILL AINT GOT A TEAM TEAM PAGE YO!!!', ':|:=-=:|:', { profile, team : payload.team, pathname, hash, modals : showingEntryModal(hash, router.location.hash) })
-
+        console.log(':|:=-=:|:', 'STILL AINT GOT A TEAM TEAM PAGE YO!!!', ':|:=-=:|:', { profile, team : payload.team, pathname, hash, modals : showingEntryModal(hash, router.location.hash) })
       }
 
       if (!payload.team) {
@@ -701,9 +715,9 @@ export function onMiddlewarePost(store) {
 
 
 export const showingEntryModal = (hash, prevHash=null)=> {
-  console.log('showingEntryModal()', { hash, prevHash, res : (([Modals.LOGIN, Modals.RECOVER, Modals.REGISTER].filter((modal)=> (hash === modal)).length === 1) && (([Modals.LOGIN, Modals.RECOVER, Modals.REGISTER].filter((modal)=> (prevHash === modal)).length === 0))) })
+  console.log('showingEntryModal()', { hash, prevHash : (prevHash || hash), res : ((prevHash || hash) === hash && ([Modals.LOGIN, Modals.RECOVER, Modals.REGISTER].filter((modal)=> (hash === modal)).length === 1) && (([Modals.LOGIN, Modals.RECOVER, Modals.REGISTER].filter((modal)=> (prevHash === modal)).length === 0))) })
 
-  return (prevHash === hash && ([Modals.LOGIN, Modals.RECOVER, Modals.REGISTER].filter((modal)=> (hash === modal)).length === 1) && (([Modals.LOGIN, Modals.RECOVER, Modals.REGISTER].filter((modal)=> (prevHash === modal)).length === 0)));
+  return ((prevHash || hash) === hash && ([Modals.LOGIN, Modals.RECOVER, Modals.REGISTER].filter((modal)=> (hash === modal)).length === 1) && (([Modals.LOGIN, Modals.RECOVER, Modals.REGISTER].filter((modal)=> (prevHash === modal)).length === 0)));
 };
 
 
