@@ -15,6 +15,8 @@
     "copy-to-clipboard": "^3.2.0",
     "crypto-js": "^4.0.0",
     "emoji-mart": "^3.0.0",
+    "eslint": "^7.9.0",
+    "eslint-plugin-react": "^7.20.6",
     "favicongrab": "^1.0.0",
     "filepond": "^4.17.1",
     "filepond-plugin-file-encode": "^2.1.6",
