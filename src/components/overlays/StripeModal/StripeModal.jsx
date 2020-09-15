@@ -5,7 +5,6 @@ import './StripeModal.css';
 import { loadStripe } from '@stripe/stripe-js';
 import { Strings } from 'lang-js-utils';
 import { connect } from 'react-redux';
-// import { NavLink, withRouter } from 'react-router-dom';
 import { NavLink } from 'react-router-dom';
 
 import BaseOverlay from '../BaseOverlay';
@@ -94,18 +93,20 @@ class StripeModal extends Component {
 		const { products, team } = this.props;
 		const { outro } = this.state;
 
+		const { userCount, members } = team;
+
 		return (<BaseOverlay
 			tracking={Modals.STRIPE}
 			outro={outro}
-			closeable={true}
-			title={null}
+			closeable={false}
+			title="Free team limit has been reached."
 			onComplete={this.handleComplete}>
 			<div className="stripe-modal">
 				<div className="header-wrapper"><h4>
-					Your domain has reached {team.userCount} {Strings.pluralize('Member', team.userCount)} users.<br />
+					Your domain has reached {userCount} {Strings.pluralize('Member', userCount)} users.<br />
 					To continue using Pair, please subscribe:<br />
-					Monthly - <span className="price">$10</span> per month per user (<span className="price">${team.members.length * 10}</span> total)< br />
-					Yearly - <span className="price">$8</span> per month per user (<span className="price">${(team.members.length * 8) * 12}</span> total)< br />
+					Monthly - <span className="price">$10</span> per month per user (<span className="price">${members.length * 10}</span> total)< br />
+					Yearly - <span className="price">$8</span> per month per user (<span className="price">${(members.length * 8) * 12}</span> total)< br />
 				</h4></div>
 				<div>
 					<button onClick={(event)=> this.handleSubmit(event, products[0])}>Monthly</button>

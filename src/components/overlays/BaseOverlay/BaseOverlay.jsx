@@ -19,8 +19,8 @@ class BaseOverlay extends Component {
     super(props);
 
     this.state = {
-      outro: false,
-      completed: false
+      outro     : false,
+      completed : false
     };
 
     //     this.timeline = new TimelineMax();

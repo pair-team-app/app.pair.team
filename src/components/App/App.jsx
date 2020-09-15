@@ -15,6 +15,7 @@ import AlertDialog from '../overlays/AlertDialog';
 import ConfirmDialog from '../overlays/ConfirmDialog';
 import LoginModal from '../overlays/LoginModal';
 import PopupNotification, { POPUP_TYPE_OK } from '../overlays/PopupNotification';
+import { AUTHORIZED_MODALS } from '../overlays/BaseOverlay';
 import ProfileModal from '../overlays/ProfileModal';
 import RecoverModal from '../overlays/RecoverModal';
 import RegisterModal from '../overlays/RegisterModal';
@@ -116,7 +117,7 @@ class App extends Component {
     console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : this.props, prevState, state : this.state, snapshot });
     // console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props, this.state.modals);
 
-    const { location, profile, team, purchase, invite, urlHistory } = this.props;
+    const { location, profile, team, purchase, invite, urlHistory, hash } = this.props;
     const { pathname } = location;
     const { modals } = this.state;
 
@@ -126,7 +127,7 @@ class App extends Component {
       trackPageview();
     }
 
-    const hash = (urlHistory && urlHistory.length > 0) ? [ ...urlHistory].pop() : '';
+    // const hash = (urlHistory && urlHistory.length > 0) ? [ ...urlHistory].pop() : '';
     if (urlHistory.length === 1) {
       // this.onEntryModal(urlHistory.hash, modals);
     }
@@ -183,6 +184,12 @@ class App extends Component {
 
         if (modals.register) {
           this.onToggleModal(Modals.REGISTER, false);
+        }
+
+        if (team && !prevProps.team) {
+          if (AUTHORIZED_MODALS.includes(hash)) {
+            this.onToggleModal(Object.values(Modals).find((modal)=> (modal === hash)));
+          }
         }
 
         // payment modal
@@ -248,6 +255,29 @@ class App extends Component {
           }
         }
       }
+
+      // // outros from history
+      // if (hash.length === 0 && hash !== prevProps.hash && prevProps.hash.length !== 0 && hash.length === 0) {
+      //   if (prevProps.hash === Modals.PROFILE && modals.profile) {
+      //     this.onToggleModal(Modals.PROFILE, false, (hash.length === 0));
+      //   }
+
+      //   if (prevProps.hash === Modals.RECOVER && modals.recover) {
+      //     this.onToggleModal(Modals.RECOVER, false, (hash.length === 0));
+      //   }
+
+      //   if (prevProps.hash === Modals.FILE_DROP && modals.fileDrop) {
+      //     this.onToggleModal(Modals.FILE_DROP, false, (hash.length === 0));
+      //   }
+
+      //   if (prevProps.hash === Modals.LOGIN && modals.login) {
+      //     this.onToggleModal(Modals.LOGIN, false, (hash.length === 0));
+      //   }
+
+      //   if (prevProps.hash === Modals.REGISTER && modals.register) {
+      //     this.onToggleModal(Modals.REGISTER, false, (hash.length === 0));
+      //   }
+      // }
 
       // outros from history
       if (hash.length === 0 && hash !== prevProps.hash && prevProps.hash.length !== 0 && hash.length === 0) {

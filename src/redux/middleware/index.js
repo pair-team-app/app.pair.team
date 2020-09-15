@@ -2,12 +2,13 @@
 
 import { push, replace } from 'connected-react-router';
 import CryptoJS from 'crypto-js';
-import { Arrays, Bits } from 'lang-js-utils';
+import { Bits } from 'lang-js-utils';
 import moment from 'moment';
 import cookie from 'react-cookies';
 import { matchPath } from 'react-router-dom';
 
 import { RoutePaths } from '../../components/helpers/Routes';
+import { ENTRY_MODALS, AUTHORIZED_MODALS } from '../../components/overlays/BaseOverlay';
 import { fetchTeamBuilds, fetchUserTeams, setRoutePath, setTeam } from '../actions';
 import { STRIPE_SESSION_PAID, BUILD_PLAYGROUNDS_LOADED, INVITE_LOADED, COMMENT_CREATED, COMMENT_ADDED, COMMENT_UPDATED, COMMENT_VOTED, DEVICES_LOADED, SET_COMMENT, SET_COMPONENT, SET_PLAYGROUND, SET_TEAM, SET_TYPE_GROUP, TEAM_BUILDS_LOADED, TEAM_COMMENTS_LOADED, TEAMS_LOADED, TEAM_LOGO_LOADED, TEAM_RULES_UPDATED, TEAM_CREATED, TEAM_UPDATED, UPDATE_MOUSE_COORDS, UPDATE_RESIZE_BOUNDS, USER_PROFILE_LOADED, USER_PROFILE_UPDATED, UPDATE_USER_PROFILE } from '../../consts/action-types';
 import { HISTORY_TIMESTAMP } from '../../consts/formats';
@@ -102,9 +103,16 @@ export function onMiddleware(store) {
         dispatch(fetchUserTeams({ profile }));
 
         if (!user.profile) {
-          if (showingEntryModal(hash)) {
+          if (ENTRY_MODALS.includes(hash)) {
             dispatch(push(window.location.pathname));
           }
+
+          if (AUTHORIZED_MODALS.includes(hash)) {
+
+          }
+          // if (showingEntryModal(hash)) {
+          //   dispatch(push(window.location.pathname));
+          // }
         }
 
       } else {
@@ -147,8 +155,6 @@ export function onMiddleware(store) {
         const team = (params) ? (payload.teams.find(({ id })=> (id === (params.teamID << 0))) || [ ...payload.teams].shift()) : [ ...payload.teams].shift();
         payload.team = team;
 
-        console.log('______________________', { params, team });
-
         payload.teams = payload.teams.map((item)=> ({ ...item,
           selected : (team && item.id === team.id)
         }));
@@ -157,7 +163,6 @@ export function onMiddleware(store) {
         payload.member = member;
 
         if (!params || (params.teamID << 0) !== team.id || params.teamSlug !== team.slug) {
-        // if (!params) {
           dispatch(replace(`${Pages.TEAM}/${team.id}--${team.slug}${hash}`));
         }
 
@@ -165,6 +170,10 @@ export function onMiddleware(store) {
           const buildID = 0;
           const deviceSlug = '';
           dispatch(fetchTeamBuilds({ team : payload.team, buildID, deviceSlug }));
+        }
+
+        if (AUTHORIZED_MODALS.includes(hash)) {
+          console.log('¡!¡!¡!¡!¡!¡!¡!', 'SHOW MODAL', { hash });
         }
       }
 
@@ -187,11 +196,20 @@ export function onMiddleware(store) {
         strict : true
       });
 
-      const projectMatch = matchPath(pathname, {
-        path   : RoutePaths.PROJECT,
-        exact  : true,
-        strict : true
-      });
+      const projectMatch = { ...matchPath(pathname, {
+          path   : RoutePaths.PROJECT,
+          exact  : true,
+          strict : true
+        })};
+
+      //   ,
+      //   buildID     : (typeof projectMatch.params.buildID !== 'undefined') ? (projectMatch.params.buildID << 0) : null,
+      //   projectSlug : (typeof projectMatch.params.projectSlug !== 'undefined') ? projectMatch.params.projectSlug : null,
+      //   deviceSlug  : (typeof projectMatch.params.deviceSlug !== 'undefined') ? projectMatch.params.deviceSlug : null,
+      //   componentID : (typeof projectMatch.params.componentID !== 'undefined') ? (projectMatch.params.componentID << 0) : null,
+      //   comments    : (typeof projectMatch.params.comments !== 'undefined') ? (projectMatch.params.comments === true) : false,
+      //   commentID   : (typeof projectMatch.params.commentID !== 'undefined') ? (projectMatch.params.commentID << 0) : null
+      // };
 
 
       const playgrounds = [ ...payload.playgrounds].map((playground)=> (reformPlayground(playground, devices, componentTypes, team)));
@@ -203,22 +221,33 @@ export function onMiddleware(store) {
 
       if (params) {
         if (params.buildID) {
-          const playground = { ...playgrounds.find(({ buildID, device })=> (buildID === (params.buildID << 0) && device.slug === params.deviceSlug)), selected : true };
-
+          const playground = playgrounds.find(({ buildID, device })=> (buildID === (params.buildID << 0) && device.slug === params.deviceSlug)) || [ ...playgrounds].pop();
           payload.playground = { ...playground, selected : true };
-          payload.playgrounds = playgrounds.map((item)=> ((playground && item.id === playground.id) ? payload.playground : { ...item,
-            selected : false
-          }));
+          payload.playgrounds = playgrounds.map((item)=> ((playground && item.id === playground.id) ? payload.playground : { ...item, selected : false }));
 
-          if (playground && params.componentID) {
-            const component = { ...playground.components.find(({ id })=> (id === (params.componentID << 0))), selected : true };
-            payload.component = component;
+          if (params.componentID) {
+            const component = playground.components.find(({ id })=> (id === (params.componentID << 0))) || [ ...playground.components].pop();
+            payload.component = { ...component, selected : true };
 
-            if (component && params.comments && params.commentID) {
+            if (params.comments && params.commentID) {
               const comment = component.comments.find(({ id })=> (id === (params.commentID << 0)));
               payload.comment = (comment || null);
+
+            } else {
+              payload.comment = null;
             }
+
+          } else {
+            payload.component = null;
+            payload.comment = null;
           }
+        }
+
+        if (((params.buildID << 0) !== payload.playground.buildID) || (params.projectSlug !== payload.playground.slug) || (params.deviceSlug !== payload.playground.device.slug)) {
+          // console.log('¡!¡!¡!¡!¡!¡!¡!¡!', { params, payload, url : `${Pages.TEAM}/${team.id}--${team.slug}/project/${payload.playground.buildID}--${payload.playground.slug}/${payload.playground.device.slug}` });
+          //dispatch(fetchTeamBuilds({ team, buildID : payload.playground.buildID, deviceSlug : payload.playground.device.slug }));
+          //dispatch(replace(`${Pages.TEAM}/${team.id}--${team.slug}/project/${payload.playground.buildID}--${payload.playground.slug}/${payload.playground.device.slug}`));
+          //return (next(action));
         }
       }
 
@@ -604,18 +633,18 @@ export function onMiddleware(store) {
 
       if (!payload.team) {
         if (profile) {
-          dispatch(setRoutePath({
-            params : {
-              teamID       : null,
-              teamSlug     : null,
-              buildID      : null,
-              projectSlug  : null,
-              deviceSlug   : null,
-              componentID  : null,
-              comments     : null,
-              commentID    : null
-            }
-          }));
+          // dispatch(setRoutePath({
+          //   params : {
+          //     teamID       : null,
+          //     teamSlug     : null,
+          //     buildID      : null,
+          //     projectSlug  : null,
+          //     deviceSlug   : null,
+          //     componentID  : null,
+          //     comments     : null,
+          //     commentID    : null
+          //   }
+          // }));
         }
 
       } else {
@@ -625,18 +654,18 @@ export function onMiddleware(store) {
         // dispatch(fetchTeamComments({ team : payload.team, verbose : true }));
         }
 
-        dispatch(setRoutePath({ ...teamMatch,
-          params : { ...teamMatch.params,
-            teamID       : (teamMatch.params.teamID << 0 || null),
-            teamSlug     : (teamMatch.params.teamSlug || null),
-            buildID      : (projectMatch) ? (projectMatch.params.buildID << 0 || null) : null,
-            projectSlug  : (projectMatch) ? (projectMatch.params.projectSlug || null) : null,
-            deviceSlug   : (projectMatch) ? (projectMatch.params.deviceSlug || null) : null,
-            componentID  : (projectMatch) ? (projectMatch.params.componentID << 0 || null) : null,
-            comments     : (teamMatch.params.comments) ? (teamMatch.params.comments === true) : false,
-            commentID    : (teamMatch.params.commentID << 0 || null)
-          }
-        }));
+        // dispatch(setRoutePath({ ...teamMatch,
+        //   params : { ...teamMatch.params,
+        //     teamID       : (teamMatch.params.teamID << 0 || null),
+        //     teamSlug     : (teamMatch.params.teamSlug || null),
+        //     buildID      : (projectMatch) ? (projectMatch.params.buildID << 0 || null) : null,
+        //     projectSlug  : (projectMatch) ? (projectMatch.params.projectSlug || null) : null,
+        //     deviceSlug   : (projectMatch) ? (projectMatch.params.deviceSlug || null) : null,
+        //     componentID  : (projectMatch) ? (projectMatch.params.componentID << 0 || null) : null,
+        //     comments     : (teamMatch.params.comments) ? (teamMatch.params.comments === true) : false,
+        //     commentID    : (teamMatch.params.commentID << 0 || null)
+        //   }
+        // }));
       }
     }
 
