@@ -1,5 +1,5 @@
 
-import { push, routerMiddleware } from 'connected-react-router';
+import { push, replace, routerMiddleware } from 'connected-react-router';
 import { createBrowserHistory } from 'history';
 import cookie from 'react-cookies';
 import { applyMiddleware, createStore } from 'redux';
@@ -47,15 +47,8 @@ const store = createStore(rootReducer(history), composeEnhancers(applyMiddleware
 
 
 console.log(LOG_STORE_PREFIX, '-=-=-=STORE INIT=-=-=-', { store : store.getState(), cookie : (typeof cookie.load('user_id')) }, LOG_STORE_POSTFIX);
-if (typeof cookie.load('user_id') === 'undefined' || (cookie.load('user_id') << 0) === 0) {
-  console.log(LOG_STORE_PREFIX, 'cookie UNDEFINED', LOG_STORE_POSTFIX);
-  // cookie.save('user_id', '0', { path : '/', sameSite : false });
-  const { hash } = store.getState().router.location;
-
-  console.log(LOG_STORE_PREFIX, 'STORE SAYS SHOW MODAL!!!!', { store : store.getState(), modal : showingEntryModal(hash) }, LOG_STORE_POSTFIX);
-  if (!showingEntryModal(hash)) {
-    store.dispatch(push(`${Pages.TEAM}${Modals.LOGIN}`));
-  }
+if ((cookie.load('user_id') << 0) === 0) {
+  store.dispatch(replace(`${window.location.pathname}${Modals.LOGIN}`))
 
 } else {
   store.dispatch(fetchUserProfile());

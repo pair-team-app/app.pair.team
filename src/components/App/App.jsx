@@ -61,6 +61,7 @@ class App extends Component {
     trackPageview();
 
     // console.log('[:][:][:][:][:][:][:][:][:][:]', makeAvatar('M'));
+    // console.log('[:][:][:][:][:][:][:][:][:][:]', { API_ENDPT_URL, CDN_FILEPOND_URL, CDN_UPLOAD_URL });
     // console.log('[:][:][:][:][:][:][:][:][:][:]', { CryptoJSMD5 : CryptoJS.MD5('dope911t').toString() });
 
     const { profile, location, hash } = this.props;

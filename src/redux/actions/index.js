@@ -254,7 +254,9 @@ export function fetchUserProfile(payload=null) {
         type    : USER_PROFILE_LOADED,
         payload : { profile }
       });
-    }).catch((error)=> {});
+    }).catch((error)=> {
+      console.log(API_RESPONSE_PREFIX, 'USER_PROFILE >> ERROR', { error, API_ENDPT_URL, payload : { user_id : cookie.load('user_id') << 0 || 0 } });
+    });
   };
 }
 

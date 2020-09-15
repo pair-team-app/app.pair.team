@@ -1,15 +1,16 @@
 
 
-// import moment from 'moment';
+import { push, replace } from 'connected-react-router';
 import CryptoJS from 'crypto-js';
 import { Arrays, Bits } from 'lang-js-utils';
-import { push, replace } from 'connected-react-router';
+import moment from 'moment';
 import cookie from 'react-cookies';
 import { matchPath } from 'react-router-dom';
 
 import { RoutePaths } from '../../components/helpers/Routes';
 import { fetchTeamBuilds, fetchUserTeams, setRoutePath, setTeam } from '../actions';
 import { STRIPE_SESSION_PAID, BUILD_PLAYGROUNDS_LOADED, INVITE_LOADED, COMMENT_CREATED, COMMENT_ADDED, COMMENT_UPDATED, COMMENT_VOTED, DEVICES_LOADED, SET_COMMENT, SET_COMPONENT, SET_PLAYGROUND, SET_TEAM, SET_TYPE_GROUP, TEAM_BUILDS_LOADED, TEAM_COMMENTS_LOADED, TEAMS_LOADED, TEAM_LOGO_LOADED, TEAM_RULES_UPDATED, TEAM_CREATED, TEAM_UPDATED, UPDATE_MOUSE_COORDS, UPDATE_RESIZE_BOUNDS, USER_PROFILE_LOADED, USER_PROFILE_UPDATED, UPDATE_USER_PROFILE } from '../../consts/action-types';
+import { HISTORY_TIMESTAMP } from '../../consts/formats';
 import { LOG_MIDDLEWARE_POSTFIX, LOG_MIDDLEWARE_PREFIX } from '../../consts/log-ascii';
 import { Modals, Pages } from '../../consts/uris';
 import { makeAvatar } from '../../utils/funcs';
@@ -107,10 +108,8 @@ export function onMiddleware(store) {
         }
 
       } else {
-        if (user.profile) {
-          cookie.remove('user_id');
-          dispatch(push(`${Pages.TEAM}${Modals.LOGIN}`));
-        }
+        dispatch(push(`${Pages.TEAM}${Modals.LOGIN}`));
+        cookie.remove('user_id');
       }
 
     } else if (type === TEAMS_LOADED) {
@@ -463,36 +462,36 @@ export function onMiddleware(store) {
       payload.playground = prevState.builds.playground;
       payload.component =  prevState.builds.component;
 
-      payload.urlHistory = (urlHistory) ? [ ...urlHistory, { ...payload.location, state : null }] : [{ ...payload.location, state : null }];
+      payload.urlHistory = (urlHistory) ? [ ...urlHistory, { ...payload.location, state : null, epoch : (moment.utc().valueOf() * 0.001) << 0, timestamp : moment().format(HISTORY_TIMESTAMP) }] : [{ ...payload.location, state : null }];
 
-     // duplicate router change, ABORT
-     if (!isFirstRendering && payload.location.state && state && pathname === [ ...payload.location.state].pop().pathname && hash === [ ...payload.location.state].pop().hash) {
-       console.log('[|:|]=-=-=-=-=-=ABORT-ROUTE=-=-=-=-=-=-=[%s]=-=(%d)', action, (state) ? state.length : 0, { isFirstRendering, cookie : ((cookie.load('user_id') << 0) === 0), pathname, hash, state, profile, createMatch, teamMatch, projectMatch });
+      // duplicate router change, ABORT
+      //  if (!isFirstRendering && payload.location.state && state && pathname === [ ...payload.location.state].pop().pathname && hash === [ ...payload.location.state].pop().hash) {
+      if (!isFirstRendering && payload.urlHistory && urlHistory && pathname === [ ...payload.urlHistory].pop().pathname && hash === [ ...payload.urlHistory].pop().hash) {
+        console.log('[|:|]=-=-=-=-=-=ABORT-ROUTE=-=-=-=-=-=-=[%s]=-=(%d)', action, (urlHistory) ? urlHistory.length : 0);
 
       //  dispatch (next(action));
       //  dispatch (next(action));
-     }
+      }
 
-      console.log('[|:|]=-=-=-=-=-=LOCATION=-=-=-=-=-=-=[%s]=-=(%d)', action, (state) ? state.length : 0, { isFirstRendering, cookie : ((cookie.load('user_id') << 0) === 0), pathname, hash, state, profile, createMatch, teamMatch, projectMatch });
+      console.log('[|:|]=-=-=-=-=-=@@router/LOCATION_CHANGE=-=-=-=-=-=-=[%s]=-=(%d)', action, (cookie.load('user_id') << 0), { isFirstRendering, urlHistory, pathname, hash, profile, createMatch, teamMatch, projectMatch });
 
       if (isFirstRendering) {
-        console.log('\\\\\\\\\\\\\\\\\\\\', 'FIRST LOCATION RENDER', { pathname, hash, cookie : ((cookie.load('user_id') << 0) !== 0) }, '\\\\\\\\\\\\\\\\\\\\');
+        console.log('\\\\\\\\\\\\\\\\\\\\', 'FIRST LOCATION RENDER', { pathname, hash, cookie : (cookie.load('user_id') << 0) }, '\\\\\\\\\\\\\\\\\\\\');
 
-        payload.urlHistory = [{ ...payload.location, state : null }];
+        payload.urlHistory = [{ ...payload.location, state : null, epoch : (moment.utc().valueOf() * 0.001) << 0, timestamp : moment().format(HISTORY_TIMESTAMP) }];
 
-
-
-        if ((cookie.load('user_id') << 0 === 0) && !showingEntryModal(hash, router.location.hash)) {
-          dispatch(push(`${Pages.TEAM}${Modals.LOGIN}`));
+        if ((cookie.load('user_id') << 0 === 0)) {
+          dispatch(replace(`${pathname}${Modals.LOGIN}`));
         }
       }
 
-      console.log('[::::||::::]',' LOCATION HISTORY', '[::::||::::]', { payloadLocState : payload.location.state, prevLocState : state });
+      console.log('[::::||::::]',' LOCATION HISTORY', '[::::||::::]', { plHistory : payload.urlHistory, urlHistory });
 
       // abort and return to team root w/ existing
-      if (!pathname.startsWith(Pages.TEAM) && !pathname.startsWith(Pages.CREATE)) {
-        console.log('///-///', 'NOT TEAM PAGE', { pathname, hash }, '///-///');
-      }
+      // if (!pathname.startsWith(Pages.TEAM) && !pathname.startsWith(Pages.CREATE)) {
+      //   console.log('///-///', 'NOT TEAM PAGE', { pathname, hash }, '///-///');
+      //   dispatch(replace(`${Pages.TEAM}`));
+      // }
 
       if (!isFirstRendering && profile) {
 
@@ -502,7 +501,6 @@ export function onMiddleware(store) {
 
             // has history
             if (payload.urlHistory !== null && payload.urlHistory.length >= 1) {
-              // const prevLocation = [ ...payload.location.state].pop();
               const prevURL = payload.urlHistory.pop();
 
               // replace with history
@@ -519,31 +517,12 @@ export function onMiddleware(store) {
         // fwd nav
         } else if (action === 'PUSH' || action === 'REPLACE') {
 
-          // not valid page / param url
-          if (!teamMatch && !createMatch && !projectMatch) {
-            console.log('///-///', 'NON-TEAM PARAM URL', { pathname, hash }, '///-///');
-
-            // dispatch(setRoutePath({
-            //   params : {
-            //     teamID       : null,
-            //     teamSlug     : null,
-            //     buildID      : null,
-            //     projectSlug  : null,
-            //     deviceSlug   : null,
-            //     componentID  : null,
-            //     comments     : null,
-            //     commentID    : null
-            //   }
-            // }));
-          }
-
-
 
           // push last location onto state
-          payload.location = { ...location,
-            // state : Arrays.pruneObjDupKeys((!state) ? [{ ...location, state : null }] : [ ...state, { ...prevState.router.location }], 'key')
-            state : Arrays.pruneObjDupKeys((!urlHistory) ? [{ ...location, state : null }] : [ ...urlHistory, { ...prevState.router.location }], 'key')
-          };
+          // payload.location = { ...location,
+          //   // state : Arrays.pruneObjDupKeys((!state) ? [{ ...location, state : null }] : [ ...state, { ...prevState.router.location }], 'key')
+          //   state : Arrays.pruneObjDupKeys((!urlHistory) ? [{ ...location, state : null }] : [ ...urlHistory, { ...prevState.router.location }], 'key')
+          // };
 
         } else if (action === 'REPLACE') {
           // payload.location = { ...location,
@@ -637,12 +616,11 @@ export function onMiddleware(store) {
               commentID    : null
             }
           }));
-      }
+        }
 
       } else {
         // start fetching team data
-        if (teams
-        ) {
+        if (teams) {
           dispatch(fetchTeamBuilds({ team : payload.team, buildID, deviceSlug }));
         // dispatch(fetchTeamComments({ team : payload.team, verbose : true }));
         }
@@ -660,8 +638,6 @@ export function onMiddleware(store) {
           }
         }));
       }
-
-
     }
 
     next(action);
@@ -715,9 +691,11 @@ export function onMiddlewarePost(store) {
 
 
 export const showingEntryModal = (hash, prevHash=null)=> {
-  console.log('showingEntryModal()', { hash, prevHash : (prevHash || hash), res : ((prevHash || hash) === hash && ([Modals.LOGIN, Modals.RECOVER, Modals.REGISTER].filter((modal)=> (hash === modal)).length === 1) && (([Modals.LOGIN, Modals.RECOVER, Modals.REGISTER].filter((modal)=> (prevHash === modal)).length === 0))) })
+  // console.log('showingEntryModal()', { hash, prevHash : (prevHash || hash), res : ((prevHash || hash) === hash && ([Modals.LOGIN, Modals.RECOVER, Modals.REGISTER].filter((modal)=> (hash === modal)).length === 1) && (([Modals.LOGIN, Modals.RECOVER, Modals.REGISTER].filter((modal)=> (prevHash === modal)).length === 0))) })
+  console.log('showingEntryModal()', { hash, prevHash : (prevHash || hash), res : ((prevHash || hash) === hash && ([Modals.LOGIN, Modals.RECOVER, Modals.REGISTER].filter((modal)=> (hash === modal)).length === 1)) })
 
-  return ((prevHash || hash) === hash && ([Modals.LOGIN, Modals.RECOVER, Modals.REGISTER].filter((modal)=> (hash === modal)).length === 1) && (([Modals.LOGIN, Modals.RECOVER, Modals.REGISTER].filter((modal)=> (prevHash === modal)).length === 0)));
+  // return ((prevHash || hash) === hash && ([Modals.LOGIN, Modals.RECOVER, Modals.REGISTER].filter((modal)=> (hash === modal)).length === 1) && (([Modals.LOGIN, Modals.RECOVER, Modals.REGISTER].filter((modal)=> (prevHash === modal)).length === 0)));
+  return ((prevHash || hash) === hash && ([Modals.LOGIN, Modals.RECOVER, Modals.REGISTER].filter((modal)=> (hash === modal)).length === 1) );
 };
 
 
