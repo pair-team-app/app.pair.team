@@ -73,13 +73,20 @@ class TeamPageFileDrop extends Component {
   }
 
 	componentDidUpdate(prevProps, prevState, snapshot) {
-    console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : this.props, prevState, state : this.state });
+    console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : this.props, prevState, state : this.state, commentInput : (this.commentInput) ? {
+      editor            : this.commentInput.editor,
+      getEditorContents : this.commentInput.getEditorContents(),
+      getText           : this.commentInput.editor.getText(),
+      isControlled      : this.commentInput.isControlled(),
+      props             : this.commentInput.props,
+      state             : this.commentInput.state,
+    } : null });
 
     // const { preComment, pathname, hash } = this.props;
     // const { text, url, files, image } = this.state;
 
     const { preComment } = this.props;
-    const { url, files, image } = this.state;
+    const { files, image, intro } = this.state;
 
     if (files.length > 0) {
       if (!window.location.href.includes(Modals.FILE_DROP)) {
@@ -92,7 +99,11 @@ class TeamPageFileDrop extends Component {
       // console.log('¡!¡!¡!¡!¡!¡!', { urls })
 
       if (!prevProps.preComment) {
-        this.setState({ intro : false });
+        this.setState({ intro : false }, ()=> {
+          // this.commentInput.editor.setText(preComment);
+          // // this.commentInput.editor.insertText(preComment.length, '');
+          // this.commentInput.editor.setSelection(preComment.length, 0);
+        });
       }
 
       if (preComment !== prevProps.preComment && preComment !== ' ') {
@@ -109,6 +120,10 @@ class TeamPageFileDrop extends Component {
         //     }
         //   });
         // }
+      }
+
+      if (preComment !== ' ' && this.commentInput.editor.getText().slice(0, -1).length === 0) {
+        this.handleResetContent();
       }
 
     } else {
@@ -274,35 +289,22 @@ class TeamPageFileDrop extends Component {
       state             : this.commentInput.state,
     } : null, props : this.props, state : this.state });
 
+    const { preComment } = this.props;
     const { intro } = this.state;
+    if (!intro) {
+      const urls = (LinkifyIt().match(this.commentInput.editor.getText().slice(0, -1)) || []).map(({ url })=> (url));
+      const url = (urls.length > 0) ? [ ...urls].shift() : null;
 
-    // if (this.commentInput) {
-    //   this.commentInput.focus();
-    // }
-
-    const urls = (LinkifyIt().match(this.commentInput.editor.getText().slice(0, -1)) || []).map(({ url })=> (url));
-    const url = (urls.length > 0) ? [ ...urls].shift() : null;
-
-    if (url) {
-      if (!this.state.url && url) {
-          this.setState({ url }, ()=> {
-            this.onFetchScreenshot(url);
-            this.commentInput.editor.setText('\n');
-            this.props.createComment(' ');
-        });
+      if (url) {
+        if (!this.state.url && url) {
+            this.setState({ url }, ()=> {
+              this.onFetchScreenshot(url);
+              this.commentInput.editor.setText('\n');
+              this.props.createComment(' ');
+          });
+        }
       }
     }
-
-    if (intro) {
-      this.commentInput.focus();
-      return;
-    }
-    if (value === '<p><br></p>') {
-      this.handleResetContent();
-    }
-
-
-
 
     // this.props.createComment(value);
     // this.props.createComment(value.replace(/\<p\>(.+)\<\/p\>/g, '$1'));
@@ -411,7 +413,7 @@ class TeamPageFileDrop extends Component {
             onChange={this.handleTextChange}
             // onEditorChangeText={(value, delta, source, editor)=> console.log('TeamPageFileDrop', 'onEditorChangeText', { value, delta, source, editor })}
             // onFocus={this.handleFieldFocus}
-            autoFocus
+            // autoFocus
             ref={(el)=> (el) ? this.commentInput = el : null}
             data-code={(code)} />
           {/* {(preComment) && (<CodeFormAccessory align={FormAccessoryAlignment.BOTTOM} onClick={this.handleCode} />)} */}
