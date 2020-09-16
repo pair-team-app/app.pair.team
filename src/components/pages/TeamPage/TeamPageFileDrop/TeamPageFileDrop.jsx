@@ -8,6 +8,7 @@ import FilePondPluginFileEncode from 'filepond-plugin-file-encode';
 import FilePondPluginImageExifOrientation from 'filepond-plugin-image-exif-orientation';
 import FilePondPluginImagePreview from 'filepond-plugin-image-preview';
 import { URIs } from 'lang-js-utils';
+import LinkifyIt from 'linkify-it';
 // import TextareaAutosize from 'react-autosize-textarea';
 import { FilePond, registerPlugin } from 'react-filepond';
 import KeyboardEventHandler from 'react-keyboard-event-handler';
@@ -87,7 +88,8 @@ class TeamPageFileDrop extends Component {
     }
 
     if (preComment) {
-      const urls = URIs.extractURLs(preComment);
+      // const urls = (LinkifyIt().match(preComment) || []).map(({ url })=> (url));
+      // console.log('¡!¡!¡!¡!¡!¡!', { urls })
 
       if (!prevProps.preComment) {
         this.setState({ intro : false });
@@ -100,13 +102,13 @@ class TeamPageFileDrop extends Component {
           this.props.onContent();
         }
 
-        if ([...urls].shift() !== url && !url) {
-          this.setState({ url : [...urls].shift() }, ()=> {
-            if (urls.length > 0) {
-              this.onFetchScreenshot(preComment);
-            }
-          });
-        }
+        // if ([...urls].shift() !== url && !url) {
+        //   this.setState({ url : [...urls].shift() }, ()=> {
+        //     if (urls.length > 0) {
+        //       this.onFetchScreenshot(preComment);
+        //     }
+        //   });
+        // }
       }
 
     } else {
@@ -265,6 +267,7 @@ class TeamPageFileDrop extends Component {
     console.log('%s.handleTextChange(value)', this.constructor.name, { value, commentInput : (this.commentInput) ? {
       editor            : this.commentInput.editor,
       getEditorContents : this.commentInput.getEditorContents(),
+      getText           : this.commentInput.editor.getText(),
       isControlled      : this.commentInput.isControlled(),
       isDelta           : this.commentInput.isDelta(value),
       props             : this.commentInput.props,
@@ -277,14 +280,29 @@ class TeamPageFileDrop extends Component {
     //   this.commentInput.focus();
     // }
 
-    if (intro) {
-      this.commentInput.focus();
-      return
+    const urls = (LinkifyIt().match(this.commentInput.editor.getText().slice(0, -1)) || []).map(({ url })=> (url));
+    const url = (urls.length > 0) ? [ ...urls].shift() : null;
+
+    if (url) {
+      if (!this.state.url && url) {
+          this.setState({ url }, ()=> {
+            this.onFetchScreenshot(url);
+            this.commentInput.editor.setText('\n');
+            this.props.createComment(' ');
+        });
+      }
     }
 
+    if (intro) {
+      this.commentInput.focus();
+      return;
+    }
     if (value === '<p><br></p>') {
       this.handleResetContent();
     }
+
+
+
 
     // this.props.createComment(value);
     // this.props.createComment(value.replace(/\<p\>(.+)\<\/p\>/g, '$1'));
