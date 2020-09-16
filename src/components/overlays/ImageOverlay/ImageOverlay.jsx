@@ -1,17 +1,17 @@
 
 import React, { Component } from 'react';
-import './ProjectOverlay.css';
+import './ImageOverlay.css';
 
 import KeyboardEventHandler from 'react-keyboard-event-handler';
 import { Menu, MenuProvider } from 'react-contexify';
 import { connect } from 'react-redux';
 
 import BaseComment from '../../iterables/BaseComment';
-import BasePopover from '../../overlays/BasePopover';
+import BasePopover from '../BasePopover';
 import { setComment, setComponent, makeComment } from '../../../redux/actions';
 
 
-class ProjectOverlay extends Component {
+class ImageOverlay extends Component {
   constructor(props) {
     super(props);
 
@@ -87,7 +87,7 @@ class ProjectOverlay extends Component {
     const { component } = this.props;
     const { comment } = this.state;
 
-    return (<div className="project-overlay">
+    return (<div className="image-overlay">
       <div className="header-wrapper">HEADER</div>
       <div className="content-wrapper"><KeyboardEventHandler handleKeys={['enter', 'esc']} handleFocusableElements onKeyEvent={(key, event)=> this.handleKeyPress(event, key)} />
         <img src={[...component.images].pop()} alt={component.title} />
@@ -168,4 +168,4 @@ const mapStateToProps = (state, ownProps)=> {
   });
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(ProjectOverlay);
+export default connect(mapStateToProps, mapDispatchToProps)(ImageOverlay);

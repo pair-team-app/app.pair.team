@@ -22,7 +22,7 @@ import RegisterModal from '../overlays/RegisterModal';
 import StripeModal from '../overlays/StripeModal';
 import LeftNav from '../sections/LeftNav';
 import TopNav from '../sections/TopNav';
-import ProjectOverlay from '../sections/ProjectOverlay';
+import ProjectOverlay from '../overlays/ImageOverlay';
 
 import { API_ENDPT_URL, Modals, Pages } from '../../consts/uris';
 import { fetchUserTeams, fetchUserProfile, fetchInvite, setPlayground, modifyInvite, paidStripeSession, updateUserProfile } from '../../redux/actions';

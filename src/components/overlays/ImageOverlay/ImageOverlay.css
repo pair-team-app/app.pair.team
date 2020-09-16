@@ -1,5 +1,5 @@
 
-.project-overlay {
+.image-overlay {
   /* display: flex;
   flex-flow: column nowrap; */
   position: fixed;
@@ -9,7 +9,7 @@
   z-index: 10;
 }
 
-.project-overlay .header-wrapper {
+.image-overlay .header-wrapper {
   width: 100%;
   height: 110px;
   padding: 45px;
@@ -17,7 +17,7 @@
   text-align: center;
 }
 
-.project-overlay > .content-wrapper {
+.image-overlay > .content-wrapper {
   position: relative;
   top: 0;
   width: 100%;
@@ -25,7 +25,7 @@
   overflow: auto;
 }
 
-.project-overlay .content-wrapper .comments-wrapper {
+.image-overlay .content-wrapper .comments-wrapper {
   position: absolute;
   top: 0;
   left: 0;
@@ -91,7 +91,7 @@
   width: 317px;
 }
 
-.project-overlay .base-comment .content {
+.image-overlay .base-comment .content {
   font-size: 16px;
   text-align: left;
 }
