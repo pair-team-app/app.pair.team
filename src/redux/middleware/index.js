@@ -9,7 +9,7 @@ import { matchPath } from 'react-router-dom';
 
 import { RoutePaths } from '../../components/helpers/Routes';
 import { ENTRY_MODALS, AUTHORIZED_MODALS } from '../../components/overlays/BaseOverlay';
-import { fetchTeamBuilds, fetchUserTeams, setRoutePath, setTeam } from '../actions';
+import { fetchTeamBuilds, fetchUserTeams, setTeam } from '../actions';
 import { STRIPE_SESSION_PAID, BUILD_PLAYGROUNDS_LOADED, INVITE_LOADED, COMMENT_CREATED, COMMENT_ADDED, COMMENT_UPDATED, COMMENT_VOTED, DEVICES_LOADED, SET_COMMENT, SET_COMPONENT, SET_PLAYGROUND, SET_TEAM, SET_TYPE_GROUP, TEAM_BUILDS_LOADED, TEAM_COMMENTS_LOADED, TEAMS_LOADED, TEAM_LOGO_LOADED, TEAM_RULES_UPDATED, TEAM_CREATED, TEAM_UPDATED, UPDATE_MOUSE_COORDS, UPDATE_RESIZE_BOUNDS, USER_PROFILE_LOADED, USER_PROFILE_UPDATED, UPDATE_USER_PROFILE } from '../../consts/action-types';
 import { HISTORY_TIMESTAMP } from '../../consts/formats';
 import { LOG_MIDDLEWARE_POSTFIX, LOG_MIDDLEWARE_PREFIX } from '../../consts/log-ascii';
@@ -62,7 +62,7 @@ export function onMiddleware(store) {
     } else if (type === USER_PROFILE_LOADED) {
       // const { pathname, hash } = prevState.router.location;
       const { profile } = payload;
-      const { id, state, password } = profile;
+      const { id, state } = profile;
 
       cookie.save('user_id', (profile) ? profile.id : '0', { path : '/', sameSite : false });
 
@@ -106,13 +106,6 @@ export function onMiddleware(store) {
           if (ENTRY_MODALS.includes(hash)) {
             dispatch(push(window.location.pathname));
           }
-
-          if (AUTHORIZED_MODALS.includes(hash)) {
-
-          }
-          // if (showingEntryModal(hash)) {
-          //   dispatch(push(window.location.pathname));
-          // }
         }
 
       } else {
@@ -122,7 +115,6 @@ export function onMiddleware(store) {
 
     } else if (type === TEAMS_LOADED) {
       const { profile } = prevState.user;
-      // const { params } = prevState.path;
       const { pathname, hash } = prevState.router.location;
 
       payload.team = null;
@@ -173,7 +165,6 @@ export function onMiddleware(store) {
         }
 
         if (AUTHORIZED_MODALS.includes(hash)) {
-          console.log('¡!¡!¡!¡!¡!¡!¡!', 'SHOW MODAL', { hash });
         }
       }
 
@@ -184,7 +175,6 @@ export function onMiddleware(store) {
       payload.team = { ...team, logo : logo.replace(/\\n/g, '', logo) };
 
     } else if (type === TEAM_BUILDS_LOADED) {
-      // const { params } = prevState.path;
       const { team } = prevState.teams;
       const { pathname } = prevState.router.location;
       const { devices, componentTypes } = prevState.builds;
@@ -196,27 +186,33 @@ export function onMiddleware(store) {
         strict : true
       });
 
-      const projectMatch = { ...matchPath(pathname, {
-          path   : RoutePaths.PROJECT,
-          exact  : true,
-          strict : true
-        })};
+      const projectMatch = matchPath(pathname, {
+        path   : RoutePaths.PROJECT,
+        exact  : true,
+        strict : false
+      });
 
-      //   ,
-      //   buildID     : (typeof projectMatch.params.buildID !== 'undefined') ? (projectMatch.params.buildID << 0) : null,
-      //   projectSlug : (typeof projectMatch.params.projectSlug !== 'undefined') ? projectMatch.params.projectSlug : null,
-      //   deviceSlug  : (typeof projectMatch.params.deviceSlug !== 'undefined') ? projectMatch.params.deviceSlug : null,
-      //   componentID : (typeof projectMatch.params.componentID !== 'undefined') ? (projectMatch.params.componentID << 0) : null,
-      //   comments    : (typeof projectMatch.params.comments !== 'undefined') ? (projectMatch.params.comments === true) : false,
-      //   commentID   : (typeof projectMatch.params.commentID !== 'undefined') ? (projectMatch.params.commentID << 0) : null
-      // };
+      const { params } = ({ ...projectMatch } || ({ ...teamMatch } || { params : null }));
+      // const params = { ...teamMatch.params, ...projectMatch.params }
+
+      const reformedMatch = { ...teamMatch, ...projectMatch,
+        // buildID     : (typeof projectMatch.params.buildID !== 'undefined') ? (projectMatch.params.buildID << 0) : null,
+        // projectSlug : (typeof projectMatch.params.projectSlug !== 'undefined') ? projectMatch.params.projectSlug : null,
+        // deviceSlug  : (typeof projectMatch.params.deviceSlug !== 'undefined') ? projectMatch.params.deviceSlug : null,
+        // componentID : (typeof projectMatch.params.componentID !== 'undefined') ? (projectMatch.params.componentID << 0) : null,
+        // comments    : (typeof projectMatch.params.comments !== 'undefined') ? (projectMatch.params.comments === true) : false,
+        // commentID   : (typeof projectMatch.params.commentID !== 'undefined') ? (projectMatch.params.commentID << 0) : null
+      };
+
+      console.log('¡!¡!¡!¡!¡!¡!¡!¡!', { teamMatch, projectMatch, reformedMatch, params });
+
 
 
       const playgrounds = [ ...payload.playgrounds].map((playground)=> (reformPlayground(playground, devices, componentTypes, team)));
       payload.playgrounds = playgrounds;//.sort((i, ii)=> ((i.id < ii.id) ? 1 : (i.id > ii.id) ? -1 : 0));
       payload.playground = null;
 
-      const { params } = (projectMatch || (teamMatch || { params : null }));
+      // const { params } = (projectMatch || (teamMatch || { params : null }));
       console.log('______________________', { params });
 
       if (params) {
