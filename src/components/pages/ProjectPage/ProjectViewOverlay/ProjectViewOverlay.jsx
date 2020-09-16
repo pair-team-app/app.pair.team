@@ -1,17 +1,17 @@
 
 import React, { Component } from 'react';
-import './ImageOverlay.css';
+import './ProjectViewOverlay.css';
 
 import KeyboardEventHandler from 'react-keyboard-event-handler';
 import { Menu, MenuProvider } from 'react-contexify';
 import { connect } from 'react-redux';
 
-import BaseComment from '../../iterables/BaseComment';
-import BasePopover from '../BasePopover';
-import { setComment, setComponent, makeComment, setCommentImage } from '../../../redux/actions';
+import BaseComment from '../../../iterables/BaseComment';
+import BasePopover from '../../../overlays/BasePopover';
+import { setComment, setComponent, makeComment } from '../../../../redux/actions';
 
 
-class ImageOverlay extends Component {
+class ProjectViewOverlay extends Component {
   constructor(props) {
     super(props);
 
@@ -39,6 +39,7 @@ class ImageOverlay extends Component {
       y : (top.replace('px', '') << 0) - 120
     }
 
+    const { profile, component } = this.props;
     const { comment } = this.state;
 
     console.log('handleAddComment()', { position });
@@ -68,8 +69,8 @@ class ImageOverlay extends Component {
     console.log('handleKeyPress()', { event, key });
 
     if (key === 'esc') {
-      this.props.setCommentImage(false);
       this.props.setComment(null);
+      this.props.setComponent(null);
 
     } else {
       this.handleAddComment(event);
@@ -78,21 +79,22 @@ class ImageOverlay extends Component {
 
   render() {
     console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
-    const { comment } = this.props;
-    const { image, replies } = comment;
 
-    return (<div className="image-overlay">
+    const { component } = this.props;
+    const { comment } = this.state;
+
+    return (<div className="project-view-overlay">
       <div className="header-wrapper">HEADER</div>
       <div className="content-wrapper"><KeyboardEventHandler handleKeys={['enter', 'esc']} handleFocusableElements onKeyEvent={(key, event)=> this.handleKeyPress(event, key)} />
-        <img src={image} alt={image} />
+        <img src={[...component.images].pop()} alt={component.title} />
         <MenuProvider id="menu_id" className="menu-provider">
           <div className="comments-wrapper">
-            {(replies.filter(({ types })=> (types.includes('op'))).map((comment, i)=> (<ProjectViewComment key={i} ind={(i+1)} comment={comment} activeComment={this.props.comment} onClick={this.handleCommentMarkerClick} onClose={()=>null} />)))}
+            {(component.comments.filter(({ types })=> (types.includes('op'))).map((comment, i)=> (<ProjectViewComment key={i} ind={(i+1)} comment={comment} activeComment={this.props.comment} onClick={this.handleCommentMarkerClick} onClose={()=>null} />)))}
           </div>
         </MenuProvider>
       </div>
 
-      <AddCommentMenu comment={this.state.comment} onTextChange={this.handleAddCommentText} onSubmit={this.handleAddComment} onClick={({ event, props })=> console.log('MenuClick', { event, props })} />
+      <AddCommentMenu comment={comment} onTextChange={this.handleAddCommentText} onSubmit={this.handleAddComment} onClick={({ event, props })=> console.log('MenuClick', { event, props })} />
     </div>);
   }
 }
@@ -148,18 +150,18 @@ const AddCommentMenu = (props)=> {
 
 const mapDispatchToProps = (dispatch)=> {
   return ({
-    makeComment     : (payload)=> dispatch(makeComment(payload)),
-    setComment      : (payload)=> dispatch(setComment(payload)),
-    setComponent    : (payload)=> dispatch(setComponent(payload)),
-    setCommentImage : (payload)=> dispatch(setCommentImage(payload))
+    makeComment  : (payload)=> dispatch(makeComment(payload)),
+    setComment   : (payload)=> dispatch(setComment(payload)),
+    setComponent : (payload)=> dispatch(setComponent(payload))
   });
 };
 
 const mapStateToProps = (state, ownProps)=> {
   return ({
-    comment : state.teams.comment,
-    profile : state.user.profile,
+    comment   : state.builds.comment,
+    component : state.builds.component,
+    profile   : state.user.profile,
   });
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(ImageOverlay);
+export default connect(mapStateToProps, mapDispatchToProps)(ProjectViewOverlay);

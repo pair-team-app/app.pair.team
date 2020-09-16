@@ -22,12 +22,14 @@ import RegisterModal from '../overlays/RegisterModal';
 import StripeModal from '../overlays/StripeModal';
 import LeftNav from '../sections/LeftNav';
 import TopNav from '../sections/TopNav';
-import ProjectOverlay from '../overlays/ImageOverlay';
+import ImageOverlay from '../overlays/ImageOverlay';
+import ProjectViewOverlay from '../pages/ProjectPage/ProjectViewOverlay';
 
 import { API_ENDPT_URL, Modals, Pages } from '../../consts/uris';
 import { fetchUserTeams, fetchUserProfile, fetchInvite, setPlayground, modifyInvite, paidStripeSession, updateUserProfile } from '../../redux/actions';
 // import { makeAvatar } from '../../utils/funcs';
 import { initTracker, trackEvent, trackPageview } from '../../utils/tracking';
+
 
 const MATTY_DEVIN_THEME = false;
 
@@ -430,7 +432,7 @@ class App extends Component {
     console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
     // console.log('%s.render()', this.constructor.name, this.state.modals);
 
-    const { darkThemed, profile, team, component } = this.props;
+    const { darkThemed, profile, team, component, imageComment } = this.props;
     const { popup, modals } = this.state;
 
     return (<div className="site-wrapper" data-theme={(darkThemed) ? 'dark' : 'light'} data-devin-matty={MATTY_DEVIN_THEME}>
@@ -440,9 +442,11 @@ class App extends Component {
 		    <Routes onLogout={this.handleLogout} onModal={this.onToggleModal} onPopup={this.handlePopup} { ...this.props } />
 	    </div>
 
-      {(component) && (<ProjectOverlay>
+      {(component) && (<ProjectViewOverlay>
+      </ProjectViewOverlay>)}
 
-      </ProjectOverlay>)}
+      {(imageComment) && (<ImageOverlay>
+      </ImageOverlay>)}
 
 		  <div className='modal-wrapper'>
         {/* <ModalRoutes modals={modals} onComplete={this.handeModalComplete} /> */}
@@ -540,6 +544,7 @@ const mapStateToProps = (state, ownProps)=> {
     typeGroup      : state.builds.typeGroup,
     component      : state.builds.component,
     comment        : state.comments.comment,
+    imageComment   : state.comments.imageComment,
     matchPath      : state.matchPath,
     hash           : state.router.location.hash,
     urlHistory     : state.path.urlHistory,

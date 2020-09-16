@@ -46,11 +46,11 @@ export default function builds(state=initialState, action) {
 
   } else if (type === COMMENT_ADDED) {
     const { playgrounds, playground, component, comment } = payload;
-    return (Object.assign({}, state, { playgrounds, playground, component, comment }));
+    return ((comment.types.includes('project')) ? Object.assign({}, state, { playgrounds, playground, component, comment }) : state);
 
   } else if (type === COMMENT_UPDATED) {
     const { playgrounds, playground, component, comment } = payload;
-    return (Object.assign({}, state, { playgrounds, playground, component, comment }));
+    return ((comment.types.includes('project')) ? Object.assign({}, state, { playgrounds, playground, component, comment }) : state);
 
   } else if (type === SET_PLAYGROUND) {
     const { playgrounds, playground } = payload;
@@ -66,7 +66,7 @@ export default function builds(state=initialState, action) {
 
   } else if (type === SET_COMMENT) {
     const { comment } = payload;
-    return (Object.assign({}, state, { comment }));
+    return ((!comment || comment.types.includes('project')) ? Object.assign({}, state, { comment }) : state);
 
   } else if (type === '@@router/LOCATION_CHANGE') {
     const { playgrounds, playground, component, comment } = payload;

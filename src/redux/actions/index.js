@@ -1,7 +1,7 @@
 import axios from 'axios';
 import cookie from 'react-cookies';
 import { VOTE_ACTION_DOWN, VOTE_ACTION_UP } from '../../components/iterables/BaseComment';
-import { BUILD_PLAYGROUNDS_LOADED, SET_TEAM_COMMENTS_SORT, INVITE_LOADED, INVITE_MODIFIED, COMMENT_CREATED, COMMENT_ADDED, COMMENT_UPDATED, COMMENT_VOTED, COMPONENT_TYPES_LOADED, DEVICES_LOADED, PRODUCTS_LOADED, SET_COMMENT, SET_COMPONENT, SET_INVITE, SET_PLAYGROUND, SET_ROUTE_PATH, SET_TEAM, SET_TYPE_GROUP, TEAM_BUILDS_LOADED, TEAM_COMMENTS_LOADED, TEAMS_LOADED, TEAM_LOGO_LOADED, TEAM_RULES_UPDATED, TEAM_UPDATED, TOGGLE_THEME, UPDATE_MOUSE_COORDS, UPDATE_RESIZE_BOUNDS, USER_PROFILE_ERROR, USER_PROFILE_LOADED, USER_PROFILE_UPDATED, TEAM_CREATED, STRIPE_SESSION_CREATED, STRIPE_SESSION_PAID } from '../../consts/action-types';
+import { BUILD_PLAYGROUNDS_LOADED, SET_TEAM_COMMENTS_SORT, INVITE_LOADED, INVITE_MODIFIED, COMMENT_CREATED, COMMENT_ADDED, COMMENT_UPDATED, COMMENT_VOTED, COMPONENT_TYPES_LOADED, DEVICES_LOADED, PRODUCTS_LOADED, SET_COMMENT, SET_COMPONENT, SET_INVITE, SET_PLAYGROUND, SET_ROUTE_PATH, SET_TEAM, SET_TYPE_GROUP, TEAM_BUILDS_LOADED, TEAM_COMMENTS_LOADED, TEAMS_LOADED, TEAM_LOGO_LOADED, TEAM_RULES_UPDATED, TEAM_UPDATED, TOGGLE_THEME, UPDATE_MOUSE_COORDS, UPDATE_RESIZE_BOUNDS, USER_PROFILE_ERROR, USER_PROFILE_LOADED, USER_PROFILE_UPDATED, TEAM_CREATED, STRIPE_SESSION_CREATED, STRIPE_SESSION_PAID, SET_COMMENT_IMAGE } from '../../consts/action-types';
 import { API_RESPONSE_PREFIX, LOG_ACTION_POSTFIX, LOG_ACTION_PREFIX } from '../../consts/log-ascii';
 import { API_ENDPT_URL } from '../../consts/uris';
 
@@ -278,9 +278,9 @@ export function makeComment(payload) {
     logFormat('makeComment()', { store : (typeof getState === 'function') ? getState() : getState, typeof : typeof getState }, payload);
 
     const { profile } = getState().user;
-    const { team } = getState().teams;
+    const { team, comment } = getState().teams;
     const { component } = getState().builds;
-    const { comment, content, format, position, link, image } = payload;
+    const { content, format, position, link, image } = payload;
 
     axios.post(API_ENDPT_URL, {
       action  : 'ADD_COMMENT',
@@ -530,6 +530,13 @@ export function modifyTeam(payload) {
 
     }).catch((error)=> {});
   });
+}
+
+
+export function setCommentImage(payload) {
+  logFormat('setCommentImage()', null, payload);
+  const enabled = payload;
+  return { payload : { enabled }, type : SET_COMMENT_IMAGE };
 }
 
 

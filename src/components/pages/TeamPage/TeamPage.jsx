@@ -13,12 +13,13 @@ import TextareaAutosize from 'react-autosize-textarea';
 import BasePage from '../BasePage';
 import BaseComment from '../../iterables/BaseComment';
 import TeamPageFileDrop from './TeamPageFileDrop';
+import ImageOverlay from '../../overlays/ImageOverlay';
 
 import { CommentSortTypes } from '../../sections/TopNav';
 import { TEAM_TIMESTAMP } from '../../../consts/formats';
 import { ENTER_KEY } from '../../../consts/key-codes';
 import { Modals } from '../../../consts/uris';
-import { fetchTeamComments, createComment, makeComment, makeTeamRule, modifyTeam, setComment, setPlayground, setTypeGroup } from '../../../redux/actions';
+import { fetchTeamComments, createComment, makeTeamRule, modifyTeam, setComment, setPlayground, setTypeGroup, setCommentImage } from '../../../redux/actions';
 import { trackEvent } from '../../../utils/tracking';
 
 import 'react-contexify/dist/ReactContexify.min.css';
@@ -219,8 +220,7 @@ class TeamPage extends Component {
 
   handleCommentImageClick = (comment)=> {
     console.log('%s.handleCommentImageClick()', this.constructor.name, { comment });
-
-
+    this.props.setCommentImage(comment);
   }
 
   handleCommentReply = (comment, key)=> {
@@ -417,12 +417,12 @@ const mapDispatchToProps = (dispatch)=> {
   return ({
     fetchTeamComments : (payload)=> dispatch(fetchTeamComments(payload)),
     createComment     : (payload)=> dispatch(createComment(payload)),
-    makeComment       : (payload)=> dispatch(makeComment(payload)),
     makeTeamRule      : (payload)=> dispatch(makeTeamRule(payload)),
     modifyTeam        : (payload)=> dispatch(modifyTeam(payload)),
     setPlayground     : (payload)=> dispatch(setPlayground(payload)),
     setTypeGroup      : (payload)=> dispatch(setTypeGroup(payload)),
     setComment        : (payload)=> dispatch(setComment(payload)),
+    setCommentImage   : (payload)=> dispatch(setCommentImage(payload)),
     push              : (payload)=> dispatch(push(payload))
   });
 };

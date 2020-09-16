@@ -10,7 +10,7 @@ import { connect } from 'react-redux';
 
 import { COMMENT_TIMESTAMP } from '../../../consts/formats';
 import { USER_DEFAULT_AVATAR } from '../../../consts/uris';
-import { makeComment, setComment, makeVote, modifyComment } from '../../../redux/actions';
+import { makeComment, setComment, makeVote, modifyComment, setCommentImage } from '../../../redux/actions';
 import { trackEvent } from '../../../utils/tracking';
 
 import 'emoji-mart/css/emoji-mart.css';
@@ -61,8 +61,8 @@ class BaseComment extends Component {
 	handleImageClick = (event)=> {
 		console.log('%s.handleImageClick()', this.constructor.name, { event, comment : this.props.comment });
 		const { comment } = this.props;
-
-		this.props.onImageClick(comment);
+		this.props.setComment(comment);
+		this.props.setCommentImage(true);
 	}
 
 	handleTextChange = (event)=> {
@@ -101,7 +101,7 @@ class BaseComment extends Component {
     event.preventDefault();
     event.stopPropagation();
 
-		this.props.makeComment({ comment,
+		this.props.makeComment({
 			content  : replyContent,
 			format   : (codeFormat) ? 'code' : 'text',
 			position : comment.position
@@ -132,7 +132,7 @@ class BaseComment extends Component {
 			<BaseCommentHeader { ...this.props} onDelete={this.handleDeleteComment} />
 			<div className="comment-body">
 				{(comment.votable) && (<BaseCommentVote { ...this.props } onVote={this.handleVote} />)}
-				<BaseCommentContent { ...contentProps } onImageClick={this.handleImageClick} nReplyFocus={this.handleReplyFocus} onReplyKeyPress={this.handleReplyKeyPress} onTextChange={this.handleTextChange} onDeleteReply={this.handleDeleteComment} onCodeToggle={this.handleCodeToggle} />
+				<BaseCommentContent { ...contentProps } onImageClick={this.handleImageClick} onReplyFocus={this.handleReplyFocus} onReplyKeyPress={this.handleReplyKeyPress} onTextChange={this.handleTextChange} onDeleteReply={this.handleDeleteComment} onCodeToggle={this.handleCodeToggle} />
 				{/* <Picker set="apple" onSelect={this.handleEmoji} onClick={this.handleEmoji} perline={9} emojiSize={24} native={true} sheetSize={16} showPreview={false} showSkinTones={false} title="Pick your emoji…" emoji="point_up" style={{ position : 'relative', bottom : '20px', right : '20px' }} /> */}
 			</div>
 		</div>);
@@ -223,10 +223,11 @@ const BaseCommentReplies = (props)=> {
 
 const mapDispatchToProps = (dispatch)=> {
   return ({
-		makeComment   : (payload)=> dispatch(makeComment(payload)),
-		setComment    : (payload)=> dispatch(setComment(payload)),
-    modifyComment : (payload)=> dispatch(modifyComment(payload)),
-		makeVote      : (payload)=> dispatch(makeVote(payload))
+		makeComment     : (payload)=> dispatch(makeComment(payload)),
+		setComment      : (payload)=> dispatch(setComment(payload)),
+		setCommentImage : (payload)=> dispatch(setCommentImage(payload)),
+    modifyComment   : (payload)=> dispatch(modifyComment(payload)),
+		makeVote        : (payload)=> dispatch(makeVote(payload))
 	});
 };
 

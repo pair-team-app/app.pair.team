@@ -179,6 +179,9 @@ export function onMiddleware(store) {
       const { pathname } = prevState.router.location;
       const { devices, componentTypes } = prevState.builds;
 
+      payload.component = null;
+      payload.comment = null;
+
       // match params
       const teamMatch = matchPath(pathname, {
         path   : RoutePaths.TEAM,
@@ -314,22 +317,26 @@ export function onMiddleware(store) {
       const { team } = prevState.teams;
       const { preComment } = payload;
 
-      payload.comment = null;
+      // payload.comment = null;
       dispatch(push((preComment) ? `${Pages.TEAM}/${team.id}--${team.slug}/${Modals.FILE_DROP}` : `${Pages.TEAM}/${team.id}--${team.slug}`));
 
     } else if (type === COMMENT_ADDED) {
-      const { team } = prevState.teams;
+      const { teams, team } = prevState.teams;
       const { playgrounds, playground, component } = prevState.builds;
 
       const { comment } = payload;
+      payload.comment = reformComment(comment, (component) ? `${Pages.TEAM}/${team.id}--${team.slug}/project` : `${Pages.TEAM}/${team.id}--${team.slug}/comments`);
 
-      payload.team = { ...team,
-        comments : [ ...team.comments, reformComment(comment, `${Pages.TEAM}/${team.id}--${team.slug}/comments`)]
-      };
+      if (comment.types.includes('team')) {
+        payload.team = { ...team,
+          comments : [ ...team.comments, payload.comment]
+        };
 
-      if (component) {
+        payload.teams = teams.map((item)=> (item.id === team.id) ? payload.team : item);
+
+      } else {
         payload.component = { ...component,
-          comments : [reformComment(comment, `${Pages.TEAM}/${team.id}--${team.slug}/comments`), ...component.comments]
+          comments : [payload.comment, ...component.comments]
         }
 
         payload.playground = { ...playground,
@@ -340,19 +347,21 @@ export function onMiddleware(store) {
       }
 
     } else if (type === COMMENT_UPDATED) {
-      const { team } = prevState.teams;
+      const { teams, team } = prevState.teams;
       const comment = reformComment(payload.comment, `${Pages.TEAM}/${team.id}--${team.slug}/comments`);
-        const { playgrounds, playground, component } = prevState.builds;
+      const { playgrounds, playground, component } = prevState.builds;
 
+      payload.teams = teams;
       payload.team = team;
       payload.playgrounds = playgrounds;
       payload.playground = playground;
       payload.component = component;
-      payload.comment = (comment.state === 'deleted') ? null : comment;
+      // payload.comment = (comment.state === 'deleted') ? null : comment;
+      payload.comment = comment;
 
       if (comment.types.includes('project')) {
         payload.component = { ...component,
-          comments : (comment.state === 'deleted') ? component.comments.filter(({ id })=> (id !== comment.id)) : [ ...component.comments.filter(({ id })=> (id !== comment.id)), payload.comment]
+          comments : (comment.state === 'deleted') ? component.comments.filter(({ id })=> (id !== comment.id)) : [ ...component.comments.filter(({ id })=> (id !== comment.id)), comment]
         };
         payload.playground = { ...playground,
           components : (comment.state === 'deleted') ? payload.playground.components.filter(({ id })=> (id !== comment.id)) : [ ...payload.playground.components.filter(({ id })=> (id !== comment.id)), comment]
@@ -361,8 +370,10 @@ export function onMiddleware(store) {
 
       } else {
         payload.team = { ...team,
-          comments : (comment.state === 'deleted') ? team.comments.filter(({ id })=> (id !== comment.id)) : [ ...team.comments.filter(({ id })=> (id !== comment.id)), payload.comment]
+          comments : (comment.state === 'deleted') ? team.comments.filter(({ id })=> (id !== comment.id)) : [ ...team.comments.filter(({ id })=> (id !== comment.id)), comment]
         };
+
+        payload.teams = teams.map((item)=> (item.id === team.id) ? payload.team : item);
       }
 
     } else if (type === STRIPE_SESSION_PAID) {
@@ -663,7 +674,7 @@ export function onMiddleware(store) {
       } else {
         // start fetching team data
         if (teams && payload.team) {
-          dispatch(fetchTeamBuilds({ team : payload.team, buildID, deviceSlug }));
+          // dispatch(fetchTeamBuilds({ team : payload.team, buildID, deviceSlug }));
         // dispatch(fetchTeamComments({ team : payload.team, verbose : true }));
         }
 

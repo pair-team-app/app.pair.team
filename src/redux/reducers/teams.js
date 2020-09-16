@@ -1,5 +1,5 @@
 
-import { INVITE_LOADED, SET_TEAM, SET_TEAM_COMMENTS_SORT, TEAM_COMMENTS_LOADED, TEAMS_LOADED, TEAM_CREATED, TEAM_LOGO_LOADED, TEAM_RULES_UPDATED, TEAM_UPDATED, COMMENT_ADDED, COMMENT_UPDATED, COMMENT_VOTED, USER_PROFILE_UPDATED } from '../../consts/action-types';
+import { INVITE_LOADED, SET_TEAM, SET_COMMENT, SET_TEAM_COMMENTS_SORT, TEAM_COMMENTS_LOADED, TEAMS_LOADED, TEAM_CREATED, TEAM_LOGO_LOADED, TEAM_RULES_UPDATED, TEAM_UPDATED, COMMENT_ADDED, COMMENT_UPDATED, COMMENT_VOTED, USER_PROFILE_UPDATED } from '../../consts/action-types';
 import { LOG_REDUCER_POSTFIX, LOG_REDUCER_PREFIX } from '../../consts/log-ascii';
 import { CommentSortTypes } from '../../components/sections/TopNav';
 
@@ -9,7 +9,8 @@ const initialState = {
   sort       : CommentSortTypes.DATE,
   team       : null,
   member     : null,
-  invite     : null
+  invite     : null,
+  comment    : null
 };
 
 
@@ -47,16 +48,16 @@ export default function comments(state=initialState, action) {
     return (Object.assign({}, state, { team }));
 
   } else if (type === COMMENT_ADDED) {
-    const { team } = payload;
-    return (Object.assign({}, state, { team }));
+    const { teams, team } = payload;
+    return (Object.assign({}, state, { teams, team }));
 
   } else if (type === COMMENT_UPDATED) {
-    const { team } = payload;
-    return (Object.assign({}, state, { team }));
+    const { teams, team, comment } = payload;
+    return ((comment.types.includes('team')) ? Object.assign({}, state, { teams, team }) : state);
 
   } else if (type === COMMENT_VOTED) {
-    const { team } = payload;
-    return (Object.assign({}, state, { team }));
+    const { teams, team, comment } = payload;
+    return ((comment.types.includes('team')) ? Object.assign({}, state, { teams, team }) : state);
 
   } else if (type === TEAM_LOGO_LOADED) {
     const { team } = payload;
@@ -68,6 +69,10 @@ export default function comments(state=initialState, action) {
     // return ({ ...state, teams, team });
     // state.teams = teams;
     // return (state);
+
+  } else if (type === SET_COMMENT) {
+    const { comment } = payload;
+    return ((!comment || comment.types.includes('team')) ? Object.assign({}, state, { comment }) : state);
 
   } else if (type === USER_PROFILE_UPDATED) {
     const { profile } = payload;

@@ -323,7 +323,7 @@ class TeamPageFileDrop extends Component {
       this.handleResetContent();
 
     } else if ((key === 'meta' || key === 'ctrl') && keyCode === ENTER_KEY) {
-      if (this.commentInput.getEditorContents().length > 0 || files.length > 0) {
+      if (this.commentInput.editor.getText().slice(0, -1).length > 0 || files.length > 0) {
         target.blur();
         this.handleSubmit();
       }
@@ -338,14 +338,10 @@ class TeamPageFileDrop extends Component {
       event.stopPropagation();
     }
 
-    const { preComment, comment } = this.props;
     const { text, image, code, url } = this.state;
     this.props.makeComment({ image,
       link     : (url || null),
-      comment  : comment,
-			content  : this.commentInput.getEditorContents(),
-			// content  : preComment,
-      position : (comment) ? comment.position : null,
+			content  : this.commentInput.editor.getText().slice(0, -1),
       format   : (code) ? 'code' : 'text'
     });
 
@@ -487,9 +483,9 @@ class TeamPageFileDrop extends Component {
 
 const mapDispatchToProps = (dispatch)=> {
   return ({
-    createComment : (payload)=> dispatch(createComment(payload)),
-    makeComment   : (payload)=> dispatch(makeComment(payload)),
-    push          : (payload)=> dispatch(push(payload))
+    createComment   : (payload)=> dispatch(createComment(payload)),
+    makeComment     : (payload)=> dispatch(makeComment(payload)),
+    push            : (payload)=> dispatch(push(payload))
   });
 };
 
