@@ -193,7 +193,7 @@ class App extends Component {
         }
 
         // payment modal
-        if (team && team.type === 'free' && !modals.stripe && !modals.profile) {
+        if (team && team.type === 'free' && !modals.stripe) {
           // if (team.userCount >= 4) {
           if (team.userCount === 2) {
             this.onToggleModal(Modals.STRIPE);
@@ -228,32 +228,6 @@ class App extends Component {
 
       // not logged in
       } else {
-
-
-        // intros from history
-        if (prevProps.hash !== this.props.hash && this.props.hash.length !== 0) {
-
-
-          if (this.props.hash === Modals.PROFILE && !modals.profile) {
-            this.onToggleModal(Modals.PROFILE);
-          }
-
-          if (this.props.hash === Modals.LOGIN && !modals.login) {
-            this.onToggleModal(Modals.LOGIN);
-          }
-
-          if (this.props.hash === Modals.REGISTER && !modals.register) {
-            this.onToggleModal(Modals.REGISTER);
-          }
-
-          if (this.props.hash === Modals.RECOVER && !modals.recover) {
-            this.onToggleModal(Modals.RECOVER);
-          }
-
-          if (this.props.hash === Modals.FILE_DROP && !modals.fileDrop) {
-            this.onToggleModal(Modals.FILE_DROP);
-          }
-        }
       }
 
       // // outros from history
@@ -295,6 +269,14 @@ class App extends Component {
 
         if (prevProps.hash === Modals.LOGIN && modals.login) {
           this.onToggleModal(Modals.LOGIN, false, (hash.length === 0));
+        }
+
+        if (prevProps.hash === Modals.LOGIN && modals.login) {
+          this.onToggleModal(Modals.LOGIN, false, (hash.length === 0));
+        }
+
+        if (prevProps.hash === Modals.STRIPE && modals.stripe) {
+          this.onToggleModal(Modals.STRIPE, false, (hash.length === 0));
         }
 
         if (prevProps.hash === Modals.REGISTER && modals.register) {

@@ -1,5 +1,5 @@
 
-import { BUILD_PLAYGROUNDS_LOADED, COMPONENT_TYPES_LOADED, DEVICES_LOADED, COMMENT_ADDED, SET_COMPONENT, SET_PLAYGROUND, SET_TEAM, TEAM_BUILDS_LOADED, SET_COMMENT } from '../../consts/action-types';
+import { BUILD_PLAYGROUNDS_LOADED, COMPONENT_TYPES_LOADED, DEVICES_LOADED, COMMENT_ADDED, SET_COMPONENT, SET_PLAYGROUND, SET_TEAM, TEAM_BUILDS_LOADED, SET_COMMENT, COMMENT_UPDATED } from '../../consts/action-types';
 import { LOG_REDUCER_POSTFIX, LOG_REDUCER_PREFIX } from '../../consts/log-ascii';
 
 const initialState = {
@@ -45,14 +45,12 @@ export default function builds(state=initialState, action) {
     return (Object.assign({}, state, { playgrounds, components }));
 
   } else if (type === COMMENT_ADDED) {
-    const { component } = payload;
+    const { playgrounds, playground, component, comment } = payload;
+    return (Object.assign({}, state, { playgrounds, playground, component, comment }));
 
-    if (component) {
-      return (Object.assign({}, state, { component }));
-
-    } else {
-      return (state);
-    }
+  } else if (type === COMMENT_UPDATED) {
+    const { playgrounds, playground, component, comment } = payload;
+    return (Object.assign({}, state, { playgrounds, playground, component, comment }));
 
   } else if (type === SET_PLAYGROUND) {
     const { playgrounds, playground } = payload;
