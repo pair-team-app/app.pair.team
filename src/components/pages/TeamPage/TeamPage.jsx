@@ -217,6 +217,12 @@ class TeamPage extends Component {
     }
   };
 
+  handleCommentImageClick = (comment)=> {
+    console.log('%s.handleCommentImageClick()', this.constructor.name, { comment });
+
+
+  }
+
   handleCommentReply = (comment, key)=> {
     console.log('%s.handleCommentReply()', this.constructor.name, { comment, key });
     if (comment !== this.props.comment) {
@@ -297,6 +303,7 @@ class TeamPage extends Component {
                 fetching={Boolean((fetching & 0x010) === 0x010)}
                 loading={commentsLoading}
                 sort={sort}
+                onImageClick={this.handleCommentImageClick}
                 onReplyKeyPress={this.handleCommentReply}
               />
             </div>
@@ -350,7 +357,7 @@ const TeamPageCommentsPanel = (props)=> {
     <div className="empty-comments">No Comments</div>
 		{(comments.map((comment, i)=> {
 			const vote = (comment.votes.find(({ author, score })=> (author.id === profile.id && score !== 0 )) || null);
-			return (<TeamPageComment key={i} comment={comment}  loading={loading} vote={vote} onReplyKeyPress={props.onReplyKeyPress} />);
+			return (<TeamPageComment key={i} comment={comment}  loading={loading} vote={vote} onImageClick={props.onImageClick} onReplyKeyPress={props.onReplyKeyPress} />);
 		}))}
 	</div>);
 };
@@ -361,7 +368,7 @@ const TeamPageComment = (props)=> {
 
   const { loading, vote, comment } = props;
 	return (<div className="team-page-comment" data-id={comment.id} data-author={comment.author.id} data-loading={loading}>
-    <BaseComment loading={loading} vote={vote} comment={comment} onReplyKeyPress={props.onReplyKeyPress} />
+    <BaseComment loading={loading} vote={vote} comment={comment} onImageClick={props.onImageClick} onReplyKeyPress={props.onReplyKeyPress} />
   </div>);
 };
 

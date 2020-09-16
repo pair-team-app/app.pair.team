@@ -55,8 +55,15 @@ class BaseComment extends Component {
 	};
 
 	handleEmoji = (emoji, event)=> {
-		console.log('BaseComment.handleEmoji()', { emoji, event });
+		console.log('%s.handleEmoji()', this.constructor.name, { emoji, event });
 	};
+
+	handleImageClick = (event)=> {
+		console.log('%s.handleImageClick()', this.constructor.name, { event, comment : this.props.comment });
+		const { comment } = this.props;
+
+		this.props.onImageClick(comment);
+	}
 
 	handleTextChange = (event)=> {
 		// console.log('%s.handleTextChange()', this.constructor.name, event);
@@ -125,7 +132,7 @@ class BaseComment extends Component {
 			<BaseCommentHeader { ...this.props} onDelete={this.handleDeleteComment} />
 			<div className="comment-body">
 				{(comment.votable) && (<BaseCommentVote { ...this.props } onVote={this.handleVote} />)}
-				<BaseCommentContent { ...contentProps } onReplyFocus={this.handleReplyFocus} onReplyKeyPress={this.handleReplyKeyPress} onTextChange={this.handleTextChange} onDeleteReply={this.handleDeleteComment} onCodeToggle={this.handleCodeToggle} />
+				<BaseCommentContent { ...contentProps } onImageClick={this.handleImageClick} nReplyFocus={this.handleReplyFocus} onReplyKeyPress={this.handleReplyKeyPress} onTextChange={this.handleTextChange} onDeleteReply={this.handleDeleteComment} onCodeToggle={this.handleCodeToggle} />
 				{/* <Picker set="apple" onSelect={this.handleEmoji} onClick={this.handleEmoji} perline={9} emojiSize={24} native={true} sheetSize={16} showPreview={false} showSkinTones={false} title="Pick your emoji…" emoji="point_up" style={{ position : 'relative', bottom : '20px', right : '20px' }} /> */}
 			</div>
 		</div>);
@@ -178,7 +185,7 @@ const BaseCommentContent = (props)=> {
 
 	return (<div className="base-comment-content">
 		{(content) && (<div className="content" data-format={format}>{content}</div>)}
-		{(image) && (<div className="image"><img src={image} alt={URIs.lastComponent(image)} /></div>)}
+		{(image) && (<div className="image" onClick={props.onImageClick}><img src={image} alt={URIs.lastComponent(image)} /></div>)}
 		{(link) && (<div className="link" dangerouslySetInnerHTML={{ __html : `<a href="${link}" target="_blank">${link}</a>`}}></div>)}
 		{(comment.state !== 'closed' && types.includes('team') && types.includes('op')) && (<div className="reply-form">
 			<KeyboardEventHandler handleKeys={['enter', `esc`]} isDisabled={(preComment !== null)} onKeyEvent={(key, event)=> props.onReplyKeyPress(event, key)}>

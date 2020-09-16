@@ -303,7 +303,7 @@ class TeamPageFileDrop extends Component {
       this.handleResetContent();
 
     } else if ((key === 'meta' || key === 'ctrl') && keyCode === ENTER_KEY) {
-      if (preComment.length > 0 || files.length > 0) {
+      if (this.commentInput.getEditorContents().length > 0 || files.length > 0) {
         target.blur();
         this.handleSubmit();
       }
