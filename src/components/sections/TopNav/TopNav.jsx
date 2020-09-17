@@ -9,7 +9,7 @@ import { CommentSortTypes } from './';
 import UserSettings, { SettingsMenuItemTypes} from './UserSettings';
 import { RoutePaths } from '../../helpers/Routes';
 import SharePopover from '../../overlays/SharePopover';
-import { Modals } from '../../../consts/uris';
+import { Modals, Popovers } from '../../../consts/uris';
 import { setTeamCommentsSort, toggleTheme } from '../../../redux/actions';
 
 
@@ -30,7 +30,7 @@ class TopNav extends Component {
 	componentDidMount() {
 		console.log('%s.componentDidMount()', this.constructor.name, { props : this.props, state : this.state });
 
-		const { hash } = this.props;
+		const { hash } = window.location;
 		if (hash === '#share' && !this.state.popover) {
 			this.setState({ popover : true });
 		}
@@ -41,7 +41,6 @@ class TopNav extends Component {
 // console.log('%s.componentDidUpdate()', this.constructor.name, { left : shareLink.offsetLeft, top : shareLink.offsetTop });
 
 		const { pathname, hash } = this.props;
-
 		if ((hash === '#share') && !this.state.popover) {
 			this.setState({ popover : true });
 		}
@@ -95,13 +94,19 @@ class TopNav extends Component {
 
 	handlePopoverToggle = ()=> {
 		console.log('%s.handlePopoverToggle()', this.constructor.name);
-		this.props.push(`${window.location.pathname}#share`);
+
+		if (window.location.hash !== Popovers.SHARE) {
+			this.props.push(`${window.location.pathname}${Popovers.SHARE}`);
+		}
 	};
 
 	handlePopoverClose = ()=> {
 		console.log('%s.handlePopoverClose()', this.constructor.name);
 
-		this.props.push(window.location.pathname.replace('#share', ''));
+		if (window.location.hash === Popovers.SHARE) {
+			this.props.push(window.location.pathname);
+		}
+
 		this.setState({ popover : false });
 	};
 

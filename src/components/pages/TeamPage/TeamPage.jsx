@@ -185,9 +185,9 @@ class TeamPage extends Component {
       this.setState({ dragging : true });
     }
 
-    if (!window.location.href.includes(Modals.FILE_DROP)) {
-      this.props.push(`${window.location.pathname}${Modals.FILE_DROP}`);
-    }
+    // if (!window.location.href.includes(Modals.FILE_DROP)) {
+    //   this.props.push(`${window.location.pathname}${Modals.FILE_DROP}`);
+    // }
   };
 
   handleDragLeave = (event)=> {

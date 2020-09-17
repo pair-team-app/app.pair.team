@@ -88,10 +88,13 @@ class TeamPageFileDrop extends Component {
     const { preComment } = this.props;
     const { files, image, intro } = this.state;
 
+    // if (window.location.hash !== Modals.FILE_DROP && preComment !== ' ') {
+    //   console.log('¡!', `${window.location.pathname}${Modals.FILE_DROP}`);
+    //   this.props.push(`${window.location.pathname}${Modals.FILE_DROP}`);
+    // }
+
     if (files.length > 0) {
-      if (!window.location.href.includes(Modals.FILE_DROP)) {
-        this.props.push(`${window.location.pathname}${Modals.FILE_DROP}`);
-      }
+
     }
 
     if (preComment) {

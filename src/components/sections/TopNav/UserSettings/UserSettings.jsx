@@ -33,14 +33,14 @@ class UserSettings extends Component {
 	componentDidMount() {
 		// console.log('%s.componentDidMount()', this.constructor.name, { props : this.props, state : this.state });
 
-		const { hash } = this.props;
-		if (hash === '#settings' && !this.state.popover) {
+		const { hash } = window.location;
+		if (hash === Popovers.SETTINGS && !this.state.popover) {
 			this.setState({ popover : true });
 		}
 	}
 
 	componentDidUpdate(prevProps, prevState, snapshot) {
-		// console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : this.props, prevState, state : this.state });
+		console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : this.props, prevState, state : this.state, location : window.location });
 		// console.log('%s.componentDidUpdate()', this.constructor.name, { left : shareLink.offsetLeft, top : shareLink.offsetTop });
 
 		const { hash } = this.props;
@@ -54,7 +54,7 @@ class UserSettings extends Component {
 	}
 
 	handleComplete = ()=> {
-		console.log('%s.handleComplete()', this.constructor.name, { props : this.props, state : this.state });
+		console.log('%s.handleComplete()', this.constructor.name, { props : this.props, state : this.state, pathname : window.location });
 
 		// window.location.href = window.location.href.replace('#settings', '');
 
@@ -67,13 +67,17 @@ class UserSettings extends Component {
 
 				} else if (itemType !== SettingsMenuItemTypes.DOCS && itemType !== SettingsMenuItemTypes.INSTALL) {
 					this.props.onMenuItem(itemType);
-					this.props.push(window.location.pathname.replace(Popovers.SETTINGS, ''));
-				}
-			}
 
-			// if (profile) {
-				// this.props.push((profile) ? window.location.pathname.replace(Popovers.SETTINGS, '') : `${Pages.TEAM}${Modals.LOGIN}`);
-			// }
+					if (window.location.hash === Popovers.SETTINGS) {
+						this.props.push(window.location.pathname);
+					}
+				}
+
+			} else {
+				if (window.location.hash === Popovers.SETTINGS) {
+						this.props.push(window.location.pathname);
+					}
+			}
 		});
 	};
 
@@ -96,8 +100,10 @@ class UserSettings extends Component {
 	handleShowPopover = ()=> {
 // console.log('%s.handleShowPopover()', this.constructor.name);
 
-		this.props.push(`${window.location.pathname}#settings`);
-		// window.location.href = `${window.location.href}#settings`;
+		if (window.location.hash !== Popovers.SETTINGS) {
+			this.props.push(`${window.location.pathname}${Popovers.SETTINGS}`);
+		}
+
 		this.setState({ outro : false });
 	};
 

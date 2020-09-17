@@ -416,7 +416,7 @@ export function onMiddleware(store) {
 
       if (payload.team) {
         dispatch(push(`${Pages.TEAM}/${payload.team.id}--${payload.team.slug}`));
-        dispatch(fetchTeamBuilds({ team : payload.team, buildID, deviceSlug }));
+        // dispatch(fetchTeamBuilds({ team : payload.team, buildID, deviceSlug }));
         // dispatch(fetchTeamComments({ team : payload.team, verbose : true }));
       }
 
@@ -476,11 +476,11 @@ export function onMiddleware(store) {
       const { state } = router.location;
       const { pathname, hash } = location;
 
-      if (urlHistory && pathname === [ ...urlHistory].pop().pathname && hash === [ ...urlHistory].pop().hash) {
-        return;
+      // if (urlHistory && pathname === [ ...urlHistory].pop().pathname && hash === [ ...urlHistory].pop().hash) {
+        // return;
         // dispatch(next(action));
         //  dispatch(replace(`${router.location.pathname}${router.location.hash}`));
-      }
+      // }
 
       // match params
       const teamMatch = matchPath(pathname, {
@@ -512,10 +512,10 @@ export function onMiddleware(store) {
       payload.preComment = null;
 
       payload.playgrounds = playgrounds;
-      payload.playground = prevState.builds.playground;
-      payload.component =  prevState.builds.component;
+      payload.playground = null;
+      payload.component = null;
 
-      payload.urlHistory = (urlHistory) ? [ ...urlHistory, { ...payload.location, state : null, epoch : (moment.utc().valueOf() * 0.001) << 0, timestamp : moment().format(HISTORY_TIMESTAMP) }] : [{ ...payload.location, state : null }];
+      payload.urlHistory = (urlHistory) ? [ ...urlHistory, { ...payload.location, state : null, epoch : (moment.utc().valueOf() * 0.001) << 0, timestamp : moment().format(HISTORY_TIMESTAMP) }] : [{ ...payload.location, state : null, epoch : (moment.utc().valueOf() * 0.001) << 0, timestamp : moment().format(HISTORY_TIMESTAMP)}];
 
       // duplicate router change, ABORT
       //  if (!isFirstRendering && payload.location.state && state && pathname === [ ...payload.location.state].pop().pathname && hash === [ ...payload.location.state].pop().hash) {
@@ -536,7 +536,11 @@ export function onMiddleware(store) {
         if ((cookie.load('user_id') << 0 === 0)) {
           dispatch(replace(`${pathname}${Modals.LOGIN}`));
         }
+
+      } else {
+        // payload.urlHistory = (urlHistory) ? [ ...urlHistory, { ...payload.location, state : null, epoch : (moment.utc().valueOf() * 0.001) << 0, timestamp : moment().format(HISTORY_TIMESTAMP) }] : [{ ...payload.location, state : null, epoch : (moment.utc().valueOf() * 0.001) << 0, timestamp : moment().format(HISTORY_TIMESTAMP)}];
       }
+
 
       console.log('[::::||::::]',' LOCATION HISTORY', '[::::||::::]', { plHistory : payload.urlHistory, urlHistory });
 
@@ -554,12 +558,12 @@ export function onMiddleware(store) {
 
             // has history
             if (payload.urlHistory !== null && payload.urlHistory.length >= 1) {
-              const prevURL = payload.urlHistory.pop();
+              // const prevURL = payload.urlHistory.pop();
 
               // replace with history
-              if (location.key !== prevURL.key) {
-                payload.location = prevURL;
-              }
+              // if (location.key !== prevURL.key) {
+                // payload.location = prevURL;
+              // }
 
             // no history
             } else {
@@ -603,12 +607,14 @@ export function onMiddleware(store) {
         // on team page
         if (teamMatch) {
           // clear precomment if not in path
+          payload.team = (hash === Modals.FILE_DROP) ? prevState.teams.team : null;
           payload.preComment = (hash === Modals.FILE_DROP) ? preComment : null;
+          payload.comment = (hash === Modals.FILE_DROP) ? null : prevState.teams.comment;
 
           // has completed team fetch
           if (teams) {
             const team = { ...teams.find(({ id, slug })=> (id === (teamMatch.params.teamID << 0) && teamMatch.params.teamSlug === slug)), selected : true } || { ...[...teams].pop(), selected : true };
-            console.log('≈~≈~≈~≈~≈~≈~≈~≈~≈~≈~≈~≈', { team });
+            // console.log('≈~≈~≈~≈~≈~≈~≈~≈~≈~≈~≈~≈', { team });
 
             // found placeholder / one matching params
             if (team) {
@@ -638,17 +644,11 @@ export function onMiddleware(store) {
           payload.member = null;
           payload.comment = null;
           payload.preComment = null;
+          payload.playground = null;
         }
 
       // no profile
       } else {
-
-
-
-        // // no login-type modal
-        // if(!existingModal) {
-        //   return (dispatch(replace(`${Pages.TEAM}${Modals.LOGIN}`)));
-        // }
       }
 
       if (profile && urlHistory && !payload.team && urlHistory.length === 1 && pathname === Pages.TEAM && !showingEntryModal(hash, router.location.hash)) {
@@ -673,8 +673,8 @@ export function onMiddleware(store) {
 
       } else {
         // start fetching team data
-        if (teams && payload.team) {
-          // dispatch(fetchTeamBuilds({ team : payload.team, buildID, deviceSlug }));
+        if (teams && payload.team && (!prevState.teams.team || prevState.teams.team.id !== payload.team.id)) {
+          dispatch(fetchTeamBuilds({ team : payload.team, buildID, deviceSlug }));
         // dispatch(fetchTeamComments({ team : payload.team, verbose : true }));
         }
 

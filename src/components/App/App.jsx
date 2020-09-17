@@ -26,7 +26,7 @@ import ImageOverlay from '../overlays/ImageOverlay';
 import ProjectViewOverlay from '../pages/ProjectPage/ProjectViewOverlay';
 
 import { API_ENDPT_URL, Modals, Pages } from '../../consts/uris';
-import { fetchUserTeams, fetchUserProfile, fetchInvite, setPlayground, modifyInvite, paidStripeSession, updateUserProfile } from '../../redux/actions';
+import { fetchUserTeams, fetchUserProfile, fetchInvite, setPlayground, modifyInvite, paidStripeSession, updateUserProfile, createComment } from '../../redux/actions';
 // import { makeAvatar } from '../../utils/funcs';
 import { initTracker, trackEvent, trackPageview } from '../../utils/tracking';
 
@@ -119,7 +119,7 @@ class App extends Component {
     console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : this.props, prevState, state : this.state, snapshot });
     // console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props, this.state.modals);
 
-    const { location, profile, team, purchase, invite, urlHistory, hash } = this.props;
+    const { location, profile, team, purchase, invite, urlHistory, hash, preComment } = this.props;
     const { pathname } = location;
     const { modals } = this.state;
 
@@ -255,34 +255,60 @@ class App extends Component {
       //   }
       // }
 
+
+
       // outros from history
-      if (hash.length === 0 && hash !== prevProps.hash && prevProps.hash.length !== 0 && hash.length === 0) {
-        if (prevProps.hash === Modals.PROFILE && modals.profile) {
+      if (prevProps.location.hash.length > 0 && prevProps.location.hash !== location.hash) {
+      // if (hash.length === 0 && hash !== prevProps.hash && prevProps.hash.length !== 0 && this.props.location.hash.length === 0) {
+        if (prevProps.location.hash === Modals.PROFILE && modals.profile) {
           this.onToggleModal(Modals.PROFILE, false, (hash.length === 0));
         }
 
-        if (prevProps.hash === Modals.RECOVER && modals.recover) {
+        if (prevProps.location.hash === Modals.RECOVER && modals.recover) {
           this.onToggleModal(Modals.RECOVER, false, (hash.length === 0));
         }
 
-        if (prevProps.hash === Modals.FILE_DROP && modals.fileDrop) {
-          this.onToggleModal(Modals.FILE_DROP, false, (hash.length === 0));
+        if (prevProps.location.hash === Modals.FILE_DROP && preComment && preComment === ' ') {
+          this.props.createComment(null);
         }
 
-        if (prevProps.hash === Modals.LOGIN && modals.login) {
+        if (prevProps.location.hash === Modals.LOGIN && modals.login) {
           this.onToggleModal(Modals.LOGIN, false, (hash.length === 0));
         }
 
-        if (prevProps.hash === Modals.LOGIN && modals.login) {
-          this.onToggleModal(Modals.LOGIN, false, (hash.length === 0));
-        }
-
-        if (prevProps.hash === Modals.STRIPE && modals.stripe) {
+        if (prevProps.location.hash === Modals.STRIPE && modals.stripe) {
           this.onToggleModal(Modals.STRIPE, false, (hash.length === 0));
         }
 
-        if (prevProps.hash === Modals.REGISTER && modals.register) {
+        if (prevProps.location.hash === Modals.REGISTER && modals.register) {
           this.onToggleModal(Modals.REGISTER, false, (hash.length === 0));
+        }
+      }
+
+      // intros from history
+      if (location.hash.length > 0 && location.hash !== prevProps.location.hash) {
+        if (location.hash === Modals.PROFILE && !modals.profile) {
+          this.onToggleModal(Modals.PROFILE);
+        }
+
+        if (location.hash === Modals.LOGIN && !modals.login) {
+          this.onToggleModal(Modals.LOGIN);
+        }
+
+        if (location.hash === Modals.REGISTER && !modals.register) {
+          this.onToggleModal(Modals.REGISTER);
+        }
+
+        if (location.hash === Modals.RECOVER && !modals.recover) {
+          this.onToggleModal(Modals.RECOVER);
+        }
+
+        if (location.hash == Modals.FILE_DROP && !preComment) {
+          this.props.createComment(' ');
+        }
+
+        if (location.hash === Modals.STRIPE && !modals.stripe) {
+          this.onToggleModal(Modals.STRIPE);
         }
       }
 
@@ -372,9 +398,6 @@ class App extends Component {
 
     } else if (hash === Modals.PROFILE && !modals.profile && profile) {
       this.onToggleModal(Modals.PROFILE);
-
-    } else if (hash === Modals.FILE_DROP && !modals.fileDrop) {
-      this.onToggleModal(Modals.FILE_DROP);
     }
   };
 
@@ -545,6 +568,7 @@ const mapStateToProps = (state, ownProps)=> {
     component      : state.builds.component,
     comment        : state.comments.comment,
     imageComment   : state.comments.imageComment,
+    preComment     : state.comments.preComment,
     matchPath      : state.matchPath,
     hash           : state.router.location.hash,
     urlHistory     : state.path.urlHistory,
@@ -559,6 +583,7 @@ const mapDispatchToProps = (dispatch)=> {
     fetchUserProfile  : ()=> dispatch(fetchUserProfile()),
     setPlayground     : (payload)=> dispatch(setPlayground(payload)),
     modifyInvite      : (payload)=> dispatch(modifyInvite(payload)),
+    createComment     : (payload)=> dispatch(createComment(payload)),
     paidStripeSession : (payload)=> dispatch(paidStripeSession(payload)),
     updateUserProfile : (payload)=> dispatch(updateUserProfile(payload)),
     push              : (payload)=> dispatch(push(payload))
