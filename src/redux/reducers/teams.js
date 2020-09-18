@@ -53,11 +53,11 @@ export default function comments(state=initialState, action) {
 
   } else if (type === COMMENT_UPDATED) {
     const { teams, team, comment } = payload;
-    return ((comment.types.includes('team')) ? Object.assign({}, state, { teams, team }) : state);
+    return ((comment.types.includes('team')) ? Object.assign({}, state, { teams, team, comment }) : state);
 
   } else if (type === COMMENT_VOTED) {
     const { teams, team, comment } = payload;
-    return ((comment.types.includes('team')) ? Object.assign({}, state, { teams, team }) : state);
+    return ((comment.types.includes('team')) ? Object.assign({}, state, { teams, team, comment }) : state);
 
   } else if (type === TEAM_LOGO_LOADED) {
     const { team } = payload;

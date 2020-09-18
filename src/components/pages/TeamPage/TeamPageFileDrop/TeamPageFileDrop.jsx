@@ -419,26 +419,26 @@ class TeamPageFileDrop extends Component {
         </div>
 
         <div className="file-wrapper" data-file={(files.length > 0 || image !== null)} data-hidden={false}>
-         
+
 
           <FilePond
-            server={{
-              url     : CDN_FILEPOND_URL,
-              process : {
-                url     : './index.php',
-                onload  : (response) => console.log('___________', 'onload', { response }),
-                onerror : (response) => console.log('___________', 'onerror', response.data),
-                ondata  : (formData) => console.log('___________', 'ondata', { formData })
-              }
-            }}
+            // server={{
+            //   url     : CDN_FILEPOND_URL,
+            //   process : {
+            //     url     : './index.php',
+            //     onload  : (response) => console.log('___________', 'onload', { response }),
+            //     onerror : (response) => console.log('___________', 'onerror', response.data),
+            //     ondata  : (formData) => console.log('___________', 'ondata', { formData })
+            //   }
+            // }}
             // ref={ref => (this.pond = ref)}
             files={files}
             className="file-pond-wrapper"
-            allowMultiple={true}
-            maxFiles={3}
+            allowMultiple={false}
+            maxFiles={1}
             allowReorder={false}
-            allowReplace={true}
-            allowRevert={true}
+            allowReplace={false}
+            allowRevert={false}
             // appendTo={filePondAttach}
             itemInsertLocation="after"
             instantUpload={false}
@@ -461,6 +461,7 @@ class TeamPageFileDrop extends Component {
 
             imagePreviewHeight={122}
             imagePreviewTransparencyIndicator="grid"
+
 
             // onupdatefiles={(fileItems)=> {
             //   console.log('%s.onupdatefiles()', this.constructor.name, { fileItems });

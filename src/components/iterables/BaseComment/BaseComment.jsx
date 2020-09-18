@@ -51,7 +51,10 @@ class BaseComment extends Component {
 		console.log('%s.handleDeleteComment()', this.constructor.name, { comment });
 		trackEvent('button', 'delete-comment');
 		this.props.modifyComment({ comment, action : 'deleted' });
-		this.props.setComment(null);
+
+		if (comment.types.includes('op')) {
+			this.props.setComment(null);
+		}
 	};
 
 	handleEmoji = (emoji, event)=> {

@@ -10,11 +10,21 @@
 }
 
 .image-overlay .header-wrapper {
+  display: flex;
   width: 100%;
   height: 110px;
-  padding: 45px;
-  background-color: #cccccc;
+  padding: 30px 0;
   text-align: center;
+}
+
+.image-overlay-header {
+  display: flex;
+  width: 80%;
+  margin: auto;
+}
+
+.image-overlay-header .comment-txt {
+  margin-right: 20px;
 }
 
 .image-overlay > .content-wrapper {
@@ -35,8 +45,10 @@
 }
 
 
-.project-view-comment-marker {
+.image-comment-reply .comment-marker {
 	position: absolute;
+  top: -10px;
+  left: -10px;
 	width: var(--orthodox-acc-size);
 	height: var(--orthodox-acc-size);
 	border-radius: 50%;
@@ -48,11 +60,11 @@
 	transition: width 125ms cubic-bezier(0.4, 0, 0.2, 1), height var(--transition-duration-short) cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.project-view-comment-marker:hover {
+.image-comment-reply .comment-marker:hover {
 	cursor: pointer;
 }
 
-.project-view-comment-marker div {
+.image-comment-reply .comment-marker div {
 	position: absolute;
 	top: 50%;
 	left: 50%;
@@ -86,7 +98,7 @@
 }
 
 
-.project-view-comment {
+.image-comment-reply {
   position: absolute;
   width: 317px;
 }

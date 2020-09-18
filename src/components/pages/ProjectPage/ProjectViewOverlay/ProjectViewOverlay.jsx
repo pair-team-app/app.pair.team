@@ -31,12 +31,12 @@ class ProjectViewOverlay extends Component {
   }
 
   handleAddComment = (event=null)=> {
-    // console.log('handleAddComment()', { event : event.target.parentElement.parentElement.parentElement });
+    console.log('handleAddComment()', { parentElement : event.target.parentElement, event : event.target.parentElement.parentElement.parentElement });
 
     const { top, left } = event.target.parentElement.parentElement.parentElement.style;
     const position = {
-      x : (left.replace('px', '') << 0) - 10,
-      y : (top.replace('px', '') << 0) - 120
+      x : (left.replace('px', '') << 0) + 25,
+      y : (top.replace('px', '') << 0)
     }
 
     const { profile, component } = this.props;
@@ -45,10 +45,10 @@ class ProjectViewOverlay extends Component {
     console.log('handleAddComment()', { position });
 
     if (comment.text.length > 0) {
-      this.props.makeComment({ position,
-        content : comment.text,
-        format  : 'text'
-      });
+      // this.props.makeComment({ position,
+      //   content : comment.text,
+      //   format  : 'text'
+      // });
     }
   };
 
@@ -87,7 +87,7 @@ class ProjectViewOverlay extends Component {
       <div className="header-wrapper">HEADER</div>
       <div className="content-wrapper"><KeyboardEventHandler handleKeys={['enter', 'esc']} handleFocusableElements onKeyEvent={(key, event)=> this.handleKeyPress(event, key)} />
         <img src={[...component.images].pop()} alt={component.title} />
-        <MenuProvider id="menu_id" className="menu-provider">
+        <MenuProvider id="project-view-menu" className="menu-provider">
           <div className="comments-wrapper">
             {(component.comments.filter(({ types })=> (types.includes('op'))).map((comment, i)=> (<ProjectViewComment key={i} ind={(i+1)} comment={comment} activeComment={this.props.comment} onClick={this.handleCommentMarkerClick} onClose={()=>null} />)))}
           </div>
@@ -114,8 +114,8 @@ const ProjectViewComment = (props)=> {
   };
 
   const style = (position) ? {
-    top  : `${position.y}px`,
-    left : `${position.x}px`
+    top  : `${position.y + 10}px`,
+    left : `${position.x + 10}px`
   } : {
     top  : '10px',
     left : '10px'
@@ -136,7 +136,7 @@ const AddCommentMenu = (props)=> {
   console.log('AddCommentMenu()', { props });
 
   const { comment } = props;
-  return (<Menu id="menu_id" className="add-comment-menu">
+  return (<Menu id="project-view-menu" className="add-comment-menu">
     <div className="form-wrapper">
       <input type="text" className="comment-txt" placeholder="Add Comment" value={comment.text} onChange={(event)=> props.onTextChange(event.target.value)} autoFocus />
     </div>
