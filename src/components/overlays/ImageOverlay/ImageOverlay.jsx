@@ -18,7 +18,8 @@ class ImageOverlay extends Component {
     this.state = {
       activeComment : null,
       comment       : {
-        text : ''
+        text   : '',
+        bubble : false
       }
     };
   }
@@ -29,6 +30,11 @@ class ImageOverlay extends Component {
 
   componentDidUpdate(prevProps, prevState, snapshot) {
     console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : this.props, prevState, state : this.state });
+
+    const { comment } = this.props;
+    if (comment && prevProps.comment && comment.replies.length !== prevProps.comment.replies.length) {
+      this.setState({ activeComment : [ ...comment.replies].pop() });
+    }
   }
 
   handleAddComment = (event=null)=> {
@@ -36,14 +42,11 @@ class ImageOverlay extends Component {
 
     const { top, left } = event.target.parentElement.parentElement.parentElement.style;
     const position = {
-      x : Math.max(10, (left.replace('px', '') << 0) + 5),
+      x : Math.max(10, (left.replace('px', '') << 0)),
       y : Math.max(10, (top.replace('px', '') << 0) - 115)
     }
 
     const { comment } = this.state;
-
-    console.log('%s.handleAddComment()', this.constructor.name, { position });
-
     if (comment.text.length > 0) {
       this.props.makeComment({ position,
         content : comment.text,
@@ -60,9 +63,10 @@ class ImageOverlay extends Component {
     console.log('%s.handleAddCommentText()', this.constructor.name, { event });
     const { comment } = this.state;
 
-    this.setState({ comment : { ...comment,
-      text : event.target.value
-    }})
+    this.setState({
+      comment : { ...comment,
+        text : event.target.value
+    }});
   };
 
   handleCommentMarkerClick = (comment)=> {
@@ -93,28 +97,26 @@ class ImageOverlay extends Component {
       }
     }, ()=> {
       this.props.setCommentImage(false);
-      this.props.setComment(null);
+      // this.props.setComment(null);
     });
   };
 
   render() {
     console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
-    const { comment } = this.props;
-    const { activeComment } = this.state;
-    const { image, replies } = comment;
+    const { activeComment, comment } = this.state;
 
     return (<div className="image-overlay">
-      <div className="header-wrapper"><ImageOverlayHeader textContent={this.state.comment.text} onTextChange={this.handleAddCommentText} onSubmit={this.handleAddComment} onCancel={this.onClose} /></div>
+      <div className="header-wrapper"><ImageOverlayHeader textContent={(!comment.bubble) ? comment.text : ''} onTextChange={this.handleAddCommentText} onSubmit={this.handleAddComment} onCancel={this.onClose} /></div>
       <div className="content-wrapper"><KeyboardEventHandler handleKeys={['enter', 'esc']} handleFocusableElements onKeyEvent={(key, event)=> this.handleKeyPress(event, key)} />
-        <img src={image} alt={image} />
+        <img src={this.props.comment.image} alt={this.props.comment.image} />
         <MenuProvider id="comment-image-menu" className="menu-provider">
           <div className="comments-wrapper">
-            {(replies.map((comment, i)=> (<ImageCommentReply key={i} ind={(i+1)} comment={comment} opComment={this.props.comment} activeComment={activeComment} onClick={this.handleCommentMarkerClick} onClose={()=>null} />)))}
+            {(this.props.comment.replies.map((comment, i)=> (<ImageCommentReply key={i} ind={(i+1)} comment={comment} activeComment={activeComment} onClick={this.handleCommentMarkerClick} onClose={()=>null} />)))}
           </div>
         </MenuProvider>
       </div>
 
-      <AddCommentMenu comment={this.state.comment} onTextChange={this.handleAddCommentText} onSubmit={this.handleAddComment} onClick={({ event, props })=> console.log('MenuClick', { event, props })} />
+      <AddCommentMenu comment={comment} onToggle={(visible)=> this.setState({ comment : { ...comment, bubble : visible }})} onTextChange={this.handleAddCommentText} onSubmit={this.handleAddComment} onCancel={()=> this.setState({ comment : { ...comment, text : '' }})} />
     </div>);
   }
 }
@@ -124,18 +126,18 @@ const ImageOverlayHeader = (props)=> {
 
   const { textContent } = props;
   return (<div className="image-overlay-header">
-    <input type="text" className="comment-txt" placeholder="Typ or paste…" value={textContent} onChange={(event)=> props.onTextChange(event)} />
+    <input type="text" className="comment-txt" placeholder="Type or paste…" value={textContent} onChange={props.onTextChange} />
     <div className="button-wrapper button-wrapper-col">
       <button type="submit" disabled={textContent.length === 0} onClick={props.onSubmit}>Comment</button>
       <button className="cancel-button" onClick={props.onCancel}>Cancel</button>
     </div>
   </div>);
-}
+};
 
 const ImageCommentReply = (props)=> {
   // console.log('ImageCommentReply()', { props });
 
-  const { ind, comment, opComment, activeComment } = props;
+  const { ind, comment, activeComment } = props;
   const { position } = comment;
 
   const payload = {
@@ -147,8 +149,8 @@ const ImageCommentReply = (props)=> {
   };
 
   const style = (position) ? {
-    top  : `${position.y}px`,
-    left : `${position.x}px`
+    top  : `${position.y + 10}px`,
+    left : `${position.x + 10}px`
   } : {
     top  : '10px',
     left : '10px'
@@ -169,13 +171,13 @@ const AddCommentMenu = (props)=> {
   console.log('AddCommentMenu()', { props });
 
   const { comment } = props;
-  return (<Menu id="comment-image-menu" className="add-comment-menu">
+  return (<Menu onShown={()=> props.onToggle(true)} onHidden={()=>props.onToggle(false)} id="comment-image-menu" className="add-comment-menu">
     <div className="form-wrapper">
-      <input type="text" className="comment-txt" placeholder="Add Comment" value={comment.text} onChange={(event)=> props.onTextChange(event.target.value)} autoFocus />
+      <input type="text" className="comment-txt" placeholder="Add Comment" value={comment.text} onChange={props.onTextChange} autoFocus />
     </div>
     <div className="button-wrapper button-wrapper-row">
       <button disabled={(comment.text.length === 0)} onClick={props.onSubmit}>Submit</button>
-      <button className="cancel-button">Cancel</button>
+      <button className="cancel-button" onClick={props.onCancel}>Cancel</button>
     </div>
   </Menu>);
 };

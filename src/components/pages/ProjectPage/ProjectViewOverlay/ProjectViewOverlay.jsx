@@ -17,7 +17,8 @@ class ProjectViewOverlay extends Component {
 
     this.state = {
       comment : {
-        text : ''
+        text   : '',
+        bubble : false
       }
     };
   }
@@ -35,8 +36,8 @@ class ProjectViewOverlay extends Component {
 
     const { top, left } = event.target.parentElement.parentElement.parentElement.style;
     const position = {
-      x : (left.replace('px', '') << 0) + 25,
-      y : (top.replace('px', '') << 0)
+      x : Math.max(10, (left.replace('px', '') << 0) + 5),
+      y : Math.max(10, (top.replace('px', '') << 0) - 115)
     }
 
     const { profile, component } = this.props;
@@ -45,18 +46,26 @@ class ProjectViewOverlay extends Component {
     console.log('handleAddComment()', { position });
 
     if (comment.text.length > 0) {
-      // this.props.makeComment({ position,
-      //   content : comment.text,
-      //   format  : 'text'
-      // });
+      this.props.makeComment({ position,
+        content : comment.text,
+        format  : 'text'
+      });
+
+      this.setState({
+        comment : { text : '' }
+      });
     }
   };
 
-  handleAddCommentText = (text)=> {
-    console.log('handleAddCommentText()', { text });
+  handleAddCommentText = (event)=> {
+    console.log('handleAddCommentText()', { event });
     const { comment } = this.state;
 
-    this.setState({ comment : { ...comment, text }})
+    this.setState({
+      comment : { ...comment,
+        text : event.target.value
+      }
+    });
   };
 
   handleCommentMarkerClick = (comment)=> {
@@ -69,12 +78,25 @@ class ProjectViewOverlay extends Component {
     console.log('handleKeyPress()', { event, key });
 
     if (key === 'esc') {
-      this.props.setComment(null);
-      this.props.setComponent(null);
+      this.onClose();
 
     } else {
       this.handleAddComment(event);
     }
+  };
+
+  onClose = ()=> {
+    console.log('%s.onClose()', this.constructor.name);
+
+    this.setState({
+      activeComment : null,
+      comment : {
+        text : ''
+      }
+    }, ()=> {
+      this.props.setComponent(null);
+      this.props.setComment(null);
+    });
   };
 
   render() {
@@ -84,65 +106,82 @@ class ProjectViewOverlay extends Component {
     const { comment } = this.state;
 
     return (<div className="project-view-overlay">
-      <div className="header-wrapper">HEADER</div>
+      <div className="header-wrapper"><ProjectViewHeader textContent={(!comment.bubble) ? comment.text : ''} onTextChange={this.handleAddCommentText} onSubmit={this.handleAddComment} onCancel={this.onClose} /></div>
       <div className="content-wrapper"><KeyboardEventHandler handleKeys={['enter', 'esc']} handleFocusableElements onKeyEvent={(key, event)=> this.handleKeyPress(event, key)} />
         <img src={[...component.images].pop()} alt={component.title} />
         <MenuProvider id="project-view-menu" className="menu-provider">
           <div className="comments-wrapper">
-            {(component.comments.filter(({ types })=> (types.includes('op'))).map((comment, i)=> (<ProjectViewComment key={i} ind={(i+1)} comment={comment} activeComment={this.props.comment} onClick={this.handleCommentMarkerClick} onClose={()=>null} />)))}
+            {(component.comments.filter(({ types })=> (types.includes('op'))).map((comment, i)=> (<ProjectViewComment key={i} ind={(i+1)} comment={comment} activeComment={this.props.comment} onClick={this.handleCommentMarkerClick} onClose={()=> this.props.setComment(null)} />)))}
           </div>
         </MenuProvider>
       </div>
 
-      <AddCommentMenu comment={comment} onTextChange={this.handleAddCommentText} onSubmit={this.handleAddComment} onClick={({ event, props })=> console.log('MenuClick', { event, props })} />
+      <AddCommentMenu comment={comment} onToggle={(visible)=> this.setState({ comment : { ...comment, bubble : visible }})} onTextChange={this.handleAddCommentText} onSubmit={this.handleAddComment} onCancel={()=> this.setState({ comment : { ...comment, text : '' }})} />
     </div>);
   }
 }
 
 const ProjectViewComment = (props)=> {
-  // console.log('ProjectViewComment()', { props });
+  console.log('ProjectViewComment()', { props });
 
   const { ind, comment, activeComment } = props;
   const { position } = comment;
 
   const payload = {
     fixed    : false,
-    position : { ...position,
-      x : position.x + 30,
-      y : position.y + 0
+    position : {
+      x : 15,
+      y : -10
     }
+    // position : { ...position,
+    //   x : position.x + 30,
+    //   y : position.y + 0
+    // }
   };
 
   const style = (position) ? {
-    top  : `${position.y + 10}px`,
-    left : `${position.x + 10}px`
+    top  : `${position.y}px`,
+    left : `${position.x}px`
   } : {
     top  : '10px',
     left : '10px'
   };
 
-  return (<div className="project-view-comment">
+  return (<div className="project-view-comment" style={style}>
     {(activeComment && activeComment.id === comment.id) && (<BasePopover outro={false} payload={payload} onOutroComplete={()=> props.onClose(comment)}>
       <div className="project-view-comment-bubble">
         <BaseComment ind={ind} comment={comment} onDelete={props.onDelete} />
       </div>
     </BasePopover>)}
-    <div className="project-view-comment-marker" onClick={()=> props.onClick(comment)} style={style}><div>{ind}</div></div>
+    <div className="project-view-comment-marker" onClick={()=> props.onClick(comment)}><div>{ind}</div></div>
   </div>);
 };
+
+const ProjectViewHeader = (props)=> {
+  console.log('ProjectViewHeader()', { props });
+
+  const { textContent } = props;
+  return (<div className="project-view-header">
+    <input type="text" className="comment-txt" placeholder="Type or paste…" value={textContent} onChange={props.onTextChange} />
+    <div className="button-wrapper button-wrapper-col">
+      <button type="submit" disabled={textContent.length === 0} onClick={props.onSubmit}>Comment</button>
+      <button className="cancel-button" onClick={props.onCancel}>Cancel</button>
+    </div>
+  </div>);
+}
 
 
 const AddCommentMenu = (props)=> {
   console.log('AddCommentMenu()', { props });
 
   const { comment } = props;
-  return (<Menu id="project-view-menu" className="add-comment-menu">
+  return (<Menu onShown={()=> props.onToggle(true)} onHidden={()=>props.onToggle(false)} id="project-view-menu" className="add-comment-menu">
     <div className="form-wrapper">
-      <input type="text" className="comment-txt" placeholder="Add Comment" value={comment.text} onChange={(event)=> props.onTextChange(event.target.value)} autoFocus />
+      <input type="text" className="comment-txt" placeholder="Add Comment" value={comment.text} onChange={props.onTextChange} autoFocus />
     </div>
     <div className="button-wrapper button-wrapper-row">
       <button disabled={(comment.text.length === 0)} onClick={props.onSubmit}>Submit</button>
-      <button className="cancel-button">Cancel</button>
+      <button className="cancel-button" onClick={props.onCancel}>Cancel</button>
     </div>
   </Menu>);
 };
