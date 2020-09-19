@@ -83,10 +83,10 @@ export default function comments(state=initialState, action) {
     return (Object.assign({}, state, { sort }));
 
   } else if (type === '@@router/LOCATION_CHANGE') {
-    const { teams, team, member, comment } = payload;
+    const { teams, team, member, comment, imageComment } = payload;
 
     if (teams && team) {
-      return (Object.assign({}, state, { teams, team, member, comment }));
+      return (Object.assign({}, state, { teams, team, member, comment, imageComment }));
 
     } else {
       return (state);

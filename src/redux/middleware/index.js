@@ -335,6 +335,8 @@ export function onMiddleware(store) {
         payload.teams = teams.map((item)=> (item.id === team.id) ? payload.team : item);
 
       } else {
+        payload.teams = teams;
+        payload.team = team;
         payload.component = { ...component,
           comments : [payload.comment, ...component.comments]
         }
@@ -344,6 +346,7 @@ export function onMiddleware(store) {
         };
 
         payload.playgrounds = playgrounds.map((item)=> (item.id === playground.id) ? payload.playground : item);
+        dispatch(push(`${window.location.pathname}/comments/${payload.comment.id}`));
       }
 
     } else if (type === COMMENT_UPDATED) {
@@ -447,6 +450,11 @@ export function onMiddleware(store) {
 
       if (component) {
         dispatch(push(`${Pages.TEAM}/${team.id}--${team.slug}/project/${playground.buildID}--${playground.slug}/${playground.device.slug}/${component.id}`));
+
+      } else {
+        if (prevState.builds.component) {
+          dispatch(push(window.location.pathname.replace(`/${prevState.builds.component.id}`, '')));
+        }
       }
 
     } else if (type === SET_COMMENT) {
@@ -462,6 +470,9 @@ export function onMiddleware(store) {
         } else {
           dispatch(push(`${Pages.TEAM}/${team.id}--${team.slug}/comments/${comment.id}`));
         }
+
+      } else {
+        dispatch(push(window.location.pathname.replace(/\/comments\/\d+/, '')));
       }
 
     } else if (type === '@@router/LOCATION_CHANGE') {
@@ -610,6 +621,7 @@ export function onMiddleware(store) {
           payload.team = (hash === Modals.FILE_DROP) ? prevState.teams.team : null;
           payload.preComment = (hash === Modals.FILE_DROP) ? preComment : null;
           payload.comment = (hash === Modals.FILE_DROP) ? null : prevState.teams.comment;
+          payload.imageComment = (payload.comment !== null);
 
           // has completed team fetch
           if (teams) {
