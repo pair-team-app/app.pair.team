@@ -14,7 +14,7 @@ class LoginForm extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			email         : (props.invite) ? props.invite.email : '',
+			email         : (props.invite) ? props.invite.email : 'matt@pairurl.com',
 			password      : '',
 			emailValid    : true,
 			passwordValid : true,
@@ -24,7 +24,7 @@ class LoginForm extends Component {
 	}
 
 	componentDidUpdate(prevProps, prevState, snapshot) {
-// console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : this.props, prevState, state : this.state });
+		// console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : this.props, prevState, state : this.state });
 
 		if (prevProps.email !== this.props.email) {
 			const { email } = this.props;
@@ -33,7 +33,7 @@ class LoginForm extends Component {
 	}
 
 	handlePassword = (event)=> {
-// console.log('%s.handlePassword()', this.constructor.name);
+		// console.log('%s.handlePassword()', this.constructor.name);
 		event.preventDefault();
 
 		this.setState({
@@ -45,7 +45,7 @@ class LoginForm extends Component {
 	};
 
 	handleSubmit = (event)=> {
-// console.log('%s.handleSubmit()', this.constructor.name, event.target, this.state);
+		// console.log('%s.handleSubmit()', this.constructor.name, event.target, this.state);
 		event.preventDefault();
 
 		trackEvent('button', 'login');

@@ -25,7 +25,7 @@ class RegisterForm extends Component {
 	}
 
 	componentDidUpdate(prevProps, prevState, snapshot) {
-		// console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : this.props, prevState, state : this.state });
+		console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : this.props, prevState, state : this.state });
 
 		if (prevProps.email !== this.props.email) {
 			const { email } = this.props;
@@ -34,7 +34,7 @@ class RegisterForm extends Component {
 	}
 
 	handlePassword = ()=> {
-		// console.log('%s.handlePassword()', this.constructor.name);
+		console.log('%s.handlePassword()', this.constructor.name);
 
 		this.setState({
 			password      : '',
@@ -45,7 +45,7 @@ class RegisterForm extends Component {
 	};
 
 	handleSubmit = (event)=> {
-		// console.log('%s.handleSubmit()', this.constructor.name, event.target);
+		console.log('%s.handleSubmit()', this.constructor.name, event.target);
 		event.preventDefault();
 
 		const { invite } = this.props;
@@ -102,7 +102,7 @@ class RegisterForm extends Component {
 
 
 	render() {
-		// console.log('%s.render()', this.constructor.name, this.props, this.state);
+		console.log('%s.render()', this.constructor.name, this.props, this.state);
 
 		const { invite } = this.props;
 		const { email, password, password2, passMsg } = this.state;
