@@ -32,10 +32,10 @@
 
 
 .team-page-file-drop > div > * {
-  display: flex;
+  /* display: flex; */
   /* flex: 1 1 0; */
   width: 100%;
-  /* border: 1px solid #00ffff; */
+  border: 1px solid #00ffff;
 }
 
 .team-page-file-drop[data-dragging="false"] > div > *:not(:last-child)[data-hidden="false"] {
@@ -52,46 +52,50 @@
   height: 100%;
 }
 
-.team-page-file-drop[data-dragging="true"] > div > *.file-wrapper {
+.team-page-file-drop[data-dragging="false"] > div > .file-wrapper[data-file="true"] {
   display: flex;
-  width : 100%;
-  height: 100%;
-}
-
-.team-page-file-drop[data-dragging="false"] > div > *.file-wrapper[data-file="true"] {
-    display: flex;
   flex-flow: column nowrap;
   align-items: flex-start;
   justify-content: flex-start;
   height: 122px;
-  /* height: 50%; */
 }
 
 .team-page-file-drop .input-wrapper {
   position: relative;
+  /* padding-bottom: 20px; */
   /* height: 100%; */
 }
 
-.team-page-file-drop .input-wrapper > span {
+/* .team-page-file-drop .input-wrapper textarea, .team-page-file-drop .input-wrapper textarea:hover {
   width: 100%;
-}
-
-.team-page-file-drop .input-wrapper textarea, .team-page-file-drop .input-wrapper textarea:hover {
-  width: 100%;
-   /* min-height: 51px; */
-   height: 100%;
+  height: 100%;
   padding: 0;
   background-color: rgba(var(--site-bg-color), 1.0);
   color: rgba(var(--site-fg-color), 1.0);
-  /* border: 1px solid rgba(var(--site-bg-color), 1.0); */
-  /* border: 1px dashed #00ff00; */
   font-size: 30px;
   font-weight: 600;
   transition: background-color var(--transition-duration-short) ease-out, color var(--transition-duration-short) ease-out;
+} */
+
+/* .team-page-file-drop .input-wrapper textarea[data-code="true"] {
+	font-family: Consolas, Monaco, "Courier New", Courier, monospace;
+} */
+
+
+
+.team-page-file-drop .file-wrapper {
+  /* display: flex; */
+  flex-flow: column nowrap;
+  align-items: flex-start;
+  justify-content: flex-start;
+  /* height: 122px; */
+
+  /* background-color: #ff0000; */
+  height: 122px;
 }
 
-.team-page-file-drop .input-wrapper textarea[data-code="true"] {
-	font-family: Consolas, Monaco, "Courier New", Courier, monospace;
+.team-page-file-drop[data-dragging="false"] > div > .file-wrapper[data-file="false"] {
+  height: 0;
 }
 
 .team-page-file-drop .url-wrapper {
@@ -108,24 +112,11 @@
   text-decoration: underline;
 }
 
-
-/* .team-page-file-drop .file-wrapper {
-  display: flex;
-  flex-flow: column nowrap;
-  align-items: flex-start;
-  justify-content: flex-start;
-  height: 122px;
-  height: 50%;
-} */
-
-.team-page-file-drop .file-wrapper > * {
-  /* flex: 1 1 auto; */
-}
-
 .team-page-file-drop .file-wrapper .filepond--wrapper {
-  /* background-color: #ff0000; */
+  /* background-color: #ff0000;
+  height: 122px; */
+  /* display: none; */
 }
-
 
 .filepond--wrapper {
   width: 100%;
@@ -162,7 +153,8 @@
 
 .filepond--wrapper .filepond--root .filepond--panel {
   height: 100%;
-  background-color: rgba(var(--site-bg-color), 1.0);
+  /* background-color: rgba(var(--site-bg-color), 1.0); */
+  background: none;
   border-radius: 0;
   filter: none;
   box-shadow: none;
@@ -178,12 +170,16 @@
 
 .filepond--wrapper .filepond--root .filepond--image-preview-overlay-success, .filepond--wrapper .filepond--root .filepond--image-preview-overlay-failure, .filepond--wrapper .filepond--root .filepond--file-action-button, .filepond--wrapper .filepond--root .filepond--file-info {
   color: rgba(var(--site-bg-color), 1.0);
-  color: unset;
+  /* color: unset; */
   /* display: none; */
 }
 
 .filepond--wrapper .filepond--root .filepond--file-action-button {
-  /* display: none; */
+  display: none;
+}
+
+.filepond--wrapper .filepond--root .filepond--progress-indicator {
+  display: none;
 }
 
 .filepond--wrapper .filepond--root .filepond--item {
@@ -202,15 +198,18 @@
 .filepond--wrapper .filepond--root .filepond--image-preview-wrapper {
   width: unset;
   border-radius: 0;
+  background: none;
 }
 
 .filepond--wrapper .filepond--root .filepond--image-preview-overlay, .filepond--wrapper .filepond--root .filepond--image-preview-overlay-idle {
-  color: rgba(var(--site-bg-color), 1.0);
+  display: none;
 }
 
 .filepond--wrapper .filepond--root .filepond--image-preview {
   /* width: unset; */
-  background-color: rgba(var(--site-bg-color), 1.0);
+
+  /* background-color: rgba(var(--site-bg-color), 1.0); */
+  background: none;
   color: rgba(var(--site-fg-color), 1.0);
 }
 
@@ -218,3 +217,6 @@
   margin: 0;
 }
 
+.ql-container {
+  height: auto;
+}

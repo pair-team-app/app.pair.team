@@ -403,35 +403,23 @@ class TeamPageFileDrop extends Component {
       <KeyboardEventHandler isDisabled={(files.length === 0 && !preComment && !image)} handleFocusableElements handleKeys={['ctrl', 'meta', 'enter', 'esc']} onKeyEvent={(key, event)=> this.handleKeyPress(event, key)} />
       <div>
         <div className="input-wrapper" data-hidden={(files.length === 0 && !preComment)}>
-            {/* <ReactQuill theme="bubble" modules={{ toolbar }} placeholder={(url) ? 'Add a comment to this url…' : (image !== null) ? 'Add a comment to this image…' : 'Add a comment…'} value={(!url) ? (preComment || '') : preComment.replace(url, '')} onFocusCapture={this.handleFieldFocus} onChange={this.handleTextChange} ref={(el)=> (el) ? this.commentInput = el : null} data-code={(code)} /> */}
-            {/* <ReactQuill placeholder={(url) ? 'Add a comment to this url…' : (image !== null) ? 'Add a comment to this image…' : 'Add a comment…'} value={(!url) ? (preComment || '') : (preComment) ? preComment.replace(url, '') : ''} onFocus={this.handleFieldFocus} onChange={this.handleTextChange} ref={(el)=> (el) ? this.commentInput = el : null} data-code={(code)} autoFocus /> */}
-            {/* <ReactQuill onEditorChangeText={(value, delta, source, editor)=> console.log('TeamPageFileDrop', 'onEditorChangeText', { value, delta, source, editor })} contentEditable="true" onBeforeInput={(event)=> console.log('TeamPageFileDrop', 'onBeforeInput', { event })} beforeInput={(event)=> console.log('TeamPageFileDrop', 'beforeInput', { event })} placeholder={(url) ? 'Add a comment to this url…' : (image !== null) ? 'Add a comment to this image…' : 'Add a comment…'} value={(!url) ? (preComment || '') : (preComment) ? preComment.replace(url, '') : ''} onFocus={this.handleFieldFocus} onChange={this.handleTextChange} ref={(el)=> (el) ? this.commentInput = el : null} data-code={(code)} /> */}
-            <ReactQuill
-              placeholder={(url) ? 'Add a comment to this url…' : (image !== null) ? 'Add a comment to this image…' : 'Add a comment…'}
-              value={(!url) ? (preComment || '') : (preComment) ? preComment.replace(url, '') : ''}
-              onChange={this.handleTextChange}
-              // onEditorChangeText={(value, delta, source, editor)=> console.log('TeamPageFileDrop', 'onEditorChangeText', { value, delta, source, editor })}
-              // onFocus={this.handleFieldFocus}
-              // autoFocus
-              ref={(el)=> (el) ? this.commentInput = el : null}
-              data-code={(code)} />
+          {/* <ReactQuill theme="bubble" modules={{ toolbar }} placeholder={(url) ? 'Add a comment to this url…' : (image !== null) ? 'Add a comment to this image…' : 'Add a comment…'} value={(!url) ? (preComment || '') : preComment.replace(url, '')} onFocusCapture={this.handleFieldFocus} onChange={this.handleTextChange} ref={(el)=> (el) ? this.commentInput = el : null} data-code={(code)} /> */}
+          {/* <ReactQuill placeholder={(url) ? 'Add a comment to this url…' : (image !== null) ? 'Add a comment to this image…' : 'Add a comment…'} value={(!url) ? (preComment || '') : (preComment) ? preComment.replace(url, '') : ''} onFocus={this.handleFieldFocus} onChange={this.handleTextChange} ref={(el)=> (el) ? this.commentInput = el : null} data-code={(code)} autoFocus /> */}
+          {/* <ReactQuill onEditorChangeText={(value, delta, source, editor)=> console.log('TeamPageFileDrop', 'onEditorChangeText', { value, delta, source, editor })} contentEditable="true" onBeforeInput={(event)=> console.log('TeamPageFileDrop', 'onBeforeInput', { event })} beforeInput={(event)=> console.log('TeamPageFileDrop', 'beforeInput', { event })} placeholder={(url) ? 'Add a comment to this url…' : (image !== null) ? 'Add a comment to this image…' : 'Add a comment…'} value={(!url) ? (preComment || '') : (preComment) ? preComment.replace(url, '') : ''} onFocus={this.handleFieldFocus} onChange={this.handleTextChange} ref={(el)=> (el) ? this.commentInput = el : null} data-code={(code)} /> */}
+          <ReactQuill
+            placeholder={(url) ? 'Add a comment to this url…' : (image !== null) ? 'Add a comment to this image…' : 'Add a comment…'}
+            value={(!url) ? (preComment || '') : (preComment) ? preComment.replace(url, '') : ''}
+            onChange={this.handleTextChange}
+            // onEditorChangeText={(value, delta, source, editor)=> console.log('TeamPageFileDrop', 'onEditorChangeText', { value, delta, source, editor })}
+            // onFocus={this.handleFieldFocus}
+            // autoFocus
+            ref={(el)=> (el) ? this.commentInput = el : null}
+            data-code={(code)} />
           {/* {(preComment) && (<CodeFormAccessory align={FormAccessoryAlignment.BOTTOM} onClick={this.handleCode} />)} */}
         </div>
 
         <div className="file-wrapper" data-file={(files.length > 0 || image !== null)} data-hidden={false}>
-
-
           <FilePond
-            // server={{
-            //   url     : CDN_FILEPOND_URL,
-            //   process : {
-            //     url     : './index.php',
-            //     onload  : (response) => console.log('___________', 'onload', { response }),
-            //     onerror : (response) => console.log('___________', 'onerror', response.data),
-            //     ondata  : (formData) => console.log('___________', 'ondata', { formData })
-            //   }
-            // }}
-            // ref={ref => (this.pond = ref)}
             files={files}
             className="file-pond-wrapper"
             allowMultiple={false}
@@ -439,11 +427,9 @@ class TeamPageFileDrop extends Component {
             allowReorder={false}
             allowReplace={false}
             allowRevert={false}
-            // appendTo={filePondAttach}
             itemInsertLocation="after"
             instantUpload={false}
             labelIdle=""
-            // iconRemove={null}
             labelFileProcessingComplete=""
             labelTapToUndo=""
             oninit={this.handleInit}
@@ -458,22 +444,13 @@ class TeamPageFileDrop extends Component {
             onprocessfiles={this.handleProcessedFiles}
             onremovefile={this.handleFileRemoved}
             onupdatefiles={this.handleFilesUpdated}
-
             imagePreviewHeight={122}
             imagePreviewTransparencyIndicator="grid"
-
-
-            // onupdatefiles={(fileItems)=> {
-            //   console.log('%s.onupdatefiles()', this.constructor.name, { fileItems });
-            //   this.setState({ files: fileItems.map(fileItem => fileItem.file) });
-            // }}
-
             ref={(el=> (el) ? this.filePond = el : null)}
           />
         </div>
         <div className="url-wrapper" data-hidden={!url} dangerouslySetInnerHTML={{ __html : `<a href="${url}" target="_blank">${url}</a>`}}></div>
         <div className="button-wrapper button-wrapper-col">
-          {/* <button type="submit" disabled={(this.commentInput) ? this.commentInput.getEditorContents().length === 0  : false && !image} onClick={this.handleSubmit}>Comment</button> */}
           <button type="submit" disabled={!image && false} onClick={this.handleSubmit}>Comment</button>
           <button className="cancel-button" onClick={this.handleResetContent}>Cancel</button>
         </div>
