@@ -6,3 +6,11 @@
 .filepond--root.filepond-wrapper, .filepond--root.filepond-wrapper > * {
   /* background-color: rgba(var(--site-bg-color), 1.0); */
 }
+
+.filepond--file-wrapper.filepond--file-wrapper > legend {
+  display: none;
+}
+
+.filepond--file-info {
+  display: none;
+}

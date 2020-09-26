@@ -101,6 +101,12 @@ class TeamPageFileDrop extends Component {
       // const urls = (LinkifyIt().match(preComment) || []).map(({ url })=> (url));
       // console.log('¡!¡!¡!¡!¡!¡!', { urls })
 
+      if ((!prevProps.preComment || prevProps.preComment === ' ') && preComment !== ' ') {
+        console.log('¡!¡!¡!¡!¡!¡!', { preComment })
+        // this.commentInput.editor.setText(preComment);
+        this.commentInput.editor.setSelection(preComment.length, 0);
+      }
+
       if (!prevProps.preComment) {
         this.setState({ intro : false }, ()=> {
           // this.commentInput.editor.setText(preComment);
@@ -307,6 +313,8 @@ class TeamPageFileDrop extends Component {
           });
         }
       }
+
+    } else {
     }
 
     // this.props.createComment(value);
