@@ -106,7 +106,7 @@ class ProjectViewOverlay extends Component {
     const { comment } = this.state;
 
     return (<div className="project-view-overlay">
-      <div className="header-wrapper"><ProjectViewHeader textContent={(!comment.bubble) ? comment.text : ''} onTextChange={this.handleAddCommentText} onSubmit={this.handleAddComment} onCancel={this.onClose} /></div>
+      {/* <div className="header-wrapper"><ProjectViewHeader textContent={(!comment.bubble) ? comment.text : ''} onTextChange={this.handleAddCommentText} onSubmit={this.handleAddComment} onCancel={this.onClose} /></div> */}
       <div className="content-wrapper"><KeyboardEventHandler handleKeys={['enter', 'esc']} handleFocusableElements onKeyEvent={(key, event)=> this.handleKeyPress(event, key)} />
         <img src={[...component.images].pop()} alt={component.title} />
         <MenuProvider id="project-view-menu" className="menu-provider">
