@@ -13,13 +13,12 @@ import TextareaAutosize from 'react-autosize-textarea';
 import BasePage from '../BasePage';
 import BaseComment from '../../iterables/BaseComment';
 import TeamPageFileDrop from './TeamPageFileDrop';
-import ImageOverlay from '../../overlays/ImageOverlay';
 
 import { CommentSortTypes } from '../../sections/TopNav';
 import { TEAM_TIMESTAMP } from '../../../consts/formats';
 import { ENTER_KEY } from '../../../consts/key-codes';
 import { Modals } from '../../../consts/uris';
-import { fetchTeamComments, createComment, makeTeamRule, modifyTeam, setComment, setPlayground, setTypeGroup, setCommentImage } from '../../../redux/actions';
+import { fetchTeamComments, createComment, makeComment, makeTeamRule, modifyTeam, setComment, setPlayground, setTypeGroup, setCommentImage } from '../../../redux/actions';
 import { trackEvent } from '../../../utils/tracking';
 
 import 'react-contexify/dist/ReactContexify.min.css';
@@ -32,15 +31,19 @@ class TeamPage extends Component {
 
     this.state = {
       topSort         : [ ],
-      codeComment     : false,
       teamDescription : '',
       ruleContent     : '',
+      teamComment     : {
+        text  : '',
+        url   : null,
+        image : null,
+        code  : false
+      },
       ruleInput       : false,
       sort            : CommentSortTypes.DATE,
       fetching        : 0x111,
       loading         : 0x000,
       share           : false,
-      urlComment      : false,
       dragging        : false,
       keyPress        : false
     };
@@ -101,6 +104,10 @@ class TeamPage extends Component {
 
     if ((loading & 0x100) === 0x100 && prevProps.team.comments !== team.comments) {
       this.setState({ loading : loading ^ 0x100 });
+    }
+
+    if (team && prevProps.team && team.comments.length > prevProps.team.comments.length) {
+
     }
 
   }
@@ -222,6 +229,17 @@ class TeamPage extends Component {
     }
   };
 
+  handleCommentKeyPress = (event, key)=> {
+    console.log('%s.handleCommentKeyPress()', this.constructor.name, { event, key });
+
+    const { teamComment } = this.state;
+    const { text } = teamComment;
+
+    if (key === 'enter' && text.length > 0) {
+      this.handleSubmitComment(event);
+    }
+  };
+
   handleCommentImageClick = (comment)=> {
     console.log('%s.handleCommentImageClick()', this.constructor.name, { comment });
     this.props.setCommentImage(comment);
@@ -232,6 +250,28 @@ class TeamPage extends Component {
     if (comment !== this.props.comment) {
       this.props.setComment(comment);
     }
+  };
+
+  handleSubmitComment = (event)=> {
+    console.log('%s.handleSubmitComment()', this.constructor.name, { event });
+
+    const { teamComment } = this.state;
+    const { text, image, url, code } = teamComment;
+
+    this.props.makeComment({ image,
+      link     : (url || null),
+			content  : text,
+      format   : (code) ? 'code' : 'text'
+    });
+
+    this.setState({
+      teamComment : {
+        text  : '',
+        url   : null,
+        image : null,
+        code  : false
+      }
+    });
   };
 
   handleUpdateTeamDescription = (event, key)=> {
@@ -282,7 +322,7 @@ class TeamPage extends Component {
   render() {
     console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
     const { profile, team, member, sort } = this.props;
-    const { teamDescription, ruleContent, ruleInput, fetching, loading, dragging } = this.state;
+    const { teamDescription, ruleContent, ruleInput, teamComment, fetching, loading, dragging } = this.state;
 
     const infoLoading = Boolean(((loading << 0) & 0x001) === 0x001);
     const rulesLoading = Boolean(((loading << 0) & 0x010) === 0x010);
@@ -293,11 +333,13 @@ class TeamPage extends Component {
     return (<BasePage { ...this.props } className="team-page" data-file-drop={(window.location.href.includes('#create'))}>
       {(profile && team && member)
       ? (<div className="content-wrapper">
-          {/* <KeyboardEventHandler handleKeys={['alphanumeric']} onKeyEvent={(key, event)=> this.handlePageKeyPress(event, key)} /> */}
+
           <div className="header" data-loading={Boolean((fetching & 0x010) === 0x010)}>
             {/* <input type="text" className="comment-txt" placeholder="Typing or Pasting anything…" value="" onChange={(event)=> this.handlePageKeyPress(event, event.target.value)} /> */}
-            <input type="text" className="comment-txt" placeholder="Typing or Pasting anything…" value="" />
-            <button className="comment-button">Comment</button>
+            <KeyboardEventHandler handleKeys={['enter', 'esc']} onKeyEvent={(key, event)=> this.handleCommentKeyPress(event, key)}>
+              <input type="text" className="comment-txt" placeholder="Typing or Pasting anything…" value={teamComment.text} onChange={(event)=> this.setState({ teamComment : { ...teamComment, text : event.target.value }})} />
+            </KeyboardEventHandler>
+            <button disabled={teamComment.text.length === 0} onClick={this.handleSubmitComment}>Comment</button>
           </div>
 
           <div className="scroll-wrapper">
@@ -422,6 +464,7 @@ const mapDispatchToProps = (dispatch)=> {
   return ({
     fetchTeamComments : (payload)=> dispatch(fetchTeamComments(payload)),
     createComment     : (payload)=> dispatch(createComment(payload)),
+    makeComment     : (payload)=> dispatch(makeComment(payload)),
     makeTeamRule      : (payload)=> dispatch(makeTeamRule(payload)),
     modifyTeam        : (payload)=> dispatch(modifyTeam(payload)),
     setPlayground     : (payload)=> dispatch(setPlayground(payload)),

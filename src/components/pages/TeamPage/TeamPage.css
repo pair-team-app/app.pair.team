@@ -51,6 +51,10 @@
 	z-index: 2;
 }
 
+.team-page .content-wrapper > .header > span {
+	width: 100%;
+}
+
 .team-page .content-wrapper .header input.comment-txt {
 	filter: none;
 }
@@ -58,13 +62,6 @@
 .team-page .content-wrapper .header button {
 	width: fit-content;
 	margin-left: var(--spacing-10);
-}
-
-.team-page .content-wrapper .header button:hover, .team-page .content-wrapper .header button:active {
-	border: 1px solid rgba(var(--btn-bg-color), 1.0);
-  background-color: rgba(var(--btn-bg-color), 1.0);
-  color: rgba(var(--btn-fg-color), 1.0);
-	cursor: default;
 }
 
 .team-page .content-wrapper .scroll-wrapper {
