@@ -235,8 +235,20 @@ class TeamPage extends Component {
     const { teamComment } = this.state;
     const { text } = teamComment;
 
-    if (key === 'enter' && text.length > 0) {
-      this.handleSubmitComment(event);
+    if (key === 'enter') {
+      if (text.length > 0) {
+        this.handleSubmitComment(event);
+      }
+
+    } else if (key === 'esc') {
+      this.setState({
+        teamComment : {
+          text  : '',
+          url   : null,
+          image : null,
+          code  : false
+        }
+      });
     }
   };
 
