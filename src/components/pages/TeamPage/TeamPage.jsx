@@ -293,9 +293,10 @@ class TeamPage extends Component {
     return (<BasePage { ...this.props } className="team-page" data-file-drop={(window.location.href.includes('#create'))}>
       {(profile && team && member)
       ? (<div className="content-wrapper">
-          <KeyboardEventHandler handleKeys={['alphanumeric']} onKeyEvent={(key, event)=> this.handlePageKeyPress(event, key)} />
+          {/* <KeyboardEventHandler handleKeys={['alphanumeric']} onKeyEvent={(key, event)=> this.handlePageKeyPress(event, key)} /> */}
           <div className="header" data-loading={Boolean((fetching & 0x010) === 0x010)}>
-            <input type="text" className="comment-txt" placeholder="Typing or Pasting anything…" value="" onChange={(event)=> this.handlePageKeyPress(event, event.target.value)} />
+            {/* <input type="text" className="comment-txt" placeholder="Typing or Pasting anything…" value="" onChange={(event)=> this.handlePageKeyPress(event, event.target.value)} /> */}
+            <input type="text" className="comment-txt" placeholder="Typing or Pasting anything…" value="" />
             <button className="comment-button">Comment</button>
           </div>
 
