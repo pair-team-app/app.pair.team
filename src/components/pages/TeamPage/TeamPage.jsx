@@ -345,14 +345,7 @@ class TeamPage extends Component {
     return (<BasePage { ...this.props } className="team-page" data-file-drop={(window.location.href.includes('#create'))}>
       {(profile && team && member)
       ? (<div className="content-wrapper">
-
-          <div className="header" data-loading={Boolean((fetching & 0x010) === 0x010)}>
-            {/* <input type="text" className="comment-txt" placeholder="Typing or Pasting anything…" value="" onChange={(event)=> this.handlePageKeyPress(event, event.target.value)} /> */}
-            <KeyboardEventHandler handleKeys={['enter', 'esc']} onKeyEvent={(key, event)=> this.handleCommentKeyPress(event, key)}>
-              <input type="text" className="comment-txt" placeholder="Typing or Pasting anything…" value={teamComment.text} onChange={(event)=> this.setState({ teamComment : { ...teamComment, text : event.target.value }})} />
-            </KeyboardEventHandler>
-            <button disabled={teamComment.text.length === 0} onClick={this.handleSubmitComment}>Comment</button>
-          </div>
+          <TeamPageCommentHeader teamComment={teamComment} onChange={(text)=> this.setState({ teamComment : { ...teamComment, text }})} onKeyPress={this.handleCommentKeyPress} onSubmit={this.handleSubmitComment} />
 
           <div className="scroll-wrapper">
             <div className="comments-wrapper" data-fetching={Boolean((fetching & 0x010) === 0x010)} data-loading={commentsLoading} data-empty={team && team.comments.length === 0}>
@@ -407,6 +400,21 @@ class TeamPage extends Component {
     </BasePage>);
   }
 }
+
+
+const TeamPageCommentHeader = (props)=> {
+  console.log('TeamPageCommentHeader()', { ...props });
+
+  const { teamComment } = props;
+  const { text, image, url, code } = teamComment;
+
+  return (<div className="team-page-comment-header">
+    <KeyboardEventHandler handleKeys={['enter', 'esc']} onKeyEvent={(key, event)=> props.onKeyPress(event, key)}>
+      <input type="text" className="comment-txt" placeholder="Type anything…" value={text} onChange={(event)=> props.onChange(event.target.value)} />
+    </KeyboardEventHandler>
+    <button disabled={text.length === 0} onClick={props.onSubmit}>Comment</button>
+  </div>);
+};
 
 const TeamPageCommentsPanel = (props)=> {
 	// console.log('TeamPageCommentsPanel()', { ...props });
