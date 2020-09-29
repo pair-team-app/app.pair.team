@@ -35,6 +35,12 @@
   overflow: auto;
 }
 
+
+/* .image-overlay > .content-wrapper[data-cursor="false"] { */
+.image-overlay[data-cursor="false"] {
+  cursor: none;
+}
+
 .image-overlay .content-wrapper .comments-wrapper {
   position: absolute;
   top: 0;
@@ -42,6 +48,21 @@
   width: 100%;
   height: 100%;
   /* padding-top: 110px; */
+}
+
+.image-overlay > .cursor-wrapper {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  padding: 20px;
+}
+
+.comment-pin-cursor {
+	position: fixed;
+	top: 0;
+	left: 0;
+  color: rgba(var(--site-selected-color), 1.0);
+	font-size: 26px;
 }
 
 

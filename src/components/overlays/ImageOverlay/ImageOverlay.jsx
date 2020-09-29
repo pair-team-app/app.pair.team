@@ -2,6 +2,7 @@
 import React, { Component } from 'react';
 import './ImageOverlay.css';
 
+import FontAwesome from 'react-fontawesome';
 import KeyboardEventHandler from 'react-keyboard-event-handler';
 import { Menu, MenuProvider } from 'react-contexify';
 import { connect } from 'react-redux';
@@ -9,6 +10,7 @@ import { connect } from 'react-redux';
 import BaseComment from '../../iterables/BaseComment';
 import BasePopover from '../BasePopover';
 import { setComment, setComponent, makeComment, setCommentImage } from '../../../redux/actions';
+import {isTypeNode} from 'typescript';
 
 
 class ImageOverlay extends Component {
@@ -16,6 +18,11 @@ class ImageOverlay extends Component {
     super(props);
 
     this.state = {
+      cursor        : true,
+      mousePosition : {
+        x : 0,
+        y : 0
+      },
       activeComment : null,
       comment       : {
         text   : '',
@@ -26,6 +33,26 @@ class ImageOverlay extends Component {
 
   componentDidMount() {
     console.log('%s.componentDidMount()', this.constructor.name, { props : this.props, state : this.state });
+    // window.addEventListener('onmousemove', this.onMouseMove);
+
+    window.onmousemove = (event)=> {
+      console.log('%s.onMouseMove()', this.constructor.name, { event, path : ([...event.path].shift().type) });
+
+      const { cursor } = this.state;
+      const { clientX : x, clientY : y, path } = event;
+
+      if (!cursor) {
+        this.setState({
+          mousePosition : { x, y },
+          // cursor        : ([...path].shift().type === 'submit')
+        });
+      }
+    };
+  }
+
+  componentWillUnmount() {
+    console.log('%s.componentWillUnmount()', this.constructor.name, { props : this.props, state : this.state });
+    // window.removeEventListener('onmousemove', this.onMouseMove);
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
@@ -101,13 +128,14 @@ class ImageOverlay extends Component {
     });
   };
 
+
   render() {
     console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
-    const { activeComment, comment } = this.state;
+    const { activeComment, comment, cursor, mousePosition } = this.state;
 
-    return (<div className="image-overlay">
+    return (<div className="image-overlay" data-cursor={cursor}>
       {/* <div className="header-wrapper"><ImageOverlayHeader textContent={(!comment.bubble) ? comment.text : ''} onTextChange={this.handleAddCommentText} onSubmit={this.handleAddComment} onCancel={this.onClose} /></div> */}
-      <div className="content-wrapper"><KeyboardEventHandler handleKeys={['enter', 'esc']} handleFocusableElements onKeyEvent={(key, event)=> this.handleKeyPress(event, key)} />
+      <div className="content-wrapper" data-cursor={cursor}><KeyboardEventHandler handleKeys={['enter', 'esc']} handleFocusableElements onKeyEvent={(key, event)=> this.handleKeyPress(event, key)} />
         <img src={this.props.comment.image} alt={this.props.comment.image} />
         <MenuProvider id="comment-image-menu" className="menu-provider">
           <div className="comments-wrapper">
@@ -116,26 +144,33 @@ class ImageOverlay extends Component {
         </MenuProvider>
       </div>
 
+      {(!cursor) && (<CommentPinCursor x={mousePosition.x} y={mousePosition.y} />)}
+
+      <div className="cursor-wrapper">
+        <button onClick={(event)=> this.setState({ cursor : !this.state.cursor })}>Marker</button>
+      </div>
+
       <AddCommentMenu comment={comment} onToggle={(visible)=> this.setState({ comment : { ...comment, bubble : visible }})} onTextChange={this.handleAddCommentText} onSubmit={this.handleAddComment} onCancel={()=> this.setState({ comment : { ...comment, text : '' }})} />
     </div>);
   }
 }
 
-const ImageOverlayHeader = (props)=> {
-  console.log('ImageOverlayHeader()', { props });
 
-  const { textContent } = props;
-  return (<div className="image-overlay-header">
-    <input type="text" className="comment-txt" placeholder="Type or paste…" value={textContent} onChange={props.onTextChange} />
-    <div className="button-wrapper button-wrapper-col">
-      <button type="submit" disabled={textContent.length === 0} onClick={props.onSubmit}>Comment</button>
-      <button className="cancel-button" onClick={props.onCancel}>Cancel</button>
-    </div>
+const CommentPinCursor = (props)=> {
+  // console.log('CommentPinCursor()', { ...props });
+  const { x, y } = props;
+  const style = {
+    top  : `${y - 30}px`,
+    left : `${x - 9}px`
+  };
+
+  return (<div className="comment-pin-cursor" style={style}>
+    <FontAwesome name="map-marker-alt" />
   </div>);
-};
+}
 
 const ImageCommentReply = (props)=> {
-  // console.log('ImageCommentReply()', { props });
+  // console.log('ImageCommentReply()', { ...props });
 
   const { ind, comment, activeComment } = props;
   const { position } = comment;
