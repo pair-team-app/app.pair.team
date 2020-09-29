@@ -36,7 +36,7 @@ class ImageOverlay extends Component {
     // window.addEventListener('onmousemove', this.onMouseMove);
 
     window.onmousemove = (event)=> {
-      console.log('%s.onMouseMove()', this.constructor.name, { event, path : ([...event.path].shift().type) });
+      // console.log('%s.onMouseMove()', this.constructor.name, { event, path : ([...event.path].shift().type) });
 
       const { cursor } = this.state;
       const { clientX : x, clientY : y, path } = event;
@@ -137,11 +137,11 @@ class ImageOverlay extends Component {
       {/* <div className="header-wrapper"><ImageOverlayHeader textContent={(!comment.bubble) ? comment.text : ''} onTextChange={this.handleAddCommentText} onSubmit={this.handleAddComment} onCancel={this.onClose} /></div> */}
       <div className="content-wrapper" data-cursor={cursor}><KeyboardEventHandler handleKeys={['enter', 'esc']} handleFocusableElements onKeyEvent={(key, event)=> this.handleKeyPress(event, key)} />
         <img src={this.props.comment.image} alt={this.props.comment.image} />
-        <MenuProvider id="comment-image-menu" className="menu-provider">
+        {/* <MenuProvider id="comment-image-menu" className="menu-provider"> */}
           <div className="comments-wrapper">
             {(this.props.comment.replies.map((comment, i)=> (<ImageCommentReply key={i} ind={(i+1)} comment={comment} activeComment={activeComment} onClick={this.handleCommentMarkerClick} onClose={()=>null} />)))}
           </div>
-        </MenuProvider>
+        {/* </MenuProvider> */}
       </div>
 
       {(!cursor) && (<CommentPinCursor x={mousePosition.x} y={mousePosition.y} />)}
@@ -164,10 +164,11 @@ const CommentPinCursor = (props)=> {
     left : `${x - 9}px`
   };
 
-  return (<div className="comment-pin-cursor" style={style}>
+  return (<div className="comment-pin-cursor" onClick={(event)=> console.log({ event })} style={style}>
     <FontAwesome name="map-marker-alt" />
   </div>);
-}
+};
+
 
 const ImageCommentReply = (props)=> {
   // console.log('ImageCommentReply()', { ...props });
@@ -216,6 +217,9 @@ const AddCommentMenu = (props)=> {
     </div>
   </Menu>);
 };
+
+
+
 
 
 const mapDispatchToProps = (dispatch)=> {
