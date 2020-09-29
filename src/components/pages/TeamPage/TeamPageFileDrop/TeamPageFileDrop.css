@@ -1,5 +1,6 @@
 
 .team-page-file-drop {
+  display: none;
   position: fixed;
   top: 0px;
   left: 0px;
@@ -12,10 +13,10 @@
 }
 
 .team-page-file-drop[data-dragging="true"] {
+  display: block;
   padding: 0;
   background-color: rgba(var(--border-color), 1.0);
 }
-
 
 .team-page-file-drop[data-latent="true"] {
   display: none;

@@ -245,12 +245,18 @@
 	filter: none;
 }
 
+.team-page-comment-header img {
+	width: 53px;
+	height: 53px;
+	margin-left: var(--spacing-10);
+	border-radius: var(--border-radius);
+	background-color: #999999;
+}
+
 .team-page-comment-header button {
 	width: fit-content;
 	margin-left: var(--spacing-10);
 }
-
-
 
 
 .team-page-comments-panel {

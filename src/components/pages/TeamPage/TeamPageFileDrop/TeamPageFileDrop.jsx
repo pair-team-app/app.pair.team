@@ -196,7 +196,7 @@ class TeamPageFileDrop extends Component {
   handleFileProcessStart = (file)=> {
     console.log('%s.handleFileProcessStart(file)', this.constructor.name, { file });
     this.setState({ loading : true }, ()=> {
-      this.props.onContent();
+      this.props.onContent(file.getFileEncodeDataURL());
     });
   };
 
@@ -391,7 +391,9 @@ class TeamPageFileDrop extends Component {
     }).then((response)=> {
       const { cdn } = response.data;
       console.log('ADD_FILE', { data : response.data });
-      this.setState({ image : cdn });
+      this.setState({ image : cdn }, ()=> {
+        this.props.onImageData(filename, cdn);
+      });
     });
   };
 

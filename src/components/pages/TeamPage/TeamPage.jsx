@@ -34,10 +34,11 @@ class TeamPage extends Component {
       teamDescription : '',
       ruleContent     : '',
       teamComment     : {
-        text  : '',
-        url   : null,
-        image : null,
-        code  : false
+        text     : '',
+        url      : null,
+        filename : null,
+        image    : null,
+        code     : false
       },
       ruleInput       : false,
       sort            : CommentSortTypes.DATE,
@@ -243,10 +244,11 @@ class TeamPage extends Component {
     } else if (key === 'esc') {
       this.setState({
         teamComment : {
-          text  : '',
-          url   : null,
-          image : null,
-          code  : false
+          text     : '',
+          url      : null,
+          image    : null,
+          filename : null,
+          code     : false
         }
       });
     }
@@ -391,7 +393,7 @@ class TeamPage extends Component {
         </div>)
 
       : (<div className="content-loading">Loading…</div>)}
-      <TeamPageFileDrop dragging={(dragging)} onContent={()=> this.setState({ dragging : false })} onClose={this.handleFileDropClose} />
+      <TeamPageFileDrop dragging={(dragging)} onContent={(image)=> this.setState({ dragging : false })} onImageData={(filename, image)=> this.setState({ teamComment : { ...teamComment, filename, image }})} onClose={this.handleFileDropClose} />
 
       <MyAwesomeMenu onClick={({ event, props })=> { console.log('MenuClick', { event, props }); this.props.onPopup({
         type    : POPUP_TYPE_OK,
@@ -406,13 +408,14 @@ const TeamPageCommentHeader = (props)=> {
   console.log('TeamPageCommentHeader()', { ...props });
 
   const { teamComment } = props;
-  const { text, image, url, code } = teamComment;
+  const { text, image, filename, url, code } = teamComment;
 
   return (<div className="team-page-comment-header">
     <KeyboardEventHandler handleKeys={['enter', 'esc']} onKeyEvent={(key, event)=> props.onKeyPress(event, key)}>
       <input type="text" className="comment-txt" placeholder="Type anything…" value={text} onChange={(event)=> props.onChange(event.target.value)} />
     </KeyboardEventHandler>
-    <button disabled={text.length === 0} onClick={props.onSubmit}>Comment</button>
+    {(image) && (<img src={image} alt={filename} />)}
+    <button disabled={text.length === 0 && image === null} onClick={props.onSubmit}>Comment</button>
   </div>);
 };
 
