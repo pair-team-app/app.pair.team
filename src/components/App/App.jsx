@@ -268,9 +268,9 @@ class App extends Component {
           this.onToggleModal(Modals.RECOVER, false, (hash.length === 0));
         }
 
-        if (prevProps.location.hash === Modals.FILE_DROP && preComment && preComment === ' ') {
-          this.props.createComment(null);
-        }
+        // if (prevProps.location.hash === Modals.FILE_DROP && preComment && preComment === ' ') {
+        //   this.props.createComment(null);
+        // }
 
         if (prevProps.location.hash === Modals.LOGIN && modals.login) {
           this.onToggleModal(Modals.LOGIN, false, (hash.length === 0));
@@ -303,9 +303,9 @@ class App extends Component {
           this.onToggleModal(Modals.RECOVER);
         }
 
-        if (location.hash == Modals.FILE_DROP && !preComment) {
-          this.props.createComment(' ');
-        }
+        // if (location.hash == Modals.FILE_DROP && !preComment) {
+        //   this.props.createComment(' ');
+        // }
 
         if (location.hash === Modals.STRIPE && !modals.stripe) {
           this.onToggleModal(Modals.STRIPE);
@@ -455,7 +455,7 @@ class App extends Component {
     console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
     // console.log('%s.render()', this.constructor.name, this.state.modals);
 
-    const { darkThemed, profile, team, component, imageComment } = this.props;
+    const { darkThemed, profile, team, component, comment, imageComment } = this.props;
     const { popup, modals } = this.state;
 
     return (<div className="site-wrapper" data-theme={(darkThemed) ? 'dark' : 'light'} data-devin-matty={MATTY_DEVIN_THEME}>
@@ -468,7 +468,7 @@ class App extends Component {
       {(component) && (<ProjectViewOverlay>
       </ProjectViewOverlay>)}
 
-      {(imageComment) && (<ImageOverlay>
+      {(imageComment && comment !== null) && (<ImageOverlay>
       </ImageOverlay>)}
 
 		  <div className='modal-wrapper'>
@@ -566,7 +566,7 @@ const mapStateToProps = (state, ownProps)=> {
     playground     : state.builds.playground,
     typeGroup      : state.builds.typeGroup,
     component      : state.builds.component,
-    comment        : state.comments.comment,
+    comment        : state.teams.comment,
     imageComment   : state.comments.imageComment,
     preComment     : state.comments.preComment,
     matchPath      : state.matchPath,

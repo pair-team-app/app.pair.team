@@ -318,7 +318,7 @@ export function onMiddleware(store) {
       const { preComment } = payload;
 
       // payload.comment = null;
-      dispatch(push((preComment) ? `${Pages.TEAM}/${team.id}--${team.slug}/${Modals.FILE_DROP}` : `${Pages.TEAM}/${team.id}--${team.slug}`));
+      // dispatch(push((preComment) ? `${Pages.TEAM}/${team.id}--${team.slug}/${Modals.FILE_DROP}` : `${Pages.TEAM}/${team.id}--${team.slug}`));
 
     } else if (type === COMMENT_ADDED) {
       const { teams, team } = prevState.teams;
@@ -622,6 +622,10 @@ export function onMiddleware(store) {
           payload.preComment = (hash === Modals.FILE_DROP) ? preComment : null;
           payload.comment = (hash === Modals.FILE_DROP) ? null : prevState.teams.comment;
           payload.imageComment = (payload.comment !== null);
+
+          // payload.team = null;
+          // payload.preComment = null;
+          // payload.comment = null;
 
           // has completed team fetch
           if (teams) {
