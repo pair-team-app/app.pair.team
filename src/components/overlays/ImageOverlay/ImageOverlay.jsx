@@ -25,8 +25,12 @@ class ImageOverlay extends Component {
       },
       activeComment : null,
       comment       : {
-        text   : '',
-        bubble : false
+        text     : '',
+        bubble   : false,
+        position : {
+          x : 0,
+          y : 0
+        }
       }
     };
   }
@@ -103,6 +107,21 @@ class ImageOverlay extends Component {
     // this.props.setComment(comment);
   };
 
+  handleCommentMenu = (event)=> {
+    console.log('%s.handleCommentMenu()', this.constructor.name, { event });
+
+    const { clientX : x, clientY : y } = event;
+
+    this.setState({
+      cursor  : true,
+      comment : {
+        text   : '',
+        bubble : true,
+        position : { x, y }
+      }
+    });
+  };
+
   handleKeyPress = (event, key)=> {
     console.log('%s.handleKeyPress()', this.constructor.name, { event, key });
 
@@ -144,27 +163,30 @@ class ImageOverlay extends Component {
         {/* </MenuProvider> */}
       </div>
 
-      {(!cursor) && (<CommentPinCursor x={mousePosition.x} y={mousePosition.y} />)}
+      {(comment.bubble) && (<AddCommentBubble comment={comment} onTextChange={this.handleAddCommentText} onSubmit={this.handleAddComment} onCancel={()=> this.setState({ comment : { ...comment, text : '', bubble : false }})} />)}
+      {(!cursor) && (<CommentPinCursor x={mousePosition.x} y={mousePosition.y} onPinClick={this.handleCommentMenu} />)}
 
       <div className="cursor-wrapper">
         <button onClick={(event)=> this.setState({ cursor : !this.state.cursor })}>Marker</button>
       </div>
 
-      <AddCommentMenu comment={comment} onToggle={(visible)=> this.setState({ comment : { ...comment, bubble : visible }})} onTextChange={this.handleAddCommentText} onSubmit={this.handleAddComment} onCancel={()=> this.setState({ comment : { ...comment, text : '' }})} />
+      <Menu onShown={()=> this.setState({ comment : { ...comment, bubble : true }})} onHidden={()=> this.setState({ comment : { ...comment, bubble : false }})} id="comment-image-menu" className="add-comment-menu">
+        <AddCommentBubble comment={comment} onTextChange={this.handleAddCommentText} onSubmit={this.handleAddComment} onCancel={()=> this.setState({ comment : { ...comment, text : '' }})} />
+      </Menu>
     </div>);
   }
 }
 
 
 const CommentPinCursor = (props)=> {
-  // console.log('CommentPinCursor()', { ...props });
+  console.log('CommentPinCursor()', { ...props });
   const { x, y } = props;
   const style = {
     top  : `${y - 30}px`,
     left : `${x - 9}px`
   };
 
-  return (<div className="comment-pin-cursor" onClick={(event)=> console.log({ event })} style={style}>
+  return (<div className="comment-pin-cursor" onClick={props.onPinClick} style={style}>
     <FontAwesome name="map-marker-alt" />
   </div>);
 };
@@ -203,11 +225,22 @@ const ImageCommentReply = (props)=> {
 };
 
 
-const AddCommentMenu = (props)=> {
-  console.log('AddCommentMenu()', { props });
+const AddCommentBubble = (props)=> {
+  console.log('AddCommentBubble()', { props });
 
   const { comment } = props;
-  return (<Menu onShown={()=> props.onToggle(true)} onHidden={()=>props.onToggle(false)} id="comment-image-menu" className="add-comment-menu">
+  const { position } = comment;
+
+  const style = (position) ? {
+    top  : `${position.y - 10}px`,
+    left : `${position.x - 9}px`
+  } : {
+    top  : '10px',
+    left : '10px'
+  };
+
+
+  return (<div className="add-comment-bubble" style={style}>
     <div className="form-wrapper">
       <input type="text" className="comment-txt" placeholder="Add Comment" value={comment.text} onChange={props.onTextChange} autoFocus />
     </div>
@@ -215,7 +248,7 @@ const AddCommentMenu = (props)=> {
       <button disabled={(comment.text.length === 0)} onClick={props.onSubmit}>Submit</button>
       <button className="cancel-button" onClick={props.onCancel}>Cancel</button>
     </div>
-  </Menu>);
+  </div>);
 };
 
 

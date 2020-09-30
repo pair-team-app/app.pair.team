@@ -38,7 +38,7 @@
 
 /* .image-overlay > .content-wrapper[data-cursor="false"] { */
 .image-overlay[data-cursor="false"] {
-  cursor: none;
+  /* cursor: none; */
 }
 
 .image-overlay .content-wrapper .comments-wrapper {
@@ -95,7 +95,10 @@
 
 
 
-.add-comment-menu {
+.add-comment-bubble {
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 268px;
   padding: 10px;
   border-radius: var(--border-radius);
@@ -103,18 +106,18 @@
 	/* filter: var(--orthodox-drop-shadow); */
 }
 
-.add-comment-menu .form-wrapper {
+.add-comment-bubble .form-wrapper {
   width: 100%;
   margin-bottom: 10px;
 }
 
 
-.add-comment-menu .form-wrapper .comment-txt:focus {
+.add-comment-bubble .form-wrapper .comment-txt:focus {
   box-shadow: none;
   filter: none;
 }
 
-.add-comment-menu .button-wrapper > *:not(:last-child) {
+.add-comment-bubble .button-wrapper > *:not(:last-child) {
   margin-bottom: 10px;
 }
 
