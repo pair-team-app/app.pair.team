@@ -135,10 +135,9 @@ class ProfileForm extends Component {
 				<form onSubmit={this.handleSubmit}>
           <DummyForm />
 					<input type={(validated) ? 'email' : 'text'} placeholder="Change Email Address" value={email} onFocus={()=> this.setState({ email : (emailValid) ? email : '', emailValid : true, validated : false })} onChange={this.handleEmailChange} autoComplete="new-password" required={(validated)} />
-					<input type={(passMsg) ? 'email' : 'password'} placeholder="Current Password" value={(passMsg || password)} onChange={(event)=> this.setState({ password : event.target.value, passMsg : null })} onClick={this.handlePasswordClick} autoComplete="new-password" />
+					<input type={(passMsg) ? 'email' : 'password'} placeholder="Current Password" value={(passMsg || password)} onChange={(event)=> this.setState({ password : event.target.value, passMsg : null })} onClick={this.handlePasswordClick} autoComplete="current-password" />
 					<input type={(validated && newPassword !== newPassword2) ? 'email' : 'password'} placeholder="New Password" value={newPassword} onChange={(event)=> this.setState({ newPassword : event.target.value, passMsg : null })} onClick={this.handlePasswordClick} autoComplete="new-password" required={(validated)} />
 					<input type="password" placeholder="Confirm New Password" value={newPassword2} onChange={(event)=> this.setState({ newPassword2 : event.target.value, passMsg : null })} onClick={this.handlePasswordClick} autoComplete="new-password" />
-
 
 					<div className="button-wrapper button-wrapper-row">
             <button type="submit" disabled={!changed || email.length === 0 || !emailValid || !passwordValid || (CryptoJS.MD5(password).toString() !== profile.password)} onClick={(event)=> this.handleSubmit(event)}>Submit</button>

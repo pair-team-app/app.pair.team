@@ -109,13 +109,13 @@ class LoginForm extends Component {
 			<form onSubmit={this.handleSubmit}>
 				<DummyForm />
 				{(validated)
-					? (<input type="email" disabled={(invite !== null)} placeholder="Enter Email Address" value={email} onFocus={()=> this.setState({ email : (emailValid) ? email : '', emailValid : true, passMsg : null, validated : false })} onChange={(event)=> this.setState({ email : event.target.value })} autoComplete="new-password" autoFocus />)
-					: (<input type="text" disabled={(invite !== null)} placeholder="Enter Email Address" value={email} onFocus={()=> this.setState({ email : (emailValid) ? email : '', emailValid : true, passMsg : null, validated : false })} onChange={(event)=> this.setState({ email : event.target.value })} autoComplete="new-password" />)
+					? (<input type="email" disabled={(invite !== null)} placeholder="Enter Work Email Address" value={email} onFocus={()=> this.setState({ email : (emailValid) ? email : '', emailValid : true, passMsg : null, validated : false })} onChange={(event)=> this.setState({ email : event.target.value })} autoComplete="new-password" autoFocus />)
+					: (<input type="text" disabled={(invite !== null)} placeholder="Enter Work Email Address" value={email} onFocus={()=> this.setState({ email : (emailValid) ? email : '', emailValid : true, passMsg : null, validated : false })} onChange={(event)=> this.setState({ email : event.target.value })} autoComplete="new-password" />)
 				}
 
 				{(passMsg)
-					? (<input type="email" placeholder="Enter Password" disabled={(invite !== null)} value={(passMsg || password)} onFocus={()=> this.setState({ passwordValid : true, passMsg : null })} onChange={(event)=> this.setState({ password : event.target.value, passMsg : null })} onClick={this.handlePassword} autoComplete="off" autoFocus />)
-					: (<input type="password" placeholder="Enter Password" value={(passMsg || password)} onFocus={()=> this.setState({ passwordValid : true, passMsg : null })} onChange={(event)=> this.setState({ password : event.target.value })} onClick={this.handlePassword} autoComplete="off" />)
+					? (<input type="email" placeholder="Enter Password" disabled={(invite !== null)} value={(passMsg || password)} onFocus={()=> this.setState({ passwordValid : true, passMsg : null })} onChange={(event)=> this.setState({ password : event.target.value, passMsg : null })} onClick={this.handlePassword} autoComplete="new-password" autoFocus />)
+					: (<input type="password" placeholder="Enter Password" value={(passMsg || password)} onFocus={()=> this.setState({ passwordValid : true, passMsg : null })} onChange={(event)=> this.setState({ password : event.target.value })} onClick={this.handlePassword} autoComplete="new-password" />)
 				}
 				<div className="button-wrapper button-wrapper-row">
 					<button type="submit" disabled={(email.length === 0 || password.length === 0 || !emailValid || !passwordValid || passMsg)} onClick={(event)=> this.handleSubmit(event)}>Submit</button>

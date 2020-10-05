@@ -120,10 +120,9 @@ class ProfileModal extends Component {
       <div className="profile-modal">
         <div className="link-wrapper"><span>
           {(profile.validated)
-              ? (<div>Your account is email verified</div>)
-              : (<PageNavLink to="#" onClick={this.handleResendVerify}>Resend Verify Email</PageNavLink>)
+              ? (<div>Your account is email verified <PageNavLink to="#" onClick={this.handleResetPassword}>Delete Account?</PageNavLink></div>)
+              : (<div><PageNavLink to="#" onClick={this.handleResendVerify}>Resend Verify Email</PageNavLink> <PageNavLink to="#" onClick={this.handleResetPassword}>Delete Account?</PageNavLink></div>)
             }
-            <PageNavLink to="#" onClick={this.handleResetPassword}>Delete Account?</PageNavLink>
         </span></div>
         <div className="form-wrapper">
           <ProfileForm profile={profile} password={password} team={team} onCancel={this.handleCancel} onSubmit={this.handleSubmit} />

@@ -62,7 +62,7 @@ class RecoverModal extends Component {
 
 				<div className="recover-modal">
           <div className="link-wrapper">
-						<span>Looking for <PageNavLink to={Modals.REGISTER} onClick={this.handleModal}>Sign Up</PageNavLink> or <PageNavLink to={Modals.LOGIN} onClick={this.handleModal}>Login</PageNavLink>?</span>
+						<span>Looking for <PageNavLink to={Modals.REGISTER} onClick={this.handleModal}>Sign Up</PageNavLink> or <PageNavLink to={Modals.LOGIN} onClick={this.handleModal}>Log In</PageNavLink>?</span>
 					</div>
 
 					<div className="form-wrapper">

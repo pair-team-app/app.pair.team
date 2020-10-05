@@ -96,7 +96,7 @@ class RegisterModal extends Component {
 			<div className="register-modal">
 				{(invite) && (<div className="title-wrapper">{invite.team_title}</div>)}
         <div className="link-wrapper">
-          <span>Already have an account? <PageNavLink to={Modals.LOGIN} onClick={this.handleModal}>Login</PageNavLink></span>
+          <span>Already have an account? <PageNavLink to={Modals.LOGIN} onClick={this.handleModal}>Log In</PageNavLink></span>
         </div>
 				<div className="form-wrapper">
 					<RegisterForm
