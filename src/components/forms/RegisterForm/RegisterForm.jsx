@@ -4,6 +4,7 @@ import './RegisterForm.css'
 
 import axios from 'axios';
 import { Bits, Strings } from 'lang-js-utils';
+import ReactPasswordStrength from 'react-password-strength';
 
 import DummyForm from '../../forms/DummyForm';
 import { API_ENDPT_URL } from '../../../consts/uris';
@@ -18,6 +19,7 @@ class RegisterForm extends Component {
 			password      : '',
 			password2     : '',
 			passMsg       : null,
+			passScore     : 0,
 			emailValid    : true,
 			passwordValid : true,
 			validated     : false
@@ -53,7 +55,7 @@ class RegisterForm extends Component {
 
 		const emailValid = Strings.isEmail(email);
 		const emailBlackListed = false; //(blacklistTeamDomains.matches.filter((patt)=> ((new RegExp(`${patt}`, 'i')).test(email))).length > 0);
-		const passwordValid = (password.length > 0 && password === password2);
+		const passwordValid = (password.length >= 5 && password === password2);
 
 		this.setState({ emailValid, passwordValid,
 			email         : (emailValid) ? (emailBlackListed) ? `@${email.split('@').pop()} not supported` : email : 'Email Address Invalid',
@@ -105,7 +107,7 @@ class RegisterForm extends Component {
 		console.log('%s.render()', this.constructor.name, this.props, this.state);
 
 		const { invite } = this.props;
-		const { email, password, password2, passMsg } = this.state;
+		const { email, password, password2, passMsg, passScore } = this.state;
 		const { emailValid, passwordValid, validated } = this.state;
 
 		return (
@@ -118,17 +120,30 @@ class RegisterForm extends Component {
 						: (<input type="text" disabled={(invite !== null)} placeholder="Enter Work Email Address" value={email} onFocus={()=> this.setState({ email : (emailValid) ? email : '', emailValid : true, validated : false })} onChange={(event)=> this.setState({ email : event.target.value })} autoComplete="new-password" />)
 					}
 
-					{(passMsg)
-						? (<input type="email" placeholder="Enter Password" value={passMsg} onFocus={()=> this.setState({ passMsg : null })} onChange={(event)=> this.setState({ password : event.target.value, passMsg : null })} onClick={this.handlePassword} autoComplete="new-password" required />)
-						: (<input type="password" placeholder="Enter Password" value={password} onChange={(event)=> this.setState({ password : event.target.value, passMsg : null })} onClick={this.handlePassword} autoComplete="new-password" />)
-					}
+					<ReactPasswordStrength
+						className="react-password-strength"
+						// style={{ display : 'none' }}
+						minLength={5}
+						minScore={1}
+						scoreWords={['weak', 'okay', 'good', 'strong', 'stronger']}
+						changeCallback={({ password, score })=> {
+							this.setState({ password,
+								passMsg   : null,
+								passScore : score
+							});
+						}}
+						inputProps={{
+							placeholder  : 'Enter Password',
+							autoComplete : 'new-password'
+						}}
+					/>
 
 					{(passMsg)
 						? (<input type="email" placeholder="Confirm Password" value={passMsg} onChange={(event)=> this.setState({ password2 : event.target.value })} autoComplete="off" required />)
 						: (<input type="password" placeholder="Confirm Password" value={password2} onChange={(event)=> this.setState({ password2 : event.target.value })} autoComplete="off" />)
 					}
           <div className="button-wrapper button-wrapper-row">
-					  <button type="submit" disabled={(email.length === 0 || password.length === 0 || password2.length === 0 || !emailValid || !passwordValid || password !== password2)} onClick={(event)=> this.handleSubmit(event)}>Submit</button>
+					  <button type="submit" disabled={(email.length === 0 || password.length < 5 || password2.length < 5 || passScore < 1 || !emailValid || !passwordValid || password !== password2)} onClick={(event)=> this.handleSubmit(event)}>Submit</button>
             <button type="button" className="cancel-button" onClick={this.props.onCancel}>Cancel</button>
           </div>
 				</form>

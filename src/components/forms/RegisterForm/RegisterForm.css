@@ -1,3 +1,19 @@
 
 .register-form {
 }
+
+.register-form .react-password-strength {
+  border: none;
+  font-family: var(--orthodox-font-family);
+  font-size: var(--base-font-size);
+}
+
+.register-form .ReactPasswordStrength-strength-desc {
+  top: 5px;
+  width: auto;
+  font-style: normal;
+}
+
+.register-form .ReactPasswordStrength-strength-bar {
+  display: none;
+}

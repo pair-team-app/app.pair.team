@@ -15,3 +15,20 @@
 	background-color: rgba(var(--txtfield-bg-color), 1.0);
 	color: rgba(var(--txtfield-fg-color), 1.0);
 }
+
+
+.profile-form .react-password-strength {
+  border: none;
+  font-family: var(--orthodox-font-family);
+  font-size: var(--base-font-size);
+}
+
+.profile-form .ReactPasswordStrength-strength-desc {
+  top: 5px;
+  width: auto;
+  font-style: normal;
+}
+
+.profile-form .ReactPasswordStrength-strength-bar {
+  display: none;
+}

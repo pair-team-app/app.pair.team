@@ -4,6 +4,7 @@ import './ProfileForm.css';
 
 import CryptoJS from 'crypto-js';
 import { Bits, Strings } from 'lang-js-utils';
+import ReactPasswordStrength from 'react-password-strength';
 
 import DummyForm from '../DummyForm';
 import { trackEvent } from '../../../utils/tracking';
@@ -76,7 +77,7 @@ class ProfileForm extends Component {
 		event.stopPropagation();
 
 		const { profile } = this.props;
-		const { email, password, newPassword, newPassword2, changed } = this.state;
+		const { email, password, newPassword, newPassword2, passScore, changed } = this.state;
 
 		console.log('%s.handleSubmit()', this.constructor.name, { event, props : this.props, state : this.state, passwdMD5 : CryptoJS.MD5(this.state.password).toString(), passwdProfile : profile.password });
 
@@ -84,7 +85,7 @@ class ProfileForm extends Component {
 		if (changed) {
       const emailValid = Strings.isEmail(email);
       // const passwordValid = (CryptoJS.MD(password).toString() === profile.password);
-      const passwordValid = (password.length > 0 && newPassword === newPassword2);
+      const passwordValid = (password.length >= 5 && passScore >= 1 && newPassword === newPassword2);
 
       if (emailValid && passwordValid) {
         trackEvent('button', 'profile-update');
@@ -127,7 +128,7 @@ class ProfileForm extends Component {
 		console.log('%s.render()', this.constructor.name, { props : this.props, state : { ...this.state, password : CryptoJS.MD5(this.state.password).toString() }});
 
 		const { profile } = this.props;
-		const { email, password, newPassword, newPassword2, passMsg } = this.state;
+		const { email, password, newPassword2, passMsg } = this.state;
 		const { emailValid, passwordValid, changed, validated } = this.state;
 
 		return (
@@ -136,7 +137,26 @@ class ProfileForm extends Component {
           <DummyForm />
 					<input type={(validated) ? 'email' : 'text'} placeholder="Change Email Address" value={email} onFocus={()=> this.setState({ email : (emailValid) ? email : '', emailValid : true, validated : false })} onChange={this.handleEmailChange} autoComplete="new-password" required={(validated)} />
 					<input type={(passMsg) ? 'email' : 'password'} placeholder="Current Password" value={(passMsg || password)} onChange={(event)=> this.setState({ password : event.target.value, passMsg : null })} onClick={this.handlePasswordClick} autoComplete="current-password" />
-					<input type={(validated && newPassword !== newPassword2) ? 'email' : 'password'} placeholder="New Password" value={newPassword} onChange={(event)=> this.setState({ newPassword : event.target.value, passMsg : null })} onClick={this.handlePasswordClick} autoComplete="new-password" required={(validated)} />
+
+
+					<ReactPasswordStrength
+						className="react-password-strength"
+						minLength={5}
+						minScore={1}
+						scoreWords={['weak', 'okay', 'good', 'strong', 'stronger']}
+						changeCallback={({ password, score })=> {
+							this.setState({
+								newPassword : password,
+								passMsg     : null,
+								passScore  : score
+							});
+						}}
+						inputProps={{
+							placeholder  : 'New Password',
+							autoComplete : 'new-password'
+						}}
+					/>
+
 					<input type="password" placeholder="Confirm New Password" value={newPassword2} onChange={(event)=> this.setState({ newPassword2 : event.target.value, passMsg : null })} onClick={this.handlePasswordClick} autoComplete="new-password" />
 
 					<div className="button-wrapper button-wrapper-row">
