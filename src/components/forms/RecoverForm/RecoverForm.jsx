@@ -25,7 +25,8 @@ class RecoverForm extends Component {
 	}
 
 	handleSubmit = (event)=> {
-// console.log('%s.handleSubmit()', this.constructor.name, event.target, this.state);
+		console.log('%s.handleSubmit()', this.constructor.name, event.target, this.state);
+
 		event.preventDefault();
 
 		trackEvent('button', 'recover');
@@ -45,6 +46,8 @@ class RecoverForm extends Component {
 				action  : 'RECOVER',
 				payload : { email, username }
 			}).then((response)=> {
+				console.log('RECOVER', response.data);
+
         this.props.onSubmitted();
 			}).catch((error)=> {
 			});
