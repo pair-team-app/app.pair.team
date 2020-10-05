@@ -101,6 +101,7 @@
   left: 0;
   width: 268px;
   padding: 10px;
+  background-color: rgba(var(--site-bg-color), 1.0);
   border-radius: var(--border-radius);
   box-shadow: var(--orthodox-shadow);
 	/* filter: var(--orthodox-drop-shadow); */
@@ -131,26 +132,3 @@
   font-size: 16px;
   text-align: left;
 }
-
-/*
-.react-contexify {
-	z-index: 2000;
-}
-
-.react-contexify__item__content {
-	position: static;
-	display: block;
-	padding: 0;
-}
-
-.react-contexify__item:not(.react-contexify__item--disabled):hover > .react-contexify__item__content {
-	background-color: rgba(var(--modal-bg-color), 1.0);
-	cursor: default;
-}
-
-.react-contexify__item, .react-contexify__item .react-contexify__item__content {
-	display: block;
-	background-color: rgba(var(--modal-bg-color), 1.0);
-	cursor: default;
-}
-*/

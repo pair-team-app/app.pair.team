@@ -4,13 +4,11 @@ import './ImageOverlay.css';
 
 import FontAwesome from 'react-fontawesome';
 import KeyboardEventHandler from 'react-keyboard-event-handler';
-import { Menu, MenuProvider } from 'react-contexify';
 import { connect } from 'react-redux';
 
 import BaseComment from '../../iterables/BaseComment';
 import BasePopover from '../BasePopover';
 import { setComment, setComponent, makeComment, setCommentImage } from '../../../redux/actions';
-import {isTypeNode} from 'typescript';
 
 
 class ImageOverlay extends Component {
@@ -69,13 +67,13 @@ class ImageOverlay extends Component {
   }
 
   handleAddComment = (event=null)=> {
-    console.log('%s.handleAddComment()', this.constructor.name, { parent : event.target.parentElement, event : event.target.parentElement.parentElement.parentElement, props : this.props, state : this.state });
+    console.log('%s.handleAddComment()', this.constructor.name, { parent : event.target.parentElement, event : event.target.parentElement.parentElement, props : this.props, state : this.state });
 
-    const { top, left } = event.target.parentElement.parentElement.parentElement.style;
+    const { top, left } = event.target.parentElement.parentElement.style;
     const position = {
-      x : Math.max(10, (left.replace('px', '') << 0)),
-      y : Math.max(10, (top.replace('px', '') << 0) - 115)
-    }
+      x : Math.max(10, (left.replace('px', '') << 0) - 10),
+      y : Math.max(10, (top.replace('px', '') << 0) - 5)
+    };
 
     const { comment } = this.state;
     if (comment.text.length > 0) {
@@ -156,11 +154,9 @@ class ImageOverlay extends Component {
       {/* <div className="header-wrapper"><ImageOverlayHeader textContent={(!comment.bubble) ? comment.text : ''} onTextChange={this.handleAddCommentText} onSubmit={this.handleAddComment} onCancel={this.onClose} /></div> */}
       <div className="content-wrapper" data-cursor={cursor}><KeyboardEventHandler handleKeys={['enter', 'esc']} handleFocusableElements onKeyEvent={(key, event)=> this.handleKeyPress(event, key)} />
         <img src={this.props.comment.image} alt={this.props.comment.image} />
-        {/* <MenuProvider id="comment-image-menu" className="menu-provider"> */}
-          <div className="comments-wrapper">
-            {(this.props.comment.replies.map((comment, i)=> (<ImageCommentReply key={i} ind={(i+1)} comment={comment} activeComment={activeComment} onClick={this.handleCommentMarkerClick} onClose={()=>null} />)))}
-          </div>
-        {/* </MenuProvider> */}
+        <div className="comments-wrapper">
+          {(this.props.comment.replies.map((comment, i)=> (<ImageCommentReply key={i} ind={(i+1)} comment={comment} activeComment={activeComment} onClick={this.handleCommentMarkerClick} onClose={()=>null} />)))}
+        </div>
       </div>
 
       {(comment.bubble) && (<AddCommentBubble comment={comment} onTextChange={this.handleAddCommentText} onSubmit={this.handleAddComment} onCancel={()=> this.setState({ comment : { ...comment, text : '', bubble : false }})} />)}
@@ -169,17 +165,14 @@ class ImageOverlay extends Component {
       <div className="cursor-wrapper">
         <button onClick={(event)=> this.setState({ cursor : !this.state.cursor })}>Marker</button>
       </div>
-
-      <Menu onShown={()=> this.setState({ comment : { ...comment, bubble : true }})} onHidden={()=> this.setState({ comment : { ...comment, bubble : false }})} id="comment-image-menu" className="add-comment-menu">
-        <AddCommentBubble comment={comment} onTextChange={this.handleAddCommentText} onSubmit={this.handleAddComment} onCancel={()=> this.setState({ comment : { ...comment, text : '' }})} />
-      </Menu>
     </div>);
   }
 }
 
 
 const CommentPinCursor = (props)=> {
-  console.log('CommentPinCursor()', { ...props });
+  // console.log('CommentPinCursor()', { ...props });
+
   const { x, y } = props;
   const style = {
     top  : `${y - 30}px`,
@@ -226,14 +219,14 @@ const ImageCommentReply = (props)=> {
 
 
 const AddCommentBubble = (props)=> {
-  console.log('AddCommentBubble()', { props });
+  // console.log('AddCommentBubble()', { props });
 
   const { comment } = props;
   const { position } = comment;
 
   const style = (position) ? {
-    top  : `${position.y - 10}px`,
-    left : `${position.x - 9}px`
+    top  : `${position.y - 5}px`,
+    left : `${position.x - 0}px`
   } : {
     top  : '10px',
     left : '10px'

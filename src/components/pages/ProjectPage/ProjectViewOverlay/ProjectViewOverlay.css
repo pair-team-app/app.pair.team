@@ -34,6 +34,20 @@
   /* padding-top: 110px; */
 }
 
+.project-view-overlay > .cursor-wrapper {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  padding: 20px;
+}
+
+.comment-pin-cursor {
+	position: fixed;
+	top: 0;
+	left: 0;
+  color: rgba(var(--site-selected-color), 1.0);
+	font-size: 26px;
+}
 
 .project-view-comment-marker {
 	position: absolute;
@@ -63,39 +77,31 @@
 }
 
 
-
-.add-comment-menu {
+.add-comment-bubble {
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 268px;
   padding: 10px;
+  background-color: rgba(var(--site-bg-color), 1.0);
   border-radius: var(--border-radius);
   box-shadow: var(--orthodox-shadow);
 	/* filter: var(--orthodox-drop-shadow); */
 }
 
-.add-comment-menu .form-wrapper {
+.add-comment-bubble .form-wrapper {
   width: 100%;
   margin-bottom: 10px;
 }
 
 
-.add-comment-menu .form-wrapper .comment-txt:focus {
+.add-comment-bubble .form-wrapper .comment-txt:focus {
   box-shadow: none;
   filter: none;
 }
 
-.add-comment-menu .button-wrapper > *:not(:last-child) {
+.add-comment-bubble .button-wrapper > *:not(:last-child) {
   margin-bottom: 10px;
-}
-
-
-.project-view-header {
-  display: flex;
-  width: 80%;
-  margin: auto;
-}
-
-.project-view-header .comment-txt {
-  margin-right: 20px;
 }
 
 
@@ -108,26 +114,3 @@
   font-size: 16px;
   text-align: left;
 }
-
-/*
-.react-contexify {
-	z-index: 2000;
-}
-
-.react-contexify__item__content {
-	position: static;
-	display: block;
-	padding: 0;
-}
-
-.react-contexify__item:not(.react-contexify__item--disabled):hover > .react-contexify__item__content {
-	background-color: rgba(var(--modal-bg-color), 1.0);
-	cursor: default;
-}
-
-.react-contexify__item, .react-contexify__item .react-contexify__item__content {
-	display: block;
-	background-color: rgba(var(--modal-bg-color), 1.0);
-	cursor: default;
-}
-*/

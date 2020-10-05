@@ -14,7 +14,7 @@ class LoginForm extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			email         : (props.invite) ? props.invite.email : 'matt@pairurl.com',
+			email         : (props.invite) ? props.invite.email : '',
 			password      : '',
 			emailValid    : true,
 			passwordValid : true,
