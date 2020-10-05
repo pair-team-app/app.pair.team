@@ -197,7 +197,7 @@ a {
 	transition: color var(--transition-duration-short) ease-out;
 }
 
-a:hover {
+a:hover{
 	color: rgba(var(--link-hover-color), 1.0);
 	text-decoration: none;
 }
@@ -205,6 +205,11 @@ a:hover {
 a:active {
 	color: rgba(var(--link-selected-color), 1.0);
 	text-decoration: none;
+}
+
+a:focus {
+	color: rgba(var(--link-alt-color), 1.0);
+	text-decoration: underline;
 }
 
 
