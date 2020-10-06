@@ -4,6 +4,7 @@ import './TeamPage.css';
 
 import { push } from 'connected-react-router';
 import { Strings } from 'lang-js-utils';
+import LinkifyIt from 'linkify-it';
 import { Menu, Item, Separator, Submenu, MenuProvider } from 'react-contexify';
 import KeyboardEventHandler from 'react-keyboard-event-handler';
 import { connect } from 'react-redux';
@@ -266,6 +267,24 @@ class TeamPage extends Component {
     }
   };
 
+  handleCommentChange = (event)=> {
+    console.log('%s.handleCommentChange()', this.constructor.name, { event });
+
+    const { value : text } = event.target;
+    const urls = (LinkifyIt().match(text) || []).map(({ url })=> (url));
+    const url = (urls.length > 0) ? [ ...urls].shift() : null;
+
+    const { teamComment } = this.state;
+
+    this.setState({ teamComment : { ...teamComment, text }}, ()=> {
+      if (url) {
+        if (!this.state.teamComment.url && url) {
+          this.setState({ teamComment : { ...teamComment, url }});
+        }
+      }
+    });
+  };
+
   handleSubmitComment = (event)=> {
     console.log('%s.handleSubmitComment()', this.constructor.name, { event });
 
@@ -274,7 +293,7 @@ class TeamPage extends Component {
 
     this.props.makeComment({ image,
       link     : (url || null),
-			content  : text,
+			content  : (url !== null) ? null : text,
       format   : (code) ? 'code' : 'text'
     });
 
@@ -347,7 +366,7 @@ class TeamPage extends Component {
     return (<BasePage { ...this.props } className="team-page" data-file-drop={(window.location.href.includes('#create'))}>
       {(profile && team && member)
       ? (<div className="content-wrapper">
-          <TeamPageCommentHeader teamComment={teamComment} onChange={(text)=> this.setState({ teamComment : { ...teamComment, text }})} onKeyPress={this.handleCommentKeyPress} onSubmit={this.handleSubmitComment} />
+          <TeamPageCommentHeader teamComment={teamComment} onChange={this.handleCommentChange} onKeyPress={this.handleCommentKeyPress} onSubmit={this.handleSubmitComment} />
 
           <div className="scroll-wrapper">
             <div className="comments-wrapper" data-fetching={Boolean((fetching & 0x010) === 0x010)} data-loading={commentsLoading} data-empty={team && team.comments.length === 0}>
@@ -412,7 +431,7 @@ const TeamPageCommentHeader = (props)=> {
 
   return (<div className="team-page-comment-header">
     <KeyboardEventHandler handleKeys={['enter', 'esc']} onKeyEvent={(key, event)=> props.onKeyPress(event, key)}>
-      <input type="text" className="comment-txt" placeholder="Type anything…" value={text} onChange={(event)=> props.onChange(event.target.value)} />
+      <input type="text" className="comment-txt" placeholder="Type anything…" value={text} onChange={props.onChange} />
     </KeyboardEventHandler>
     {(image) && (<img src={image} alt={filename} />)}
     <button disabled={text.length === 0 && image === null} onClick={props.onSubmit}>Comment</button>
