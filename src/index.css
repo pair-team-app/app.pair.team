@@ -32,7 +32,7 @@
 
 :root {
 	--orthodox-font-family: 'SF Pro Display', system-ui, -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Ubuntu, 'Segoe UI', Roboto, Arial, sans-serif;
-	--base-font-size: 14px;
+	--base-font-size: 16px;
 	--base-font-weight: 600;
 	--font-weight-bold: 700;
 	--border-radius: 6px;
