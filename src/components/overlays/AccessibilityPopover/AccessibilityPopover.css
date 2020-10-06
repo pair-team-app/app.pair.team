@@ -80,7 +80,7 @@
 }
 
 .accessibility-report-item .content {
-  font-size: 14px;
+  font-size: var(--base-font-size);
 	line-height: 20px;
 	text-align: justify;
 }

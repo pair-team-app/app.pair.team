@@ -112,7 +112,7 @@
 	padding: var(--spacing-10);
 	background-color: rgba(var(--site-bg-color), 1.0);
 	color: rgba(var(--site-fg-color), 1.0);
-	font-size: 14px;
+	font-size: var(--base-font-size);
 	transition: opacity var(--transition-duration-short) cubic-bezier(0.4, 0, 0.2, 1);
 }
 
