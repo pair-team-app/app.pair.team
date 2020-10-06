@@ -197,7 +197,7 @@ a {
 	transition: color var(--transition-duration-short) ease-out;
 }
 
-a:hover{
+a:hover {
 	color: rgba(var(--link-hover-color), 1.0);
 	text-decoration: none;
 }
