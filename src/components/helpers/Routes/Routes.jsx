@@ -7,6 +7,7 @@ import { Redirect, Route, Switch } from 'react-router-dom';
 import BasePage from '../../pages/BasePage';
 import CreateTeamPage from '../../pages/CreateTeamPage';
 import ProjectPage from '../../pages/ProjectPage';
+import RecoverPage from '../../pages/RecoverPage';
 import TeamPage from '../../pages/TeamPage';
 import { Pages } from '../../../consts/uris';
 
@@ -65,6 +66,14 @@ class Routes extends Component {
         path={RoutePaths.CREATE}
         render={({ props })=> <CreateTeamPage
           onLogout={this.props.onLogout}
+          onModal={(uri, payload)=> this.props.onModal(uri, true, payload)}
+          onPopup={this.props.onPopup} { ...props}
+          />
+      } />
+
+      <Route
+        path={RoutePaths.RECOVER}
+        render={({ props })=> <RecoverPage
           onModal={(uri, payload)=> this.props.onModal(uri, true, payload)}
           onPopup={this.props.onPopup} { ...props}
           />

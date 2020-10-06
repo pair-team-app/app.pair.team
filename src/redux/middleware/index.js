@@ -130,6 +130,12 @@ export function onMiddleware(store) {
         strict : false
       });
 
+      const recoverMatch = matchPath(pathname, {
+        path   : RoutePaths.RECOVER,
+        exact  : false,
+        strict : false
+      });
+
       const projectMatch = matchPath(pathname, {
         path   : RoutePaths.PROJECT,
         exact  : true,
@@ -143,7 +149,7 @@ export function onMiddleware(store) {
       });
 
       const { params } = (projectMatch || (teamMatch || { params : null }));
-      if (!createMatch && payload.teams.length > 0) {
+      if (!recoverMatch && !createMatch && payload.teams.length > 0) {
         const team = (params) ? (payload.teams.find(({ id })=> (id === (params.teamID << 0))) || [ ...payload.teams].shift()) : [ ...payload.teams].shift();
         payload.team = team;
 
@@ -512,6 +518,12 @@ export function onMiddleware(store) {
         strict : true
       });
 
+      const recoverMatch = matchPath(pathname, {
+        path   : RoutePaths.RECOVER,
+        exact  : true,
+        strict : true
+      });
+
       const buildID = (projectMatch) ? projectMatch.params.buildID << 0 : 0;
       const deviceSlug = (projectMatch) ? projectMatch.params.deviceSlug : '';
 
@@ -537,14 +549,14 @@ export function onMiddleware(store) {
       //  dispatch (next(action));
       }
 
-      console.log('[|:|]=-=-=-=-=-=@@router/LOCATION_CHANGE=-=-=-=-=-=-=[%s]=-=(%d)', action, (cookie.load('user_id') << 0), { isFirstRendering, urlHistory, pathname, hash, profile, createMatch, teamMatch, projectMatch });
+      console.log('[|:|]=-=-=-=-=-=@@router/LOCATION_CHANGE=-=-=-=-=-=-=[%s]=-=(%d)', action, (cookie.load('user_id') << 0), { isFirstRendering, urlHistory, pathname, hash, profile, createMatch, teamMatch, projectMatch, recoverMatch });
 
       if (isFirstRendering) {
         console.log('\\\\\\\\\\\\\\\\\\\\', 'FIRST LOCATION RENDER', { pathname, hash, cookie : (cookie.load('user_id') << 0) }, '\\\\\\\\\\\\\\\\\\\\');
 
         payload.urlHistory = [{ ...payload.location, state : null, epoch : (moment.utc().valueOf() * 0.001) << 0, timestamp : moment().format(HISTORY_TIMESTAMP) }];
 
-        if ((cookie.load('user_id') << 0 === 0)) {
+        if ((cookie.load('user_id') << 0 === 0) && !recoverMatch) {
           dispatch(replace(`${pathname}${Modals.LOGIN}`));
         }
 
@@ -655,7 +667,7 @@ export function onMiddleware(store) {
         }
 
         // on create page
-        if (createMatch) {
+        if (createMatch || recoverMatch) {
           payload.team = null;
           payload.member = null;
           payload.comment = null;

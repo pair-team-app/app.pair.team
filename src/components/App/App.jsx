@@ -4,7 +4,6 @@ import './App.css';
 
 import axios from 'axios';
 import { push } from 'connected-react-router';
-import CryptoJS from 'crypto-js';
 import { Browsers } from 'lang-js-utils';
 import cookie from 'react-cookies';
 import { connect } from 'react-redux';
@@ -97,7 +96,7 @@ class App extends Component {
         }
       }
 
-      if (location.pathname.startsWith(Pages.INVITE)) {
+      if (location.pathname.startsWith(Pages.INVITE) || location.pathname.startsWith(Pages.RECOVER)) {
         if (profile) {
           this.onLogout();
         }

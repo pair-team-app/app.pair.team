@@ -47,7 +47,7 @@ const store = createStore(rootReducer(history), composeEnhancers(applyMiddleware
 
 
 console.log(LOG_STORE_PREFIX, '-=-=-=STORE INIT=-=-=-', { store : store.getState(), cookie : (typeof cookie.load('user_id')) }, LOG_STORE_POSTFIX);
-if ((cookie.load('user_id') << 0) === 0) {
+if ((cookie.load('user_id') << 0) === 0 && !window.location.pathname.startsWith(Pages.RECOVER)) {
   store.dispatch(replace(`${window.location.pathname}${Modals.LOGIN}`))
 
 } else {

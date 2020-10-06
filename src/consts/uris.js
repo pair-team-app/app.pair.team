@@ -29,6 +29,7 @@ export const Pages = {
 	PAYMENT    : '/payment',
 	PRIVACY    : '/privacy',
 	PROJECT    : '/project',
+	RECOVER    : '/recover',
 	TEAM       : '/team',
 	TERMS      : '/terms',
 	VERIFY      : '/verify',

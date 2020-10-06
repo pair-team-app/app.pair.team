@@ -51,20 +51,18 @@ class RegisterForm extends Component {
 		event.preventDefault();
 
 		const { invite } = this.props;
-		const { email, password, password2 } = this.state;
+		const { email, password, password2, passScore } = this.state;
 
 		const emailValid = Strings.isEmail(email);
 		const emailBlackListed = false; //(blacklistTeamDomains.matches.filter((patt)=> ((new RegExp(`${patt}`, 'i')).test(email))).length > 0);
-		const passwordValid = (password.length >= 5 && password === password2);
+		const passwordValid = (password.length >= 5 && password === password2 && passScore >= 1);
 
 		this.setState({ emailValid, passwordValid,
 			email         : (emailValid) ? (emailBlackListed) ? `@${email.split('@').pop()} not supported` : email : 'Email Address Invalid',
 			passMsg       : (passwordValid) ? '' : 'Passwords don\'t match'
 		});
 
-
 		console.log('%s.handleSubmit()', this.constructor.name, { props : this.props, state : this.state, email, emailValid, passwordValid, emailBlackListed });
-
 
 		if (emailValid && passwordValid && !emailBlackListed) {
 			axios.post(API_ENDPT_URL, {
