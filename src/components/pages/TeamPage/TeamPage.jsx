@@ -321,7 +321,7 @@ class TeamPage extends Component {
     if (key === 'esc') {
       target.blur();
 
-    } else if (key === 'meta' || key === 'ctrl') {
+    } else if (key === 'shift') {
       if (keyCode === ENTER_KEY) {
         this.setState({ teamDescription : `${teamDescription}\n` });
       }
@@ -386,7 +386,7 @@ class TeamPage extends Component {
                 <MenuProvider id="menu_id" className="menu-provider">
                   <div className="header">About</div>
                 </MenuProvider>
-                <div className="content"><KeyboardEventHandler handleKeys={['ctrl', 'meta', 'enter', 'esc']} onKeyEvent={(key, event)=> this.handleUpdateTeamDescription(event, key)}>
+                <div className="content"><KeyboardEventHandler handleKeys={['shift', 'enter', 'esc']} onKeyEvent={(key, event)=> this.handleUpdateTeamDescription(event, key)}>
                   <TextareaAutosize id="team-info-txtarea" className="team-info-txtarea" placeholder="Describe your team" value={teamDescription} onFocusCapture={this.handleTeamFocus} onFocus={(e)=> console.log('=+=+=+=+=+=+=', 'onFocus', { e })} onChange={(event)=> this.setState({ teamDescription : event.target.value })} data-admin={member.roles.includes('admin')} data-keypress-override="true" />
                 </KeyboardEventHandler></div>
                 <div className="footer">
