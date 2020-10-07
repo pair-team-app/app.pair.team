@@ -66,7 +66,7 @@ class BaseComment extends Component {
 		const { comment } = this.props;
 		this.props.setComment(comment);
 		this.props.setCommentImage(true);
-	}
+	};
 
 	handleTextChange = (event)=> {
 		// console.log('%s.handleTextChange()', this.constructor.name, event);
@@ -121,7 +121,7 @@ class BaseComment extends Component {
 
 		trackEvent('button', (action === VOTE_ACTION_UP) ? 'upvote-comment' : (action === VOTE_ACTION_DOWN) ? 'downvote-comment' : 'retract-vote');
     this.props.makeVote({ comment, action });
-	}
+	};
 
 
 	render() {
@@ -135,7 +135,7 @@ class BaseComment extends Component {
 			<BaseCommentHeader { ...this.props} onDelete={this.handleDeleteComment} />
 			<div className="comment-body">
 				{(comment.votable) && (<BaseCommentVote { ...this.props } onVote={this.handleVote} />)}
-				<BaseCommentContent { ...contentProps } onImageClick={this.handleImageClick} onReplyFocus={this.handleReplyFocus} onReplyKeyPress={this.handleReplyKeyPress} onTextChange={this.handleTextChange} onDeleteReply={this.handleDeleteComment} onCodeToggle={this.handleCodeToggle} />
+				<BaseCommentContent { ...contentProps } onImageClick={this.handleImageClick} onReplyFocus={this.handleReplyFocus} onReplyKeyPress={this.handleReplyKeyPress} onReplySubmit={this.handleReplySubmit} onTextChange={this.handleTextChange} onDeleteReply={this.handleDeleteComment} onCodeToggle={this.handleCodeToggle} />
 				{/* <Picker set="apple" onSelect={this.handleEmoji} onClick={this.handleEmoji} perline={9} emojiSize={24} native={true} sheetSize={16} showPreview={false} showSkinTones={false} title="Pick your emoji…" emoji="point_up" style={{ position : 'relative', bottom : '20px', right : '20px' }} /> */}
 			</div>
 		</div>);
@@ -193,6 +193,7 @@ const BaseCommentContent = (props)=> {
 		{(comment.state !== 'closed' && types.includes('team') && types.includes('op')) && (<div className="reply-form">
 			<KeyboardEventHandler handleKeys={['enter', `esc`]} isDisabled={(preComment !== null)} onKeyEvent={(key, event)=> props.onReplyKeyPress(event, key)}>
 				<input type="text" placeholder="Reply…" value={replyContent} onFocus={props.onReplyFocus} onChange={props.onTextChange} data-code={codeFormat} autoComplete="new-password" />
+				<button disabled={replyContent.length === 0} onClick={props.onReplySubmit}>Comment</button>
 			</KeyboardEventHandler>
 			{/* <img src={btnCode} className="code-button" onClick={props.onCodeToggle} alt="Code" /> */}
 		</div>)}

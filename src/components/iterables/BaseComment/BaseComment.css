@@ -167,6 +167,11 @@
 }
 
 .comment-body .base-comment-content .reply-form {
+	width: 100%;
+}
+
+.comment-body .base-comment-content .reply-form > span {
+	display: flex;
 	position: relative;
 	width: 100%;
 	margin-top: 15px;
@@ -188,6 +193,10 @@
 .comment-body .base-comment-content .reply-form > .code-button:hover {
 	opacity: 1;
   cursor: pointer;
+}
+
+.comment-body .base-comment-content .reply-form button {
+	margin-left: 10px;
 }
 
 
