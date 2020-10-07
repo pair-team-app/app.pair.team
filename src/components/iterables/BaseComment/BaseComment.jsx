@@ -193,7 +193,7 @@ const BaseCommentContent = (props)=> {
 		{(comment.state !== 'closed' && types.includes('team') && types.includes('op')) && (<div className="reply-form">
 			<KeyboardEventHandler handleKeys={['enter', `esc`]} isDisabled={(preComment !== null)} onKeyEvent={(key, event)=> props.onReplyKeyPress(event, key)}>
 				<input type="text" placeholder="Reply…" value={replyContent} onFocus={props.onReplyFocus} onChange={props.onTextChange} data-code={codeFormat} autoComplete="new-password" />
-				<button disabled={replyContent.length === 0} onClick={props.onReplySubmit}>Comment</button>
+				<button disabled={replyContent.length === 0} onClick={props.onReplySubmit}>Reply</button>
 			</KeyboardEventHandler>
 			{/* <img src={btnCode} className="code-button" onClick={props.onCodeToggle} alt="Code" /> */}
 		</div>)}
