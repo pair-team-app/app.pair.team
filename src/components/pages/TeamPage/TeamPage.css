@@ -237,18 +237,22 @@
 	z-index: 2;
 }
 
-.team-page-comment-header > span {
+.team-page-comment-header > div {
+	position: relative;
 	width: 100%;
 }
 
 .team-page-comment-header input.comment-txt {
+	position: absolute;
 	filter: none;
 }
 
 .team-page-comment-header img {
+	position: absolute;
+	top: 0;
+	right: 0;
 	width: 53px;
 	height: 53px;
-	margin-left: var(--spacing-10);
 	border-radius: var(--border-radius);
 	background-color: #999999;
 }
