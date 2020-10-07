@@ -45,21 +45,6 @@ class LeftNav extends Component {
     }
   }
 
-  handleHeaderClick=(event)=> {
-    console.log('%s.handleHeaderClick()', this.constructor.name, { event });
-
-    const { teams } = this.props;
-    if (teams.length > 0) {
-      this.props.setTeam(teams[0]);
-
-    } else {
-      this.setState({ builds : null }, ()=> {
-        this.props.setTeam(null);
-        this.props.push(Pages.CREATE);
-      });
-    }
-  };
-
   handleBuildClick = (build)=> {
     console.log('%s.handleBuildClick()', this.constructor.name, { build });
 
@@ -123,7 +108,7 @@ class LeftNav extends Component {
     const { builds } = this.state;
 
     return (<div className="left-nav">
-      <div className="header" onClick={this.handleHeaderClick} data-teams={(teams && teams.length > 0)}>Pair</div>
+      <div className="header">Pair</div>
       <div className="content">
         <button disabled={(!profile || !profile.validated)} onClick={this.handleCreateTeam}>Create Channel</button>
         <div className="teams-wrapper" data-loading={!teams}>

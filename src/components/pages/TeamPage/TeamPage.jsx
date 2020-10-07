@@ -506,7 +506,7 @@ const mapDispatchToProps = (dispatch)=> {
   return ({
     fetchTeamComments : (payload)=> dispatch(fetchTeamComments(payload)),
     createComment     : (payload)=> dispatch(createComment(payload)),
-    makeComment     : (payload)=> dispatch(makeComment(payload)),
+    makeComment       : (payload)=> dispatch(makeComment(payload)),
     makeTeamRule      : (payload)=> dispatch(makeTeamRule(payload)),
     modifyTeam        : (payload)=> dispatch(modifyTeam(payload)),
     setPlayground     : (payload)=> dispatch(setPlayground(payload)),

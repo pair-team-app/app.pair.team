@@ -28,12 +28,6 @@
 	transition: color var(--transition-duration-short) ease-out;
 }
 
-.left-nav .header[data-teams="true"]:hover {
-	color: rgba(var(--link-color), 1.0);
-	text-decoration: underline;
-	cursor: pointer;
-}
-
 .left-nav .content {
 	flex-grow: 1;
 	overflow-y: auto;
@@ -66,8 +60,7 @@
 }
 
 .left-nav .content .teams-wrapper[data-loading="false"] .loading, .left-nav .content .builds-wrapper[data-loading="false"] .loading {
-	height: 0;
-	opacity: 0;
+	display: none;
 }
 
 .left-nav .left-nav-team {
