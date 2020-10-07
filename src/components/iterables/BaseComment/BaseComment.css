@@ -97,6 +97,7 @@
 }
 
 .base-comment-vote .vote-arrow {
+	font-size: 16px;
 	color: rgba(var(--site-fg-color), 1.0);
 	transition: color var(--transition-duration-short) ease-out;
 }

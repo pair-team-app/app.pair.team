@@ -366,7 +366,7 @@ class TeamPage extends Component {
     return (<BasePage { ...this.props } className="team-page" data-file-drop={(window.location.href.includes('#create'))}>
       {(profile && team && member)
       ? (<div className="content-wrapper">
-          <TeamPageCommentHeader teamComment={teamComment} onChange={this.handleCommentChange} onKeyPress={this.handleCommentKeyPress} onSubmit={this.handleSubmitComment} />
+          <TeamPageCommentHeader teamComment={teamComment} onChange={this.handleCommentChange} onKeyPress={this.handleCommentKeyPress} onSubmit={this.handleSubmitComment} onFocus={()=> this.props.setComment(null)} />
 
           <div className="scroll-wrapper">
             <div className="comments-wrapper" data-fetching={Boolean((fetching & 0x010) === 0x010)} data-loading={commentsLoading} data-empty={team && team.comments.length === 0}>
@@ -412,7 +412,7 @@ class TeamPage extends Component {
         </div>)
 
       : (<div className="content-loading">Loading…</div>)}
-      <TeamPageFileDrop dragging={(dragging)} onContent={(image)=> this.setState({ dragging : false })} onImageData={(filename, image)=> this.setState({ teamComment : { ...teamComment, filename, image }})} onClose={this.handleFileDropClose} />
+      <TeamPageFileDrop dragging={(dragging)} onContent={(image)=> this.setState({ dragging : false })} onImageData={(filename, image)=> this.setState({ teamComment : { ...teamComment, filename, image }})} onClose={this.handleFileDropClose} onPopup={this.props.onPopup} />
 
       <MyAwesomeMenu onClick={({ event, props })=> { console.log('MenuClick', { event, props }); this.props.onPopup({
         type    : POPUP_TYPE_OK,
@@ -432,7 +432,7 @@ const TeamPageCommentHeader = (props)=> {
   return (<div className="team-page-comment-header">
     <div>
       <KeyboardEventHandler handleKeys={['enter', 'esc']} onKeyEvent={(key, event)=> props.onKeyPress(event, key)}>
-        <input type="text" className="comment-txt" placeholder="Type anything…" value={text} onChange={props.onChange} />
+        <input type="text" className="comment-txt" placeholder="Type anything…" value={text} onChange={props.onChange} onFocus={props.onFocus} />
       </KeyboardEventHandler>
       {(image) && (<img src={image} alt={filename} />)}
     </div>

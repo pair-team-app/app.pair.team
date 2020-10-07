@@ -52,9 +52,9 @@ class BaseComment extends Component {
 		trackEvent('button', 'delete-comment');
 		this.props.modifyComment({ comment, action : 'deleted' });
 
-		if (comment.types.includes('op')) {
+		// if (comment.types.includes('op')) {
 			this.props.setComment(null);
-		}
+		// }
 	};
 
 	handleEmoji = (emoji, event)=> {
@@ -201,7 +201,7 @@ const BaseCommentContent = (props)=> {
 		{(comment.replies.length > 0) && (<BaseCommentReplies { ...props } onDelete={props.onDeleteReply} />)}
 	</div>
 	);
-}
+};
 
 
 const BaseCommentReplies = (props)=> {

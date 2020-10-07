@@ -6,6 +6,7 @@ import axios from 'axios';
 import { push } from 'connected-react-router';
 import FilePondPluginFileEncode from 'filepond-plugin-file-encode';
 import FilePondPluginImageExifOrientation from 'filepond-plugin-image-exif-orientation';
+import FilePondPluginFileValidateType from 'filepond-plugin-file-validate-type';
 import FilePondPluginImagePreview from 'filepond-plugin-image-preview';
 import { URIs } from 'lang-js-utils';
 import LinkifyIt from 'linkify-it';
@@ -15,6 +16,7 @@ import KeyboardEventHandler from 'react-keyboard-event-handler';
 import ReactQuill from 'react-quill';
 import { connect } from 'react-redux';
 
+import { POPUP_TYPE_ERROR } from '../../../overlays/PopupNotification';
 import { CodeFormAccessory, FormAccessoryAlignment } from '../../../forms/FormAccessories';
 import { ENTER_KEY } from '../../../../consts/key-codes';
 import { API_ENDPT_URL, CDN_FILEPOND_URL, CDN_UPLOAD_URL, Modals } from '../../../../consts/uris';
@@ -28,7 +30,7 @@ import 'react-quill/dist/quill.snow.css';
 import './post-styles.css';
 
 
-registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview, FilePondPluginFileEncode);
+registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview, FilePondPluginFileEncode, FilePondPluginFileValidateType);
 
 
 // const extractURLs = (val)=> {
@@ -177,11 +179,27 @@ class TeamPageFileDrop extends Component {
 
 
   handleFileAdd = (error, file)=> {
-    console.log('%s.handleFileAdd(file)', this.constructor.name, { error, image : this.state.image, file : file.getFileEncodeDataURL() });
+    console.log('%s.handleFileAdd(file)', this.constructor.name, { error, image : this.state.image, file : file.fileType });
 
-    const { image } = this.state;
-    if (!image) {
-      this.onUploadFile(file.filename, file.getFileEncodeDataURL());
+    const fileTypes = [
+      'image/gif',
+      'image/jpeg',
+      'image/png',
+      'image/svg+xml',
+      'image/tiff'
+    ];
+
+    if (fileTypes.includes(file.fileType)) {
+      const { image } = this.state;
+      if (!image) {
+        this.onUploadFile(file.filename, file.getFileEncodeDataURL());
+      }
+
+    } else {
+      this.props.onPopup({
+        type    : POPUP_TYPE_ERROR,
+        content : 'Invalid file type'
+      });
     }
   };
 
@@ -226,7 +244,6 @@ class TeamPageFileDrop extends Component {
   // processes the first file
   handleFileError = (error, file, status) => {
     console.log('%s.handleFileError(error, file, status)', this.constructor.name, { error, file, status });
-    // File has been processed
   };
 
   handleFilesUpdated = (fileItems)=> {
@@ -431,6 +448,7 @@ class TeamPageFileDrop extends Component {
         <div className="file-wrapper" data-file={(files.length > 0 || image !== null)} data-hidden={false}>
           <FilePond
             files={files}
+            acceptedFileTypes={['image/png', 'image/jpeg', 'image/gif', 'image/svg+xml', 'image/tiff']}
             className="file-pond-wrapper"
             allowMultiple={false}
             maxFiles={1}
