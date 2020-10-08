@@ -17,7 +17,7 @@
 	text-align: left;
 }
 
-.team-page[data-file-drop="true"] {
+.team-page[data-dragging="true"] {
 	z-index: 2;
 }
 

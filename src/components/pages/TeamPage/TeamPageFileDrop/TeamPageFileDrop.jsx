@@ -87,7 +87,7 @@ class TeamPageFileDrop extends Component {
     // const { preComment, pathname, hash } = this.props;
     // const { text, url, files, image } = this.state;
 
-    const { preComment } = this.props;
+    const { preComment, dragging } = this.props;
     const { files, image, intro } = this.state;
 
     // if (window.location.hash !== Modals.FILE_DROP && preComment !== ' ') {
@@ -96,7 +96,9 @@ class TeamPageFileDrop extends Component {
     // }
 
     if (files.length > 0) {
-
+      if (dragging && !prevProps.dragging) {
+        this.handleResetContent();
+      }
     }
 
     if (preComment) {
@@ -453,7 +455,7 @@ class TeamPageFileDrop extends Component {
             allowMultiple={false}
             maxFiles={1}
             allowReorder={false}
-            allowReplace={false}
+            allowReplace={true}
             allowRevert={false}
             itemInsertLocation="after"
             instantUpload={false}

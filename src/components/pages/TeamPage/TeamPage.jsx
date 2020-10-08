@@ -363,7 +363,7 @@ class TeamPage extends Component {
     console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state, infoLoading, rulesLoading, commentsLoading });
     // console.log('%s.render()', this.constructor.name, { infoLoading, rulesLoading, commentsLoading });
 
-    return (<BasePage { ...this.props } className="team-page" data-file-drop={(window.location.href.includes('#create'))}>
+    return (<BasePage { ...this.props } className="team-page" data-dragging={dragging}>
       {(profile && team && member)
       ? (<div className="content-wrapper">
           <TeamPageCommentHeader teamComment={teamComment} onChange={this.handleCommentChange} onKeyPress={this.handleCommentKeyPress} onSubmit={this.handleSubmitComment} onFocus={()=> this.props.setComment(null)} />
