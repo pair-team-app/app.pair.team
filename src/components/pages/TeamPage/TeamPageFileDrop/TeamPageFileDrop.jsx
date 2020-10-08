@@ -427,7 +427,7 @@ class TeamPageFileDrop extends Component {
     ];
 
 		return (<div className="team-page-file-drop" data-dragging={(dragging)} data-latent={(!dragging && files.length === 0 && !preComment)}>
-      <KeyboardEventHandler isDisabled={(files.length === 0 && !preComment && !image)} handleFocusableElements handleKeys={['ctrl', 'meta', 'enter', 'esc']} onKeyEvent={(key, event)=> this.handleKeyPress(event, key)} />
+      { /*<KeyboardEventHandler isDisabled={(files.length === 0 && !preComment && !image)} handleFocusableElements handleKeys={['ctrl', 'meta', 'enter', 'esc']} onKeyEvent={(key, event)=> this.handleKeyPress(event, key)} /> */}
       <div>
         <div className="input-wrapper" data-hidden={(files.length === 0 && !preComment)}>
           {/* <ReactQuill theme="bubble" modules={{ toolbar }} placeholder={(url) ? 'Add a comment to this url…' : (image !== null) ? 'Add a comment to this image…' : 'Add a comment…'} value={(!url) ? (preComment || '') : preComment.replace(url, '')} onFocusCapture={this.handleFieldFocus} onChange={this.handleTextChange} ref={(el)=> (el) ? this.commentInput = el : null} data-code={(code)} /> */}
