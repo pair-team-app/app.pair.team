@@ -41,6 +41,12 @@
   padding: 20px;
 }
 
+.project-view-overlay .close-button {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+}
+
 .comment-pin-cursor {
 	position: fixed;
 	top: 0;

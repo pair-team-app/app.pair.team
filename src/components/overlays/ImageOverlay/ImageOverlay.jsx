@@ -165,6 +165,8 @@ class ImageOverlay extends Component {
       <div className="cursor-wrapper">
         <button onClick={(event)=> this.setState({ cursor : !this.state.cursor })}>Marker</button>
       </div>
+
+      <button className="close-button" onClick={this.onClose}>x</button>
     </div>);
   }
 }
