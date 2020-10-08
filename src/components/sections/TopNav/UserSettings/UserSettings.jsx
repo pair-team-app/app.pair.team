@@ -82,16 +82,18 @@ class UserSettings extends Component {
 	};
 
 	handleItemClick = (itemType, event=null)=> {
-// console.log('%s.handleItemClick()', this.constructor.name, itemType, event);
+		console.log('%s.handleItemClick()', this.constructor.name, { itemType, event });
 
 		event.preventDefault();
 		this.setState({ itemType,
 			outro : true
 		}, ()=> {
 			if (itemType === SettingsMenuItemTypes.DOCS) {
+				this.props.push(window.location.pathname);
 				trackOutbound(GITHUB_DOCS);
 
 			} else if (itemType === SettingsMenuItemTypes.INSTALL) {
+				this.props.push(window.location.pathname);
 				trackOutbound(NPM_DE_PLAYGROUND);
 			}
 		});
