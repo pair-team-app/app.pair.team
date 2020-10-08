@@ -143,7 +143,7 @@ class ProfileForm extends Component {
 						className="react-password-strength"
 						minLength={5}
 						minScore={1}
-						scoreWords={['weak', 'okay', 'good', 'strong', 'stronger']}
+						scoreWords={['weak', 'okay', 'good', 'strong', 'strongest']}
 						changeCallback={({ password, score })=> {
 							this.setState({
 								newPassword : password,

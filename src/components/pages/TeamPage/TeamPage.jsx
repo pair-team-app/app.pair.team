@@ -430,12 +430,10 @@ const TeamPageCommentHeader = (props)=> {
   const { text, image, filename, url, code } = teamComment;
 
   return (<div className="team-page-comment-header">
-    <div>
-      <KeyboardEventHandler handleKeys={['enter', 'esc']} onKeyEvent={(key, event)=> props.onKeyPress(event, key)}>
-        <input type="text" className="comment-txt" placeholder="Type anything…" value={text} onChange={props.onChange} onFocus={props.onFocus} />
-      </KeyboardEventHandler>
-      {(image) && (<img src={image} alt={filename} />)}
-    </div>
+    <KeyboardEventHandler handleKeys={['enter', 'esc']} onKeyEvent={(key, event)=> props.onKeyPress(event, key)}>
+      <input type="text" className="comment-txt" placeholder="Type anything…" value={text} onChange={props.onChange} onFocus={props.onFocus} />
+    </KeyboardEventHandler>
+    {(image) && (<img src={image} alt={filename} />)}
     <button disabled={text.length === 0 && image === null} onClick={props.onSubmit}>Comment</button>
   </div>);
 };

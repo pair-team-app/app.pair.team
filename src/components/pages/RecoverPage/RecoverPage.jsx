@@ -109,7 +109,7 @@ const RecoverForm = (props)=> {
         // style={{ display : 'none' }}
         minLength={5}
         minScore={1}
-        scoreWords={['weak', 'okay', 'good', 'strong', 'stronger']}
+        scoreWords={['weak', 'okay', 'good', 'strong', 'strongest']}
         changeCallback={({ password, score })=> props.onPassChange(password, score)}
         inputProps={{
           placeholder  : 'Enter New Password',

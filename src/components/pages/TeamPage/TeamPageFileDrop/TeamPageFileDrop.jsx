@@ -95,7 +95,7 @@ class TeamPageFileDrop extends Component {
     //   this.props.push(`${window.location.pathname}${Modals.FILE_DROP}`);
     // }
 
-    if (files.length > 0) {
+    if (prevState.files.length > 0) {
       if (dragging && !prevProps.dragging) {
         this.handleResetContent();
       }
