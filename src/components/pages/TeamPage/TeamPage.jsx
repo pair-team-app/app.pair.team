@@ -379,7 +379,10 @@ class TeamPage extends Component {
                   <TextareaAutosize id="team-info-txtarea" className="team-info-txtarea" placeholder="Describe your team" value={teamDescription} onFocusCapture={this.handleTeamFocus} onFocus={(e)=> console.log('=+=+=+=+=+=+=', 'onFocus', { e })} onChange={(event)=> this.setState({ teamDescription : event.target.value })} data-admin={member.roles.includes('admin')} data-keypress-override="true" />
                 </KeyboardEventHandler></div>
                 <div className="footer">
-                  <div className="member-count">{team.userCount} {Strings.pluralize('member', team.userCount)}</div>
+                  <div className="member-count">
+                    {team.userCount} {Strings.pluralize('member', team.userCount)}
+                    <button className="small-button">Invite</button>
+                  </div>
                   <div className="timestamp">CREATED {team.added.format(TEAM_TIMESTAMP)}</div>
                 </div>
               </div>

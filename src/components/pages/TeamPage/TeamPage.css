@@ -139,6 +139,10 @@
 	text-transform: uppercase;
 }
 
+.team-page .content-wrapper .scroll-wrapper .team-wrapper .member-count button {
+	margin-left: 10px;
+}
+
 .team-page .content-wrapper .scroll-wrapper .team-wrapper .timestamp {
 	padding-top: var(--spacing-05);
 	color: rgba(var(--site-lite-fg-color), 1.0);
