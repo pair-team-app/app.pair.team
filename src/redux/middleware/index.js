@@ -370,16 +370,16 @@ export function onMiddleware(store) {
 
       if (comment.types.includes('project')) {
         payload.component = { ...component,
-          comments : (comment.state === 'deleted') ? component.comments.filter(({ id })=> (id !== comment.id)) : [ ...component.comments.filter(({ id })=> (id !== comment.id)), comment]
+          comments : (comment.state === 'deleted' || comment.state === 'resolved') ? component.comments.filter(({ id })=> (id !== comment.id)) : [ ...component.comments.filter(({ id })=> (id !== comment.id)), comment]
         };
         payload.playground = { ...playground,
-          components : (comment.state === 'deleted') ? payload.playground.components.filter(({ id })=> (id !== comment.id)) : [ ...payload.playground.components.filter(({ id })=> (id !== comment.id)), comment]
+          components : (comment.state === 'deleted' || comment.state === 'resolved') ? payload.playground.components.filter(({ id })=> (id !== comment.id)) : [ ...payload.playground.components.filter(({ id })=> (id !== comment.id)), comment]
         };
         payload.playgrounds = playgrounds.map((item)=> (item.id === payload.playground.id) ? payload.playground : item);
 
       } else {
         payload.team = { ...team,
-          comments : (comment.state === 'deleted') ? team.comments.filter(({ id })=> (id !== comment.id)) : [ ...team.comments.filter(({ id })=> (id !== comment.id)), comment]
+          comments : (comment.state === 'deleted' || comment.state === 'resolved') ? team.comments.filter(({ id })=> (id !== comment.id)) : [ ...team.comments.filter(({ id })=> (id !== comment.id)), comment]
         };
 
         payload.teams = teams.map((item)=> (item.id === team.id) ? payload.team : item);

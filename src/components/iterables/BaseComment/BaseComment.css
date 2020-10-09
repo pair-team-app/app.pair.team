@@ -162,6 +162,10 @@
   color: rgba(var(--site-selected-color), 1.0);
 }
 
+.base-comment .link {
+	margin-right: 10px;
+}
+
 .base-comment .link a:hover {
   color: rgba(var(--site-selected-color), 1.0);
   text-decoration: underline;

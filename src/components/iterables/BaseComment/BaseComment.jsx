@@ -51,10 +51,14 @@ class BaseComment extends Component {
 		console.log('%s.handleDeleteComment()', this.constructor.name, { comment });
 		trackEvent('button', 'delete-comment');
 		this.props.modifyComment({ comment, action : 'deleted' });
+		this.props.setComment(null);
+	};
 
-		// if (comment.types.includes('op')) {
-			this.props.setComment(null);
-		// }
+	handleResolveComment = (comment)=> {
+		console.log('%s.handleResolveComment()', this.constructor.name, { comment });
+		trackEvent('button', 'resolve-comment');
+		this.props.modifyComment({ comment, action : 'resolved' });
+		this.props.setComment(null);
 	};
 
 	handleEmoji = (emoji, event)=> {
@@ -132,7 +136,7 @@ class BaseComment extends Component {
 		const contentProps = { ...this.props, replyContent, codeFormat };
 
 		return (<div className="base-comment" data-id={comment.id} data-type={comment.type} data-author={comment.author.id === profile.id} data-votable={comment.votable} data-selected={comment.selected}>
-			<BaseCommentHeader { ...this.props} onDelete={this.handleDeleteComment} />
+			<BaseCommentHeader { ...this.props} onResolve={this.handleResolveComment} onDelete={this.handleDeleteComment} />
 			<div className="comment-body">
 				{(comment.votable) && (<BaseCommentVote { ...this.props } onVote={this.handleVote} />)}
 				<BaseCommentContent { ...contentProps } onImageClick={this.handleImageClick} onReplyFocus={this.handleReplyFocus} onReplyKeyPress={this.handleReplyKeyPress} onReplySubmit={this.handleReplySubmit} onTextChange={this.handleTextChange} onDeleteReply={this.handleDeleteComment} onCodeToggle={this.handleCodeToggle} />
@@ -159,12 +163,17 @@ const BaseCommentHeader = (props)=> {
 	// console.log('BaseComment.BaseCommentHeader()', { props });
 
 	const { profile, comment } = props;
-	const { author, timestamp } = comment;
+	const { author, timestamp, types } = comment;
 	// const { roles } = author;
 
 	const handleDelete = (event)=> {
 		event.preventDefault();
 		props.onDelete(comment);
+	};
+
+	const handleResolve = (event)=> {
+		event.preventDefault();
+		props.onResolve(comment);
 	};
 
 	return (<div className="base-comment-header">
@@ -175,6 +184,7 @@ const BaseCommentHeader = (props)=> {
 			{/* <div className="timestamp" dangerouslySetInnerHTML={{ __html : timestamp.format(COMMENT_TIMESTAMP).replace(/(\d{1,2})(\w{2}) @/, (match, p1, p2)=> (`${p1}<sup>${p2}</sup> @`)) }} /> */}
 			<div className="timestamp">Commented @ {timestamp.format(COMMENT_TIMESTAMP)}</div>
 			{(profile.id === author.id) && (<div className="link" onClick={handleDelete}>Delete</div>)}
+			{(types.includes('op')) && (<div className="link" onClick={handleResolve}>Resolve</div>)}
 		</div>
 	</div>);
 };
@@ -215,7 +225,6 @@ const BaseCommentReplies = (props)=> {
 			return (<div key={i} className="base-comment base-comment-reply" data-id={comment.id} data-type={comment.type} data-author={comment.author.id === profile.id} data-votable={comment.votable} data-selected={comment.selected}>
 				<BaseCommentHeader { ...replyProps } onDelete={props.onDelete} />
 				<div className="comment-body">
-
 					<BaseCommentContent { ...replyProps } onTextChange={props.handleTextChange} onDeleteReply={props.handleDeleteComment} />
 					{/* <Picker set="apple" onSelect={this.handleEmoji} onClick={this.handleEmoji} perline={9} emojiSize={24} native={true} sheetSize={16} showPreview={false} showSkinTones={false} title="Pick your emoji…" emoji="point_up" style={{ position : 'relative', bottom : '20px', right : '20px' }} /> */}
 				</div>
