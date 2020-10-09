@@ -5,7 +5,6 @@ import './TeamPage.css';
 import { push } from 'connected-react-router';
 import { Strings } from 'lang-js-utils';
 import LinkifyIt from 'linkify-it';
-import { Menu, Item, Separator, Submenu, MenuProvider } from 'react-contexify';
 import KeyboardEventHandler from 'react-keyboard-event-handler';
 import { connect } from 'react-redux';
 import TextareaAutosize from 'react-autosize-textarea';
@@ -375,9 +374,7 @@ class TeamPage extends Component {
 
             <div className="team-wrapper" data-fetching={Boolean((fetching & 0x010) === 0x010)}>
               <div className="about-wrapper" data-processing={infoLoading}>
-                <MenuProvider id="menu_id" className="menu-provider">
-                  <div className="header">About</div>
-                </MenuProvider>
+                <div className="header">About</div>
                 <div className="content"><KeyboardEventHandler handleKeys={['shift', 'enter', 'esc']} onKeyEvent={(key, event)=> this.handleUpdateTeamDescription(event, key)}>
                   <TextareaAutosize id="team-info-txtarea" className="team-info-txtarea" placeholder="Describe your team" value={teamDescription} onFocusCapture={this.handleTeamFocus} onFocus={(e)=> console.log('=+=+=+=+=+=+=', 'onFocus', { e })} onChange={(event)=> this.setState({ teamDescription : event.target.value })} data-admin={member.roles.includes('admin')} data-keypress-override="true" />
                 </KeyboardEventHandler></div>
@@ -405,11 +402,6 @@ class TeamPage extends Component {
 
       : (<div className="content-loading">Loading…</div>)}
       <TeamPageFileDrop dragging={(dragging)} onContent={(image)=> this.setState({ dragging : false })} onImageData={(filename, image)=> this.setState({ teamComment : { ...teamComment, filename, image }})} onClose={this.handleFileDropClose} onPopup={this.props.onPopup} />
-
-      <MyAwesomeMenu onClick={({ event, props })=> { console.log('MenuClick', { event, props }); this.props.onPopup({
-        type    : POPUP_TYPE_OK,
-        content : 'Menu Clicked.'
-      });}} />
     </BasePage>);
   }
 }
@@ -472,25 +464,6 @@ const TeamPageAddRuleButton = (props)=> {
       <rect x="16" y="7" width="2" height="16" transform="rotate(90 16 7)" fill="#CCCCCC"/>
     </svg>
   </button>);
-};
-
-
-
-
-const MyAwesomeMenu = (props)=> {
-  console.log('MyAwesomeMenu()', { props });
-
-  return (<Menu id="menu_id">
-    <Item onClick={props.onClick}>Lorem</Item>
-    <Item onClick={props.onClick}>Ipsum</Item>
-    <Separator />
-    <Item disabled>Dolor</Item>
-    <Separator />
-    <Submenu label="Foobar">
-      <Item onClick={props.onClick}>Foo</Item>
-      <Item onClick={props.onClick}>Bar</Item>
-     </Submenu>
-  </Menu>);
 };
 
 
