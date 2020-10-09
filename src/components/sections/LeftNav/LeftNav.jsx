@@ -6,11 +6,12 @@ import { push } from 'connected-react-router';
 import { Strings } from 'lang-js-utils';
 // import FontAwesome from 'react-fontawesome';
 import { connect } from 'react-redux';
+import { NavLink } from 'react-router-dom';
 
 import ContentExpander from '../../iterables/ContentExpander';
-import { Pages } from '../../../consts/uris';
+import { NPM_DE_PLAYGROUND, Pages } from '../../../consts/uris';
 import { fetchBuildPlaygrounds, setComponent, setPlayground, setTeam } from '../../../redux/actions';
-import { trackEvent } from '../../../utils/tracking';
+import { trackEvent, trackOutbound } from '../../../utils/tracking';
 
 class LeftNav extends Component {
   constructor(props) {
@@ -141,8 +142,8 @@ class LeftNav extends Component {
           </div>)}
         </div>)}
 
-
         {(profile && !profile.validated) && (<div className="verify-wrapper">Verify your email first</div>)}
+        <button onClick={()=> window.open(NPM_DE_PLAYGROUND, '_blank')}>Download NPM</button>
       </div>
     </div>);
   }
@@ -179,7 +180,7 @@ const LeftNavTeam = (props)=> {
 
 	const { team } = props;
 	const { id, title, selected } = team;
-	return (<div className="left-nav-team" onClick={()=> props.onClick(team)} data-id={id} data-selected={selected}>#{title}</div>);
+	return (<div className="left-nav-team" onClick={()=> props.onClick(team)} data-id={id} data-selected={selected}>#{title} ({team.comments.length})</div>);
 }
 
 
