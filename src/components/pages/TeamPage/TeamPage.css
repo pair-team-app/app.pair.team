@@ -300,6 +300,7 @@
 }
 
 .team-page-rule {
+	position: relative;
 	display: flex;
 	min-width: 100%;
 	min-height: 36px;
@@ -315,4 +316,19 @@
 
 .team-page-rule[data-skeleton="true"] {
 	color: rgba(var(--site-fg-color), 0.5);
+}
+
+.team-page-rule .delete {
+	display: none;
+	position: absolute;
+	right: 0;
+	color: rgba(var(--btn-bg-color), 1.0);
+}
+
+.team-page-rule .delete:hover {
+	cursor: pointer;
+}
+
+.team-page-rule:hover .delete {
+	display: block;
 }

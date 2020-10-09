@@ -5,6 +5,7 @@ import './TeamPage.css';
 import { push } from 'connected-react-router';
 import { Strings } from 'lang-js-utils';
 import LinkifyIt from 'linkify-it';
+import FontAwesome from 'react-fontawesome';
 import KeyboardEventHandler from 'react-keyboard-event-handler';
 import { connect } from 'react-redux';
 import TextareaAutosize from 'react-autosize-textarea';
@@ -454,7 +455,10 @@ const TeamPageRule = (props)=> {
   const { rule, ind, skeleton } = props;
   const { title, content } = rule;
   const text = `${ind}. ${title}${(content) ? `\n${content}` : ''}`;
-  return (<div className="team-page-rule" data-skeleton={skeleton}>{text}</div>);
+  return (<div className="team-page-rule" data-skeleton={skeleton}>
+    {text}
+    <FontAwesome name="minus-circle" className="delete" onClick={props.onDelete} />
+  </div>);
 };
 
 const TeamPageAddRuleButton = (props)=> {
