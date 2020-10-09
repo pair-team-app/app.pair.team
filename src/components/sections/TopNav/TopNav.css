@@ -22,7 +22,7 @@
 	flex-shrink: 0;
 	width: 100%;
 	padding: 18px;
-	/*background-color: rgba(var(--site-bg-color), 0.975);*/
+	background-color: rgba(var(--site-bg-color), 1.0);
 	z-index: 2;
 	align-items: center;
 	transition: width var(--transition-duration-mid) var(--transition-duration-short) cubic-bezier(0.4, 0, 0.2, 1);
