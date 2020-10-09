@@ -9,22 +9,8 @@
   z-index: 10;
 }
 
-.image-overlay .header-wrapper {
-  display: flex;
-  width: 100%;
-  height: 110px;
-  padding: 30px 0;
-  text-align: center;
-}
-
-.image-overlay-header {
-  display: flex;
-  width: 80%;
-  margin: auto;
-}
-
-.image-overlay-header .comment-txt {
-  margin-right: 20px;
+.image-overlay > div {
+  /* position: relative; */
 }
 
 .image-overlay > .content-wrapper {

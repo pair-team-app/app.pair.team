@@ -151,11 +151,13 @@ class ImageOverlay extends Component {
     const { activeComment, comment, cursor, mousePosition } = this.state;
 
     return (<div className="image-overlay" data-cursor={cursor}>
-      {/* <div className="header-wrapper"><ImageOverlayHeader textContent={(!comment.bubble) ? comment.text : ''} onTextChange={this.handleAddCommentText} onSubmit={this.handleAddComment} onCancel={this.onClose} /></div> */}
-      <div className="content-wrapper" data-cursor={cursor}><KeyboardEventHandler handleKeys={['enter', 'esc']} handleFocusableElements onKeyEvent={(key, event)=> this.handleKeyPress(event, key)} />
-        <img src={this.props.comment.image} alt={this.props.comment.image} />
-        <div className="comments-wrapper">
-          {(this.props.comment.replies.map((comment, i)=> (<ImageCommentReply key={i} ind={(i+1)} comment={comment} activeComment={activeComment} onClick={this.handleCommentMarkerClick} onClose={()=>null} />)))}
+      <div>
+        {/* <div className="header-wrapper"><ImageOverlayHeader textContent={(!comment.bubble) ? comment.text : ''} onTextChange={this.handleAddCommentText} onSubmit={this.handleAddComment} onCancel={this.onClose} /></div> */}
+        <div className="content-wrapper" data-cursor={cursor}><KeyboardEventHandler handleKeys={['enter', 'esc']} handleFocusableElements onKeyEvent={(key, event)=> this.handleKeyPress(event, key)} />
+          <img src={this.props.comment.image} alt={this.props.comment.image} />
+          <div className="comments-wrapper">
+            {(this.props.comment.replies.map((comment, i)=> (<ImageCommentReply key={i} ind={(i+1)} comment={comment} activeComment={activeComment} onClick={this.handleCommentMarkerClick} onClose={()=>null} />)))}
+          </div>
         </div>
       </div>
 

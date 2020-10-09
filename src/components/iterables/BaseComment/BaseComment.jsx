@@ -215,7 +215,7 @@ const BaseCommentReplies = (props)=> {
 			return (<div key={i} className="base-comment base-comment-reply" data-id={comment.id} data-type={comment.type} data-author={comment.author.id === profile.id} data-votable={comment.votable} data-selected={comment.selected}>
 				<BaseCommentHeader { ...replyProps } onDelete={props.onDelete} />
 				<div className="comment-body">
-					{(comment.votable) && (<BaseCommentVote { ...replyProps } onVote={props.handleVote} />)}
+
 					<BaseCommentContent { ...replyProps } onTextChange={props.handleTextChange} onDeleteReply={props.handleDeleteComment} />
 					{/* <Picker set="apple" onSelect={this.handleEmoji} onClick={this.handleEmoji} perline={9} emojiSize={24} native={true} sheetSize={16} showPreview={false} showSkinTones={false} title="Pick your emoji…" emoji="point_up" style={{ position : 'relative', bottom : '20px', right : '20px' }} /> */}
 				</div>

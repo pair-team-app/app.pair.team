@@ -8,7 +8,6 @@ import LinkifyIt from 'linkify-it';
 import { Menu, Item, Separator, Submenu, MenuProvider } from 'react-contexify';
 import KeyboardEventHandler from 'react-keyboard-event-handler';
 import { connect } from 'react-redux';
-// import { withRouter } from 'react-router-dom';
 import TextareaAutosize from 'react-autosize-textarea';
 
 import BasePage from '../BasePage';
@@ -18,7 +17,6 @@ import TeamPageFileDrop from './TeamPageFileDrop';
 import { CommentSortTypes } from '../../sections/TopNav';
 import { TEAM_TIMESTAMP } from '../../../consts/formats';
 import { ENTER_KEY } from '../../../consts/key-codes';
-import { Modals } from '../../../consts/uris';
 import { fetchTeamComments, createComment, makeComment, makeTeamRule, modifyTeam, setComment, setPlayground, setTypeGroup, setCommentImage } from '../../../redux/actions';
 import { trackEvent } from '../../../utils/tracking';
 
@@ -111,7 +109,6 @@ class TeamPage extends Component {
     if (team && prevProps.team && team.comments.length > prevProps.team.comments.length) {
 
     }
-
   }
 
   componentWillUnmount() {
@@ -268,7 +265,7 @@ class TeamPage extends Component {
   };
 
   handleCommentChange = (event)=> {
-    console.log('%s.handleCommentChange()', this.constructor.name, { event });
+    // console.log('%s.handleCommentChange()', this.constructor.name, { event });
 
     const { value : text } = event.target;
     const urls = (LinkifyIt().match(text) || []).map(({ url })=> (url));
@@ -276,13 +273,8 @@ class TeamPage extends Component {
 
     const { teamComment } = this.state;
 
-    this.setState({ teamComment : { ...teamComment, text }}, ()=> {
-      if (url) {
-        if (!this.state.teamComment.url && url) {
-          this.setState({ teamComment : { ...teamComment, url }});
-        }
-      }
-    });
+    console.log('%s.handleCommentChange()', this.constructor.name, { urls, text });
+    this.setState({ teamComment : { ...teamComment, text, url }});
   };
 
   handleSubmitComment = (event)=> {
