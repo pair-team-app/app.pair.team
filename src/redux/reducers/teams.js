@@ -1,16 +1,16 @@
 
-import { INVITE_LOADED, SET_TEAM, SET_COMMENT, SET_TEAM_COMMENTS_SORT, TEAM_COMMENTS_LOADED, TEAMS_LOADED, TEAM_CREATED, TEAM_LOGO_LOADED, TEAM_RULES_UPDATED, TEAM_UPDATED, COMMENT_ADDED, COMMENT_UPDATED, COMMENT_VOTED, USER_PROFILE_UPDATED } from '../../consts/action-types';
+import { INVITE_LOADED, SET_TEAM, SET_COMMENT, SET_TEAM_COMMENTS_SORT, TEAM_COMMENTS_LOADED, TEAMS_LOADED, TEAM_CREATED, TEAM_LOGO_LOADED, TEAM_RULES_UPDATED, TEAM_UPDATED, COMMENT_ADDED, COMMENT_UPDATED, COMMENT_VOTED, USER_PROFILE_UPDATED, SET_TEAM_COMMENTS_FILTER } from '../../consts/action-types';
 import { LOG_REDUCER_POSTFIX, LOG_REDUCER_PREFIX } from '../../consts/log-ascii';
-import { CommentSortTypes } from '../../components/sections/TopNav';
+import { CommentSortTypes, CommentFilterTypes } from '../../components/sections/TopNav';
 
 const initialState = {
-  // teams      : [],
-  teams      : null,
-  sort       : CommentSortTypes.DATE,
-  team       : null,
-  member     : null,
-  invite     : null,
-  comment    : null
+  teams   : null,
+  sort    : CommentSortTypes.DATE,
+  filter  : CommentFilterTypes.NONE,
+  team    : null,
+  member  : null,
+  invite  : null,
+  comment : null
 };
 
 
@@ -81,6 +81,10 @@ export default function comments(state=initialState, action) {
   } else if (type === SET_TEAM_COMMENTS_SORT) {
     const { sort } = payload;
     return (Object.assign({}, state, { sort }));
+
+  } else if (type === SET_TEAM_COMMENTS_FILTER) {
+    const { filter } = payload;
+    return (Object.assign({}, state, { filter }));
 
   } else if (type === '@@router/LOCATION_CHANGE') {
     const { teams, team, member, comment, imageComment } = payload;

@@ -10,8 +10,16 @@ export const BreadcrumbTypes = {
 };
 
 export const CommentSortTypes = {
-  DATE  : 'SORT_BY_DATE',
-  SCORE : 'SORT_BY_SCORE'
+  DATE   : 'DATE',
+  SCORE  : 'SCORE'
+};
+
+export const CommentFilterTypes = {
+  NONE   : 'NONE',
+  ISSUES : 'ISSUES',
+  TO_DOS : 'TO_DOS',
+  BUGS   : 'BUGS',
+  DONE   : 'DONE'
 };
 
 

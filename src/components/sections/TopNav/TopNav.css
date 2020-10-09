@@ -62,10 +62,15 @@
 	cursor: pointer;
 }
 
-.top-nav .link-wrapper .nav-link[data-selected="true"], .top-nav .link-wrapper .nav-link[data-selected="true"]:hover {
+.top-nav .link-wrapper .nav-link[data-selected="true"], .top-nav .link-wrapper .nav-link-sort[data-selected="true"]:hover {
 	text-decoration: none;
 	color: rgba(var(--link-selected-color), 1.0);
 	cursor: default;
+}
+
+.top-nav .link-wrapper .nav-link-filter[data-selected="true"]:hover {
+	text-decoration: underline;
+	cursor: pointer;
 }
 
 .top-nav-share-link {
