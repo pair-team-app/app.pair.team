@@ -177,7 +177,7 @@ class BasePopover extends Component {
 		const { children } = this.props;
 		const { fixed, position, offset, size, outro } = this.state;
 
-		console.log('%s.render()', this.constructor.name, '::::::::__', { props : this.props, state : this.state, size : size || null, position : position || null, offset });
+		// console.log('%s.render()', this.constructor.name, '::::::::__', { props : this.props, state : this.state, size : size || null, position : position || null, offset });
 
 		// let prunedObj = {};
 		// for (const k in offset) {

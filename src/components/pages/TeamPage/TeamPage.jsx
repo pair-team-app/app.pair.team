@@ -383,7 +383,7 @@ class TeamPage extends Component {
             <div className="team-wrapper" data-fetching={Boolean((fetching & 0x010) === 0x010)}>
               <div className="about-wrapper" data-processing={infoLoading}>
                 <div className="header">About</div>
-                <div className="content"><KeyboardEventHandler handleKeys={['shift', 'enter', 'esc']} onKeyEvent={(key, event)=> this.handleUpdateTeamDescription(event, key)}>
+                <div className="content"><KeyboardEventHandler handleKeys={['enter', 'esc']} onKeyEvent={(key, event)=> this.handleUpdateTeamDescription(event, key)}>
                   <TextareaAutosize id="team-info-txtarea" className="team-info-txtarea" placeholder="Describe your team" value={teamDescription} onFocusCapture={this.handleTeamFocus} onFocus={(e)=> console.log('=+=+=+=+=+=+=', 'onFocus', { e })} onChange={(event)=> this.setState({ teamDescription : event.target.value })} data-admin={member.roles.includes('admin')} data-keypress-override="true" />
                 </KeyboardEventHandler></div>
                 <div className="footer">
@@ -402,7 +402,7 @@ class TeamPage extends Component {
                 </div>
                 <div className="input-wrapper" data-input={ruleInput}>
                   <TeamPageAddRuleButton admin={member.roles.includes('admin')} disabled={rulesLoading} onClick={this.handleRuleInput} />
-                  <KeyboardEventHandler handleKeys={['ctrl', 'meta', 'enter', 'esc']} handleFocusableElements onKeyEvent={(key, event)=> this.handleAddRule(event, key)}>
+                  <KeyboardEventHandler handleKeys={['enter', 'esc']} handleFocusableElements onKeyEvent={(key, event)=> this.handleAddRule(event, key)}>
                     <TextareaAutosize id="team-add-rule-txtarea" placeholder="" value={ruleContent} onChange={(event)=> this.setState({ ruleContent : event.target.value })} ref={(el)=> this.ruleInput = (el) ? el : null} />
                   </KeyboardEventHandler>
                 </div>

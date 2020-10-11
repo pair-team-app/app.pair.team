@@ -73,6 +73,8 @@ class UserSettings extends Component {
 					}
 				}
 
+				this.setState({ itemType : null });
+
 			} else {
 				if (window.location.hash === Popovers.SETTINGS) {
 						this.props.push(window.location.pathname);
