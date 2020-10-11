@@ -105,7 +105,7 @@ class TeamPageFileDrop extends Component {
       // const urls = (LinkifyIt().match(preComment) || []).map(({ url })=> (url));
       // console.log('¡!¡!¡!¡!¡!¡!', { urls })
 
-      if ((!prevProps.preComment || prevProps.preComment === ' ') && preComment !== ' ') {
+      if ((!prevProps.preComment || prevProps.preComment === ' ') && preComment !== ' ' && this.commentInput.editor) {
         // console.log('¡!¡!¡!¡!¡!¡!', { preComment })
         // this.commentInput.editor.setText(preComment);
         this.commentInput.editor.setSelection(preComment.length, 0);
@@ -135,7 +135,7 @@ class TeamPageFileDrop extends Component {
         // }
       }
 
-      if (preComment !== ' ' && this.commentInput.editor.getText().slice(0, -1).length === 0) {
+      if (preComment !== ' ' && this.commentInput.editor && this.commentInput.editor.getText().slice(0, -1).length === 0) {
         this.handleResetContent();
       }
 
@@ -432,19 +432,13 @@ class TeamPageFileDrop extends Component {
       { /*<KeyboardEventHandler isDisabled={(files.length === 0 && !preComment && !image)} handleFocusableElements handleKeys={['ctrl', 'meta', 'enter', 'esc']} onKeyEvent={(key, event)=> this.handleKeyPress(event, key)} /> */}
       <div>
         <div className="input-wrapper" data-hidden={(files.length === 0 && !preComment)}>
-          {/* <ReactQuill theme="bubble" modules={{ toolbar }} placeholder={(url) ? 'Add a comment to this url…' : (image !== null) ? 'Add a comment to this image…' : 'Add a comment…'} value={(!url) ? (preComment || '') : preComment.replace(url, '')} onFocusCapture={this.handleFieldFocus} onChange={this.handleTextChange} ref={(el)=> (el) ? this.commentInput = el : null} data-code={(code)} /> */}
-          {/* <ReactQuill placeholder={(url) ? 'Add a comment to this url…' : (image !== null) ? 'Add a comment to this image…' : 'Add a comment…'} value={(!url) ? (preComment || '') : (preComment) ? preComment.replace(url, '') : ''} onFocus={this.handleFieldFocus} onChange={this.handleTextChange} ref={(el)=> (el) ? this.commentInput = el : null} data-code={(code)} autoFocus /> */}
-          {/* <ReactQuill onEditorChangeText={(value, delta, source, editor)=> console.log('TeamPageFileDrop', 'onEditorChangeText', { value, delta, source, editor })} contentEditable="true" onBeforeInput={(event)=> console.log('TeamPageFileDrop', 'onBeforeInput', { event })} beforeInput={(event)=> console.log('TeamPageFileDrop', 'beforeInput', { event })} placeholder={(url) ? 'Add a comment to this url…' : (image !== null) ? 'Add a comment to this image…' : 'Add a comment…'} value={(!url) ? (preComment || '') : (preComment) ? preComment.replace(url, '') : ''} onFocus={this.handleFieldFocus} onChange={this.handleTextChange} ref={(el)=> (el) ? this.commentInput = el : null} data-code={(code)} /> */}
+          {/*
           <ReactQuill
             placeholder={(url) ? 'Add a comment to this url…' : (image !== null) ? 'Add a comment to this image…' : 'Add a comment…'}
             value={(!url) ? (preComment || '') : (preComment) ? preComment.replace(url, '') : ''}
             onChange={this.handleTextChange}
-            // onEditorChangeText={(value, delta, source, editor)=> console.log('TeamPageFileDrop', 'onEditorChangeText', { value, delta, source, editor })}
-            // onFocus={this.handleFieldFocus}
-            // autoFocus
             ref={(el)=> (el) ? this.commentInput = el : null}
-            data-code={(code)} />
-          {/* {(preComment) && (<CodeFormAccessory align={FormAccessoryAlignment.BOTTOM} onClick={this.handleCode} />)} */}
+            data-code={(code)} />*/}
         </div>
 
         <div className="file-wrapper" data-file={(files.length > 0 || image !== null)} data-hidden={false}>
