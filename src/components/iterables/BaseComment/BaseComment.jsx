@@ -82,7 +82,7 @@ class BaseComment extends Component {
 
 	handleReplyBlur = (event)=>{
 		console.log('BaseCommentContent.handleReplyBlur()', this.constructor.name, { event });
-		this.props.setComment(null);
+		// this.props.setComment(null);
 	};
 
 	handleReplyKeyPress = (event, key)=> {

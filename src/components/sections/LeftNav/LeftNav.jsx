@@ -34,7 +34,7 @@ class LeftNav extends Component {
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
-    // console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : this.props, prevState, state : this.state });
+    console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : this.props, prevState, state : this.state });
 
     const { playgrounds } = this.props;
     const { builds } = this.state;

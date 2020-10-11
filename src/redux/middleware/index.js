@@ -215,8 +215,6 @@ export function onMiddleware(store) {
 
       // console.log('¡!¡!¡!¡!¡!¡!¡!¡!', { teamMatch, projectMatch, reformedMatch, params });
 
-
-
       const playgrounds = [ ...payload.playgrounds].map((playground)=> (reformPlayground(playground, devices, componentTypes, team)));
       payload.playgrounds = playgrounds;//.sort((i, ii)=> ((i.id < ii.id) ? 1 : (i.id > ii.id) ? -1 : 0));
       payload.playground = null;
@@ -401,12 +399,14 @@ export function onMiddleware(store) {
       payload.team = reformTeam(team);
 
     } else if (type === COMMENT_VOTED) {
-      const { team } = prevState.teams;
+      const { team, teams } = prevState.teams;
 
       const prevComment = team.comments.find(({ id })=> (id === (payload.comment.id << 0)));
       payload.team = { ...team,
         comments : team.comments.map((comment)=> ((comment.id === prevComment.id) ? reformComment(payload.comment, prevComment.uri) : comment))
       };
+
+      payload.teams = teams;
 
     } else if (type === SET_TEAM) {
       const { profile } = prevState.user;
