@@ -189,7 +189,7 @@ const BaseCommentHeader = (props)=> {
 
 	return (<div className="base-comment-header">
 		<div className="avatar-wrapper">
-			<img className="avatar-ico" src={(!author.avatar) ? USER_DEFAULT_AVATAR : author.avatar} alt={author.username} data-id={author.id} />
+			<div className="avatar-ico" data-id={author.id}>{author.email.split('').shift().toUpperCase()}</div>
 		</div>
 		<div className="info-wrapper">
 			{/* <div className="timestamp" dangerouslySetInnerHTML={{ __html : timestamp.format(COMMENT_TIMESTAMP).replace(/(\d{1,2})(\w{2}) @/, (match, p1, p2)=> (`${p1}<sup>${p2}</sup> @`)) }} /> */}

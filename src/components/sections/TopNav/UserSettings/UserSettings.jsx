@@ -120,7 +120,7 @@ class UserSettings extends Component {
 
 		return (<div className="user-settings">
 			<div className="avatar-wrapper" onClick={this.handleShowPopover}>
-				<img className="avatar-ico" src={avatar} alt="Avatar" />
+				<div className="avatar-ico">{profile.email.split('').shift().toUpperCase()}</div>
 			</div>
 
 			{(popover) && (<UserSettingsPopover
