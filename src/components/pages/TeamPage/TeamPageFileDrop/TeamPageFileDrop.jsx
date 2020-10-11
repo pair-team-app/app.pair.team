@@ -75,14 +75,14 @@ class TeamPageFileDrop extends Component {
   }
 
 	componentDidUpdate(prevProps, prevState, snapshot) {
-    console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : this.props, prevState, state : this.state, commentInput : (this.commentInput) ? {
-      editor            : this.commentInput.editor,
-      getEditorContents : this.commentInput.getEditorContents(),
-      getText           : this.commentInput.editor.getText(),
-      isControlled      : this.commentInput.isControlled(),
-      props             : this.commentInput.props,
-      state             : this.commentInput.state,
-    } : null });
+    // console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : this.props, prevState, state : this.state, commentInput : (this.commentInput) ? {
+    //   editor            : this.commentInput.editor,
+    //   getEditorContents : this.commentInput.getEditorContents(),
+    //   getText           : this.commentInput.editor.getText(),
+    //   isControlled      : this.commentInput.isControlled(),
+    //   props             : this.commentInput.props,
+    //   state             : this.commentInput.state,
+    // } : null });
 
     // const { preComment, pathname, hash } = this.props;
     // const { text, url, files, image } = this.state;
@@ -106,7 +106,7 @@ class TeamPageFileDrop extends Component {
       // console.log('¡!¡!¡!¡!¡!¡!', { urls })
 
       if ((!prevProps.preComment || prevProps.preComment === ' ') && preComment !== ' ') {
-        console.log('¡!¡!¡!¡!¡!¡!', { preComment })
+        // console.log('¡!¡!¡!¡!¡!¡!', { preComment })
         // this.commentInput.editor.setText(preComment);
         this.commentInput.editor.setSelection(preComment.length, 0);
       }
@@ -417,7 +417,7 @@ class TeamPageFileDrop extends Component {
   };
 
 	render() {
-    console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state, commentInput : (this.commentInput) ? this.commentInput : null });
+    // console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state, commentInput : (this.commentInput) ? this.commentInput : null });
 
     const { dragging, preComment } = this.props;
     const { url, code, image, files, text } = this.state;

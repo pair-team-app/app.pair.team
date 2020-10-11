@@ -66,7 +66,7 @@ class TeamPage extends Component {
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
-    console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : this.props, prevState, state : this.state });
+    // console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : this.props, prevState, state : this.state });
     // console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : this.props, prevFetching : prevState.fetching.toString(16), fetching : this.state.fetching.toString(16), prevLoading : prevState.loading.toString(16), loading : this.state.loading.toString(16) });
 
     const { profile, team, comment } = this.props;
@@ -352,14 +352,14 @@ class TeamPage extends Component {
   };
 
   render() {
-    console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
+    // console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
     const { profile, team, member, sort } = this.props;
     const { teamDescription, ruleContent, ruleInput, teamComment, fetching, loading, dragging } = this.state;
 
     const infoLoading = Boolean(((loading << 0) & 0x001) === 0x001);
     const rulesLoading = Boolean(((loading << 0) & 0x010) === 0x010);
     const commentsLoading = Boolean(((loading << 0) & 0x100) === 0x100);
-    console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state, infoLoading, rulesLoading, commentsLoading });
+
     // console.log('%s.render()', this.constructor.name, { infoLoading, rulesLoading, commentsLoading });
 
     return (<BasePage { ...this.props } className="team-page" data-dragging={dragging}>
@@ -419,7 +419,7 @@ class TeamPage extends Component {
 
 
 const TeamPageCommentHeader = (props)=> {
-  console.log('TeamPageCommentHeader()', { ...props });
+  // console.log('TeamPageCommentHeader()', { ...props });
 
   const { teamComment } = props;
   const { text, image, filename, url, code } = teamComment;

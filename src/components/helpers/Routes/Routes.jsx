@@ -31,7 +31,7 @@ class Routes extends Component {
 
 
   render() {
-    console.log('%s.render()', this.constructor.name, { state : this.state, props : this.props });
+    // console.log('%s.render()', this.constructor.name, { state : this.state, props : this.props });
 
     return (<Switch>
       <Route exact path={Pages.HOME}><Redirect to={Pages.TEAM} /></Route>

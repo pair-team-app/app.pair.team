@@ -213,7 +213,7 @@ export function onMiddleware(store) {
         // commentID   : (typeof projectMatch.params.commentID !== 'undefined') ? (projectMatch.params.commentID << 0) : null
       };
 
-      console.log('¡!¡!¡!¡!¡!¡!¡!¡!', { teamMatch, projectMatch, reformedMatch, params });
+      // console.log('¡!¡!¡!¡!¡!¡!¡!¡!', { teamMatch, projectMatch, reformedMatch, params });
 
 
 
@@ -222,7 +222,7 @@ export function onMiddleware(store) {
       payload.playground = null;
 
       // const { params } = (projectMatch || (teamMatch || { params : null }));
-      console.log('______________________', { params });
+      // console.log('______________________', { params });
 
       if (params) {
         if (params.buildID) {
@@ -292,7 +292,7 @@ export function onMiddleware(store) {
       const { teams } = prevState.teams;
       const { team } = payload;
 
-      console.log('_________ CREATE_TEAM', { payload });
+      // console.log('_________ CREATE_TEAM', { payload });
 
       payload.team = reformTeam(team, { selected : true });
       payload.teams = [payload.team, ...teams.map((item)=> ({ ...item, selected : false }))];
@@ -742,7 +742,7 @@ export function onMiddlewarePost(store) {
     const { dispatch } = store;
 
     const { type, payload } = action;
-    console.log('______________', 'onMiddlewarePost()', { store : store.getState(), action, type, payload });
+    // console.log('______________', 'onMiddlewarePost()', { store : store.getState(), action, type, payload });
 
     // logFormat({ store, action, next, event : 'POST' });
 

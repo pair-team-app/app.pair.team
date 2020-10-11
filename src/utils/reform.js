@@ -132,7 +132,7 @@ export const reformRule = (rule, members, overwrite={})=> {
 
 
 export const reformTeam = (team, overwrite={})=> {
-  console.log('reformTeam()', { team, overwrite });
+  // console.log('reformTeam()', { team, overwrite });
 
   const { description, slug, image, updated, added } = team;
   const members = team.members.map((member)=> ({ ...member,
