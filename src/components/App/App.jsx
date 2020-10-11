@@ -194,12 +194,11 @@ class App extends Component {
         }
 
         // payment modal
-        if (team && team.type === 'free' && !modals.stripe) {
-          if (team.userCount >= 4) {
-          // if (team.userCount === 2) {
-            this.onToggleModal(Modals.STRIPE);
-          }
-        }
+        // if (team && team.type === 'free' && !modals.stripe) {
+        //   if (team.userCount >= 4) {
+        //     this.onToggleModal(Modals.STRIPE);
+        //   }
+        // }
 
         // start payment process
         if (location.pathname.startsWith(Pages.PAYMENT)) {
