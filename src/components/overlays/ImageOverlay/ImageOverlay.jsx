@@ -141,7 +141,7 @@ class ImageOverlay extends Component {
       }
     }, ()=> {
       this.props.setCommentImage(false);
-      // this.props.setComment(null);
+      this.props.setComment(null);
     });
   };
 
