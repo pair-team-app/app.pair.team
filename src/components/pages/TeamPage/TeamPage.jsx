@@ -283,9 +283,16 @@ class TeamPage extends Component {
     const { teamComment } = this.state;
     const { text, image, url, code } = teamComment;
 
+    console.log('%s.handleSubmitComment()', this.constructor.name, { image,
+      link     : (url || null),
+			content  : (url !== null && text.replace(url, '').length === 0) ? null : text.replace(url, ''),
+      format   : (code) ? 'code' : 'text'
+    });
+
+
     this.props.makeComment({ image,
       link     : (url || null),
-			content  : (url !== null) ? null : text,
+			content  : (url !== null && text.replace(url, '').length === 0) ? null : text.replace(url, ''),
       format   : (code) ? 'code' : 'text'
     });
 
@@ -425,6 +432,7 @@ const TeamPageCommentHeader = (props)=> {
     <button disabled={text.length === 0 && image === null} onClick={props.onSubmit}>Comment</button>
   </div>);
 };
+
 
 const TeamPageCommentsPanel = (props)=> {
 	// console.log('TeamPageCommentsPanel()', { ...props });

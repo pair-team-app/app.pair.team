@@ -230,7 +230,6 @@
 .team-page .content-wrapper .scroll-wrapper .team-wrapper .about-wrapper[data-processing="true"] textarea, .team-page .content-wrapper .scroll-wrapper .team-wrapper .rules-wrapper[data-processing="true"] .input-wrapper {
 	background-color: rgba(var(--disabled-bg-color), 0.5);
 	opacity: 0.5;
-	cursor: progress;
 }
 
 

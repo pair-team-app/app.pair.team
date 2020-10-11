@@ -4,6 +4,7 @@ import './BaseComment.css';
 import { VOTE_ACTION_DOWN, VOTE_ACTION_RETRACT, VOTE_ACTION_UP } from './index';
 
 import { URIs } from 'lang-js-utils';
+import LinkifyIt from 'linkify-it';
 import FontAwesome from 'react-fontawesome';
 import KeyboardEventHandler from 'react-keyboard-event-handler';
 import { connect } from 'react-redux';
@@ -75,7 +76,13 @@ class BaseComment extends Component {
 	handleTextChange = (event)=> {
 		// console.log('%s.handleTextChange()', this.constructor.name, event);
     const replyContent = event.target.value;
+
     this.setState({ replyContent });
+	};
+
+	handleReplyBlur = (event)=>{
+		console.log('BaseCommentContent.handleReplyBlur()', this.constructor.name, { event });
+		this.props.setComment(null);
 	};
 
 	handleReplyKeyPress = (event, key)=> {
@@ -97,7 +104,7 @@ class BaseComment extends Component {
 	};
 
 	handleReplySubmit = (event)=> {
-    console.log('BaseCommentContent.handleReplySubmit()', this.constructor.name, { event });
+    console.log('BaseCommentContent.handleReplySubmit()', this.constructor.name, { event, comment : this.props.comment, state : this.state });
 
 		const { comment } = this.props;
 		const { replyContent, codeFormat } = this.state;
@@ -108,8 +115,12 @@ class BaseComment extends Component {
     event.preventDefault();
     event.stopPropagation();
 
+		const urls = (LinkifyIt().match(replyContent) || []).map(({ url })=> (url));
+    const url = (urls.length > 0) ? [ ...urls].shift() : null;
+
 		this.props.makeComment({
-			content  : replyContent,
+			content  : (url !== null && replyContent.replace(url, '').length === 0) ? null : replyContent.replace(url, ''),
+			link     : url,
 			format   : (codeFormat) ? 'code' : 'text',
 			position : comment.position
 		});
@@ -139,7 +150,7 @@ class BaseComment extends Component {
 			<BaseCommentHeader { ...this.props} onResolve={this.handleResolveComment} onDelete={this.handleDeleteComment} />
 			<div className="comment-body">
 				{(comment.votable) && (<BaseCommentVote { ...this.props } onVote={this.handleVote} />)}
-				<BaseCommentContent { ...contentProps } onImageClick={this.handleImageClick} onReplyFocus={this.handleReplyFocus} onReplyKeyPress={this.handleReplyKeyPress} onReplySubmit={this.handleReplySubmit} onTextChange={this.handleTextChange} onDeleteReply={this.handleDeleteComment} onCodeToggle={this.handleCodeToggle} />
+				<BaseCommentContent { ...contentProps } onImageClick={this.handleImageClick} onReplyFocus={this.handleReplyFocus} onReplyBlur={this.handleReplyBlur} onReplyKeyPress={this.handleReplyKeyPress} onReplySubmit={this.handleReplySubmit} onTextChange={this.handleTextChange} onDeleteReply={this.handleDeleteComment} onCodeToggle={this.handleCodeToggle} />
 				{/* <Picker set="apple" onSelect={this.handleEmoji} onClick={this.handleEmoji} perline={9} emojiSize={24} native={true} sheetSize={16} showPreview={false} showSkinTones={false} title="Pick your emoji…" emoji="point_up" style={{ position : 'relative', bottom : '20px', right : '20px' }} /> */}
 			</div>
 		</div>);
@@ -184,7 +195,7 @@ const BaseCommentHeader = (props)=> {
 			{/* <div className="timestamp" dangerouslySetInnerHTML={{ __html : timestamp.format(COMMENT_TIMESTAMP).replace(/(\d{1,2})(\w{2}) @/, (match, p1, p2)=> (`${p1}<sup>${p2}</sup> @`)) }} /> */}
 			<div className="timestamp">Commented @ {timestamp.format(COMMENT_TIMESTAMP)}</div>
 			{(profile.id === author.id) && (<div className="link" onClick={handleDelete}>Delete</div>)}
-			{(types.includes('op')) && (<div className="link" onClick={handleResolve}>Resolve</div>)}
+			{(types.includes('op') || types.includes('project')) && (<div className="link" onClick={handleResolve}>Resolve</div>)}
 		</div>
 	</div>);
 };
@@ -202,7 +213,7 @@ const BaseCommentContent = (props)=> {
 		{(link) && (<div className="link" dangerouslySetInnerHTML={{ __html : `<a href="${link}" target="_blank">${link}</a>`}}></div>)}
 		{(comment.state !== 'closed' && types.includes('team') && types.includes('op')) && (<div className="reply-form">
 			<KeyboardEventHandler handleKeys={['enter', `esc`]} isDisabled={(preComment !== null)} onKeyEvent={(key, event)=> props.onReplyKeyPress(event, key)}>
-				<input type="text" placeholder="Reply…" value={replyContent} onFocus={props.onReplyFocus} onChange={props.onTextChange} data-code={codeFormat} autoComplete="new-password" />
+				<input type="text" placeholder="Reply…" value={replyContent} onFocus={props.onReplyFocus} onBlur={props.onReplyBlur} onChange={props.onTextChange} data-code={codeFormat} autoComplete="new-password" />
 				<button disabled={replyContent.length === 0} onClick={props.onReplySubmit}>Reply</button>
 			</KeyboardEventHandler>
 			{/* <img src={btnCode} className="code-button" onClick={props.onCodeToggle} alt="Code" /> */}
