@@ -17,7 +17,7 @@ import TeamPageFileDrop from './TeamPageFileDrop';
 import { CommentSortTypes } from '../../sections/TopNav';
 import { TEAM_TIMESTAMP } from '../../../consts/formats';
 import { ENTER_KEY } from '../../../consts/key-codes';
-import { fetchTeamComments, createComment, makeComment, makeTeamRule, modifyTeam, setComment, setPlayground, setTypeGroup, setCommentImage } from '../../../redux/actions';
+import { fetchTeamComments, createComment, makeComment, makeTeamRule, modifyTeam, modifyTeamRule, setComment, setPlayground, setTypeGroup, setCommentImage } from '../../../redux/actions';
 import { trackEvent } from '../../../utils/tracking';
 
 import 'react-contexify/dist/ReactContexify.min.css';
@@ -149,6 +149,12 @@ class TeamPage extends Component {
         });
       }
     }
+  };
+
+  handleRuleDelete = (rule)=> {
+    console.log('%s.handleRuleDelete()', this.constructor.name, { rule });
+
+    this.props.modifyTeamRule({ rule });
   };
 
   handleRuleInput = (event=null)=> {
@@ -397,7 +403,7 @@ class TeamPage extends Component {
               <div className="rules-wrapper" data-processing={rulesLoading}>
                 <div className="header">Rules</div>
                 <div className="content">
-                  {(team.rules.map((rule, i)=> (<TeamPageRule key={i} rule={rule} ind={(i+1)} skeleton={false} />)))}
+                  {(team.rules.map((rule, i)=> (<TeamPageRule key={i} rule={rule} ind={(i+1)} admin={member.roles.includes('admin')} onDelete={this.handleRuleDelete} skeleton={false} />)))}
                   {(rulesLoading) && (<TeamPageRule key={-1} rule={{ title : ruleContent, content : null }} ind={(team.rules.length + 1)} skeleton={true} />)}
                 </div>
                 <div className="input-wrapper" data-input={ruleInput}>
@@ -465,7 +471,7 @@ const TeamPageRule = (props)=> {
   const text = `${ind}. ${title}${(content) ? `\n${content}` : ''}`;
   return (<div className="team-page-rule" data-skeleton={skeleton}>
     {text}
-    <FontAwesome name="minus-circle" className="delete" onClick={props.onDelete} />
+    <FontAwesome name="minus-circle" className="delete" onClick={()=> props.onDelete(rule)} />
   </div>);
 };
 
@@ -489,6 +495,7 @@ const mapDispatchToProps = (dispatch)=> {
     makeComment       : (payload)=> dispatch(makeComment(payload)),
     makeTeamRule      : (payload)=> dispatch(makeTeamRule(payload)),
     modifyTeam        : (payload)=> dispatch(modifyTeam(payload)),
+    modifyTeamRule    : (payload)=> dispatch(modifyTeamRule(payload)),
     setPlayground     : (payload)=> dispatch(setPlayground(payload)),
     setTypeGroup      : (payload)=> dispatch(setTypeGroup(payload)),
     setComment        : (payload)=> dispatch(setComment(payload)),

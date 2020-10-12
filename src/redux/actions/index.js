@@ -480,6 +480,31 @@ export function modifyInvite(payload) {
   });
 }
 
+export function modifyTeamRule(payload) {
+  return ((dispatch, getState)=> {
+    logFormat('modifyTeamRule()', { store : (typeof getState === 'function') ? getState() : getState, typeof : typeof getState }, payload);
+    const { rule } = payload;
+    const { team } = getState().teams;
+
+    axios.post(API_ENDPT_URL, {
+      action  : 'DELETE_RULE',
+      payload : {
+        team_id : team.id,
+        rule_id : rule.id
+      }
+    }).then((response)=> {
+      console.log(API_RESPONSE_PREFIX, 'DELETE_RULE', response.data);
+      const { rules } = response.data;
+
+      dispatch({
+        type    : TEAM_RULES_UPDATED,
+        payload : { rules }
+      });
+
+    }).catch((error)=> {});
+  });
+}
+
 
 export function paidStripeSession(payload) {
   return ((dispatch, getState)=> {
