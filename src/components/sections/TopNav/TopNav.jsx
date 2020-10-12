@@ -180,14 +180,13 @@ const TeamPageHeader = (props)=> {
 
 	const { sort, formatFilter, doneFilter } = props;
 	const { DATE, SCORE } = CommentSortTypes;
-	const { ISSUES, TO_DOS, BUGS, DONE } = CommentFilterTypes;
+	const { ISSUES, BUGS, DONE } = CommentFilterTypes;
 
 	return (<div className="team-page-header page-header">
 		<div className="link-wrapper">
 			<div className="nav-link nav-link-sort" data-selected={sort === DATE} onClick={()=> props.onSortClick(DATE)}>New</div>
 			<div className="nav-link nav-link-sort" data-selected={sort === SCORE} onClick={()=> props.onSortClick(SCORE)}>Top</div>
 			<div className="nav-link nav-link-filter" data-selected={formatFilter === ISSUES} onClick={()=> props.onFilterClick(ISSUES)}>Issues</div>
-			<div className="nav-link nav-link-filter" data-selected={formatFilter === TO_DOS} onClick={()=> props.onFilterClick(TO_DOS)}>To Dos</div>
 			<div className="nav-link nav-link-filter" data-selected={formatFilter === BUGS} onClick={()=> props.onFilterClick(BUGS)}>Bugs</div>
 			<div className="nav-link nav-link-filter" data-selected={doneFilter} onClick={()=> props.onFilterClick(DONE)}>Done</div>
 		</div>
