@@ -133,13 +133,13 @@ class TopNav extends Component {
 	render() {
 		// console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
 
-		const { darkThemed, profile, invite, teamSort, formatFilter, doneFilter } = this.props;
+		const { darkThemed, profile, invite, sort, formatFilter, doneFilter } = this.props;
 		const { popover, matchPaths } = this.state;
 
 		return (<div className="top-nav">
 			{/* <div className="col breadcrumb-wrapper">{this.buildBreadcrumbs().map((breadcrumb)=> (breadcrumb))}</div> */}
 			<div className="col col-left"><div className="page-header-wrapper">
-				{(matchPaths.team && !matchPaths.project) && (<TeamPageHeader sort={teamSort} formatFilter={formatFilter} doneFilter={doneFilter} onSortClick={this.handleTeamCommentsSort} onFilterClick={this.handleTeamCommentsFilter} />)}
+				{(matchPaths.team && !matchPaths.project) && (<TeamPageHeader sort={sort} formatFilter={formatFilter} doneFilter={doneFilter} onSortClick={this.handleTeamCommentsSort} onFilterClick={this.handleTeamCommentsFilter} />)}
 				{(matchPaths.create) && (<TopNavPageTitle title="Create" />)}
 				{(matchPaths.project) && (<TopNavPageTitle title="Project" />)}
 			</div></div>
@@ -176,7 +176,7 @@ const TopNavShareLink = (props)=> {
 
 
 const TeamPageHeader = (props)=> {
-	// console.log('TeamPageHeader()', { props });
+	console.log('TeamPageHeader()', { props });
 
 	const { sort, formatFilter, doneFilter } = props;
 	const { DATE, SCORE } = CommentSortTypes;
@@ -209,7 +209,7 @@ const mapStateToProps = (state, ownProps)=> {
     darkThemed   : state.darkThemed,
 		invite       : state.teams.invite,
 		profile      : state.user.profile,
-		teamSort     : state.comments.sort,
+		sort         : state.comments.sort,
 		formatFilter : state.comments.filters.format,
 		doneFilter   : state.comments.filters.done,
 		hash         : state.router.location.hash,

@@ -9,7 +9,7 @@ const initialState = {
   // comment      : null,
   preComment   : null,
   imageComment : false,
-  sort         : CommentSortTypes.NONE,
+  sort         : CommentSortTypes.DATE,
   filters      : {
     format : CommentFilterTypes.NONE,
     done   : false
