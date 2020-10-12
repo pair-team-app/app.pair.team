@@ -16,10 +16,10 @@ export const CommentSortTypes = {
 
 export const CommentFilterTypes = {
   NONE   : 'NONE',
-  ISSUES : 'ISSUES',
-  TO_DOS : 'TO_DOS',
-  BUGS   : 'BUGS',
-  DONE   : 'DONE'
+  ISSUES : 'issue',
+  TO_DOS : 'to-do',
+  BUGS   : 'bug',
+  DONE   : 'resolved'
 };
 
 

@@ -220,6 +220,7 @@ const BaseCommentContent = (props)=> {
 				<button disabled={replyContent.length === 0} onClick={props.onReplySubmit}>Reply</button>
 			</KeyboardEventHandler>
 			{/* <img src={btnCode} className="code-button" onClick={props.onCodeToggle} alt="Code" /> */}
+
 		</div>)}
 
 		{(comment.replies.length > 0) && (<BaseCommentReplies { ...props } onDelete={props.onDeleteReply} />)}
@@ -236,7 +237,7 @@ const BaseCommentReplies = (props)=> {
 		{(comment.replies.map((reply, i)=> {
 			const replyProps = { ...props, comment : reply }
 
-			return (<div key={i} className="base-comment base-comment-reply" data-id={comment.id} data-type={comment.type} data-author={comment.author.id === profile.id} data-votable={comment.votable} data-selected={comment.selected}>
+			return (<div key={i} className="base-comment base-comment-reply" data-id={reply.id} data-type={comment.type} data-author={comment.author.id === profile.id} data-votable={comment.votable} data-selected={comment.selected}>
 				<BaseCommentHeader { ...replyProps } onDelete={props.onDelete} />
 				<div className="comment-body">
 					<BaseCommentContent { ...replyProps } onTextChange={props.handleTextChange} onDeleteReply={props.handleDeleteComment} />

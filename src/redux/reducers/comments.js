@@ -1,14 +1,19 @@
 
-import { BUILD_PLAYGROUNDS_LOADED, COMMENT_ADDED, COMMENT_UPDATED, COMMENT_CREATED, SET_COMMENT, SET_COMMENT_IMAGE, TEAM_COMMENTS_LOADED } from '../../consts/action-types';
+import { BUILD_PLAYGROUNDS_LOADED, COMMENT_ADDED, COMMENT_UPDATED, COMMENT_CREATED, SET_COMMENT, SET_COMMENT_IMAGE, TEAM_COMMENTS_LOADED, SET_COMMENTS_SORT, SET_COMMENTS_FORMAT_FILTER, SET_COMMENTS_DONE_FILTER } from '../../consts/action-types';
 import { LOG_REDUCER_POSTFIX, LOG_REDUCER_PREFIX } from '../../consts/log-ascii';
-
+import { CommentSortTypes, CommentFilterTypes } from '../../components/sections/TopNav';
 
 
 const initialState = {
   // comments     : [],
   // comment      : null,
   preComment   : null,
-  imageComment : false
+  imageComment : false,
+  sort         : CommentSortTypes.NONE,
+  filters      : {
+    format : CommentFilterTypes.NONE,
+    done   : false
+  }
 };
 
 
@@ -48,6 +53,18 @@ export default function comments(state=initialState, action) {
   } else if (type === SET_COMMENT_IMAGE) {
     const { enabled } = payload;
     return (Object.assign({}, state, { imageComment : enabled }));
+
+  } else if (type === SET_COMMENTS_SORT) {
+    const { sort } = payload;
+    return (Object.assign({}, state, { sort }));
+
+  } else if (type === SET_COMMENTS_FORMAT_FILTER) {
+    const { filter : format } = payload;
+    return (Object.assign({}, state, { filters : { ...state.filters, format } }));
+
+  } else if (type === SET_COMMENTS_DONE_FILTER) {
+    const { filter : done } = payload;
+    return (Object.assign({}, state, { filters : { ...state.filters, done } }));
 
   // } else if (type === '@@router/LOCATION_CHANGE') {
     // const { preComment, comment } = payload;

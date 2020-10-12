@@ -14,7 +14,7 @@ import BasePage from '../BasePage';
 import BaseComment from '../../iterables/BaseComment';
 import TeamPageFileDrop from './TeamPageFileDrop';
 
-import { CommentSortTypes } from '../../sections/TopNav';
+import { CommentSortTypes, CommentFilterTypes } from '../../sections/TopNav';
 import { TEAM_TIMESTAMP } from '../../../consts/formats';
 import { ENTER_KEY } from '../../../consts/key-codes';
 import { fetchTeamComments, createComment, makeComment, makeTeamRule, modifyTeam, modifyTeamRule, setComment, setPlayground, setTypeGroup, setCommentImage } from '../../../redux/actions';
@@ -22,6 +22,18 @@ import { trackEvent } from '../../../utils/tracking';
 
 import 'react-contexify/dist/ReactContexify.min.css';
 import { POPUP_TYPE_OK, POPUP_TYPE_ERROR } from '../../overlays/PopupNotification';
+
+
+const formatFilterComments = (comments, filter)=> {
+  console.log('TeamPage.formatFilterComments()', { comments, filter });
+
+  if (filter === CommentFilterTypes.NONE) {
+    return (comments);
+
+  } else {
+    return (comments.filter(({ format })=> ((format === filter))));
+  }
+};
 
 
 class TeamPage extends Component {
@@ -358,9 +370,11 @@ class TeamPage extends Component {
   };
 
   render() {
-    // console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
-    const { profile, team, member, sort } = this.props;
+    console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
+    const { profile, team, member, sort, formatFilter, doneFilter } = this.props;
     const { teamDescription, ruleContent, ruleInput, teamComment, fetching, loading, dragging } = this.state;
+
+    const comments = formatFilterComments((team) ? (sort === CommentSortTypes.DATE) ? team.comments.sort((i, ii)=> ((i.epoch > ii.epoch) ? -1 : (i.epoch < ii.epoch) ? 1 : 0)) : team.comments.sort((i, ii)=> ((i.score > ii.score) ? -1 : (i.score < ii.score) ? 1 : 0)).filter((comment)=> (comment !== null)) : [], formatFilter);
 
     const infoLoading = Boolean(((loading << 0) & 0x001) === 0x001);
     const rulesLoading = Boolean(((loading << 0) & 0x010) === 0x010);
@@ -377,7 +391,7 @@ class TeamPage extends Component {
             <div className="comments-wrapper" data-fetching={Boolean((fetching & 0x010) === 0x010)} data-loading={commentsLoading} data-empty={team && team.comments.length === 0}>
               <TeamPageCommentsPanel
                 profile={profile}
-                comments={(sort === CommentSortTypes.DATE) ? team.comments.sort((i, ii)=> ((i.epoch > ii.epoch) ? -1 : (i.epoch < ii.epoch) ? 1 : 0)) : team.comments.sort((i, ii)=> ((i.score > ii.score) ? -1 : (i.score < ii.score) ? 1 : 0)).filter((comment)=> (comment !== null))}
+                comments={(doneFilter) ? comments.filter(({ state })=> (state === CommentFilterTypes.DONE)) : comments}
                 fetching={Boolean((fetching & 0x010) === 0x010)}
                 loading={commentsLoading}
                 sort={sort}
@@ -506,13 +520,15 @@ const mapDispatchToProps = (dispatch)=> {
 
 const mapStateToProps = (state, ownProps)=> {
   return ({
-    preComment : state.comments.preComment,
-    comment    : state.comments.comment,
-    profile    : state.user.profile,
-    team       : state.teams.team,
-    member     : state.teams.member,
-    sort       : state.teams.sort,
-    playground : state.playground
+    preComment   : state.comments.preComment,
+    comment      : state.comments.comment,
+    profile      : state.user.profile,
+    team         : state.teams.team,
+    member       : state.teams.member,
+    sort         : state.comments.sort,
+    formatFilter : state.comments.filters.format,
+    doneFilter   : state.comments.filters.done,
+    playground   : state.playground
   });
 };
 
