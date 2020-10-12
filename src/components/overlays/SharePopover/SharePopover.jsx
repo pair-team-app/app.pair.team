@@ -122,7 +122,6 @@ class SharePopover extends Component {
             <button>Copy</button>
           </div>
         </CopyToClipboard>
-        <button className="cancel-button" onClick={(event)=> this.setState({ outro : true })}>Cancel</button>
       </div>
     </BasePopover>);
   }

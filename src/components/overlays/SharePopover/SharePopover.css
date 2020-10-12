@@ -6,7 +6,6 @@
 
 .share-popover .copy-wrapper > * {
 	width: 100%;
-	margin-bottom: var(--spacing-20);
 }
 
 .share-popover .url {
