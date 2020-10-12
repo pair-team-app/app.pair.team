@@ -310,6 +310,7 @@
 	/* border: 1px solid rgba(var(--txtfield-border-color), 1.0); */
 	border-radius: var(--border-radius);
 	transition: color var(--transition-duration-short) ease-out;
+	word-break: break-all;
 }
 
 .team-page-rule[data-skeleton="true"] {

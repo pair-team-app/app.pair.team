@@ -158,6 +158,10 @@
   filter: var(--orthodox-drop-shadow);
 }
 
+.base-comment .link {
+	word-break: break-all;
+}
+
 .base-comment .link a {
   color: rgba(var(--site-selected-color), 1.0);
 }
