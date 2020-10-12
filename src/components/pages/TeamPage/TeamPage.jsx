@@ -385,7 +385,7 @@ class TeamPage extends Component {
     return (<BasePage { ...this.props } className="team-page" data-dragging={dragging}>
       {(profile && team && member)
       ? (<div className="content-wrapper">
-          <TeamPageCommentHeader teamComment={teamComment} onChange={this.handleCommentChange} onKeyPress={this.handleCommentKeyPress} onSubmit={this.handleSubmitComment} onFocus={()=> this.props.setComment(null)} />
+          <TeamPageCommentHeader teamComment={teamComment} onChange={this.handleCommentChange} onKeyPress={this.handleCommentKeyPress} onFormatClick={(format)=> this.setState({ teamComment : { ...teamComment, format }})} onSubmit={this.handleSubmitComment} onFocus={()=> this.props.setComment(null)} />
 
           <div className="scroll-wrapper">
             <div className="comments-wrapper" data-fetching={Boolean((fetching & 0x010) === 0x010)} data-loading={commentsLoading} data-empty={team && team.comments.length === 0}>
@@ -442,12 +442,18 @@ const TeamPageCommentHeader = (props)=> {
   // console.log('TeamPageCommentHeader()', { ...props });
 
   const { teamComment } = props;
-  const { text, image, filename, url, code } = teamComment;
+  const { text, image, filename, code, format } = teamComment;
 
   return (<div className="team-page-comment-header">
-    <KeyboardEventHandler handleKeys={['enter', 'esc']} onKeyEvent={(key, event)=> props.onKeyPress(event, key)}>
-      <input type="text" className="comment-txt" placeholder="Type anything…" value={text} onChange={props.onChange} onFocus={props.onFocus} />
-    </KeyboardEventHandler>
+    <div>
+      <KeyboardEventHandler handleKeys={['enter', 'esc']} onKeyEvent={(key, event)=> props.onKeyPress(event, key)}>
+        <input type="text" className="comment-txt" placeholder="Type anything…" value={text} onChange={props.onChange} onFocus={props.onFocus} />
+        <div className="format-wrapper">
+          <label><input type="radio" name="format" value="issue" checked={(format === CommentFilterTypes.ISSUES)} onClick={()=> props.onFormatClick(CommentFilterTypes.ISSUES)} />Issue</label>
+          <label><input type="radio" name="format" value="bug" checked={(format === CommentFilterTypes.BUGS)} onClick={()=> props.onFormatClick(CommentFilterTypes.BUGS)} />Bug</label>
+        </div>
+      </KeyboardEventHandler>
+    </div>
     {(image) && (<img src={image} alt={filename} />)}
     <button disabled={text.length === 0 && image === null} onClick={props.onSubmit}>Comment</button>
   </div>);

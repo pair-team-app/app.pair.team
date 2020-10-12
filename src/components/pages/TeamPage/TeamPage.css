@@ -240,18 +240,29 @@
 	z-index: 2;
 }
 
-.team-page-comment-header > span {
+.team-page-comment-header > div {
 	position: relative;
 	width: 100%;
 }
 
-.team-page-comment-header input.comment-txt {
-	/* position: absolute; */
+.team-page-comment-header > div input.comment-txt {
+	position: absolute;
 	filter: none;
 }
 
-.team-page-comment-header img {
-	/* position: absolute; */
+.team-page-comment-header > div .format-wrapper {
+	position: absolute;
+	top: 50%;
+	right: 0;
+	transform: translateY(-50%);
+}
+
+.team-page-comment-header > div .format-wrapper > * {
+	margin-right: 10px;
+}
+
+.team-page-comment-header > img {
+	position: absolute;
 	top: 0;
 	right: 0;
 	width: 53px;
@@ -261,7 +272,7 @@
 	background-color: #999999;
 }
 
-.team-page-comment-header button {
+.team-page-comment-header > button {
 	width: fit-content;
 	margin-left: var(--spacing-10);
 }

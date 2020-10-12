@@ -388,6 +388,10 @@ input[type="email"]:hover, input[type="password"]:hover, input[type="text"]:hove
 	filter: var(--txtfield-shadow);
 }
 
+input[type="radio"] {
+	color: #a4a4a4;
+}
+
 
 li > p:last-child {
 	margin-bottom: var(--spacing-20);
