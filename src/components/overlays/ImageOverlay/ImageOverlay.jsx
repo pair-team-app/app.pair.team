@@ -79,7 +79,8 @@ class ImageOverlay extends Component {
     if (comment.text.length > 0) {
       this.props.makeComment({ position,
         content : comment.text,
-        format  : 'text'
+        format  : 'text',
+        code    : false
       });
 
       this.setState({

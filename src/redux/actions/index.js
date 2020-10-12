@@ -280,14 +280,14 @@ export function makeComment(payload) {
     const { profile } = getState().user;
     const { team, comment } = getState().teams;
     const { component } = getState().builds;
-    const { content, format, position, link, image } = payload;
+    const { content, format, position, link, image, code } = payload;
 
     axios.post(API_ENDPT_URL, {
       action  : 'ADD_COMMENT',
-      payload : { content, format,
+      payload : { content, format, code,
         link         : (link || null),
         image_url    : (image || null),
-        position     : (position || ((comment) ? comment.position : { x : 0, y : 0 })),
+        position     : (position || ((comment) ? comment.position : { x : 0, y : 0})),
         user_id      : profile.id,
         team_id      : (component) ? 0 : team.id,
         component_id : (component) ? component.id : 0,

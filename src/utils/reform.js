@@ -8,12 +8,13 @@ import { Pages, TEAM_DEFAULT_AVATAR } from '../consts/uris';
 export const reformComment = (comment, uri, overwrite={})=> {
   // console.log('reformComment()', { comment, uri, overwrite }, { position : typeof comment.position });
 
-  const { id, position, content, link, image_url, author, state, votes, types, replies, added } = comment;
+  const { id, position, content, link, image_url, code, author, state, votes, types, replies, added } = comment;
 
   const reformed = { ...comment, uri, types,
     id       : id << 0,
     position : (position) ? (typeof position === 'string' && position.charAt(0) === '{') ? JSON.parse(position) : (position || { x : 0, y : 0 }) : { x : 0, y : 0 },
     content  : (content || null),
+    code     : ((code << 0) === 1),
     image    : (image_url || null),
     link     : (link || null),
     author   : { ...author },

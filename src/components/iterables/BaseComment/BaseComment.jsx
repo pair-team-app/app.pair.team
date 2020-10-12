@@ -21,7 +21,8 @@ class BaseComment extends Component {
 
     this.state = {
 			replyContent : '',
-			codeFormat   : false
+			codeType     : false,
+			format       : 'text'
 		};
 	}
 
@@ -45,12 +46,13 @@ class BaseComment extends Component {
 
 	handleCodeToggle = ()=> {
 		console.log('%s.handleCodeToggle()', this.constructor.name);
-		this.setState({ codeFormat : !this.state.codeFormat });
+		this.setState({ codeType : !this.state.codeType });
 	};
 
 	handleDeleteComment = (comment)=> {
 		console.log('%s.handleDeleteComment()', this.constructor.name, { comment });
 		trackEvent('button', 'delete-comment');
+
 		this.props.modifyComment({ comment, action : 'deleted' });
 		this.props.setComment(null);
 	};
@@ -58,7 +60,8 @@ class BaseComment extends Component {
 	handleResolveComment = (comment)=> {
 		console.log('%s.handleResolveComment()', this.constructor.name, { comment });
 		trackEvent('button', 'resolve-comment');
-		this.props.modifyComment({ comment, action : 'resolved' });
+
+		this.props.modifyComment({ comment, action : (comment.state === 'open') ? 'resolved' : 'open' });
 		this.props.setComment(null);
 	};
 
@@ -95,7 +98,7 @@ class BaseComment extends Component {
 		} else if (key === 'esc') {
 			this.setState({
 				replyContent : '',
-				codeFormat   : false
+				codeType     : false
 			}, ()=> {
 				event.target.blur();
 				this.props.setComment(null);
@@ -107,7 +110,7 @@ class BaseComment extends Component {
     console.log('BaseCommentContent.handleReplySubmit()', this.constructor.name, { event, comment : this.props.comment, state : this.state });
 
 		const { comment } = this.props;
-		const { replyContent, codeFormat } = this.state;
+		const { format, replyContent, codeType : code } = this.state;
 
 		trackEvent('button', 'reply-comment', comment.id);
 
@@ -118,16 +121,16 @@ class BaseComment extends Component {
 		const urls = (LinkifyIt().match(replyContent) || []).map(({ url })=> (url));
     const url = (urls.length > 0) ? [ ...urls].shift() : null;
 
-		this.props.makeComment({
+		this.props.makeComment({ code, format,
 			content  : (url !== null && replyContent.replace(url, '').length === 0) ? null : replyContent.replace(url, ''),
 			link     : url,
-			format   : (codeFormat) ? 'code' : 'text',
 			position : comment.position
 		});
 
 		this.setState({
 			replyContent : '' ,
-			codeFormat   : false
+			codeType   : false,
+			format     : 'text'
 		});
   };
 
@@ -143,8 +146,8 @@ class BaseComment extends Component {
     // console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
 
 		const { profile, comment } = this.props;
-		const { replyContent, codeFormat } = this.state;
-		const contentProps = { ...this.props, replyContent, codeFormat };
+		const { replyContent, codeType } = this.state;
+		const contentProps = { ...this.props, replyContent, codeType };
 
 		return (<div className="base-comment" data-id={comment.id} data-type={comment.type} data-author={comment.author.id === profile.id} data-votable={comment.votable} data-selected={comment.selected}>
 			<BaseCommentHeader { ...this.props} onResolve={this.handleResolveComment} onDelete={this.handleDeleteComment} />
@@ -174,7 +177,7 @@ const BaseCommentHeader = (props)=> {
 	// console.log('BaseComment.BaseCommentHeader()', { props });
 
 	const { profile, comment } = props;
-	const { author, timestamp, types } = comment;
+	const { author, timestamp, types, state} = comment;
 	// const { roles } = author;
 
 	const handleDelete = (event)=> {
@@ -192,10 +195,10 @@ const BaseCommentHeader = (props)=> {
 			<div className="avatar-ico" data-id={author.id}>{author.email.split('').shift().toUpperCase()}</div>
 		</div>
 		<div className="info-wrapper">
-			{/* <div className="timestamp" dangerouslySetInnerHTML={{ __html : timestamp.format(COMMENT_TIMESTAMP).replace(/(\d{1,2})(\w{2}) @/, (match, p1, p2)=> (`${p1}<sup>${p2}</sup> @`)) }} /> */}
 			<div className="timestamp">Commented @ {timestamp.format(COMMENT_TIMESTAMP)}</div>
 			{(profile.id === author.id) && (<div className="link" onClick={handleDelete}>Delete</div>)}
-			{(types.includes('op') || types.includes('project')) && (<div className="link" onClick={handleResolve}>Resolve</div>)}
+			{(state === 'open' && (types.includes('op') || types.includes('project'))) && (<div className="link" onClick={handleResolve}>Resolve</div>)}
+			{(state === 'resolved') && (<div className="link" onClick={handleResolve}>Reopen</div>)}
 		</div>
 	</div>);
 };
@@ -204,16 +207,16 @@ const BaseCommentHeader = (props)=> {
 const BaseCommentContent = (props)=> {
 	// console.log('BaseComment.BaseCommentContent()', { props });
 
-	const { comment, replyContent, codeFormat, preComment } = props;
-	const { types, format, content, image, link } = comment;
+	const { comment, replyContent, codeType, preComment } = props;
+	const { types, format, code, content, image, link, state } = comment;
 
-	return (<div className="base-comment-content">
-		{(content) && (<div className="content" data-format={format}>{content}</div>)}
+	return (<div className="base-comment-content" data-format={format} data-resolved={(state === 'resolved')}>
+		{(content) && (<div className="content" data-code={code}>{content}</div>)}
 		{(image) && (<div className="image" onClick={props.onImageClick}><img src={image} alt={URIs.lastComponent(image)} /></div>)}
 		{(link) && (<div className="link" dangerouslySetInnerHTML={{ __html : `<a href="${link}" target="_blank">${link}</a>`}}></div>)}
-		{(comment.state !== 'closed' && types.includes('team') && types.includes('op')) && (<div className="reply-form">
+		{(comment.state !== 'resolved' && comment.state !== 'closed' && types.includes('team') && types.includes('op')) && (<div className="reply-form">
 			<KeyboardEventHandler handleKeys={['enter', `esc`]} isDisabled={(preComment !== null)} onKeyEvent={(key, event)=> props.onReplyKeyPress(event, key)}>
-				<input type="text" placeholder="Reply…" value={replyContent} onFocus={props.onReplyFocus} onBlur={props.onReplyBlur} onChange={props.onTextChange} data-code={codeFormat} autoComplete="new-password" />
+				<input type="text" placeholder="Reply…" value={replyContent} onFocus={props.onReplyFocus} onBlur={props.onReplyBlur} onChange={props.onTextChange} data-code={codeType} autoComplete="new-password" />
 				<button disabled={replyContent.length === 0} onClick={props.onReplySubmit}>Reply</button>
 			</KeyboardEventHandler>
 			{/* <img src={btnCode} className="code-button" onClick={props.onCodeToggle} alt="Code" /> */}

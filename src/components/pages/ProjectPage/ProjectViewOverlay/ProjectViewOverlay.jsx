@@ -67,6 +67,7 @@ class ProjectViewOverlay extends Component {
     if (comment.text.length > 0) {
       this.props.makeComment({ position,
         content : comment.text,
+        code    : false,
         format  : 'text'
       });
 

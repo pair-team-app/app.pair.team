@@ -147,6 +147,11 @@
 	font-size: 30px;
 }
 
+.comment-body .base-comment-content[data-resolved="true"] {
+	text-decoration: line-through;
+	opacity: 0.5;
+}
+
 .base-comment .image {
 	margin-top: 15px;
 	font-size: var(--base-font-size);

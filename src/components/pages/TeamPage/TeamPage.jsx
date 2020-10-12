@@ -33,6 +33,7 @@ class TeamPage extends Component {
       teamDescription : '',
       ruleContent     : '',
       teamComment     : {
+        format   : 'text',
         text     : '',
         url      : null,
         filename : null,
@@ -287,27 +288,26 @@ class TeamPage extends Component {
     console.log('%s.handleSubmitComment()', this.constructor.name, { event });
 
     const { teamComment } = this.state;
-    const { text, image, url, code } = teamComment;
+    const { format, text, image, url, code } = teamComment;
 
-    console.log('%s.handleSubmitComment()', this.constructor.name, { image,
+    console.log('%s.handleSubmitComment()', this.constructor.name, { image, code, format,
       link     : (url || null),
-			content  : (url !== null && text.replace(url, '').length === 0) ? null : text.replace(url, ''),
-      format   : (code) ? 'code' : 'text'
+			content  : (url !== null && text.replace(url, '').length === 0) ? null : text.replace(url, '')
     });
 
 
-    this.props.makeComment({ image,
+    this.props.makeComment({ image, code, format,
       link     : (url || null),
 			content  : (url !== null && text.replace(url, '').length === 0) ? null : text.replace(url, ''),
-      format   : (code) ? 'code' : 'text'
     });
 
     this.setState({
       teamComment : {
-        text  : '',
-        url   : null,
-        image : null,
-        code  : false
+        text   : '',
+        url    : null,
+        image  : null,
+        code   : false,
+        format : 'text'
       }
     });
   };
