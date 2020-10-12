@@ -147,7 +147,7 @@ const UserSettingsPopover = (props)=> {
 	return (<BasePopover outro={outro} payload={POPOVER_PAYLOAD} onOutroComplete={props.onComplete}>
 		<div className="user-settings-popover">
 			<div className="settings-item" onClick={(event)=> props.onItemClick(SettingsMenuItemTypes.PROFILE, event)}>Profile</div>
-			<div className="settings-item"><NavLink to={NPM_DE_PLAYGROUND} target="_blank" className="user-settings-link" onClick={(event)=> props.onItemClick(SettingsMenuItemTypes.INSTALL, event)}>Install</NavLink></div>
+			{/* <div className="settings-item"><NavLink to={NPM_DE_PLAYGROUND} target="_blank" className="user-settings-link" onClick={(event)=> props.onItemClick(SettingsMenuItemTypes.INSTALL, event)}>Install</NavLink></div> */}
 			<div className="settings-item"><NavLink to={GITHUB_DOCS} target="_blank" className="user-settings-link" onClick={(event)=> props.onItemClick(SettingsMenuItemTypes.DOCS, event)}>Support</NavLink></div>
 			<div className="settings-item" onClick={(event)=> props.onItemClick(SettingsMenuItemTypes.LOGOUT, event)}>Logout</div>
 		</div>
