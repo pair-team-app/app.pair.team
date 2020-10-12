@@ -11,7 +11,6 @@ import { connect } from 'react-redux';
 
 import { CommentFilterTypes } from '../../sections/TopNav';
 import { COMMENT_TIMESTAMP } from '../../../consts/formats';
-import { USER_DEFAULT_AVATAR } from '../../../consts/uris';
 import { makeComment, setComment, makeVote, modifyComment, setCommentImage } from '../../../redux/actions';
 import { trackEvent } from '../../../utils/tracking';
 

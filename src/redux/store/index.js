@@ -1,5 +1,5 @@
 
-import { push, replace, routerMiddleware } from 'connected-react-router';
+import { replace, routerMiddleware } from 'connected-react-router';
 import { createBrowserHistory } from 'history';
 import cookie from 'react-cookies';
 import { applyMiddleware, createStore } from 'redux';
@@ -8,7 +8,7 @@ import thunk from 'redux-thunk';
 
 import { fetchComponentTypes, fetchDevices, fetchProducts, fetchUserProfile } from '../actions';
 import * as actionCreators from '../actions';
-import { onMiddleware, onMiddlewarePost, showingEntryModal } from '../middleware';
+import { onMiddleware } from '../middleware';
 import rootReducer from '../reducers/index';
 
 // import { SET_ROUTE_PATH, SET_TEAM, SET_PLAYGROUND, SET_COMMENT, COMMENT_CREATED } from '../../consts/action-types';

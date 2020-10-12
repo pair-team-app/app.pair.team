@@ -9,7 +9,7 @@ import { CommentSortTypes, CommentFilterTypes } from './';
 import UserSettings, { SettingsMenuItemTypes} from './UserSettings';
 import { RoutePaths } from '../../helpers/Routes';
 import SharePopover from '../../overlays/SharePopover';
-import { Modals, Popovers } from '../../../consts/uris';
+import { Modals } from '../../../consts/uris';
 import { setCommentsSortFilter, setCommentsFormatFilter, setCommentsDoneFilter, toggleTheme } from '../../../redux/actions';
 
 

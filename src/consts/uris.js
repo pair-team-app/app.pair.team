@@ -39,7 +39,7 @@ export const Pages = {
 
 let endpts = {};
 if (process.env.NODE_ENV === 'development') {
-	const CDN_VER = 'v1';
+	// const CDN_VER = 'v1';
 
 	endpts = {
 //		API_ENDPT_URL    : `http://192.168.1.50:1215/current/gateway.php`,
@@ -53,7 +53,7 @@ if (process.env.NODE_ENV === 'development') {
 	};
 
 } else {
-	const CDN_VER = 'v1';
+	// const CDN_VER = 'v1';
 
 	endpts = {
 		API_ENDPT_URL    : `https://api.pair.team/current/gateway.php`,

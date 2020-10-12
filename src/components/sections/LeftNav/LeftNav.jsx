@@ -6,7 +6,6 @@ import { push } from 'connected-react-router';
 import { Strings } from 'lang-js-utils';
 // import FontAwesome from 'react-fontawesome';
 import { connect } from 'react-redux';
-import { NavLink } from 'react-router-dom';
 
 import ContentExpander from '../../iterables/ContentExpander';
 import { NPM_DE_PLAYGROUND, Pages } from '../../../consts/uris';
@@ -83,6 +82,13 @@ class LeftNav extends Component {
     });
   };
 
+  handleInstallClick = (event)=> {
+    console.log('%s.handleInstallClick()', this.constructor.name, { event });
+
+    trackOutbound(NPM_DE_PLAYGROUND);
+    window.open(NPM_DE_PLAYGROUND, '_blank')
+  };
+
 
   onPopulateBuildTree = ()=> {
     console.log('%s.onPopulateBuildTree()', this.constructor.name, { playgrounds : this.props.playgrounds, playground : this.props.playground });
@@ -143,7 +149,7 @@ class LeftNav extends Component {
         </div>)}
 
         {(profile && !profile.validated) && (<div className="verify-wrapper">Verify your email first</div>)}
-        <button onClick={()=> window.open(NPM_DE_PLAYGROUND, '_blank')}>Download NPM</button>
+        <button onClick={this.handleInstallClick}>Download NPM</button>
       </div>
     </div>);
   }

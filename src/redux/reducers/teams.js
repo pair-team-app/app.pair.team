@@ -1,7 +1,6 @@
 
 import { INVITE_LOADED, SET_TEAM, SET_COMMENT, TEAM_COMMENTS_LOADED, TEAMS_LOADED, TEAM_CREATED, TEAM_LOGO_LOADED, TEAM_RULES_UPDATED, TEAM_UPDATED, COMMENT_ADDED, COMMENT_UPDATED, COMMENT_VOTED, USER_PROFILE_UPDATED } from '../../consts/action-types';
 import { LOG_REDUCER_POSTFIX, LOG_REDUCER_PREFIX } from '../../consts/log-ascii';
-import { CommentSortTypes, CommentFilterTypes } from '../../components/sections/TopNav';
 
 const initialState = {
   teams   : null,

@@ -5,7 +5,7 @@ import './UserSettings.css';
 import { push } from 'connected-react-router';
 import { connect } from 'react-redux';
 import { NavLink } from 'react-router-dom';
-import { GITHUB_DOCS, NPM_DE_PLAYGROUND, USER_DEFAULT_AVATAR, Modals, Pages, Popovers } from '../../../../consts/uris';
+import { GITHUB_DOCS, NPM_DE_PLAYGROUND, Modals, Pages, Popovers } from '../../../../consts/uris';
 import { trackOutbound } from '../../../../utils/tracking';
 import BasePopover from '../../../overlays/BasePopover';
 import { SettingsMenuItemTypes } from './';
@@ -33,7 +33,7 @@ class UserSettings extends Component {
 	componentDidMount() {
 		// console.log('%s.componentDidMount()', this.constructor.name, { props : this.props, state : this.state });
 
-		const { hash } = window.location;
+		// const { hash } = window.location;
 		// if (hash === Popovers.SETTINGS && !this.state.popover) {
 		// 	this.setState({ popover : true });
 		// }
@@ -43,7 +43,7 @@ class UserSettings extends Component {
 		console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : this.props, prevState, state : this.state, location : window.location });
 		// console.log('%s.componentDidUpdate()', this.constructor.name, { left : shareLink.offsetLeft, top : shareLink.offsetTop });
 
-		const { hash } = this.props;
+		// const { hash } = this.props;
 		// if ((hash === Popovers.SETTINGS) && !this.state.popover) {
 		// 	this.setState({ popover : true });
 		// }
@@ -120,7 +120,6 @@ class UserSettings extends Component {
 		// console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
 
 		const { profile } = this.props;
-		const { avatar } = (profile || { avatar : USER_DEFAULT_AVATAR });
 		const { popover, outro } = this.state;
 
 		return (<div className="user-settings">

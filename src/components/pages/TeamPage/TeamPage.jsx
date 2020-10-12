@@ -12,7 +12,7 @@ import TextareaAutosize from 'react-autosize-textarea';
 
 import BasePage from '../BasePage';
 import BaseComment from '../../iterables/BaseComment';
-import TeamPageFileDrop from './TeamPageFileDrop';
+// import TeamPageFileDrop from './TeamPageFileDrop';
 
 import { CommentSortTypes, CommentFilterTypes } from '../../sections/TopNav';
 import { TEAM_TIMESTAMP } from '../../../consts/formats';
@@ -21,7 +21,7 @@ import { fetchTeamComments, createComment, makeComment, makeTeamRule, modifyTeam
 import { trackEvent } from '../../../utils/tracking';
 
 import 'react-contexify/dist/ReactContexify.min.css';
-import { POPUP_TYPE_OK, POPUP_TYPE_ERROR } from '../../overlays/PopupNotification';
+import { POPUP_TYPE_ERROR } from '../../overlays/PopupNotification';
 
 
 const formatFilterComments = (comments, filter)=> {
@@ -442,7 +442,7 @@ const TeamPageCommentHeader = (props)=> {
   // console.log('TeamPageCommentHeader()', { ...props });
 
   const { teamComment } = props;
-  const { text, image, filename, code, format } = teamComment;
+  const { text, image, filename, format } = teamComment;
 
   return (<div className="team-page-comment-header">
     <div>

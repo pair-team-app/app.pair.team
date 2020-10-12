@@ -41,7 +41,7 @@ class ImageOverlay extends Component {
       // console.log('%s.onMouseMove()', this.constructor.name, { event, path : ([...event.path].shift().type) });
 
       const { cursor } = this.state;
-      const { clientX : x, clientY : y, path } = event;
+      const { clientX : x, clientY : y } = event;
 
       if (!cursor) {
         this.setState({

@@ -9,7 +9,6 @@ import { matchPath } from 'react-router-dom';
 
 import { RoutePaths } from '../../components/helpers/Routes';
 import { ENTRY_MODALS, AUTHORIZED_MODALS } from '../../components/overlays/BaseOverlay';
-import { CommentFilterTypes } from '../../components/sections/TopNav';
 import { fetchTeamBuilds, fetchUserTeams, setTeam } from '../actions';
 import { STRIPE_SESSION_PAID, BUILD_PLAYGROUNDS_LOADED, INVITE_LOADED, COMMENT_CREATED, COMMENT_ADDED, COMMENT_UPDATED, COMMENT_VOTED, DEVICES_LOADED, SET_COMMENT, SET_COMPONENT, SET_PLAYGROUND, SET_TEAM, SET_TYPE_GROUP, TEAM_BUILDS_LOADED, TEAM_COMMENTS_LOADED, TEAMS_LOADED, TEAM_LOGO_LOADED, TEAM_RULES_UPDATED, TEAM_CREATED, TEAM_UPDATED, UPDATE_MOUSE_COORDS, UPDATE_RESIZE_BOUNDS, USER_PROFILE_LOADED, USER_PROFILE_UPDATED } from '../../consts/action-types';
 import { HISTORY_TIMESTAMP } from '../../consts/formats';
@@ -85,7 +84,6 @@ export function onMiddleware(store) {
 
       if (profile) {
         cookie.save('user_id', profile.id, { path : '/', sameSite : false });
-        const { password } = profile;
 
         const status = parseInt(payload.status, 16);
         const { id, username, email, state } = profile;
@@ -205,16 +203,7 @@ export function onMiddleware(store) {
       const { params } = ({ ...projectMatch } || ({ ...teamMatch } || { params : null }));
       // const params = { ...teamMatch.params, ...projectMatch.params }
 
-      const reformedMatch = { ...teamMatch, ...projectMatch,
-        // buildID     : (typeof projectMatch.params.buildID !== 'undefined') ? (projectMatch.params.buildID << 0) : null,
-        // projectSlug : (typeof projectMatch.params.projectSlug !== 'undefined') ? projectMatch.params.projectSlug : null,
-        // deviceSlug  : (typeof projectMatch.params.deviceSlug !== 'undefined') ? projectMatch.params.deviceSlug : null,
-        // componentID : (typeof projectMatch.params.componentID !== 'undefined') ? (projectMatch.params.componentID << 0) : null,
-        // comments    : (typeof projectMatch.params.comments !== 'undefined') ? (projectMatch.params.comments === true) : false,
-        // commentID   : (typeof projectMatch.params.commentID !== 'undefined') ? (projectMatch.params.commentID << 0) : null
-      };
-
-      // console.log('¡!¡!¡!¡!¡!¡!¡!¡!', { teamMatch, projectMatch, reformedMatch, params });
+      // console.log('¡!¡!¡!¡!¡!¡!¡!¡!', { teamMatch, projectMatch, params });
 
       const playgrounds = [ ...payload.playgrounds].map((playground)=> (reformPlayground(playground, devices, componentTypes, team)));
       payload.playgrounds = playgrounds;//.sort((i, ii)=> ((i.id < ii.id) ? 1 : (i.id > ii.id) ? -1 : 0));
@@ -319,8 +308,8 @@ export function onMiddleware(store) {
     } else if (type === COMMENT_CREATED) {
       // const { pathname, hash } = prevState.router.location;
       // const { comment } = prevState.comments;
-      const { team } = prevState.teams;
-      const { preComment } = payload;
+      // const { team } = prevState.teams;
+      // const { preComment } = payload;
 
       // payload.comment = null;
       // dispatch(push((preComment) ? `${Pages.TEAM}/${team.id}--${team.slug}/${Modals.FILE_DROP}` : `${Pages.TEAM}/${team.id}--${team.slug}`));
@@ -421,8 +410,8 @@ export function onMiddleware(store) {
       const member = (payload.team) ? payload.team.members.find(({ id })=> (id === profile.id)) : null;
       payload.member = member;
 
-      const buildID = 0;
-      const deviceSlug = '';
+      // const buildID = 0;
+      // const deviceSlug = '';
 
       if (payload.team) {
         dispatch(push(`${Pages.TEAM}/${payload.team.id}--${payload.team.slug}`));
@@ -491,7 +480,7 @@ export function onMiddleware(store) {
       const { urlHistory } = prevState.path;
 
       const { action, isFirstRendering, location } = payload;
-      const { state } = router.location;
+      // const { state } = router.location;
       const { pathname, hash } = location;
 
       // if (urlHistory && pathname === [ ...urlHistory].pop().pathname && hash === [ ...urlHistory].pop().hash) {
@@ -724,8 +713,8 @@ export function onMiddleware(store) {
 
     next(action);
 
-    const postState = store.getState();
-    const { devices, componentTypes, team } = postState;
+    // const postState = store.getState();
+    // const { devices, componentTypes, team } = postState;
 
     if (type === TEAM_CREATED) {
       const { team } = payload;
@@ -739,7 +728,7 @@ export function onMiddleware(store) {
 
 export function onMiddlewarePost(store) {
   return ((next)=> (action)=> {
-    const state = store.getState();
+    // const state = store.getState();
     const { dispatch } = store;
 
     const { type, payload } = action;

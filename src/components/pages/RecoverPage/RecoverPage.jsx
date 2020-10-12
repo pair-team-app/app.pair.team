@@ -4,7 +4,6 @@ import './RecoverPage.css';
 
 import axios from 'axios';
 import { push } from 'connected-react-router';
-import { Strings } from 'lang-js-utils';
 import ReactPasswordStrength from 'react-password-strength';
 import { connect } from 'react-redux';
 import { matchPath } from 'react-router-dom';
@@ -13,7 +12,6 @@ import BasePage from '../BasePage';
 import { RoutePaths } from '../../helpers/Routes';
 import DummyForm from '../../forms/DummyForm';
 import { API_ENDPT_URL, Pages, Modals } from '../../../consts/uris';
-import { updateUserProfile } from '../../../redux/actions';
 
 
 class RecoverPage extends Component {

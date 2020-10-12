@@ -66,8 +66,7 @@ class App extends Component {
     // console.log('[:][:][:][:][:][:][:][:][:][:]', { API_ENDPT_URL, CDN_FILEPOND_URL, CDN_UPLOAD_URL });
     // console.log('[:][:][:][:][:][:][:][:][:][:]', { CryptoJSMD5 : CryptoJS.MD5('dope911t').toString() });
 
-    const { profile, location, hash } = this.props;
-    const { modals } = this.state;
+    const { profile, location } = this.props;
 
     if (!Browsers.isOnline()) {
       this.handlePopup({
@@ -118,7 +117,7 @@ class App extends Component {
     console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : this.props, prevState, state : this.state, snapshot });
     // console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props, this.state.modals);
 
-    const { location, profile, team, purchase, invite, urlHistory, hash, preComment } = this.props;
+    const { location, profile, team, purchase, invite, urlHistory, hash } = this.props;
     const { pathname } = location;
     const { modals } = this.state;
 
