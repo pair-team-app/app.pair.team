@@ -325,9 +325,9 @@
 	word-break: break-all;
 }
 
-.team-page-rule[data-skeleton="true"] {
+/* .team-page-rule[data-skeleton="true"] {
 	color: rgba(var(--site-fg-color), 0.5);
-}
+} */
 
 .team-page-rule .delete {
 	display: none;

@@ -147,13 +147,13 @@
 	font-size: 30px;
 }
 
-.comment-body .base-comment-content .link {
-	word-break: break-all;
-}
-
-.comment-body .base-comment-content[data-resolved="true"] {
+.comment-body .base-comment-content[data-resolved="true"] .content {
 	text-decoration: line-through;
 	opacity: 0.5;
+}
+
+.comment-body .base-comment-content .link {
+	word-break: break-all;
 }
 
 .base-comment .image {
