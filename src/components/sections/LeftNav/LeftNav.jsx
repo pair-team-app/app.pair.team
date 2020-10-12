@@ -109,7 +109,7 @@ class LeftNav extends Component {
     const { builds } = this.state;
 
     return (<div className="left-nav">
-      {(profile) && (<div className="header">{profile.email.split('@').pop().split('.').slice(0, -1).shift()}</div>)}
+      {(profile) && (<div className="header">{Strings.capitalize(profile.email.split('@').pop().split('.').slice(0, -1).shift())}</div>)}
       <div className="content">
         <button disabled={(!profile || !profile.validated)} onClick={this.handleCreateTeam}>Create Channel</button>
         <div className="teams-wrapper" data-loading={!teams}>

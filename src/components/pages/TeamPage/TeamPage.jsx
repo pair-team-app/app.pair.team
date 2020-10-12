@@ -418,7 +418,7 @@ class TeamPage extends Component {
         </div>)
 
       : (<div className="content-loading">Loading…</div>)}
-      <TeamPageFileDrop dragging={(dragging)} onContent={(image)=> this.setState({ dragging : false })} onImageData={(filename, image)=> this.setState({ teamComment : { ...teamComment, filename, image }})} onClose={this.handleFileDropClose} onPopup={this.props.onPopup} />
+      {/* <TeamPageFileDrop dragging={(dragging)} onContent={(image)=> this.setState({ dragging : false })} onImageData={(filename, image)=> this.setState({ teamComment : { ...teamComment, filename, image }})} onClose={this.handleFileDropClose} onPopup={this.props.onPopup} /> */}
     </BasePage>);
   }
 }
