@@ -34,9 +34,9 @@ class UserSettings extends Component {
 		// console.log('%s.componentDidMount()', this.constructor.name, { props : this.props, state : this.state });
 
 		const { hash } = window.location;
-		if (hash === Popovers.SETTINGS && !this.state.popover) {
-			this.setState({ popover : true });
-		}
+		// if (hash === Popovers.SETTINGS && !this.state.popover) {
+		// 	this.setState({ popover : true });
+		// }
 	}
 
 	componentDidUpdate(prevProps, prevState, snapshot) {
@@ -44,13 +44,13 @@ class UserSettings extends Component {
 		// console.log('%s.componentDidUpdate()', this.constructor.name, { left : shareLink.offsetLeft, top : shareLink.offsetTop });
 
 		const { hash } = this.props;
-		if ((hash === Popovers.SETTINGS) && !this.state.popover) {
-			this.setState({ popover : true });
-		}
+		// if ((hash === Popovers.SETTINGS) && !this.state.popover) {
+		// 	this.setState({ popover : true });
+		// }
 
-		if (hash !== Popovers.SETTINGS && this.state.popover) {
-			this.setState({ popover : false });
-		}
+		// if (hash !== Popovers.SETTINGS && this.state.popover) {
+		// 	this.setState({ popover : false });
+		// }
 	}
 
 	handleComplete = ()=> {
@@ -77,8 +77,8 @@ class UserSettings extends Component {
 
 			} else {
 				if (window.location.hash === Popovers.SETTINGS) {
-						this.props.push(window.location.pathname);
-					}
+					this.props.push(window.location.pathname);
+				}
 			}
 		});
 	};
@@ -104,11 +104,16 @@ class UserSettings extends Component {
 	handleShowPopover = ()=> {
 // console.log('%s.handleShowPopover()', this.constructor.name);
 
-		if (window.location.hash !== Popovers.SETTINGS) {
-			this.props.push(`${window.location.pathname}${Popovers.SETTINGS}`);
-		}
+		// if (window.location.hash !== Popovers.SETTINGS) {
+		// 	this.props.push(`${window.location.pathname}${Popovers.SETTINGS}`);
+		// }
 
-		this.setState({ outro : false });
+		this.setState({
+			popover : true,
+			outro   : false
+		});
+
+		// this.setState({ outro : false });
 	};
 
 	render() {

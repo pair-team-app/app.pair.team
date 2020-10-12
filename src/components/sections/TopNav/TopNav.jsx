@@ -30,24 +30,25 @@ class TopNav extends Component {
 	componentDidMount() {
 		console.log('%s.componentDidMount()', this.constructor.name, { props : this.props, state : this.state });
 
-		const { hash } = window.location;
-		if (hash === '#share' && !this.state.popover) {
-			this.setState({ popover : true });
-		}
+		// const { hash } = window.location;
+		// if (hash === '#share' && !this.state.popover) {
+		// 	this.setState({ popover : true });
+		// }
 	}
 
 	componentDidUpdate(prevProps, prevState, snapshot) {
 		// console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : this.props, prevState, state : this.state });
 // console.log('%s.componentDidUpdate()', this.constructor.name, { left : shareLink.offsetLeft, top : shareLink.offsetTop });
 
-		const { pathname, hash } = this.props;
-		if ((hash === '#share') && !this.state.popover) {
-			this.setState({ popover : true });
-		}
+		const { pathname } = this.props;
+		// const { pathname, hash } = this.props;
+		// if ((hash === '#share') && !this.state.popover) {
+		// 	this.setState({ popover : true });
+		// }
 
-		if (hash !== '#share' && this.state.popover) {
-			this.setState({ popover : false });
-		}
+		// if (hash !== '#share' && this.state.popover) {
+		// 	this.setState({ popover : false });
+		// }
 
 		const matchPaths = {
 			team    : matchPath(pathname, {
@@ -95,17 +96,18 @@ class TopNav extends Component {
 	handlePopoverToggle = ()=> {
 		console.log('%s.handlePopoverToggle()', this.constructor.name);
 
-		if (window.location.hash !== Popovers.SHARE) {
-			this.props.push(`${window.location.pathname}${Popovers.SHARE}`);
-		}
+		this.setState({ popover : true });
+		// if (window.location.hash !== Popovers.SHARE) {
+		// 	this.props.push(`${window.location.pathname}${Popovers.SHARE}`);
+		// }
 	};
 
 	handlePopoverClose = ()=> {
 		console.log('%s.handlePopoverClose()', this.constructor.name);
 
-		if (window.location.hash === Popovers.SHARE) {
-			this.props.push(window.location.pathname);
-		}
+		// if (window.location.hash === Popovers.SHARE) {
+		// 	this.props.push(window.location.pathname);
+		// }
 
 		this.setState({ popover : false });
 	};
