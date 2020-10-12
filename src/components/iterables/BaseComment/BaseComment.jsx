@@ -9,6 +9,7 @@ import FontAwesome from 'react-fontawesome';
 import KeyboardEventHandler from 'react-keyboard-event-handler';
 import { connect } from 'react-redux';
 
+import { CommentFilterTypes } from '../../sections/TopNav';
 import { COMMENT_TIMESTAMP } from '../../../consts/formats';
 import { USER_DEFAULT_AVATAR } from '../../../consts/uris';
 import { makeComment, setComment, makeVote, modifyComment, setCommentImage } from '../../../redux/actions';
@@ -106,6 +107,11 @@ class BaseComment extends Component {
 		}
 	};
 
+	handleReplyFormat = (format)=> {
+		console.log('BaseCommentContent.handleReplySubmit()', this.constructor.name, { format });
+		this.setState({ format });
+	}
+
 	handleReplySubmit = (event)=> {
     console.log('BaseCommentContent.handleReplySubmit()', this.constructor.name, { event, comment : this.props.comment, state : this.state });
 
@@ -146,14 +152,14 @@ class BaseComment extends Component {
     // console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
 
 		const { profile, comment } = this.props;
-		const { replyContent, codeType } = this.state;
-		const contentProps = { ...this.props, replyContent, codeType };
+		const { replyContent, codeType, format } = this.state;
+		const contentProps = { ...this.props, replyContent, codeType, format };
 
 		return (<div className="base-comment" data-id={comment.id} data-type={comment.type} data-author={comment.author.id === profile.id} data-votable={comment.votable} data-selected={comment.selected}>
 			<BaseCommentHeader { ...this.props} onResolve={this.handleResolveComment} onDelete={this.handleDeleteComment} />
 			<div className="comment-body">
 				{(comment.votable) && (<BaseCommentVote { ...this.props } onVote={this.handleVote} />)}
-				<BaseCommentContent { ...contentProps } onImageClick={this.handleImageClick} onReplyFocus={this.handleReplyFocus} onReplyBlur={this.handleReplyBlur} onReplyKeyPress={this.handleReplyKeyPress} onReplySubmit={this.handleReplySubmit} onTextChange={this.handleTextChange} onDeleteReply={this.handleDeleteComment} onCodeToggle={this.handleCodeToggle} />
+				<BaseCommentContent { ...contentProps } onImageClick={this.handleImageClick} onReplyFocus={this.handleReplyFocus} onReplyBlur={this.handleReplyBlur} onReplyFormatClick={this.handleReplyFormat} onReplyKeyPress={this.handleReplyKeyPress} onReplySubmit={this.handleReplySubmit} onTextChange={this.handleTextChange} onDeleteReply={this.handleDeleteComment} onCodeToggle={this.handleCodeToggle} />
 				{/* <Picker set="apple" onSelect={this.handleEmoji} onClick={this.handleEmoji} perline={9} emojiSize={24} native={true} sheetSize={16} showPreview={false} showSkinTones={false} title="Pick your emoji…" emoji="point_up" style={{ position : 'relative', bottom : '20px', right : '20px' }} /> */}
 			</div>
 		</div>);
@@ -207,18 +213,24 @@ const BaseCommentHeader = (props)=> {
 const BaseCommentContent = (props)=> {
 	// console.log('BaseComment.BaseCommentContent()', { props });
 
-	const { comment, replyContent, codeType, preComment } = props;
-	const { types, format, code, content, image, link, state } = comment;
+	const { comment, replyContent, codeType, preComment, format } = props;
+	const { types, code, content, image, link, state } = comment;
 
 	return (<div className="base-comment-content" data-format={format} data-resolved={(state === 'resolved')}>
 		{(content) && (<div className="content" data-code={code}>{content}</div>)}
 		{(image) && (<div className="image" onClick={props.onImageClick}><img src={image} alt={URIs.lastComponent(image)} /></div>)}
 		{(link) && (<div className="link" dangerouslySetInnerHTML={{ __html : `<a href="${link}" target="_blank">${link}</a>`}}></div>)}
 		{(comment.state !== 'resolved' && comment.state !== 'closed' && types.includes('team') && types.includes('op')) && (<div className="reply-form">
-			<KeyboardEventHandler handleKeys={['enter', `esc`]} isDisabled={(preComment !== null)} onKeyEvent={(key, event)=> props.onReplyKeyPress(event, key)}>
-				<input type="text" placeholder="Reply…" value={replyContent} onFocus={props.onReplyFocus} onBlur={props.onReplyBlur} onChange={props.onTextChange} data-code={codeType} autoComplete="new-password" />
-				<button disabled={replyContent.length === 0} onClick={props.onReplySubmit}>Reply</button>
-			</KeyboardEventHandler>
+			<div>
+				<KeyboardEventHandler handleKeys={['enter', `esc`]} isDisabled={(preComment !== null)} onKeyEvent={(key, event)=> props.onReplyKeyPress(event, key)}>
+					<input type="text" placeholder="Reply…" value={replyContent} onFocus={props.onReplyFocus} onBlur={props.onReplyBlur} onChange={props.onTextChange} data-code={codeType} autoComplete="new-password" />
+					<div className="format-wrapper">
+						<label><input type="radio" name="format" value="issue" checked={(format === CommentFilterTypes.ISSUES)} onClick={()=> props.onReplyFormatClick(CommentFilterTypes.ISSUES)} />Issue</label>
+          	<label><input type="radio" name="format" value="bug" checked={(format === CommentFilterTypes.BUGS)} onClick={()=> props.onReplyFormatClick(CommentFilterTypes.BUGS)} />Bug</label>
+					</div>
+				</KeyboardEventHandler>
+			</div>
+			<button disabled={replyContent.length === 0} onClick={props.onReplySubmit}>Reply</button>
 			{/* <img src={btnCode} className="code-button" onClick={props.onCodeToggle} alt="Code" /> */}
 
 		</div>)}
