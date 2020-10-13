@@ -471,7 +471,7 @@ const TeamPageCommentsPanel = (props)=> {
 			const vote = (comment.votes.find(({ author, score })=> (author.id === profile.id && score !== 0 )) || null);
 			return (<TeamPageComment key={i} comment={comment}  loading={loading} vote={vote} onImageClick={props.onImageClick} onReplyKeyPress={props.onReplyKeyPress} />);
 		}))}
-    <div className="emoji-footer">✌️</div>
+    <div className="emoji-footer"><span role="img" aria-label="peace-sign">✌️</span></div>
 	</div>);
 };
 

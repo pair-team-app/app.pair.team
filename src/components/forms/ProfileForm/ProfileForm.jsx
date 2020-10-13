@@ -77,7 +77,7 @@ class ProfileForm extends Component {
 		event.stopPropagation();
 
 		const { profile } = this.props;
-		const { email, password, newPassword, newPassword2, passScore, changed } = this.state;
+		const { email, newPassword, newPassword2, passScore, changed } = this.state;
 
 		console.log('%s.handleSubmit()', this.constructor.name, { event, props : this.props, state : this.state, passwdMD5 : CryptoJS.MD5(this.state.password).toString(), passwdProfile : profile.password });
 
@@ -129,7 +129,7 @@ class ProfileForm extends Component {
 
 		const { profile } = this.props;
 		const { email, password, newPassword, newPassword2, passMsg } = this.state;
-		const { emailValid, passwordValid, changed, validated } = this.state;
+		const { emailValid, changed, validated } = this.state;
 
 		return (
 			<div className="profile-form">
