@@ -87,6 +87,7 @@ class LoginModal extends Component {
 			outro={outro}
 			filled={true}
 			closeable={false}
+			title="Login"
 			delay={125}
 			onComplete={this.handleComplete}>
 
@@ -101,7 +102,9 @@ class LoginModal extends Component {
 						onCancel={this.props.goBack}
 						onLoggedIn={this.handleLoggedIn} />
 				</div>
-				<div className="footer-wrapper form-disclaimer"></div>
+				<div className="footer-wrapper form-disclaimer">
+					<PageNavLink to="https://pair.team/terms" target="_blank">Terms of Service</PageNavLink>
+				</div>
 			</div>
 		</BaseOverlay>);
 	}
