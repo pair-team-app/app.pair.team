@@ -9,7 +9,7 @@ import BaseOverlay from '../BaseOverlay';
 import { POPUP_TYPE_ERROR } from '../PopupNotification';
 import LoginForm from '../../forms/LoginForm';
 import PageNavLink from '../../iterables/PageNavLink';
-import { Modals } from '../../../consts/uris';
+import { Modals, TERMS_PAGE } from '../../../consts/uris';
 import { modifyInvite, updateUserProfile } from '../../../redux/actions';
 import { trackEvent } from '../../../utils/tracking';
 
@@ -103,7 +103,7 @@ class LoginModal extends Component {
 						onLoggedIn={this.handleLoggedIn} />
 				</div>
 				<div className="footer-wrapper form-disclaimer">
-					<PageNavLink to="https://pair.team/terms" target="_blank">Terms of Service</PageNavLink>
+					<PageNavLink to={TERMS_PAGE} target="_blank">Terms of Service</PageNavLink>
 				</div>
 			</div>
 		</BaseOverlay>);

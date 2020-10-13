@@ -1,29 +1,29 @@
 
-.recover-form {
+.recover-page .recover-form {
   width: 100%;
   text-align: left;
 }
 
-.recover-form form {
+.recover-page .recover-form form {
   width: 50%;
 }
 
-.recover-form form > *:not(.dummy-form):not(:last-child) {
+.recover-page .recover-form form > *:not(.dummy-form):not(:last-child) {
   margin-bottom: 20px;
 }
 
-.recover-form .react-password-strength {
+.recover-page .recover-form .react-password-strength {
   border: none;
   font-family: var(--orthodox-font-family);
   font-size: var(--base-font-size);
 }
 
-.recover-form .ReactPasswordStrength-strength-desc {
+.recover-page .recover-form .ReactPasswordStrength-strength-desc {
   top: 5px;
   width: auto;
   font-style: normal;
 }
 
-.recover-form .ReactPasswordStrength-strength-bar {
+.recover-page .recover-form .ReactPasswordStrength-strength-bar {
   display: none;
 }

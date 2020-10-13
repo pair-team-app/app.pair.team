@@ -72,3 +72,4 @@ export const GITHUB_XD_PLUGIN = 'https://github.com/de-ai/designengine-xd';
 export const NPM_DE_PLAYGROUND = 'https://www.npmjs.com/package/design-engine-playground';
 
 export const TWITTER_SUPPORT = 'https://twitter.com/Pairteamapp';
+export const TERMS_PAGE = 'https://pair.team/terms';

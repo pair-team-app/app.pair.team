@@ -8,7 +8,7 @@ import { connect } from 'react-redux';
 import BaseOverlay from '../BaseOverlay';
 import RecoverForm from '../../forms/RecoverForm';
 import PageNavLink from '../../iterables/PageNavLink';
-import { Modals } from '../../../consts/uris';
+import { Modals, TERMS_PAGE } from '../../../consts/uris';
 
 
 class RecoverModal extends Component {
@@ -57,16 +57,20 @@ class RecoverModal extends Component {
 				outro={outro}
 				filled={true}
 				closeable={false}
+				title="Forgot Password"
 				delay={125}
 				onComplete={this.handleComplete}>
 
 				<div className="recover-modal">
           <div className="link-wrapper">
-						<span>Looking for <PageNavLink to={Modals.REGISTER} onClick={this.handleModal}>Sign Up</PageNavLink> or <PageNavLink to={Modals.LOGIN} onClick={this.handleModal}>Log In</PageNavLink>?</span>
+						<span>Looking for <PageNavLink to={Modals.REGISTER} onClick={this.handleModal}>Sign Up</PageNavLink> or <PageNavLink to={Modals.LOGIN} onClick={this.handleModal}>Login</PageNavLink>?</span>
 					</div>
 
 					<div className="form-wrapper">
 						<RecoverForm onCancel={this.props.goBack} onSubmitted={(event)=> { event.preventDefault(); this.handleComplete(); }} />
+					</div>
+					<div className="footer-wrapper form-disclaimer">
+						<PageNavLink to={TERMS_PAGE} target="_blank">Terms of Service</PageNavLink>
 					</div>
 				</div>
 			</BaseOverlay>);

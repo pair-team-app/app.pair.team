@@ -10,7 +10,7 @@ import { POPUP_TYPE_ERROR } from '../PopupNotification';
 import RegisterForm from '../../forms/RegisterForm';
 import PageNavLink from '../../iterables/PageNavLink';
 
-import { Modals } from '../../../consts/uris';
+import { Modals, TERMS_PAGE } from '../../../consts/uris';
 import { modifyInvite, updateUserProfile } from '../../../redux/actions';
 import { trackEvent } from '../../../utils/tracking';
 
@@ -108,7 +108,7 @@ class RegisterModal extends Component {
 				</div>
 
 				<div className="footer-wrapper form-disclaimer">
-					<PageNavLink to="https://pair.team/terms" target="_blank">Terms of Service</PageNavLink>
+					<PageNavLink to={TERMS_PAGE} target="_blank">Terms of Service</PageNavLink>
 				</div>
 			</div>
 		</BaseOverlay>);
