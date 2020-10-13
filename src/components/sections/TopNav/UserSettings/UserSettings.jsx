@@ -5,7 +5,7 @@ import './UserSettings.css';
 import { push } from 'connected-react-router';
 import { connect } from 'react-redux';
 import { NavLink } from 'react-router-dom';
-import { GITHUB_DOCS, NPM_DE_PLAYGROUND, Modals, Pages, Popovers } from '../../../../consts/uris';
+import { TWITTER_SUPPORT, NPM_DE_PLAYGROUND, Modals, Pages, Popovers } from '../../../../consts/uris';
 import { trackOutbound } from '../../../../utils/tracking';
 import BasePopover from '../../../overlays/BasePopover';
 import { SettingsMenuItemTypes } from './';
@@ -92,7 +92,7 @@ class UserSettings extends Component {
 		}, ()=> {
 			if (itemType === SettingsMenuItemTypes.DOCS) {
 				this.props.push(window.location.pathname);
-				trackOutbound(GITHUB_DOCS);
+				trackOutbound(TWITTER_SUPPORT);
 
 			} else if (itemType === SettingsMenuItemTypes.INSTALL) {
 				this.props.push(window.location.pathname);
@@ -147,7 +147,7 @@ const UserSettingsPopover = (props)=> {
 		<div className="user-settings-popover">
 			<div className="settings-item" onClick={(event)=> props.onItemClick(SettingsMenuItemTypes.PROFILE, event)}>Profile</div>
 			{/* <div className="settings-item"><NavLink to={NPM_DE_PLAYGROUND} target="_blank" className="user-settings-link" onClick={(event)=> props.onItemClick(SettingsMenuItemTypes.INSTALL, event)}>Install</NavLink></div> */}
-			<div className="settings-item"><NavLink to={GITHUB_DOCS} target="_blank" className="user-settings-link" onClick={(event)=> props.onItemClick(SettingsMenuItemTypes.DOCS, event)}>Support</NavLink></div>
+			<div className="settings-item"><NavLink to={TWITTER_SUPPORT} target="_blank" className="user-settings-link" onClick={(event)=> props.onItemClick(SettingsMenuItemTypes.DOCS, event)}>Support</NavLink></div>
 			<div className="settings-item" onClick={(event)=> props.onItemClick(SettingsMenuItemTypes.LOGOUT, event)}>Logout</div>
 		</div>
 	</BasePopover>);
