@@ -10,7 +10,7 @@ import { matchPath } from 'react-router-dom';
 import { RoutePaths } from '../../components/helpers/Routes';
 import { ENTRY_MODALS, AUTHORIZED_MODALS } from '../../components/overlays/BaseOverlay';
 import { fetchTeamBuilds, fetchUserTeams, setTeam } from '../actions';
-import { STRIPE_SESSION_PAID, BUILD_PLAYGROUNDS_LOADED, INVITE_LOADED, COMMENT_CREATED, COMMENT_ADDED, COMMENT_UPDATED, COMMENT_VOTED, DEVICES_LOADED, SET_COMMENT, SET_COMPONENT, SET_PLAYGROUND, SET_TEAM, SET_TYPE_GROUP, TEAM_BUILDS_LOADED, TEAM_COMMENTS_LOADED, TEAMS_LOADED, TEAM_LOGO_LOADED, TEAM_RULES_UPDATED, TEAM_CREATED, TEAM_UPDATED, UPDATE_MOUSE_COORDS, UPDATE_RESIZE_BOUNDS, USER_PROFILE_LOADED, USER_PROFILE_UPDATED } from '../../consts/action-types';
+import { STRIPE_SESSION_PAID, BUILD_PLAYGROUNDS_LOADED, INVITE_LOADED, COMMENT_CREATED, COMMENT_ADDED, COMMENT_UPDATED, COMMENT_VOTED, DEVICES_LOADED, SET_COMMENT, SET_COMPONENT, SET_PLAYGROUND, SET_TEAM, SET_TYPE_GROUP, TEAM_BUILDS_LOADED, TEAM_COMMENTS_LOADED, TEAMS_LOADED, TEAM_LOGO_LOADED, TEAM_RULES_UPDATED, TEAM_CREATED, TEAM_UPDATED, UPDATE_MOUSE_COORDS, UPDATE_RESIZE_BOUNDS, USER_PROFILE_LOADED, USER_PROFILE_UPDATED, TEAM_DELETED } from '../../consts/action-types';
 import { HISTORY_TIMESTAMP } from '../../consts/formats';
 import { LOG_MIDDLEWARE_POSTFIX, LOG_MIDDLEWARE_PREFIX } from '../../consts/log-ascii';
 import { Modals, Pages } from '../../consts/uris';
@@ -385,6 +385,22 @@ export function onMiddleware(store) {
       };
 
       payload.teams = teams.map((item)=> (item.id === payload.team.id) ? payload.team : item) ;
+
+    } else if (type === TEAM_DELETED) {
+      const { teams, team } = prevState.teams;
+
+      payload.team = reformTeam(payload.team);
+      payload.teams = teams.filter(({ id })=> (id !== payload.team.id))
+
+      if (team.id === payload.team.id) {
+        if (payload.teams.length === 0) {
+          dispatch(push(Pages.CREATE));
+
+        } else {
+          payload.team = (payload.team.id === team.id) ? [...teams].shift() : team;
+          dispatch(setTeam(payload.team));
+        }
+      }
 
     } else if (type === TEAM_UPDATED) {
       const { team } = payload;

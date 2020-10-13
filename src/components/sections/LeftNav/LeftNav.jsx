@@ -4,12 +4,12 @@ import './LeftNav.css';
 
 import { push } from 'connected-react-router';
 import { Strings } from 'lang-js-utils';
-// import FontAwesome from 'react-fontawesome';
+import FontAwesome from 'react-fontawesome';
 import { connect } from 'react-redux';
 
 import ContentExpander from '../../iterables/ContentExpander';
 import { NPM_DE_PLAYGROUND, Pages } from '../../../consts/uris';
-import { fetchBuildPlaygrounds, setComponent, setPlayground, setTeam } from '../../../redux/actions';
+import { fetchBuildPlaygrounds, setComponent, setPlayground, setTeam, removeTeam } from '../../../redux/actions';
 import { trackEvent, trackOutbound } from '../../../utils/tracking';
 
 class LeftNav extends Component {
@@ -82,6 +82,12 @@ class LeftNav extends Component {
     });
   };
 
+  handleDeleteTeam = (team)=> {
+    console.log('%s.handleDeleteTeam()', this.constructor.name, { team });
+
+    this.props.removeTeam({ team });
+  };
+
   handleInstallClick = (event)=> {
     console.log('%s.handleInstallClick()', this.constructor.name, { event });
 
@@ -128,6 +134,7 @@ class LeftNav extends Component {
                 key={i}
                 team={team}
                 onClick={this.handleTeamClick}
+                onDelete={this.handleDeleteTeam}
               />
             ))}
           </div>)}
@@ -186,7 +193,10 @@ const LeftNavTeam = (props)=> {
 
 	const { team } = props;
 	const { id, title, selected } = team;
-	return (<div className="left-nav-team" onClick={()=> props.onClick(team)} data-id={id} data-selected={selected}># {title} ({team.comments.length})</div>);
+	return (<div className="left-nav-team" data-id={id} data-selected={selected}>
+    <div className="title" onClick={()=> props.onClick(team)}># {title} ({team.comments.length})</div>
+    <FontAwesome name="minus-circle" className="delete" onClick={()=> props.onDelete(team)} />
+  </div>);
 };
 
 
@@ -206,6 +216,7 @@ const mapDispatchToProps = (dispatch)=> {
     setComponent          : (payload)=> dispatch(setComponent(payload)),
     setPlayground         : (payload)=> dispatch(setPlayground(payload)),
     setTeam               : (payload)=> dispatch(setTeam(payload)),
+    removeTeam            : (payload)=> dispatch(removeTeam(payload)),
     push                  : (payload)=> dispatch(push(payload))
   });
 };

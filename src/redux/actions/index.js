@@ -1,7 +1,7 @@
 import axios from 'axios';
 import cookie from 'react-cookies';
 import { VOTE_ACTION_DOWN, VOTE_ACTION_UP } from '../../components/iterables/BaseComment';
-import { BUILD_PLAYGROUNDS_LOADED, INVITE_LOADED, INVITE_MODIFIED, COMMENT_CREATED, COMMENT_ADDED, COMMENT_UPDATED, COMMENT_VOTED, COMPONENT_TYPES_LOADED, DEVICES_LOADED, PRODUCTS_LOADED, SET_COMMENT, SET_COMPONENT, SET_INVITE, SET_PLAYGROUND, SET_ROUTE_PATH, SET_TEAM, SET_TYPE_GROUP, TEAM_BUILDS_LOADED, TEAM_COMMENTS_LOADED, TEAMS_LOADED, TEAM_LOGO_LOADED, TEAM_RULES_UPDATED, TEAM_UPDATED, TOGGLE_THEME, UPDATE_MOUSE_COORDS, UPDATE_RESIZE_BOUNDS, USER_PROFILE_ERROR, USER_PROFILE_LOADED, USER_PROFILE_UPDATED, TEAM_CREATED, STRIPE_SESSION_CREATED, STRIPE_SESSION_PAID, SET_COMMENT_IMAGE, SET_COMMENTS_SORT, SET_COMMENTS_FORMAT_FILTER, SET_COMMENTS_DONE_FILTER } from '../../consts/action-types';
+import { BUILD_PLAYGROUNDS_LOADED, INVITE_LOADED, INVITE_MODIFIED, COMMENT_CREATED, COMMENT_ADDED, COMMENT_UPDATED, COMMENT_VOTED, COMPONENT_TYPES_LOADED, DEVICES_LOADED, PRODUCTS_LOADED, SET_COMMENT, SET_COMPONENT, SET_INVITE, SET_PLAYGROUND, SET_ROUTE_PATH, SET_TEAM, SET_TYPE_GROUP, TEAM_DELETED, TEAM_BUILDS_LOADED, TEAM_COMMENTS_LOADED, TEAMS_LOADED, TEAM_LOGO_LOADED, TEAM_RULES_UPDATED, TEAM_UPDATED, TOGGLE_THEME, UPDATE_MOUSE_COORDS, UPDATE_RESIZE_BOUNDS, USER_PROFILE_ERROR, USER_PROFILE_LOADED, USER_PROFILE_UPDATED, TEAM_CREATED, STRIPE_SESSION_CREATED, STRIPE_SESSION_PAID, SET_COMMENT_IMAGE, SET_COMMENTS_SORT, SET_COMMENTS_FORMAT_FILTER, SET_COMMENTS_DONE_FILTER } from '../../consts/action-types';
 import { API_RESPONSE_PREFIX, LOG_ACTION_POSTFIX, LOG_ACTION_PREFIX } from '../../consts/log-ascii';
 import { API_ENDPT_URL } from '../../consts/uris';
 
@@ -550,6 +550,28 @@ export function modifyTeam(payload) {
 
       dispatch({
         type    : TEAM_UPDATED,
+        payload : { team : response.data.team }
+      });
+
+    }).catch((error)=> {});
+  });
+}
+
+export function removeTeam(payload) {
+  return ((dispatch, getState)=> {
+    logFormat('removeTeam()', { store : (typeof getState === 'function') ? getState() : getState, typeof : typeof getState }, payload);
+
+    const { team } = payload;
+    axios.post(API_ENDPT_URL, {
+      action  : 'REMOVE_TEAM',
+      payload : {
+        team_id : team.id
+      }
+    }).then((response)=> {
+      console.log(API_RESPONSE_PREFIX, 'REMOVE_TEAM', response.data);
+
+      dispatch({
+        type    : TEAM_DELETED,
         payload : { team : response.data.team }
       });
 

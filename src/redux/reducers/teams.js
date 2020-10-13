@@ -1,5 +1,5 @@
 
-import { INVITE_LOADED, SET_TEAM, SET_COMMENT, TEAM_COMMENTS_LOADED, TEAMS_LOADED, TEAM_CREATED, TEAM_LOGO_LOADED, TEAM_RULES_UPDATED, TEAM_UPDATED, COMMENT_ADDED, COMMENT_UPDATED, COMMENT_VOTED, USER_PROFILE_UPDATED } from '../../consts/action-types';
+import { INVITE_LOADED, SET_TEAM, SET_COMMENT, TEAM_COMMENTS_LOADED, TEAMS_LOADED, TEAM_CREATED, TEAM_LOGO_LOADED, TEAM_RULES_UPDATED, TEAM_UPDATED, COMMENT_ADDED, COMMENT_UPDATED, COMMENT_VOTED, USER_PROFILE_UPDATED, TEAM_DELETED } from '../../consts/action-types';
 import { LOG_REDUCER_POSTFIX, LOG_REDUCER_PREFIX } from '../../consts/log-ascii';
 
 const initialState = {
@@ -43,6 +43,10 @@ export default function comments(state=initialState, action) {
   } else if (type === TEAM_UPDATED) {
     const { team } = payload;
     return (Object.assign({}, state, { team }));
+
+  } else if (type === TEAM_DELETED) {
+    const { teams, team } = payload;
+    return (Object.assign({}, state, { teams, team }));
 
   } else if (type === COMMENT_ADDED) {
     const { teams, team } = payload;
