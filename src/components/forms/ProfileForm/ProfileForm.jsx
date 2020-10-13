@@ -85,7 +85,7 @@ class ProfileForm extends Component {
 		if (changed) {
       const emailValid = Strings.isEmail(email);
       // const passwordValid = (CryptoJS.MD(password).toString() === profile.password);
-      const passwordValid = (password.length >= 5 && passScore >= 1 && newPassword === newPassword2);
+      const passwordValid = (newPassword.length >= 5 && passScore >= 1);
 
       if (emailValid && passwordValid) {
         trackEvent('button', 'profile-update');
@@ -128,7 +128,7 @@ class ProfileForm extends Component {
 		console.log('%s.render()', this.constructor.name, { props : this.props, state : { ...this.state, password : CryptoJS.MD5(this.state.password).toString() }});
 
 		const { profile } = this.props;
-		const { email, password, newPassword2, passMsg } = this.state;
+		const { email, password, newPassword, newPassword2, passMsg } = this.state;
 		const { emailValid, passwordValid, changed, validated } = this.state;
 
 		return (
@@ -160,7 +160,7 @@ class ProfileForm extends Component {
 					<input type="password" placeholder="Confirm New Password" value={newPassword2} onChange={(event)=> this.setState({ newPassword2 : event.target.value, passMsg : null })} onClick={this.handlePasswordClick} autoComplete="new-password" />
 
 					<div className="button-wrapper button-wrapper-row">
-            <button type="submit" disabled={!changed || email.length === 0 || !emailValid || !passwordValid || (CryptoJS.MD5(password).toString() !== profile.password)} onClick={(event)=> this.handleSubmit(event)}>Submit</button>
+            <button type="submit" disabled={!changed || email.length === 0 || !emailValid || (CryptoJS.MD5(password).toString() !== profile.password) || newPassword !== newPassword2} onClick={(event)=> this.handleSubmit(event)}>Submit</button>
 						<button className="cancel-button" onClick={this.props.onCancel}>Cancel</button>
 						{/*<button disabled={(email.length === 0 || !emailValid || !passwordValid)} type="submit" onClick={this.handleSubmit}>Update</button>*/}
 					</div>
