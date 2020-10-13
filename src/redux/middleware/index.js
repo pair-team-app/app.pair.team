@@ -377,12 +377,14 @@ export function onMiddleware(store) {
       payload.team = reformTeam(payload.team);
 
     } else if (type === TEAM_RULES_UPDATED) {
-      const { team } = prevState.teams;
+      const { teams, team } = prevState.teams;
       const { rules } = payload;
 
       payload.team = { ...team,
         rules : rules.map((rule)=> (reformRule(rule, team.members)))
       };
+
+      payload.teams = teams.map((item)=> (item.id === payload.team.id) ? payload.team : item) ;
 
     } else if (type === TEAM_UPDATED) {
       const { team } = payload;

@@ -15,11 +15,11 @@ export const CommentSortTypes = {
 };
 
 export const CommentFilterTypes = {
-  NONE   : 'NONE',
-  ISSUES : 'issue',
-  TO_DOS : 'to-do',
-  BUGS   : 'bug',
-  DONE   : 'resolved'
+  NONE     : 'NONE',
+  ISSUES   : 'issue',
+  REQUESTS : 'request',
+  BUGS     : 'bug',
+  DONE     : 'resolved'
 };
 
 

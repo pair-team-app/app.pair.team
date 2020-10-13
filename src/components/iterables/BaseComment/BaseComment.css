@@ -149,7 +149,7 @@
 
 .comment-body .base-comment-content[data-resolved="true"] .content {
 	text-decoration: line-through;
-	opacity: 0.5;
+	opacity: 0.875;
 }
 
 .comment-body .base-comment-content .link {
@@ -197,7 +197,7 @@
 
 .comment-body .base-comment-content .reply-form  > div input.comment-txt {
 	position: absolute;
-	padding-right: 135px;
+	padding-right: 230px;
 	filter: none;
 }
 

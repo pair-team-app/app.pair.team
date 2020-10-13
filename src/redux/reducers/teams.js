@@ -29,8 +29,8 @@ export default function comments(state=initialState, action) {
     return (Object.assign({}, state, { team }));
 
   }  else if (type === TEAM_RULES_UPDATED) {
-    const { team } = payload;
-    return (Object.assign({}, state, { team }));
+    const { teams, team } = payload;
+    return (Object.assign({}, state, { teams, team }));
 
   } else if (type === TEAMS_LOADED) {
     const { team, teams, member } = payload;
