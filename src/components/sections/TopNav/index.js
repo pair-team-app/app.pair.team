@@ -15,7 +15,7 @@ export const CommentSortTypes = {
 };
 
 export const CommentFilterTypes = {
-  NONE     : 'NONE',
+  NONE     : 'text',
   ISSUES   : 'issue',
   REQUESTS : 'request',
   BUGS     : 'bug',

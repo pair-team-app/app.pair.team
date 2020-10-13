@@ -449,9 +449,9 @@ const TeamPageCommentHeader = (props)=> {
       <KeyboardEventHandler handleKeys={['enter', 'esc']} onKeyEvent={(key, event)=> props.onKeyPress(event, key)}>
         <input type="text" className="comment-txt" placeholder="Type anything…" value={text} onChange={props.onChange} onFocus={props.onFocus} />
         <div className="format-wrapper">
-          <label><input type="radio" name="0_format" value={CommentFilterTypes.ISSUES} checked={(format === CommentFilterTypes.ISSUES)} onChange={()=> props.onFormatClick(CommentFilterTypes.ISSUES)} />Issue</label>
-          <label><input type="radio" name="0_format" value={CommentFilterTypes.BUGS} checked={(format === CommentFilterTypes.BUGS)} onChange={()=> props.onFormatClick(CommentFilterTypes.BUGS)} />Bug</label>
-          <label><input type="radio" name="0_format" value={CommentFilterTypes.REQUESTS} checked={(format === CommentFilterTypes.REQUESTS)} onChange={()=> props.onFormatClick(CommentFilterTypes.REQUESTS)} />Request</label>
+          <label><input type="radio" name="0_format" value={CommentFilterTypes.ISSUES} checked={(format === CommentFilterTypes.ISSUES)} onChange={()=> props.onFormatClick(CommentFilterTypes.ISSUES)} onClick={(event)=> (event.target.checked && props.onFormatClick(CommentFilterTypes.NONE))} />Issue</label>
+          <label><input type="radio" name="0_format" value={CommentFilterTypes.BUGS} checked={(format === CommentFilterTypes.BUGS)} onChange={()=> props.onFormatClick(CommentFilterTypes.BUGS)} onClick={(event)=> (event.target.checked && props.onFormatClick(CommentFilterTypes.NONE))} />Bug</label>
+          <label><input type="radio" name="0_format" value={CommentFilterTypes.REQUESTS} checked={(format === CommentFilterTypes.REQUESTS)} onChange={()=> props.onFormatClick(CommentFilterTypes.REQUESTS)} onClick={(event)=> (event.target.checked && props.onFormatClick(CommentFilterTypes.NONE))} />Request</label>
         </div>
       </KeyboardEventHandler>
     </div>

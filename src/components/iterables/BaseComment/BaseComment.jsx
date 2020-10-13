@@ -22,7 +22,7 @@ class BaseComment extends Component {
     this.state = {
 			replyContent : '',
 			codeType     : false,
-			format       : 'text'
+			format       : CommentFilterTypes.NONE
 		};
 	}
 
@@ -108,7 +108,7 @@ class BaseComment extends Component {
 
 	handleReplyFormat = (format)=> {
 		console.log('BaseCommentContent.handleReplySubmit()', this.constructor.name, { format });
-		this.setState({ format });
+		this.setState({ format : (this.state.format === format) ? CommentFilterTypes.NONE : format });
 	}
 
 	handleReplySubmit = (event)=> {
@@ -135,7 +135,7 @@ class BaseComment extends Component {
 		this.setState({
 			replyContent : '' ,
 			codeType   : false,
-			format     : 'text'
+			format     : CommentFilterTypes.NONE
 		});
   };
 
@@ -224,9 +224,9 @@ const BaseCommentContent = (props)=> {
 				<KeyboardEventHandler handleKeys={['enter', `esc`]} isDisabled={(preComment !== null)} onKeyEvent={(key, event)=> props.onReplyKeyPress(event, key)}>
 					<input type="text" placeholder="Reply…" value={replyContent} onFocus={props.onReplyFocus} onBlur={props.onReplyBlur} onChange={props.onTextChange} data-code={codeType} autoComplete="new-password" />
 					<div className="format-wrapper">
-						<label><input type="radio" name={`${comment.id}_format`} value={CommentFilterTypes.ISSUES} checked={(format === CommentFilterTypes.ISSUES)} onChange={()=> props.onReplyFormatClick(CommentFilterTypes.ISSUES)} />Issue</label>
-          	<label><input type="radio" name={`${comment.id}_format`} value={CommentFilterTypes.BUGS} checked={(format === CommentFilterTypes.BUGS)} onChange={()=> props.onReplyFormatClick(CommentFilterTypes.BUGS)} />Bug</label>
-          	<label><input type="radio" name={`${comment.id}_format`} value={CommentFilterTypes.REQUESTS} checked={(format === CommentFilterTypes.REQUESTS)} onChange={()=> props.onReplyFormatClick(CommentFilterTypes.REQUESTS)} />Request</label>
+						<label><input type="radio" name={`${comment.id}_format`} value={CommentFilterTypes.ISSUES} checked={(format === CommentFilterTypes.ISSUES)} onChange={()=> props.onReplyFormatClick(CommentFilterTypes.ISSUES)} onClick={(event)=> (event.target.checked && props.onReplyFormatClick(CommentFilterTypes.NONE))} />Issue</label>
+          	<label><input type="radio" name={`${comment.id}_format`} value={CommentFilterTypes.BUGS} checked={(format === CommentFilterTypes.BUGS)} onChange={()=> props.onReplyFormatClick(CommentFilterTypes.BUGS)} onClick={(event)=> (event.target.checked && props.onReplyFormatClick(CommentFilterTypes.NONE))} />Bug</label>
+          	<label><input type="radio" name={`${comment.id}_format`} value={CommentFilterTypes.REQUESTS} checked={(format === CommentFilterTypes.REQUESTS)} onChange={()=> props.onReplyFormatClick(CommentFilterTypes.REQUESTS)} onClick={(event)=> (event.target.checked && props.onReplyFormatClick(CommentFilterTypes.NONE))} />Request</label>
 					</div>
 				</KeyboardEventHandler>
 			</div>
