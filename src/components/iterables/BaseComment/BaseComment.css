@@ -147,7 +147,7 @@
 	font-size: 30px;
 }
 
-.comment-body .base-comment-content[data-resolved="true"] .content {
+.comment-body .base-comment-content[data-resolved="true"] .content, .comment-body .base-comment-content[data-resolved="true"] .link {
 	text-decoration: line-through;
 	opacity: 0.875;
 }
