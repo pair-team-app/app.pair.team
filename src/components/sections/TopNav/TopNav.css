@@ -34,10 +34,27 @@
 	transition: width var(--transition-duration-short) var(--transition-duration-long) cubic-bezier(0.4, 0, 0.2, 1); */
 /* } */
 
+.top-nav .col {
+	flex-flow: row nowrap;
+	align-items: center;
+}
+
+.top-nav .col-left {
+	flex: 5 0 auto;
+}
+
 .top-nav .col-mid {
 	display: none;
 	visibility: hidden;
 	justify-content: center;
+}
+
+.top-nav .col-right {
+	flex: 1 0 auto;
+}
+
+.top-nav .page-header-wrapper {
+	width: 100%;
 }
 
 .top-nav .link-wrapper {
@@ -46,50 +63,58 @@
 	align-items: center;
 }
 
-.top-nav .link-wrapper > div {
-	display: flex;
-	flex-flow: row nowrap;
-	align-items: center;
+.top-nav .col-right .link-wrapper > *:not(:last-child) {
+	margin-right: 10px;
 }
 
-.top-nav .link-wrapper > div:not(:last-child) {
-	margin-right: 20px;
-}
-
-.top-nav .link-wrapper .nav-link:not(:last-child) {
+.team-page-header .nav-link:not(:last-child) {
 	margin-right: var(--spacing-10);
 }
 
-.top-nav .link-wrapper .nav-link .filter-check {
+.team-page-header .nav-link .filter-check {
 	margin-right: 2px;
 	color: #a4a4a4;
 	font-size: 12px;
 }
 
-.top-nav .link-wrapper .nav-link {
+.team-page-header .nav-link {
 	color: rgba(var(--link-color), 1.0);
 	font-weight: 700;
 	transition: color var(--transition-duration-short) ease-out;
 }
 
-.top-nav .link-wrapper .nav-link:hover {
+.team-page-header .nav-link:hover {
 	color: rgba(var(--link-hover-color), 1.0);
 	text-decoration: underline;
 	cursor: pointer;
 }
 
-.top-nav .link-wrapper .nav-link[data-selected="true"], .top-nav .link-wrapper .nav-link-sort[data-selected="true"]:hover {
+.team-page-header .nav-link[data-selected="true"], .team-page-header .nav-link-sort[data-selected="true"]:hover {
 	text-decoration: none;
 	color: rgba(var(--link-selected-color), 1.0);
 	cursor: default;
 }
 
-.top-nav .link-wrapper .nav-link-filter[data-selected="true"]:hover {
+.team-page-header {
+	display: flex;
+}
+
+.team-page-header .nav-link-sort:not(:last-child) {
+	margin-right: 10px;
+}
+
+.team-page-header .nav-link-sort:after, .team-page-header .nav-link-sort[data-selected="true"]:after {
+	margin-left: 10px;
+	color: rgba(var(--site-fg-color), 1.0);
+	content: '|';
+}
+
+.team-page-header .nav-link-filter[data-selected="true"]:hover {
 	text-decoration: underline;
 	cursor: pointer;
 }
 
-.top-nav .link-wrapper .nav-link[data-selected="true"] .filter-check {
+.team-page-header .nav-link[data-selected="true"] .filter-check {
 	color: rgba(var(--link-selected-color), 1.0);
 }
 

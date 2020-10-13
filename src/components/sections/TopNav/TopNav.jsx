@@ -184,17 +184,16 @@ const TeamPageHeader = (props)=> {
 	const { ISSUES, BUGS, REQUESTS, DONE } = CommentFilterTypes;
 
 	return (<div className="team-page-header page-header">
-		<div className="link-wrapper">
-			<div>
-				<div className="nav-link nav-link-sort" data-selected={sort === DATE} onClick={()=> props.onSortClick(DATE)}><FontAwesome name="check" className="filter-check" />New</div>
-				<div className="nav-link nav-link-sort" data-selected={sort === SCORE} onClick={()=> props.onSortClick(SCORE)}><FontAwesome name="check" className="filter-check" />Top</div>
-			</div>
-			<div>
-				<div className="nav-link nav-link-filter" data-selected={formatFilter === ISSUES} onClick={()=> props.onFilterClick(ISSUES)}><FontAwesome name="check" className="filter-check" />Issues</div>
-				<div className="nav-link nav-link-filter" data-selected={formatFilter === BUGS} onClick={()=> props.onFilterClick(BUGS)}><FontAwesome name="check" className="filter-check" />Bugs</div>
-				<div className="nav-link nav-link-filter" data-selected={formatFilter === REQUESTS} onClick={()=> props.onFilterClick(REQUESTS)}><FontAwesome name="check" className="filter-check" />Requests</div>
-			</div>
-			<div><div className="nav-link nav-link-filter" data-selected={doneFilter} onClick={()=> props.onFilterClick(DONE)}><FontAwesome name="check" className="filter-check" />Done</div></div>
+		<div className="col col-left">
+			<div className="nav-link nav-link-sort" data-selected={sort === DATE} onClick={()=> props.onSortClick(DATE)}>New</div>
+			<div className="nav-link nav-link-sort" data-selected={sort === SCORE} onClick={()=> props.onSortClick(SCORE)}>Top</div>
+			<div className="nav-link nav-link-filter" data-selected={doneFilter} onClick={()=> props.onFilterClick(DONE)}>Done</div>
+		</div>
+		<div className="col col-mid"></div>
+		<div className="col col-right">
+			<div className="nav-link nav-link-filter" data-selected={formatFilter === ISSUES} onClick={()=> props.onFilterClick(ISSUES)}><FontAwesome name="check" className="filter-check" />Issues</div>
+			<div className="nav-link nav-link-filter" data-selected={formatFilter === BUGS} onClick={()=> props.onFilterClick(BUGS)}><FontAwesome name="check" className="filter-check" />Bugs</div>
+			<div className="nav-link nav-link-filter" data-selected={formatFilter === REQUESTS} onClick={()=> props.onFilterClick(REQUESTS)}><FontAwesome name="check" className="filter-check" />Requests</div>
 		</div>
 	</div>);
 };
