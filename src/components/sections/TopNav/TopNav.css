@@ -67,6 +67,7 @@
 	margin-right: 10px;
 }
 
+
 .team-page-header .nav-link:not(:last-child) {
 	margin-right: var(--spacing-10);
 }
@@ -103,7 +104,7 @@
 	margin-right: 10px;
 }
 
-.team-page-header .nav-link-sort:after, .team-page-header .nav-link-sort[data-selected="true"]:after {
+.team-page-header .nav-link-sort:first-child:after, .team-page-header .nav-link-sort[data-selected="true"]:first-child:after {
 	margin-left: 10px;
 	color: rgba(var(--site-fg-color), 1.0);
 	content: '|';
@@ -117,6 +118,7 @@
 .team-page-header .nav-link[data-selected="true"] .filter-check {
 	color: rgba(var(--link-selected-color), 1.0);
 }
+
 
 .top-nav-share-link {
   position: relative;

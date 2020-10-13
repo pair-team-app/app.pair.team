@@ -134,13 +134,13 @@ class TopNav extends Component {
 	render() {
 		// console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
 
-		const { darkThemed, profile, invite, sort, formatFilter, doneFilter } = this.props;
+		const { darkThemed, profile, invite, team, sort, formatFilter, doneFilter } = this.props;
 		const { popover, matchPaths } = this.state;
 
 		return (<div className="top-nav">
 			{/* <div className="col breadcrumb-wrapper">{this.buildBreadcrumbs().map((breadcrumb)=> (breadcrumb))}</div> */}
 			<div className="col col-left"><div className="page-header-wrapper">
-				{(matchPaths.team && !matchPaths.project) && (<TeamPageHeader sort={sort} formatFilter={formatFilter} doneFilter={doneFilter} onSortClick={this.handleTeamCommentsSort} onFilterClick={this.handleTeamCommentsFilter} />)}
+				{(matchPaths.team && !matchPaths.project) && (<TeamPageHeader team={team} sort={sort} formatFilter={formatFilter} doneFilter={doneFilter} onSortClick={this.handleTeamCommentsSort} onFilterClick={this.handleTeamCommentsFilter} />)}
 				{(matchPaths.create) && (<TopNavPageTitle title="Create" />)}
 				{(matchPaths.project) && (<TopNavPageTitle title="Project" />)}
 			</div></div>
@@ -177,23 +177,36 @@ const TopNavShareLink = (props)=> {
 
 
 const TeamPageHeader = (props)=> {
-	console.log('TeamPageHeader()', { props });
-
-	const { sort, formatFilter, doneFilter } = props;
+	const { team, sort, formatFilter, doneFilter } = props;
 	const { DATE, SCORE } = CommentSortTypes;
 	const { ISSUES, BUGS, REQUESTS, DONE } = CommentFilterTypes;
+
+	let formatTotals = (team) ? [
+		team.comments.filter(({ format })=> (format === ISSUES)).length,
+		team.comments.filter(({ format })=> (format === BUGS)).length,
+		team.comments.filter(({ format })=> (format === REQUESTS)).length
+	] : [0, 0, 0];
+
+	let doneTotals = (team) ? [
+		team.comments.filter(({ format, state })=> (format === ISSUES && state === DONE)).length,
+		team.comments.filter(({ format, state })=> (format === BUGS && state === DONE)).length,
+		team.comments.filter(({ format, state })=> (format === REQUESTS && state === DONE)).length,
+	] : [0, 0, 0];
+
+
+	console.log('TeamPageHeader()', { ...formatTotals });
 
 	return (<div className="team-page-header page-header">
 		<div className="col col-left">
 			<div className="nav-link nav-link-sort" data-selected={sort === DATE} onClick={()=> props.onSortClick(DATE)}>New</div>
 			<div className="nav-link nav-link-sort" data-selected={sort === SCORE} onClick={()=> props.onSortClick(SCORE)}>Top</div>
-			<div className="nav-link nav-link-filter" data-selected={doneFilter} onClick={()=> props.onFilterClick(DONE)}>Done</div>
 		</div>
 		<div className="col col-mid"></div>
 		<div className="col col-right">
-			<div className="nav-link nav-link-filter" data-selected={formatFilter === ISSUES} onClick={()=> props.onFilterClick(ISSUES)}><FontAwesome name="check" className="filter-check" />Issues</div>
-			<div className="nav-link nav-link-filter" data-selected={formatFilter === BUGS} onClick={()=> props.onFilterClick(BUGS)}><FontAwesome name="check" className="filter-check" />Bugs</div>
-			<div className="nav-link nav-link-filter" data-selected={formatFilter === REQUESTS} onClick={()=> props.onFilterClick(REQUESTS)}><FontAwesome name="check" className="filter-check" />Requests</div>
+			<div className="nav-link nav-link-filter" data-selected={formatFilter === ISSUES} onClick={()=> props.onFilterClick(ISSUES)}><FontAwesome name="check" className="filter-check" />Issues ({(doneFilter) ? doneTotals[0] : formatTotals[0]})</div>
+			<div className="nav-link nav-link-filter" data-selected={formatFilter === BUGS} onClick={()=> props.onFilterClick(BUGS)}><FontAwesome name="check" className="filter-check" />Bugs ({(doneFilter) ? doneTotals[1] : formatTotals[1]})</div>
+			<div className="nav-link nav-link-filter" data-selected={formatFilter === REQUESTS} onClick={()=> props.onFilterClick(REQUESTS)}><FontAwesome name="check" className="filter-check" />Requests ({(doneFilter) ? doneTotals[2] : formatTotals[2]})</div>
+			<div className="nav-link nav-link-filter" data-selected={doneFilter} onClick={()=> props.onFilterClick(DONE)}><FontAwesome name="check" className="filter-check" />Done ({doneTotals.reduce((acc, val)=> (acc + val), 0)})</div>
 		</div>
 	</div>);
 };
@@ -212,6 +225,7 @@ const mapDispatchToProps = (dispatch)=> {
 const mapStateToProps = (state, ownProps)=> {
 	return ({
     darkThemed   : state.darkThemed,
+		team         : state.teams.team,
 		invite       : state.teams.invite,
 		profile      : state.user.profile,
 		sort         : state.comments.sort,
