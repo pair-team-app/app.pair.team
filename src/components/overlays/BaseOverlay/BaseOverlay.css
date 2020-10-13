@@ -122,6 +122,7 @@
 	display: flex;
 	flex-flow: column nowrap;
 	margin-bottom: var(--spacing-20);
+	font-size: 14px;
 	/* padding-left: var(--spacing-10); */
   /* border: 1px dotted #ffff00; */
 }
@@ -156,5 +157,6 @@
 
 .base-overlay .content-wrapper .content .footer-wrapper {
 	margin-top: 20px;
+	font-size: 14px;
 	text-align: center;
 }

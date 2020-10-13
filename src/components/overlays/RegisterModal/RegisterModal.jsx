@@ -4,12 +4,12 @@ import './RegisterModal.css';
 
 import { goBack } from 'connected-react-router';
 import { connect } from 'react-redux';
-import { NavLink } from 'react-router-dom';
 
 import BaseOverlay from '../BaseOverlay';
 import { POPUP_TYPE_ERROR } from '../PopupNotification';
 import RegisterForm from '../../forms/RegisterForm';
 import PageNavLink from '../../iterables/PageNavLink';
+
 import { Modals } from '../../../consts/uris';
 import { modifyInvite, updateUserProfile } from '../../../redux/actions';
 import { trackEvent } from '../../../utils/tracking';
