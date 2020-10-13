@@ -194,7 +194,7 @@ const LeftNavTeam = (props)=> {
 	const { team } = props;
 	const { id, title, selected } = team;
 	return (<div className="left-nav-team" data-id={id} data-selected={selected}>
-    <div className="title" onClick={()=> props.onClick(team)}># {title} ({team.comments.length})</div>
+    <div className="title" onClick={()=> props.onClick(team)}># {Strings.capitalize(title, true)} ({team.comments.length})</div>
     <FontAwesome name="minus-circle" className="delete" onClick={()=> props.onDelete(team)} />
   </div>);
 };
