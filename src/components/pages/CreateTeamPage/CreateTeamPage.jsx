@@ -145,8 +145,8 @@ const CreateTeamForm = (props)=> {
   return (<div className="create-team-form">
     <form>
       <DummyForm />
-      <input type="text" placeholder="Enter Team Name" value={title} onChange={props.onTitleChange} autoComplete="new-password" />
-      <input type="text" placeholder="Enter Team Description" value={description} onChange={props.onDescriptionChange} autoComplete="new-password" />
+      <input type="text" placeholder="Enter Name" value={title} onChange={props.onTitleChange} autoComplete="new-password" />
+      <input type="text" placeholder="Enter Description" value={description} onChange={props.onDescriptionChange} autoComplete="new-password" />
       <div className="rules-wrapper">
         {(rules.slice(0, -1).map((rule, i)=> (
           <div key={i} className="input-acc-wrapper">
@@ -155,7 +155,7 @@ const CreateTeamForm = (props)=> {
           </div>
         )))}
         <div className="input-acc-wrapper">
-          <input type="text" placeholder="Add Team Rule" value={[...rules].pop()} onChange={(event)=> props.onRuleChange(event, rules.length - 1)} autoComplete="new-password" />
+          <input type="text" placeholder="Add Rule" value={[...rules].pop()} onChange={(event)=> props.onRuleChange(event, rules.length - 1)} autoComplete="new-password" />
           <PlusFormAccessory onClick={props.onRuleAppend} />
         </div>
       </div>

@@ -123,3 +123,10 @@
 .top-nav-share-link {
   position: relative;
 }
+
+
+.top-nav-page-title {
+	/* margin-top: -10px; */
+	font-size: 28px;
+	font-weight: 700;
+}

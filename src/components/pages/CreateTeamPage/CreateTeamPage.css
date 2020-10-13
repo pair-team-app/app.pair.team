@@ -10,7 +10,7 @@
 }
 
 .create-team-form form {
-  width: 50%;
+  width: 348px;
 }
 
 .create-team-form form > *:not(.dummy-form):not(:last-child) {

@@ -141,7 +141,7 @@ class TopNav extends Component {
 			{/* <div className="col breadcrumb-wrapper">{this.buildBreadcrumbs().map((breadcrumb)=> (breadcrumb))}</div> */}
 			<div className="col col-left"><div className="page-header-wrapper">
 				{(matchPaths.team && !matchPaths.project) && (<TeamPageHeader team={team} sort={sort} formatFilter={formatFilter} doneFilter={doneFilter} onSortClick={this.handleTeamCommentsSort} onFilterClick={this.handleTeamCommentsFilter} />)}
-				{(matchPaths.create) && (<TopNavPageTitle title="Create" />)}
+				{(matchPaths.create) && (<TopNavPageTitle title="Create Channel" />)}
 				{(matchPaths.project) && (<TopNavPageTitle title="Project" />)}
 			</div></div>
 			<div className="col col-mid">
