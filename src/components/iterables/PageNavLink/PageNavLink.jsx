@@ -20,7 +20,10 @@ function PageNavLink(props) {
 		trackEvent('link', to);
 		trackOutbound(to, ()=> {
 			window.open(to);
-			props.onClick(event);
+
+			if (props.onClick) {
+				props.onClick(event);
+			}
 		});
 	};
 

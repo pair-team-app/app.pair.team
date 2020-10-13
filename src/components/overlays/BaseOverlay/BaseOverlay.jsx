@@ -178,7 +178,7 @@ class BaseOverlay extends Component {
           // onResizeStop={this.onResized}
           // onResize={this.onResized}> */
           }
-        <Resizable className="resizable" defaultSize={{ width : 550, height : 'auto' }} onResizeStart={this.onResizedContent} onResize={this.onResizedContent} onResizeStop={this.onResizedContent}>
+        <Resizable className="resizable" defaultSize={{ width : 348, height : 'auto' }} onResizeStart={this.onResizedContent} onResize={this.onResizedContent} onResizeStop={this.onResizedContent}>
 
 
             <div className="content-wrapper"data-bordered={bordered} ref={(el)=> (el) ? this.wrapper = el : null}>

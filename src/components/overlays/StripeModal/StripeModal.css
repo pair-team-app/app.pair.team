@@ -1,12 +1,4 @@
 
-.base-overlay .header-wrapper {
-	font-size: 30px;
-}
-
-.base-overlay .content-wrapper .header-wrapper {
-	justify-content: flex-start;
-}
-
 .stripe-modal {
 	position: relative;
 	min-width: 488px;

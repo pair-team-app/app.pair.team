@@ -4,6 +4,7 @@ import './RegisterModal.css';
 
 import { goBack } from 'connected-react-router';
 import { connect } from 'react-redux';
+import { NavLink } from 'react-router-dom';
 
 import BaseOverlay from '../BaseOverlay';
 import { POPUP_TYPE_ERROR } from '../PopupNotification';
@@ -91,12 +92,13 @@ class RegisterModal extends Component {
 			outro={outro}
 			closeable={false}
 			filled={true}
+			title="Sign Up"
 			onComplete={this.handleComplete}>
 
 			<div className="register-modal">
 				{(invite) && (<div className="title-wrapper">{invite.team_title}</div>)}
         <div className="link-wrapper">
-          <span>Already have an account? <PageNavLink to={Modals.LOGIN} onClick={this.handleModal}>Log In</PageNavLink></span>
+          <span>Already have an account? <PageNavLink to={Modals.LOGIN} onClick={this.handleModal}>Login</PageNavLink></span>
         </div>
 				<div className="form-wrapper">
 					<RegisterForm
@@ -105,7 +107,9 @@ class RegisterModal extends Component {
 						onRegistered={this.handleRegistered} />
 				</div>
 
-				<div className="footer-wrapper form-disclaimer"></div>
+				<div className="footer-wrapper form-disclaimer">
+					<PageNavLink to="https://pair.team/terms" target="_blank">Terms of Service</PageNavLink>
+				</div>
 			</div>
 		</BaseOverlay>);
 	}
