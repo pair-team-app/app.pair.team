@@ -9,6 +9,7 @@ import FontAwesome from 'react-fontawesome';
 import KeyboardEventHandler from 'react-keyboard-event-handler';
 import { connect } from 'react-redux';
 
+import TeamPageFileDrop from '../../pages/TeamPage/TeamPageFileDrop';
 import { CommentFilterTypes } from '../../sections/TopNav';
 import { COMMENT_TIMESTAMP } from '../../../consts/formats';
 import { makeComment, setComment, makeVote, modifyComment, setCommentImage } from '../../../redux/actions';
@@ -158,7 +159,7 @@ class BaseComment extends Component {
 			<BaseCommentHeader { ...this.props} onResolve={this.handleResolveComment} onDelete={this.handleDeleteComment} />
 			<div className="comment-body">
 				{(comment.votable) && (<BaseCommentVote { ...this.props } onVote={this.handleVote} />)}
-				<BaseCommentContent { ...contentProps } onImageClick={this.handleImageClick} onReplyFocus={this.handleReplyFocus} onReplyBlur={this.handleReplyBlur} onReplyFormatClick={this.handleReplyFormat} onReplyKeyPress={this.handleReplyKeyPress} onReplySubmit={this.handleReplySubmit} onTextChange={this.handleTextChange} onDeleteReply={this.handleDeleteComment} onCodeToggle={this.handleCodeToggle} />
+				<BaseCommentContent { ...contentProps } onImageClick={this.handleImageClick} onReplyFocus={this.handleReplyFocus} onReplyBlur={this.handleReplyBlur} onReplyFormatClick={this.handleReplyFormat} onReplyKeyPress={this.handleReplyKeyPress} onReplySubmit={this.handleReplySubmit} onTextChange={this.handleTextChange} onDeleteReply={this.handleDeleteComment} onCodeToggle={this.handleCodeToggle} onContent={null} onImageData={null} />
 				{/* <Picker set="apple" onSelect={this.handleEmoji} onClick={this.handleEmoji} perline={9} emojiSize={24} native={true} sheetSize={16} showPreview={false} showSkinTones={false} title="Pick your emoji…" emoji="point_up" style={{ position : 'relative', bottom : '20px', right : '20px' }} /> */}
 			</div>
 		</div>);
@@ -230,6 +231,7 @@ const BaseCommentContent = (props)=> {
 					</div>
 				</KeyboardEventHandler>
 			</div>
+			<TeamPageFileDrop onContent={props.onContent} onImageData={props.onImageData} />
 			<button disabled={replyContent.length === 0} onClick={props.onReplySubmit}>Reply</button>
 			{/* <img src={btnCode} className="code-button" onClick={props.onCodeToggle} alt="Code" /> */}
 

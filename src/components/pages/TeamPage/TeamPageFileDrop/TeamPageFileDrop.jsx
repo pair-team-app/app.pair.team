@@ -12,6 +12,7 @@ import { URIs } from 'lang-js-utils';
 import LinkifyIt from 'linkify-it';
 // import TextareaAutosize from 'react-autosize-textarea';
 import { FilePond, registerPlugin } from 'react-filepond';
+import FontAwesome from 'react-fontawesome';
 import KeyboardEventHandler from 'react-keyboard-event-handler';
 import ReactQuill from 'react-quill';
 import { connect } from 'react-redux';
@@ -431,31 +432,15 @@ class TeamPageFileDrop extends Component {
 		return (<div className="team-page-file-drop" data-dragging={(dragging)} data-latent={(!dragging && files.length === 0 && !preComment)}>
       { /*<KeyboardEventHandler isDisabled={(files.length === 0 && !preComment && !image)} handleFocusableElements handleKeys={['ctrl', 'meta', 'enter', 'esc']} onKeyEvent={(key, event)=> this.handleKeyPress(event, key)} /> */}
       <div>
-        <div className="input-wrapper" data-hidden={(files.length === 0 && !preComment)}>
-          {/*
-          <ReactQuill
-            placeholder={(url) ? 'Add a comment to this url…' : (image !== null) ? 'Add a comment to this image…' : 'Add a comment…'}
-            value={(!url) ? (preComment || '') : (preComment) ? preComment.replace(url, '') : ''}
-            onChange={this.handleTextChange}
-            ref={(el)=> (el) ? this.commentInput = el : null}
-            data-code={(code)} />*/}
-        </div>
-
         <div className="file-wrapper" data-file={(files.length > 0 || image !== null)} data-hidden={false}>
           <FilePond
             files={files}
             acceptedFileTypes={['image/png', 'image/jpeg', 'image/gif', 'image/svg+xml', 'image/tiff']}
             className="file-pond-wrapper"
-            allowMultiple={false}
             maxFiles={1}
-            allowReorder={false}
-            allowReplace={true}
-            allowRevert={false}
-            itemInsertLocation="after"
+            allowBrowse={true}
             instantUpload={false}
-            labelIdle=""
-            labelFileProcessingComplete=""
-            labelTapToUndo=""
+            labelIdle="…"
             oninit={this.handleInit}
             onwarning={this.handleFileWarning}
             onerror={this.handleFileError}
@@ -468,15 +453,8 @@ class TeamPageFileDrop extends Component {
             onprocessfiles={this.handleProcessedFiles}
             onremovefile={this.handleFileRemoved}
             onupdatefiles={this.handleFilesUpdated}
-            imagePreviewHeight={122}
-            imagePreviewTransparencyIndicator="grid"
             ref={(el=> (el) ? this.filePond = el : null)}
           />
-        </div>
-        <div className="url-wrapper" data-hidden={!url} dangerouslySetInnerHTML={{ __html : `<a href="${url}" target="_blank">${url}</a>`}}></div>
-        <div className="button-wrapper button-wrapper-col">
-          <button type="submit" disabled={!image && false} onClick={this.handleSubmit}>Comment</button>
-          <button className="cancel-button" onClick={this.handleResetContent}>Cancel</button>
         </div>
       </div>
     </div>);

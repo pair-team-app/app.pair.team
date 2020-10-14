@@ -1,25 +1,8 @@
 
 .team-page-file-drop {
-  display: none;
-  position: fixed;
-  top: 0px;
-  left: 0px;
-  width: 100vw;
-  height: 100vh;
-  padding: 64px;
-  background-color: rgba(var(--site-bg-color), 1.0);
-  transition: background-color var(--transition-duration-short) ease-out;
-  z-index: 3;
-}
-
-.team-page-file-drop[data-dragging="true"] {
-  display: block;
-  padding: 0;
-  background-color: rgba(var(--border-color), 1.0);
-}
-
-.team-page-file-drop[data-latent="true"] {
-  display: none;
+  margin-left: 10px;
+  width: 53px;
+  height: 53px;
 }
 
 .team-page-file-drop > div {
@@ -27,6 +10,7 @@
   flex-flow: column nowrap;
   align-items: flex-start;
   justify-content: flex-start;
+  width: 53px;
   height: 100%;
   /* border: 1px dotted #ff00ff; */
 }
@@ -35,54 +19,11 @@
 .team-page-file-drop > div > * {
   /* display: flex; */
   /* flex: 1 1 0; */
-  width: 100%;
-  border: 1px solid #00ffff;
-}
-
-.team-page-file-drop[data-dragging="false"] > div > *:not(:last-child)[data-hidden="false"] {
-  margin-bottom: 20px;
-}
-
-.team-page-file-drop[data-dragging="true"] > div > *:not(.file-wrapper) {
-  display: none;
-}
-
-.team-page-file-drop[data-dragging="true"] > div > *.file-wrapper {
-  display: flex;
-  width : 100%;
+  width: 53px;
   height: 100%;
+  background-color: rgba(var(--btn-bg-color), 1.0);
+  border-radius: var(--border-radius);
 }
-
-.team-page-file-drop[data-dragging="false"] > div > .file-wrapper[data-file="true"] {
-  display: flex;
-  flex-flow: column nowrap;
-  align-items: flex-start;
-  justify-content: flex-start;
-  height: 122px;
-}
-
-.team-page-file-drop .input-wrapper {
-  position: relative;
-  /* padding-bottom: 20px; */
-  /* height: 100%; */
-}
-
-/* .team-page-file-drop .input-wrapper textarea, .team-page-file-drop .input-wrapper textarea:hover {
-  width: 100%;
-  height: 100%;
-  padding: 0;
-  background-color: rgba(var(--site-bg-color), 1.0);
-  color: rgba(var(--site-fg-color), 1.0);
-  font-size: 30px;
-  font-weight: 600;
-  transition: background-color var(--transition-duration-short) ease-out, color var(--transition-duration-short) ease-out;
-} */
-
-/* .team-page-file-drop .input-wrapper textarea[data-code="true"] {
-	font-family: Consolas, Monaco, "Courier New", Courier, monospace;
-} */
-
-
 
 .team-page-file-drop .file-wrapper {
   /* display: flex; */
@@ -92,31 +33,6 @@
   /* height: 122px; */
 
   /* background-color: #ff0000; */
-  height: 122px;
-}
-
-.team-page-file-drop[data-dragging="false"] > div > .file-wrapper[data-file="false"] {
-  height: 0;
-}
-
-.team-page-file-drop .url-wrapper {
-  color: rgba(var(--site-selected-color), 1.0);
-  font-size: 30px;
-}
-
-.team-page-file-drop .url-wrapper a {
-  color: rgba(var(--site-selected-color), 1.0);
-}
-
-.team-page-file-drop .url-wrapper a:hover {
-  color: rgba(var(--site-selected-color), 1.0);
-  text-decoration: underline;
-}
-
-.team-page-file-drop .file-wrapper .filepond--wrapper {
-  /* background-color: #ff0000;
-  height: 122px; */
-  /* display: none; */
 }
 
 .filepond--wrapper {
@@ -133,12 +49,14 @@
   margin: 0;
 }
 
-.filepond--wrapper .filepond--panel-root {
+/* .filepond--wrapper .filepond--panel-root {
   height: 100%;
-}
+} */
 
 .filepond--wrapper .filepond--root .filepond--drop-label {
-  min-height: unset;
+  width: 100%;
+  height: 53px;
+  color: rgba(var(--btn-fg-color), 1.0);
 }
 
 .filepond--wrapper .filepond--root .filepond--item-panel {
@@ -157,17 +75,15 @@
 }
 
 .filepond--wrapper .filepond--root .filepond--panel {
-  height: 100%;
-  /* background: none; */
-  background-color: rgba(var(--site-bg-color), 1.0);
+  display: none;
+  background: none;
   border-radius: 0;
   filter: none;
   box-shadow: none;
-  /* background-color: #ff00ff; */
 }
 
 .team-page-file-drop[data-dragging="false"] .filepond--wrapper .filepond--root .filepond--panel {
-  width: 188px;
+  display: none;
   border-radius: var(--border-radius);
   box-shadow: var(--orthodox-shadow);
   filter: var(--orthodox-drop-shadow);
@@ -196,9 +112,9 @@
   border-radius: 0;
 }
 
-.filepond--wrapper .filepond--root .filepond--processing {
-  /* display: none; */
-}
+/* .filepond--wrapper .filepond--root .filepond--processing {
+  display: none;
+} */
 
 .filepond--wrapper .filepond--root .filepond--image-preview-wrapper {
   width: unset;
@@ -222,7 +138,9 @@
   margin: 0;
 }
 
-
+.filepond--wrapper .filepond--root .filepond--browser {
+  height: 53px;
+}
 
 .ql-container {
   height: auto;

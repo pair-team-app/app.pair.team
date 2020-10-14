@@ -12,7 +12,7 @@ import TextareaAutosize from 'react-autosize-textarea';
 
 import BasePage from '../BasePage';
 import BaseComment from '../../iterables/BaseComment';
-// import TeamPageFileDrop from './TeamPageFileDrop';
+import TeamPageFileDrop from './TeamPageFileDrop';
 
 import { CommentSortTypes, CommentFilterTypes } from '../../sections/TopNav';
 import { TEAM_TIMESTAMP } from '../../../consts/formats';
@@ -385,7 +385,7 @@ class TeamPage extends Component {
     return (<BasePage { ...this.props } className="team-page" data-dragging={dragging}>
       {(profile && team && member)
       ? (<div className="content-wrapper">
-          <TeamPageCommentHeader teamComment={teamComment} onChange={this.handleCommentChange} onKeyPress={this.handleCommentKeyPress} onFormatClick={(format)=> this.setState({ teamComment : { ...teamComment, format }})} onSubmit={this.handleSubmitComment} onFocus={()=> this.props.setComment(null)} />
+          <TeamPageCommentHeader teamComment={teamComment} onChange={this.handleCommentChange} onKeyPress={this.handleCommentKeyPress} onFormatClick={(format)=> this.setState({ teamComment : { ...teamComment, format }})} onSubmit={this.handleSubmitComment} onFocus={()=> this.props.setComment(null)} onContent={(image)=> this.setState({ dragging : false })} onImageData={(filename, image)=> this.setState({ teamComment : { ...teamComment, filename, image }})} />
 
           <div className="scroll-wrapper">
             <div className="comments-wrapper" data-fetching={Boolean((fetching & 0x010) === 0x010)} data-loading={commentsLoading} data-empty={team && team.comments.length === 0}>
@@ -455,8 +455,12 @@ const TeamPageCommentHeader = (props)=> {
         </div>
       </KeyboardEventHandler>
     </div>
-    {(image) && (<img src={image} alt={filename} />)}
+    {(image)
+      ? (<img src={image} alt={filename} />)
+      : (<TeamPageFileDrop onContent={props.onContent} onImageData={props.onImageData} />)
+    }
     <button disabled={text.length === 0 && image === null} onClick={props.onSubmit}>Comment</button>
+    {/* : (<TeamPageFileDrop onContent={props.onContent} onImageData={props.onImageData} />) */}
   </div>);
 };
 

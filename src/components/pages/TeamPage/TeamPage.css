@@ -240,7 +240,7 @@
 	z-index: 2;
 }
 
-.team-page-comment-header > div {
+.team-page-comment-header > div:first-child {
 	position: relative;
 	width: 100%;
 }
