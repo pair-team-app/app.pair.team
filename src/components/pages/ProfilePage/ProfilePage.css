@@ -1,0 +1,26 @@
+
+.profile-page {
+  padding-top: 60px;
+}
+
+.profile-page > div {
+  display: flex;
+  flex-flow: column nowrap;
+}
+
+.profile-page .footer {
+  margin-top: 20px;
+  color: #cccccc;
+}
+
+.profile-page .footer div:first-child {
+  margin-bottom: 10px;
+}
+
+.profile-page .footer a {
+  color: #cccccc;
+}
+
+.profile-page .footer a:hover {
+  color: #cccccc;
+}

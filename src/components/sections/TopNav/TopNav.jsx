@@ -10,7 +10,7 @@ import { CommentSortTypes, CommentFilterTypes } from './';
 import UserSettings, { SettingsMenuItemTypes} from './UserSettings';
 import { RoutePaths } from '../../helpers/Routes';
 import SharePopover from '../../overlays/SharePopover';
-import { Modals } from '../../../consts/uris';
+import { Modals, Pages } from '../../../consts/uris';
 import { setCommentsSortFilter, setCommentsFormatFilter, setCommentsDoneFilter, toggleTheme } from '../../../redux/actions';
 
 
@@ -66,6 +66,11 @@ class TopNav extends Component {
 				path   : RoutePaths.PROJECT,
 				exact  : false,
 				strict : false
+			}),
+			profile : matchPath(pathname, {
+				path   : RoutePaths.PROFILE,
+				exact  : false,
+				strict : false
 			})
 		};
 
@@ -90,7 +95,7 @@ class TopNav extends Component {
       this.props.onModal(Modals.DISABLE);
 
     } else if (itemType === SettingsMenuItemTypes.PROFILE) {
-      this.props.onModal(Modals.PROFILE);
+      this.props.push(Pages.PROFILE);
     }
 	};
 
@@ -143,6 +148,7 @@ class TopNav extends Component {
 				{(matchPaths.team && !matchPaths.project) && (<TeamPageHeader team={team} sort={sort} formatFilter={formatFilter} doneFilter={doneFilter} onSortClick={this.handleTeamCommentsSort} onFilterClick={this.handleTeamCommentsFilter} />)}
 				{(matchPaths.create) && (<TopNavPageTitle title="Create Channel" />)}
 				{(matchPaths.project) && (<TopNavPageTitle title="Project" />)}
+				{(matchPaths.profile) && (<TopNavPageTitle title="Profile" />)}
 			</div></div>
 			<div className="col col-mid">
         <input type="checkbox" checked={darkThemed} value={darkThemed} onChange={this.props.toggleTheme} />

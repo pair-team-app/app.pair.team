@@ -141,6 +141,12 @@ export function onMiddleware(store) {
         strict : true
       });
 
+      const profileMatch = matchPath(pathname, {
+        path   : RoutePaths.PROFILE,
+        exact  : true,
+        strict : true
+      });
+
       const teamMatch = matchPath(pathname, {
         path   : RoutePaths.TEAM,
         exact  : true,
@@ -148,7 +154,7 @@ export function onMiddleware(store) {
       });
 
       const { params } = (projectMatch || (teamMatch || { params : null }));
-      if (!recoverMatch && !createMatch && payload.teams.length > 0) {
+      if (!recoverMatch && !createMatch && !profileMatch && payload.teams.length > 0) {
         const team = (params) ? (payload.teams.find(({ id })=> (id === (params.teamID << 0))) || [ ...payload.teams].shift()) : [ ...payload.teams].shift();
         payload.team = team;
 
@@ -532,6 +538,12 @@ export function onMiddleware(store) {
         strict : true
       });
 
+      const profileMatch = matchPath(pathname, {
+        path   : RoutePaths.PROFILE,
+        exact  : true,
+        strict : true
+      });
+
       const buildID = (projectMatch) ? projectMatch.params.buildID << 0 : 0;
       const deviceSlug = (projectMatch) ? projectMatch.params.deviceSlug : '';
 
@@ -557,7 +569,7 @@ export function onMiddleware(store) {
       //  dispatch (next(action));
       }
 
-      console.log('[|:|]=-=-=-=-=-=@@router/LOCATION_CHANGE=-=-=-=-=-=-=[%s]=-=(%d)', action, (cookie.load('user_id') << 0), { isFirstRendering, urlHistory, pathname, hash, profile, createMatch, teamMatch, projectMatch, recoverMatch });
+      console.log('[|:|]=-=-=-=-=-=@@router/LOCATION_CHANGE=-=-=-=-=-=-=[%s]=-=(%d)', action, (cookie.load('user_id') << 0), { isFirstRendering, urlHistory, pathname, hash, profile, createMatch, teamMatch, projectMatch, recoverMatch, profileMatch });
 
       if (isFirstRendering) {
         console.log('\\\\\\\\\\\\\\\\\\\\', 'FIRST LOCATION RENDER', { pathname, hash, cookie : (cookie.load('user_id') << 0) }, '\\\\\\\\\\\\\\\\\\\\');
@@ -675,7 +687,7 @@ export function onMiddleware(store) {
         }
 
         // on create page
-        if (createMatch || recoverMatch) {
+        if (createMatch || recoverMatch || profileMatch) {
           payload.team = null;
           payload.member = null;
           payload.comment = null;

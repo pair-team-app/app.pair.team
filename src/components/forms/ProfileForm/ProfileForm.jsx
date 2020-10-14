@@ -151,6 +151,7 @@ class ProfileForm extends Component {
 								passScore  : score
 							});
 						}}
+						value={newPassword}
 						inputProps={{
 							placeholder  : 'New Password',
 							autoComplete : 'new-password'
@@ -162,7 +163,6 @@ class ProfileForm extends Component {
 					<div className="button-wrapper button-wrapper-row">
             <button type="submit" disabled={!changed || email.length === 0 || !emailValid || (CryptoJS.MD5(password).toString() !== profile.password) || newPassword !== newPassword2} onClick={(event)=> this.handleSubmit(event)}>Submit</button>
 						<button className="cancel-button" onClick={this.props.onCancel}>Cancel</button>
-						{/*<button disabled={(email.length === 0 || !emailValid || !passwordValid)} type="submit" onClick={this.handleSubmit}>Update</button>*/}
 					</div>
 				</form>
 			</div>

@@ -9,7 +9,7 @@ import ProfileForm from '../../forms/ProfileForm/ProfileForm';
 import PageNavLink from '../../iterables/PageNavLink';
 import { POPUP_TYPE_STATUS, POPUP_TYPE_OK } from '../PopupNotification';
 import { API_ENDPT_URL, Modals } from '../../../consts/uris';
-import { fetchUserTeams, fetchUserProfile, updateUserProfile } from '../../../redux/actions';
+import { updateUserProfile } from '../../../redux/actions';
 import { trackEvent } from '../../../utils/tracking';
 
 class ProfileModal extends Component {
@@ -114,7 +114,7 @@ class ProfileModal extends Component {
   render() {
     console.log('%s.render()', this.constructor.name, this.props, this.state);
 
-    const { profile, password, team } = this.props;
+    const { profile } = this.props;
     const { outro, submitting } = this.state;
     return (<BaseOverlay tracking={Modals.PROFILE} outro={outro} title="Edit Profile" closeable={false} onComplete={this.handleComplete}>
       <div className="profile-modal">
@@ -125,7 +125,7 @@ class ProfileModal extends Component {
             }
         </span></div>
         <div className="form-wrapper">
-          <ProfileForm profile={profile} password={password} team={team} onCancel={this.handleCancel} onSubmit={this.handleSubmit} />
+          <ProfileForm profile={profile} onCancel={this.handleCancel} onSubmit={this.handleSubmit} />
         </div>
         {submitting && (<div className="base-overlay-loader-wrapper">
           {/*{(true) && (<div className="base-overlay-loader-wrapper">*/}
@@ -139,16 +139,12 @@ class ProfileModal extends Component {
 
 const mapStateToProps = (state, ownProps)=> {
   return {
-    profile  : state.user.profile,
-    password : state.user.password,
-    team     : state.team
+    profile : state.user.profile
   };
 };
 
 const mapDispatchToProps = (dispatch)=> {
   return {
-    fetchUserTeams    : (payload)=> dispatch(fetchUserTeams(payload)),
-    fetchUserProfile  : ()=> dispatch(fetchUserProfile()),
     updateUserProfile : (payload)=> dispatch(updateUserProfile(payload))
   };
 };
