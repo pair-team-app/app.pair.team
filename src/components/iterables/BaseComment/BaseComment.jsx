@@ -196,7 +196,7 @@ const BaseCommentHeader = (props)=> {
 	// console.log('BaseComment.BaseCommentHeader()', { props });
 
 	const { profile, comment } = props;
-	const { author, timestamp, types, state} = comment;
+	const { author, timestamp, types, format, state } = comment;
 	// const { roles } = author;
 
 	const handleDelete = (event)=> {
@@ -216,7 +216,7 @@ const BaseCommentHeader = (props)=> {
 		<div className="info-wrapper">
 			<div className="timestamp">Commented @ {timestamp.format(COMMENT_TIMESTAMP)}</div>
 			{(profile.id === author.id) && (<div className="link" onClick={handleDelete}>Delete</div>)}
-			{(state === 'open' && (types.includes('op') || types.includes('project'))) && (<div className="link" onClick={handleResolve}>Resolve</div>)}
+			{(format !== CommentFilterTypes.NONE && state === 'open' && (types.includes('op') || types.includes('project'))) && (<div className="link" onClick={handleResolve}>Resolve</div>)}
 			{(state === 'resolved') && (<div className="link" onClick={handleResolve}>Reopen</div>)}
 		</div>
 	</div>);
