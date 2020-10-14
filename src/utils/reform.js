@@ -19,7 +19,8 @@ export const reformComment = (comment, uri, overwrite={})=> {
     link     : (link || null),
     author   : { ...author },
     votes    : (votes) ? votes.map((vote)=> ({ ...vote,
-      score : vote.score << 0
+      author : vote.author << 0,
+      score  : vote.score << 0
     })) : [],
     score     : (votes) ? votes.reduce((acc, vote)=> (acc + (vote.score << 0)), 0) : 0,
     // uri       : `${uri}/${id}`,

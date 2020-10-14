@@ -130,7 +130,7 @@
 	cursor: default;
 }
 
-.base-comment-vote [data-voted="true"] .score:hover {
+.base-comment-vote[data-voted="true"] .score:hover {
 	cursor: pointer;
 }
 

@@ -87,12 +87,12 @@ class BaseComment extends Component {
 	};
 
 	handleReplyBlur = (event)=>{
-		console.log('BaseCommentContent.handleReplyBlur()', this.constructor.name, { event });
+		console.log('%s.handleReplyBlur()', this.constructor.name, { event });
 		// this.props.setComment(null);
 	};
 
 	handleReplyKeyPress = (event, key)=> {
-		console.log('BaseCommentContent.handleReplyKeyPress()', this.constructor.name, { props : this.props, event, key });
+		console.log('%s.handleReplyKeyPress()', this.constructor.name, { props : this.props, event, key });
 
 		const { replyContent } = this.state;
     if (key === 'enter' && replyContent.length > 0) {
@@ -110,12 +110,12 @@ class BaseComment extends Component {
 	};
 
 	handleReplyFormat = (format)=> {
-		console.log('BaseCommentContent.handleReplySubmit()', this.constructor.name, { format });
+		console.log('%s.handleReplySubmit()', this.constructor.name, { format });
 		this.setState({ format : (this.state.format === format) ? CommentFilterTypes.NONE : format });
 	}
 
 	handleReplyImage = (filename, image)=> {
-		console.log('BaseCommentContent.handleReplyImage()', this.constructor.name, { filename, image });
+		console.log('%s.handleReplyImage()', this.constructor.name, { filename, image });
 
 		this.setState({ filename, image }, ()=> {
 			const { comment } = this.props;
@@ -124,7 +124,7 @@ class BaseComment extends Component {
 	};
 
 	handleReplySubmit = (event)=> {
-    console.log('BaseCommentContent.handleReplySubmit()', this.constructor.name, { event, comment : this.props.comment, state : this.state });
+    console.log('%s.handleReplySubmit()', this.constructor.name, { event, comment : this.props.comment, state : this.state });
 
 		const { comment } = this.props;
 		const { format, replyContent, codeType : code, image } = this.state;
@@ -154,7 +154,7 @@ class BaseComment extends Component {
   };
 
 	handleVote = ({ comment, action })=> {
-		console.log('BaseComment.handleVote()', this.constructor.name, { comment, action });
+		console.log('%s.handleVote()', this.constructor.name, { comment, action });
 
 		trackEvent('button', (action === VOTE_ACTION_UP) ? 'upvote-comment' : (action === VOTE_ACTION_DOWN) ? 'downvote-comment' : 'retract-vote');
     this.props.makeVote({ comment, action });
@@ -181,13 +181,19 @@ class BaseComment extends Component {
 
 
 const BaseCommentVote = (props=> {
-	// console.log('BaseComment.BaseCommentVote()', { props });
+	// console.log('BaseComment.BaseCommentVote()', { ...props });
 
-	const { profile, comment, loading, vote } = props;
-  return (<div className="base-comment-vote" data-id={comment.id} data-loading={loading} data-disabled={(comment.author.id === profile.id || loading)} data-voted={vote !== null}>
-		<FontAwesome name="sort-up" className="vote-arrow vote-arrow-up" data-selected={vote && vote.score === 1} onClick={()=> ((comment.author.id === profile.id) || (vote && vote.score === 1)) ? null : props.onVote({ comment, action : VOTE_ACTION_UP })} />
-		<div className="score" onClick={()=> (comment.author.id !== profile.id && vote) ? props.onVote({ comment, action : VOTE_ACTION_RETRACT }) : null}>{comment.score}</div>
-		<FontAwesome name="sort-down" className="vote-arrow vote-arrow-dn" data-selected={vote && vote.score === -1} onClick={()=> ((comment.author.id === profile.id) || (vote && vote.score === -1)) ? null : props.onVote({ comment, action : VOTE_ACTION_DOWN })} />
+	const { profile, comment, loading } = props;
+	const vote = comment.votes.find(({ author })=> (author === profile.id));
+
+	if (comment.id === 17371) {
+		console.log('BaseComment.BaseCommentVote()', { ...props, vote });
+	}
+
+  return (<div className="base-comment-vote" data-id={comment.id} data-loading={loading} data-disabled={(comment.author.id === profile.id || loading)} data-voted={typeof vote !== 'undefined'}>
+		<div className="vote-arrow" data-selected={typeof vote !== 'undefined' && vote.score === 1}><FontAwesome name="sort-up" onClick={()=> ((comment.author.id === profile.id) || (typeof vote !== 'undefined' && vote.score === 1)) ? null : props.onVote({ comment, action : VOTE_ACTION_UP })} /></div>
+		<div className="score" onClick={()=> (comment.author.id !== profile.id && typeof vote !== 'undefined') ? props.onVote({ comment, action : VOTE_ACTION_RETRACT }) : null}>{comment.score}</div>
+		<div className="vote-arrow" data-selected={typeof vote !== 'undefined' && vote.score === -1}><FontAwesome name="sort-down" onClick={()=> ((comment.author.id === profile.id) || (typeof vote !== 'undefined' && vote.score === -1)) ? null : props.onVote({ comment, action : VOTE_ACTION_DOWN })} /></div>
  	</div>);
 });
 
