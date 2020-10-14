@@ -440,7 +440,7 @@ class TeamPageFileDrop extends Component {
             maxFiles={1}
             allowBrowse={true}
             instantUpload={false}
-            labelIdle="…"
+            labelIdle=""
             oninit={this.handleInit}
             onwarning={this.handleFileWarning}
             onerror={this.handleFileError}

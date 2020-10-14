@@ -190,7 +190,7 @@
 	margin-top: 15px;
 }
 
-.comment-body .base-comment-content .reply-form  > div {
+.comment-body .base-comment-content .reply-form  > div:first-child {
 	position: relative;
 	width: 100%;
 }

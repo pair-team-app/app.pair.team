@@ -22,6 +22,8 @@ class BaseComment extends Component {
 
     this.state = {
 			replyContent : '',
+			filename     : null,
+      image        : null,
 			codeType     : false,
 			format       : CommentFilterTypes.NONE
 		};
