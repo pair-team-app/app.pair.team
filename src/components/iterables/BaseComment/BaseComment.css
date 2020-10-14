@@ -217,6 +217,19 @@
 	font-family: Consolas, Monaco, "Courier New", Courier, monospace;
 }
 
+.comment-body .base-comment-content .reply-form > img {
+	width: 53px;
+	height: 53px;
+	margin-left: 10px;
+	border-radius: var(--border-radius);
+	background-color: #999999;
+	object-fit: scale-down;
+}
+
+.comment-body .base-comment-content .reply-form > img[data-upload="true"] {
+	background-color: rgba(var(--site-bg-color), 1.0);
+}
+
 .comment-body .base-comment-content .reply-form > .code-button {
 	position: absolute;
 	top: 50%;

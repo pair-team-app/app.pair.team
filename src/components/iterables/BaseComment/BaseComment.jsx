@@ -114,11 +114,20 @@ class BaseComment extends Component {
 		this.setState({ format : (this.state.format === format) ? CommentFilterTypes.NONE : format });
 	}
 
+	handleReplyImage = (filename, image)=> {
+		console.log('BaseCommentContent.handleReplyImage()', this.constructor.name, { filename, image });
+
+		this.setState({ filename, image }, ()=> {
+			const { comment } = this.props;
+			this.props.setComment(comment);
+		})
+	};
+
 	handleReplySubmit = (event)=> {
     console.log('BaseCommentContent.handleReplySubmit()', this.constructor.name, { event, comment : this.props.comment, state : this.state });
 
 		const { comment } = this.props;
-		const { format, replyContent, codeType : code } = this.state;
+		const { format, replyContent, codeType : code, image } = this.state;
 
 		trackEvent('button', 'reply-comment', comment.id);
 
@@ -129,7 +138,7 @@ class BaseComment extends Component {
 		const urls = (LinkifyIt().match(replyContent) || []).map(({ url })=> (url));
     const url = (urls.length > 0) ? [ ...urls].shift() : null;
 
-		this.props.makeComment({ code, format,
+		this.props.makeComment({ code, format, image,
 			content  : (url !== null && replyContent.replace(url, '').length === 0) ? null : replyContent.replace(url, ''),
 			link     : url,
 			position : comment.position
@@ -137,8 +146,10 @@ class BaseComment extends Component {
 
 		this.setState({
 			replyContent : '' ,
-			codeType   : false,
-			format     : CommentFilterTypes.NONE
+			codeType     : false,
+			format       : CommentFilterTypes.NONE,
+			image        : null,
+			filename     : null
 		});
   };
 
@@ -154,14 +165,14 @@ class BaseComment extends Component {
     // console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
 
 		const { profile, comment } = this.props;
-		const { replyContent, codeType, format } = this.state;
-		const contentProps = { ...this.props, replyContent, codeType, format };
+		const { replyContent, codeType, format, image, filename } = this.state;
+		const contentProps = { ...this.props, replyContent, codeType, format, image, filename };
 
 		return (<div className="base-comment" data-id={comment.id} data-type={comment.type} data-author={comment.author.id === profile.id} data-votable={comment.votable} data-selected={comment.selected}>
 			<BaseCommentHeader { ...this.props} onResolve={this.handleResolveComment} onDelete={this.handleDeleteComment} />
 			<div className="comment-body">
 				{(comment.votable) && (<BaseCommentVote { ...this.props } onVote={this.handleVote} />)}
-				<BaseCommentContent { ...contentProps } onImageClick={this.handleImageClick} onReplyFocus={this.handleReplyFocus} onReplyBlur={this.handleReplyBlur} onReplyFormatClick={this.handleReplyFormat} onReplyKeyPress={this.handleReplyKeyPress} onReplySubmit={this.handleReplySubmit} onTextChange={this.handleTextChange} onDeleteReply={this.handleDeleteComment} onCodeToggle={this.handleCodeToggle} onContent={null} onImageData={null} />
+				<BaseCommentContent { ...contentProps } onImageClick={this.handleImageClick} onReplyFocus={this.handleReplyFocus} onReplyBlur={this.handleReplyBlur} onReplyFormatClick={this.handleReplyFormat} onReplyKeyPress={this.handleReplyKeyPress} onReplySubmit={this.handleReplySubmit} onTextChange={this.handleTextChange} onDeleteReply={this.handleDeleteComment} onCodeToggle={this.handleCodeToggle} onImageData={this.handleReplyImage} />
 				{/* <Picker set="apple" onSelect={this.handleEmoji} onClick={this.handleEmoji} perline={9} emojiSize={24} native={true} sheetSize={16} showPreview={false} showSkinTones={false} title="Pick your emoji…" emoji="point_up" style={{ position : 'relative', bottom : '20px', right : '20px' }} /> */}
 			</div>
 		</div>);
@@ -215,7 +226,7 @@ const BaseCommentHeader = (props)=> {
 const BaseCommentContent = (props)=> {
 	// console.log('BaseComment.BaseCommentContent()', { props });
 
-	const { comment, replyContent, codeType, preComment, format } = props;
+	const { comment, replyContent, codeType, preComment, format, image : replyImage, filename } = props;
 	const { types, code, content, image, link, state } = comment;
 
 	return (<div className="base-comment-content" data-format={format} data-resolved={(state === 'resolved')}>
@@ -233,8 +244,11 @@ const BaseCommentContent = (props)=> {
 					</div>
 				</KeyboardEventHandler>
 			</div>
-			<TeamPageFileDrop onContent={props.onContent} onImageData={props.onImageData} />
-			<button disabled={replyContent.length === 0} onClick={props.onReplySubmit}>Reply</button>
+			{(replyImage)
+      	? (<img src={replyImage} alt={filename} data-upload={replyImage !== null} />)
+				: (<TeamPageFileDrop onContent={props.onContent} onImageData={props.onImageData} />)
+			}
+			<button disabled={replyContent.length === 0 && replyImage === null} onClick={props.onReplySubmit}>Reply</button>
 			{/* <img src={btnCode} className="code-button" onClick={props.onCodeToggle} alt="Code" /> */}
 
 		</div>)}

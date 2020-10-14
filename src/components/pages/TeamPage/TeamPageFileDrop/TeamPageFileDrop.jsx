@@ -124,7 +124,7 @@ class TeamPageFileDrop extends Component {
         // this.commentInput.focus();
 
         if (files.length > 0 || image !== null) {
-          this.props.onContent();
+          //this.props.onContent();
         }
 
         // if ([...urls].shift() !== url && !url) {
@@ -183,76 +183,20 @@ class TeamPageFileDrop extends Component {
 
   handleFileAdd = (error, file)=> {
     console.log('%s.handleFileAdd(file)', this.constructor.name, { error, image : this.state.image, file : file.fileType });
-
-    const fileTypes = [
-      'image/gif',
-      'image/jpeg',
-      'image/png',
-      'image/svg+xml',
-      'image/tiff'
-    ];
-
-    if (fileTypes.includes(file.fileType)) {
-      const { image } = this.state;
-      if (!image) {
-        this.onUploadFile(file.filename, file.getFileEncodeDataURL());
-      }
-
-    } else {
-      this.props.onPopup({
-        type    : POPUP_TYPE_ERROR,
-        content : 'Invalid file type'
-      });
-    }
+    this.onUploadFile(file.filename, file.getFileEncodeDataURL());
   };
 
   handleFileInit = (file)=> {
     console.log('%s.handleFileInit(file)', this.constructor.name, { image : this.state.image, file });
   };
 
-  handleFileProgress = (file, progress)=> {
-    console.log('%s.handleFileProgress(file, progress)', this.constructor.name, { file, progress });
-  };
-
-  handleFileProcessStart = (file)=> {
-    console.log('%s.handleFileProcessStart(file)', this.constructor.name, { file });
-    this.setState({ loading : true }, ()=> {
-      this.props.onContent(file.getFileEncodeDataURL());
-    });
-  };
-
-  handleFileProcessProgress = (file, progress)=> {
-    console.log('%s.handleFileProcessProgress(file, progress)', this.constructor.name, { file, progress });
-  };
-
-  handleProcessedFile = (error, file)=> {
-    console.log('%s.handleProcessedFile(error, output)', this.constructor.name, { error, file });
-  };
-
-  handleProcessedFiles = ()=> {
-    console.log('%s.handleProcessedFiles()', this.constructor.name);
-  };
-
-  handleFileRemoved = (error, output)=> {
-    console.log('%s.handleFileRemoved(error, output)', this.constructor.name, { error, output });
-    this.handleResetContent();
-  };
-
-  // // processes the first file
-  handleFileWarning = (error, file, status)=> {
-    console.log('%s.handleFileWarning(error, file, status)', this.constructor.name, { error, file, status });
-    // File has been processed
-  };
-
-  // processes the first file
-  handleFileError = (error, file, status) => {
-    console.log('%s.handleFileError(error, file, status)', this.constructor.name, { error, file, status });
-  };
-
   handleFilesUpdated = (fileItems)=> {
     console.log('%s.handleFilesUpdated(fileItems)', this.constructor.name, { fileItems });
-    this.setState({ files : fileItems.map(({ file })=> (file)) }, ()=> {
-      this.props.onContent();
+    this.setState({
+      files : fileItems.map(({ file })=> (file)),
+
+    }, ()=> {
+      // this.props.onContent();
       // this.props.onClose();
     });
   }
@@ -429,10 +373,10 @@ class TeamPageFileDrop extends Component {
       ['clean']
     ];
 
-		return (<div className="team-page-file-drop" data-dragging={(dragging)} data-latent={(!dragging && files.length === 0 && !preComment)}>
+		return (<div className="team-page-file-drop" data-file={files.length > 0} data-upload={image !== null}>
       { /*<KeyboardEventHandler isDisabled={(files.length === 0 && !preComment && !image)} handleFocusableElements handleKeys={['ctrl', 'meta', 'enter', 'esc']} onKeyEvent={(key, event)=> this.handleKeyPress(event, key)} /> */}
       <div>
-        <div className="file-wrapper" data-file={(files.length > 0 || image !== null)} data-hidden={false}>
+        <div className="file-wrapper">
           <FilePond
             files={files}
             acceptedFileTypes={['image/png', 'image/jpeg', 'image/gif', 'image/svg+xml', 'image/tiff']}
@@ -442,16 +386,8 @@ class TeamPageFileDrop extends Component {
             instantUpload={false}
             labelIdle=""
             oninit={this.handleInit}
-            onwarning={this.handleFileWarning}
-            onerror={this.handleFileError}
             oninitfile={this.handleFileInit}
             onaddfile={this.handleFileAdd}
-            onaddfileprogress={this.handleFileProgress}
-            onprocessfilestart={this.handleFileProcessStart}
-            onprocessfileprogress={this.handleFileProcessProgress}
-            onprocessfile={this.handleProcessedFile}
-            onprocessfiles={this.handleProcessedFiles}
-            onremovefile={this.handleFileRemoved}
             onupdatefiles={this.handleFilesUpdated}
             ref={(el=> (el) ? this.filePond = el : null)}
           />

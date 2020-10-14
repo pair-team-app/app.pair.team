@@ -263,14 +263,16 @@
 }
 
 .team-page-comment-header > img {
-	/* position: absolute; */
-	top: 0;
-	right: 0;
 	width: 53px;
 	height: 53px;
 	margin-left: 10px;
 	border-radius: var(--border-radius);
 	background-color: #999999;
+	object-fit: scale-down;
+}
+
+.team-page-comment-header > img[data-upload="true"] {
+	background-color: rgba(var(--site-bg-color), 1.0);
 }
 
 .team-page-comment-header > button {

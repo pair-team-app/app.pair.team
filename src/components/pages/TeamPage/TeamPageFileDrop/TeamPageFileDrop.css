@@ -3,6 +3,12 @@
   margin-left: 10px;
   width: 53px;
   height: 53px;
+  background-color: rgba(var(--disabled-bg-color), 1.0);
+  border-radius: var(--border-radius);
+}
+
+.team-page-file-drop[data-file="true"] > * {
+  opacity: 0;
 }
 
 .team-page-file-drop > div {
@@ -26,16 +32,6 @@
   border-radius: var(--border-radius);
 }
 
-.team-page-file-drop .file-wrapper {
-  /* display: flex; */
-  flex-flow: column nowrap;
-  align-items: flex-start;
-  justify-content: flex-start;
-  /* height: 122px; */
-
-  /* background-color: #ff0000; */
-}
-
 .filepond--wrapper {
   width: 100%;
   height: 100%;
@@ -49,10 +45,6 @@
 .filepond--wrapper .filepond--root {
   margin: 0;
 }
-
-/* .filepond--wrapper .filepond--panel-root {
-  height: 100%;
-} */
 
 .filepond--wrapper .filepond--root .filepond--drop-label {
   width: 100%;
@@ -90,8 +82,6 @@
 
 .filepond--wrapper .filepond--root .filepond--image-preview-overlay-success, .filepond--wrapper .filepond--root .filepond--image-preview-overlay-failure, .filepond--wrapper .filepond--root .filepond--file-action-button, .filepond--wrapper .filepond--root .filepond--file-info {
   color: rgba(var(--site-bg-color), 1.0);
-  /* color: unset; */
-  /* display: none; */
 }
 
 .filepond--wrapper .filepond--root .filepond--file-action-button {
@@ -111,10 +101,6 @@
   border-radius: 0;
 }
 
-/* .filepond--wrapper .filepond--root .filepond--processing {
-  display: none;
-} */
-
 .filepond--wrapper .filepond--root .filepond--image-preview-wrapper {
   width: unset;
   border-radius: 0;
@@ -126,8 +112,6 @@
 }
 
 .filepond--wrapper .filepond--root .filepond--image-preview {
-  /* width: unset; */
-
   background: none;
   /* background-color: rgba(var(--site-bg-color), 1.0); */
   color: rgba(var(--site-fg-color), 1.0);
@@ -139,8 +123,4 @@
 
 .filepond--wrapper .filepond--root .filepond--browser {
   height: 53px;
-}
-
-.ql-container {
-  height: auto;
 }
