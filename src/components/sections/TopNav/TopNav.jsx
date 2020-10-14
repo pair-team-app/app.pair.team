@@ -185,34 +185,37 @@ const TopNavShareLink = (props)=> {
 const TeamPageHeader = (props)=> {
 	const { team, sort, formatFilter, doneFilter } = props;
 	const { DATE, SCORE } = CommentSortTypes;
-	const { ISSUES, BUGS, REQUESTS, DONE } = CommentFilterTypes;
+	const { NONE, ISSUES, BUGS, REQUESTS, DONE } = CommentFilterTypes;
 
-	let formatTotals = (team) ? [
-		team.comments.filter(({ format })=> (format === ISSUES)).length,
-		team.comments.filter(({ format })=> (format === BUGS)).length,
-		team.comments.filter(({ format })=> (format === REQUESTS)).length
+	const formatTotals = (team) ? [
+		team.comments.filter(({ format, state })=> (format === ISSUES && state !== DONE)).length,
+		team.comments.filter(({ format, state })=> (format === BUGS && state !== DONE)).length,
+		team.comments.filter(({ format, state })=> (format === REQUESTS && state !== DONE)).length
 	] : [0, 0, 0];
 
-	let doneTotals = (team) ? [
+	const doneTotals = (team) ? [
 		team.comments.filter(({ format, state })=> (format === ISSUES && state === DONE)).length,
 		team.comments.filter(({ format, state })=> (format === BUGS && state === DONE)).length,
 		team.comments.filter(({ format, state })=> (format === REQUESTS && state === DONE)).length,
+		team.comments.filter(({ format, state })=> (format === NONE && state === DONE)).length
 	] : [0, 0, 0];
 
+	const sortTotal = (team) ? ((formatFilter === ISSUES) ? (doneFilter) ? formatTotals[0] + doneTotals[0] : formatTotals[0] : (formatFilter === BUGS) ? formatTotals[1] : (formatFilter === REQUESTS) ? formatTotals[2] : (doneFilter) ? team.comments.length : team.comments.filter(({ state })=> (state !== DONE)).length) : 0;
+	const doneTotal = (team) ? ((formatFilter === ISSUES) ? doneTotals[0] : (formatFilter === BUGS) ? doneTotals[1] : (formatFilter === REQUESTS) ? doneTotals[2] : doneTotals.reduce((acc, val)=> (acc + val), 0)) : 0;
 
-	console.log('TeamPageHeader()', { ...formatTotals });
+	console.log('TeamPageHeader()', { formatTotals, doneTotals });
 
 	return (<div className="team-page-header page-header">
 		<div className="col col-left">
-			<div className="nav-link nav-link-sort" data-selected={sort === DATE} onClick={()=> props.onSortClick(DATE)}>New</div>
-			<div className="nav-link nav-link-sort" data-selected={sort === SCORE} onClick={()=> props.onSortClick(SCORE)}>Top</div>
+			<div className="nav-link nav-link-sort" data-selected={sort === DATE} onClick={()=> props.onSortClick(DATE)}>New ({sortTotal})</div>
+			<div className="nav-link nav-link-sort" data-selected={sort === SCORE} onClick={()=> props.onSortClick(SCORE)}>Top ({sortTotal})</div>
 		</div>
 		<div className="col col-mid"></div>
 		<div className="col col-right">
-			<div className="nav-link nav-link-filter" data-selected={formatFilter === ISSUES} onClick={()=> props.onFilterClick(ISSUES)}><FontAwesome name="check" className="filter-check" />Issues ({(doneFilter) ? doneTotals[0] : formatTotals[0]})</div>
-			<div className="nav-link nav-link-filter" data-selected={formatFilter === BUGS} onClick={()=> props.onFilterClick(BUGS)}><FontAwesome name="check" className="filter-check" />Bugs ({(doneFilter) ? doneTotals[1] : formatTotals[1]})</div>
-			<div className="nav-link nav-link-filter" data-selected={formatFilter === REQUESTS} onClick={()=> props.onFilterClick(REQUESTS)}><FontAwesome name="check" className="filter-check" />Requests ({(doneFilter) ? doneTotals[2] : formatTotals[2]})</div>
-			<div className="nav-link nav-link-filter" data-selected={doneFilter} onClick={()=> props.onFilterClick(DONE)}><FontAwesome name="check" className="filter-check" />Done ({doneTotals.reduce((acc, val)=> (acc + val), 0)})</div>
+			<div className="nav-link nav-link-filter" data-selected={formatFilter === ISSUES} onClick={()=> props.onFilterClick(ISSUES)}><FontAwesome name="check" className="filter-check" />Issues ({(doneFilter) ? doneTotals[0] + formatTotals[0] : formatTotals[0]})</div>
+			<div className="nav-link nav-link-filter" data-selected={formatFilter === BUGS} onClick={()=> props.onFilterClick(BUGS)}><FontAwesome name="check" className="filter-check" />Bugs ({(doneFilter) ? doneTotals[1] + formatTotals[1] : formatTotals[1]})</div>
+			<div className="nav-link nav-link-filter" data-selected={formatFilter === REQUESTS} onClick={()=> props.onFilterClick(REQUESTS)}><FontAwesome name="check" className="filter-check" />Requests ({(doneFilter) ? doneTotals[2] + formatTotals[2] : formatTotals[2]})</div>
+			<div className="nav-link nav-link-filter" data-selected={doneFilter} onClick={()=> props.onFilterClick(DONE)}><FontAwesome name="check" className="filter-check" />Done ({doneTotal})</div>
 		</div>
 	</div>);
 };
