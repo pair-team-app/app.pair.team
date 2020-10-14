@@ -141,7 +141,7 @@ class LeftNav extends Component {
         </div>
 
         {(teams && teams.length > 0) && (<div className="builds-wrapper" data-loading={(!builds && window.location.pathname !== Pages.CREATE)}>
-          <div className="loading">Loading…</div>
+          <div className="loading">No Channel Builds</div>
           {(builds || window.location.pathname === Pages.CREATE) && (<div className="header">{(window.location.pathname === Pages.CREATE || builds.length === 0) ? 'No ' : ''}Channel Builds</div>)}
           {(builds) && (<div className="row">
             {builds.map((build, i)=> (
