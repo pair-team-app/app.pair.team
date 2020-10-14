@@ -391,7 +391,7 @@ class TeamPage extends Component {
             <div className="comments-wrapper" data-fetching={Boolean((fetching & 0x010) === 0x010)} data-loading={commentsLoading} data-empty={team && team.comments.length === 0}>
               <TeamPageCommentsPanel
                 profile={profile}
-                comments={(doneFilter) ? comments.filter(({ state })=> (state === CommentFilterTypes.DONE)) : comments}
+                comments={(doneFilter) ? comments : comments.filter(({ state })=> (state !== CommentFilterTypes.DONE))}
                 fetching={Boolean((fetching & 0x010) === 0x010)}
                 loading={commentsLoading}
                 sort={sort}
