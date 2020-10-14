@@ -3,45 +3,20 @@ import React, { Component } from 'react';
 import './TeamPageFileDrop.css';
 
 import axios from 'axios';
-import { push } from 'connected-react-router';
 import FilePondPluginFileEncode from 'filepond-plugin-file-encode';
 import FilePondPluginImageExifOrientation from 'filepond-plugin-image-exif-orientation';
 import FilePondPluginFileValidateType from 'filepond-plugin-file-validate-type';
-import FilePondPluginImagePreview from 'filepond-plugin-image-preview';
-import { URIs } from 'lang-js-utils';
-import LinkifyIt from 'linkify-it';
-// import TextareaAutosize from 'react-autosize-textarea';
 import { FilePond, registerPlugin } from 'react-filepond';
-import FontAwesome from 'react-fontawesome';
-import KeyboardEventHandler from 'react-keyboard-event-handler';
-import ReactQuill from 'react-quill';
 import { connect } from 'react-redux';
 
-import { POPUP_TYPE_ERROR } from '../../../overlays/PopupNotification';
-import { CodeFormAccessory, FormAccessoryAlignment } from '../../../forms/FormAccessories';
-import { ENTER_KEY } from '../../../../consts/key-codes';
-import { API_ENDPT_URL, CDN_FILEPOND_URL, CDN_UPLOAD_URL, Modals } from '../../../../consts/uris';
-import { createComment, makeComment } from '../../../../redux/actions';
+import { CDN_UPLOAD_URL } from '../../../../consts/uris';
+import { makeComment } from '../../../../redux/actions';
 
 import 'filepond/dist/filepond.min.css';
-import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css';
-import 'react-quill/dist/quill.snow.css';
-// import 'react-quill/dist/quill.bubble.css';
-// import 'react-quill/dist/quill.core.css';
 import './post-styles.css';
 
 
-registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview, FilePondPluginFileEncode, FilePondPluginFileValidateType);
-
-
-// const extractURLs = (val)=> {
-//   const matches = val.match(new RegExp('(?:(?:https?|ftp)://)(?:\\S+(?::\\S*)?@)?(?:(?!(?:10|127)(?:\\.\\d{1,3}){3})(?!(?:169\\.254|192\\.168)(?:\\.\\d{1,3}){2})(?!172\\.(?:1[6-9]|2\\d|3[0-1])(?:\\.\\d{1,3}){2})(?:[1-9]\\d?|1\\d\\d|2[01]\\d|22[0-3])(?:\\.(?:1?\\d{1,2}|2[0-4]\\d|25[0-5])){2}(?:\\.(?:[1-9]\\d?|1\\d\\d|2[0-4]\\d|25[0-4]))|(?:(?:[a-z\\u00a1-\\uffff0-9]-*)*[a-z\\u00a1-\\uffff0-9]+)(?:\\.(?:[a-z\\u00a1-\\uffff0-9]-*)*[a-z\\u00a1-\\uffff0-9]+)*(?:\\.(?:[a-z\\u00a1-\\uffff]{2,})))(?::\\d{2,5})?(?:/\\S*)?', 'ig'));
-//   if (!matches) {
-//     return ([]);
-//   }
-
-//   return (matches.filter((value, index)=> (matches.indexOf(value) === index)));
-// };
+registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginFileEncode, FilePondPluginFileValidateType);
 
 
 class TeamPageFileDrop extends Component {
@@ -58,7 +33,6 @@ class TeamPageFileDrop extends Component {
       files   : []
     };
 
-    this.commentInput = React.createRef();
     this.filePond = React.createRef();
   }
 
@@ -76,81 +50,7 @@ class TeamPageFileDrop extends Component {
   }
 
 	componentDidUpdate(prevProps, prevState, snapshot) {
-    // console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : this.props, prevState, state : this.state, commentInput : (this.commentInput) ? {
-    //   editor            : this.commentInput.editor,
-    //   getEditorContents : this.commentInput.getEditorContents(),
-    //   getText           : this.commentInput.editor.getText(),
-    //   isControlled      : this.commentInput.isControlled(),
-    //   props             : this.commentInput.props,
-    //   state             : this.commentInput.state,
-    // } : null });
-
-    // const { preComment, pathname, hash } = this.props;
-    // const { text, url, files, image } = this.state;
-
-    const { preComment, dragging } = this.props;
-    const { files, image, intro } = this.state;
-
-    // if (window.location.hash !== Modals.FILE_DROP && preComment !== ' ') {
-    //   console.log('¡!', `${window.location.pathname}${Modals.FILE_DROP}`);
-    //   this.props.push(`${window.location.pathname}${Modals.FILE_DROP}`);
-    // }
-
-    if (prevState.files.length > 0) {
-      if (dragging && !prevProps.dragging) {
-        this.handleResetContent();
-      }
-    }
-
-    if (preComment) {
-      // const urls = (LinkifyIt().match(preComment) || []).map(({ url })=> (url));
-      // console.log('¡!¡!¡!¡!¡!¡!', { urls })
-
-      if ((!prevProps.preComment || prevProps.preComment === ' ') && preComment !== ' ' && this.commentInput.editor) {
-        // console.log('¡!¡!¡!¡!¡!¡!', { preComment })
-        // this.commentInput.editor.setText(preComment);
-        this.commentInput.editor.setSelection(preComment.length, 0);
-      }
-
-      if (!prevProps.preComment) {
-        this.setState({ intro : false }, ()=> {
-          // this.commentInput.editor.setText(preComment);
-          // // this.commentInput.editor.insertText(preComment.length, '');
-          // this.commentInput.editor.setSelection(preComment.length, 0);
-        });
-      }
-
-      if (preComment !== prevProps.preComment && preComment !== ' ') {
-        // this.commentInput.focus();
-
-        if (files.length > 0 || image !== null) {
-          //this.props.onContent();
-        }
-
-        // if ([...urls].shift() !== url && !url) {
-        //   this.setState({ url : [...urls].shift() }, ()=> {
-        //     if (urls.length > 0) {
-        //       this.onFetchScreenshot(preComment);
-        //     }
-        //   });
-        // }
-      }
-
-      if (preComment !== ' ' && this.commentInput.editor && this.commentInput.editor.getText().slice(0, -1).length === 0) {
-        this.handleResetContent();
-      }
-
-    } else {
-      if (prevProps.preComment) {
-        this.handleResetContent();
-      }
-    }
-  }
-
-  componentWillUnmount() {
-    console.log('%s.componentWillUnmount()', this.constructor.name, { props : this.props, state : this.state });
-
-    this.commentInput = null;
+    // console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : this.props, prevState, state : this.state });
   }
 
 
@@ -159,14 +59,13 @@ class TeamPageFileDrop extends Component {
   };
 
   handleCode = (event)=> {
-    // console.log('%s.handleCode()', this.constructor.name, { event });
+    console.log('%s.handleCode()', this.constructor.name, { event });
     this.setState({ code : !this.state.code });
   };
 
   handleResetContent = (event)=> {
     console.log('%s.handleResetContent(event)', this.constructor.name, { event });
 
-    this.props.createComment(null);
     this.setState({
       text    : '',
       image   : null,
@@ -192,154 +91,7 @@ class TeamPageFileDrop extends Component {
 
   handleFilesUpdated = (fileItems)=> {
     console.log('%s.handleFilesUpdated(fileItems)', this.constructor.name, { fileItems });
-    this.setState({
-      files : fileItems.map(({ file })=> (file)),
-
-    }, ()=> {
-      // this.props.onContent();
-      // this.props.onClose();
-    });
-  }
-
-
-  /* handleFilePond = ()=> {
-    console.log('%s.()', this.constructor.name, { ,  });
-  }; */
-
-
-  handleFieldFocus = (event)=> {
-    // console.log('%s.handleFieldFocus(event)', this.constructor.name, { event, commentInput : { ...this.commentInput }, props : this.props, state : this.state });
-    console.log('%s.handleFieldFocus(event)', this.constructor.name, { event, commentInput : (this.commentInput) ? {
-    // console.log('%s.handleFieldFocus(event)', this.constructor.name, { event, commentInput : (this.commentInput) ? { ...this.commentInput }
-    // {
-      editor : this.commentInput.editor,
-      getEditorContents : this.commentInput.getEditorContents(),
-      isControlled : this.commentInput.isControlled(),
-      isDelta : this.commentInput.isDelta(),
-      props : this.commentInput.props,
-      state : this.commentInput.state,
-      // getInitialState : this.commentInput.getInitialState(),
-      // isDelta : this.commentInput.isDelta()
-    }
-     : null, props : this.props, state : this.state, intro : this.state.intro, preComment : this.props.preComment, editorContents : this.commentInput.getEditorContents() });
-
-    return true;
-
-    if (event) {
-      const { preComment } = this.props;
-      const { intro } = this.state;
-      const { index, length } = event;
-
-      if (intro) {
-        this.setState({
-          intro : false,
-          text  : ''//target.value
-        }, ()=> {
-          // this.commentInput.target.value();
-
-          // this.commentInput.setSelectionRange(0, preComment.length);
-          // this.commentInput.setEditorSelection(preComment.length - 1, preComment.length);
-          // this.commentInput.setEditorSelection(0, 0);
-          this.commentInput.focus();
-        });
-
-      } else {
-        this.props.createComment((this.commentInput) ? (!this.commentInput.getEditorContents().startsWith('<p>')) ? `<p>${this.commentInput.getEditorContents()}</p>` : this.commentInput.getEditorContents() : null);
-      }
-    }
-
-    // this.props.createComment((this.commentInput) ? this.commentInput.getEditorContents().replace(/\<p\>(.+)\<\/p\>/g, '$1') : null);
-  };
-
-  handleTextChange = (value)=> {
-    console.log('%s.handleTextChange(value)', this.constructor.name, { value, commentInput : (this.commentInput) ? {
-      editor            : this.commentInput.editor,
-      getEditorContents : this.commentInput.getEditorContents(),
-      getText           : this.commentInput.editor.getText(),
-      isControlled      : this.commentInput.isControlled(),
-      isDelta           : this.commentInput.isDelta(value),
-      props             : this.commentInput.props,
-      state             : this.commentInput.state,
-    } : null, props : this.props, state : this.state });
-
-    const { preComment } = this.props;
-    const { intro } = this.state;
-    if (!intro) {
-      const urls = (LinkifyIt().match(this.commentInput.editor.getText().slice(0, -1)) || []).map(({ url })=> (url));
-      const url = (urls.length > 0) ? [ ...urls].shift() : null;
-
-      if (url) {
-        if (!this.state.url && url) {
-            this.setState({ url }, ()=> {
-              this.onFetchScreenshot(url);
-              this.commentInput.editor.setText('\n');
-              this.props.createComment(' ');
-          });
-        }
-      }
-
-    } else {
-    }
-
-    // this.props.createComment(value);
-    // this.props.createComment(value.replace(/\<p\>(.+)\<\/p\>/g, '$1'));
-    // this.setState({ text : value }, ()=> {
-    // });
-  };
-
-  handleKeyPress = (event, key)=> {
-    console.log('%s.handleKeyPress(event, key)_____', this.constructor.name, { event, key });
-
-    const { preComment } = this.props;
-    const { files } = this.state;
-    const { keyCode, target } = event;
-
-    if (key === 'esc') {
-      this.handleResetContent();
-
-    } else if ((key === 'meta' || key === 'ctrl') && keyCode === ENTER_KEY) {
-      if (this.commentInput.editor.getText().slice(0, -1).length > 0 || files.length > 0) {
-        target.blur();
-        this.handleSubmit();
-      }
-    }
-  };
-
-  handleSubmit = (event=null)=> {
-    console.log('%s.handleSubmit(event)', this.constructor.name, { event, props : this.props, state : this.state });
-
-    if (event) {
-      event.preventDefault();
-      event.stopPropagation();
-    }
-
-    const { text, image, code, url } = this.state;
-    this.props.makeComment({ image,
-      link     : (url || null),
-			content  : this.commentInput.editor.getText().slice(0, -1),
-      format   : (code) ? 'code' : 'text'
-    });
-
-    this.handleResetContent();
-  };
-
-  onFetchScreenshot = (text)=> {
-    console.log('%s.onFetchScreenshot(text)', this.constructor.name, { text });
-
-    // const url = text.match(/https?:\/\/.+ ?/i).shift().split(' ').shift();
-    const url = URIs.extractURLs(text).shift();
-    axios.post(API_ENDPT_URL, {
-      action  : 'SCREENSHOT_URL',
-      payload : { url }
-    }).then((response)=> {
-      const { image } = response.data;
-      console.log('SCREENSHOT_URL', { data : response.data });
-      this.setState({ url,
-        image : image.cdn,
-      }, ()=> {
-        this.dataURIFile(image.data, URIs.lastComponent(image.src));
-      });
-    });
+    this.setState({ files : fileItems.map(({ file })=> (file)) });
   };
 
   onUploadFile = (filename, dataURI)=> {
@@ -364,34 +116,24 @@ class TeamPageFileDrop extends Component {
 	render() {
     // console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state, commentInput : (this.commentInput) ? this.commentInput : null });
 
-    const { dragging, preComment } = this.props;
-    const { url, code, image, files, text } = this.state;
+    const { image, files } = this.state;
 
-    const toolbar = [
-      ['bold', 'italic', 'underline', 'strike'],
-      ['link', 'code-block'],
-      ['clean']
-    ];
-
-		return (<div className="team-page-file-drop" data-file={files.length > 0} data-upload={image !== null}>
-      { /*<KeyboardEventHandler isDisabled={(files.length === 0 && !preComment && !image)} handleFocusableElements handleKeys={['ctrl', 'meta', 'enter', 'esc']} onKeyEvent={(key, event)=> this.handleKeyPress(event, key)} /> */}
-      <div>
-        <div className="file-wrapper">
-          <FilePond
-            files={files}
-            acceptedFileTypes={['image/png', 'image/jpeg', 'image/gif', 'image/svg+xml', 'image/tiff']}
-            className="file-pond-wrapper"
-            maxFiles={1}
-            allowBrowse={true}
-            instantUpload={false}
-            labelIdle=""
-            oninit={this.handleInit}
-            oninitfile={this.handleFileInit}
-            onaddfile={this.handleFileAdd}
-            onupdatefiles={this.handleFilesUpdated}
-            ref={(el=> (el) ? this.filePond = el : null)}
-          />
-        </div>
+    return (<div className="team-page-file-drop" data-file={files.length > 0} data-upload={image !== null}>
+      <div className="file-wrapper">
+        <FilePond
+          files={files}
+          acceptedFileTypes={['image/png', 'image/jpeg', 'image/gif', 'image/svg+xml', 'image/tiff']}
+          className="file-pond-wrapper"
+          maxFiles={1}
+          allowBrowse={true}
+          instantUpload={false}
+          labelIdle=""
+          oninit={this.handleInit}
+          oninitfile={this.handleFileInit}
+          onaddfile={this.handleFileAdd}
+          onupdatefiles={this.handleFilesUpdated}
+          ref={(el=> (el) ? this.filePond = el : null)}
+        />
       </div>
     </div>);
 	}
@@ -400,20 +142,14 @@ class TeamPageFileDrop extends Component {
 
 const mapDispatchToProps = (dispatch)=> {
   return ({
-    createComment   : (payload)=> dispatch(createComment(payload)),
-    makeComment     : (payload)=> dispatch(makeComment(payload)),
-    push            : (payload)=> dispatch(push(payload))
+    makeComment : (payload)=> dispatch(makeComment(payload))
   });
 };
 
 const mapStateToProps = (state, ownProps)=> {
 	return ({
-    hash       : state.router.location.hash,
-    pathname   : state.router.location.pathname,
-    preComment : state.comments.preComment,
-    comment    : state.comments.comment,
-    profile    : state.user.profile,
-    team       : state.teams.team
+    profile : state.user.profile,
+    team    : state.teams.team
   });
 };
 
