@@ -1,5 +1,5 @@
 
-import { COMMENT_CREATED, SET_COMMENT_IMAGE, SET_COMMENTS_SORT, SET_COMMENTS_FORMAT_FILTER, SET_COMMENTS_DONE_FILTER } from '../../consts/action-types';
+import { COMMENT_CREATED, SET_COMMENT_IMAGE, SET_COMMENTS_SORT, SET_COMMENTS_FORMAT_FILTER, SET_COMMENTS_DONE_FILTER, SET_TEAM } from '../../consts/action-types';
 import { LOG_REDUCER_POSTFIX, LOG_REDUCER_PREFIX } from '../../consts/log-ascii';
 import { CommentSortTypes, CommentFilterTypes } from '../../components/sections/TopNav';
 
@@ -44,6 +44,9 @@ export default function comments(state=initialState, action) {
   } else if (type === SET_COMMENTS_DONE_FILTER) {
     const { filter : done } = payload;
     return (Object.assign({}, state, { filters : { ...state.filters, done } }));
+
+  } else if (type === SET_TEAM) {
+    return (Object.assign({}, state, { filters : { ...initialState.filters } }));
 
   } else if (type === '@@router/LOCATION_CHANGE') {
     return (state);

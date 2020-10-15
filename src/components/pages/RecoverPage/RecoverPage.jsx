@@ -83,7 +83,7 @@ class RecoverPage extends Component {
   render() {
     console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
 
-    return (<BasePage { ...this.props } className="creat-team-page">
+    return (<BasePage { ...this.props } className="recover-page">
       <RecoverForm { ...this.state}
         onPassChange={this.handlePassChange}
         onPass2Change={this.handlePass2Change}

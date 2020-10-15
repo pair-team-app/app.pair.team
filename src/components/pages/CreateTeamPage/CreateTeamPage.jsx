@@ -145,7 +145,7 @@ const CreateTeamForm = (props)=> {
   return (<div className="create-team-form">
     <form>
       <DummyForm />
-      <input type="text" placeholder="Enter Name" value={title} onChange={props.onTitleChange} autoComplete="new-password" />
+      <input type="text" placeholder="Enter Name" value={title} onChange={props.onTitleChange} autoComplete="new-password" autoFocus />
       <input type="text" placeholder="Enter Description" value={description} onChange={props.onDescriptionChange} autoComplete="new-password" />
       <div className="rules-wrapper">
         {(rules.slice(0, -1).map((rule, i)=> (
