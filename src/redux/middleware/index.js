@@ -108,8 +108,8 @@ export function onMiddleware(store) {
         }
 
       } else {
-        dispatch(push(`${Pages.TEAM}${Modals.LOGIN}`));
         cookie.remove('user_id');
+        dispatch(push(`${Pages.TEAM}${Modals.LOGIN}`));
       }
 
     } else if (type === TEAMS_LOADED) {

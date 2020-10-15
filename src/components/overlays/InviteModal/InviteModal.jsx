@@ -10,7 +10,6 @@ import BaseOverlay from '../BaseOverlay';
 import InviteForm from '../../forms/InviteForm';
 import { POPUP_TYPE_ERROR } from '../PopupNotification';
 import { Modals } from '../../../consts/uris';
-import { updateUserProfile } from '../../../redux/actions';
 import { trackEvent } from '../../../utils/tracking';
 import pairLogo from '../../../assets/images/logos/logo-pairurl-310.png';
 
@@ -84,7 +83,7 @@ class InviteModal extends Component {
 
     const { profile, team } = this.props;
 		const { outro } = this.state;
-    
+
 		return (<BaseOverlay
       tracking={Modals.LOGIN}
       outro={outro}
@@ -115,13 +114,6 @@ class InviteModal extends Component {
 }
 
 
-const mapDispatchToProps = (dispatch)=> {
-	return ({
-		updateUserProfile : (payload)=> dispatch(updateUserProfile(payload))
-	});
-
-};
-
 const mapStateToProps = (state, ownProps)=> {
 	return ({
 		profile : state.user.profile,
@@ -130,4 +122,4 @@ const mapStateToProps = (state, ownProps)=> {
 };
 
 // export default withRouter(connect(mapStateToProps, mapDispatchToProps)(InviteModal));
-export default connect(mapStateToProps, mapDispatchToProps)(InviteModal);
+export default connect(mapStateToProps)(InviteModal);

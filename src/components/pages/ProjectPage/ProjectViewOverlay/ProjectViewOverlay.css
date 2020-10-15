@@ -91,8 +91,6 @@
   padding: 10px;
   background-color: rgba(var(--site-bg-color), 1.0);
   border-radius: var(--border-radius);
-  box-shadow: var(--orthodox-shadow);
-	/* filter: var(--orthodox-drop-shadow); */
 }
 
 .add-comment-bubble .form-wrapper {

@@ -62,7 +62,6 @@ class UserSettings extends Component {
 			const { itemType } = this.state;
 			if (itemType) {
 				if (itemType === SettingsMenuItemTypes.LOGOUT) {
-					this.props.push(`${Pages.TEAM}${Modals.LOGIN}`);
 					this.props.onLogout();
 
 				} else if (itemType !== SettingsMenuItemTypes.DOCS && itemType !== SettingsMenuItemTypes.INSTALL) {

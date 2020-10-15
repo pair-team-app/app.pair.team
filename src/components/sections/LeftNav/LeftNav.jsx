@@ -24,12 +24,6 @@ class LeftNav extends Component {
 
   componentDidMount() {
     // console.log('%s.componentDidMount()', this.constructor.name, { props : this.props, state : this.state });
-
-    // const { playgrounds } = this.props;
-    // const { builds } = this.state;
-    // if (playgrounds && !builds) {
-    //   this.onPopulateBuildTree();
-    // }
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {

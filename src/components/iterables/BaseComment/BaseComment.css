@@ -172,8 +172,7 @@
 
 .base-comment .image > img {
 	max-width: 558px;
-	box-shadow: var(--orthodox-shadow);
-  filter: var(--orthodox-drop-shadow);
+	border: 1px solid #e5e5e5;
 }
 
 .base-comment .image > img:hover {

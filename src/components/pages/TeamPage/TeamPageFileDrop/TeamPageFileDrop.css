@@ -58,17 +58,10 @@
 
 .filepond--wrapper .filepond--root .filepond--panel {
   display: none;
-  background: none;
-  border-radius: 0;
-  filter: none;
-  box-shadow: none;
 }
 
 .team-page-file-drop[data-dragging="false"] .filepond--wrapper .filepond--root .filepond--panel {
   display: none;
-  border-radius: var(--border-radius);
-  box-shadow: var(--orthodox-shadow);
-  filter: var(--orthodox-drop-shadow);
 }
 
 .filepond--wrapper .filepond--root .filepond--image-preview-overlay-success, .filepond--wrapper .filepond--root .filepond--image-preview-overlay-failure, .filepond--wrapper .filepond--root .filepond--file-action-button, .filepond--wrapper .filepond--root .filepond--file-info {
