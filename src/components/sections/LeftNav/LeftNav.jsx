@@ -117,7 +117,7 @@ class LeftNav extends Component {
   render() {
     console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
 
-    const { teams, profile } = this.props;
+    const { teams, profile, doneFilter } = this.props;
     const { builds } = this.state;
 
     return (<div className="left-nav">
@@ -133,6 +133,7 @@ class LeftNav extends Component {
               <LeftNavTeam
                 key={i}
                 team={team}
+                done={doneFilter}
                 onClick={this.handleTeamClick}
                 onDelete={this.handleDeleteTeam}
               />
@@ -191,10 +192,10 @@ const LeftNavBuild = (props)=> {
 const LeftNavTeam = (props)=> {
 	// console.log('LeftNavTeam()', { props });
 
-	const { team } = props;
+	const { team, done } = props;
 	const { id, title, selected } = team;
 	return (<div className="left-nav-team" data-id={id} data-selected={selected}>
-    <div className="title" onClick={()=> props.onClick(team)}># {Strings.capitalize(title, true)} ({team.comments.length})</div>
+    <div className="title" onClick={()=> props.onClick(team)}># {Strings.capitalize(title, true)} ({(done) ? team.comments.length : team.comments.filter(({ state })=> (state !== 'resolved')).length})</div>
     <FontAwesome name="minus-circle" className="delete" onClick={()=> props.onDelete(team)} />
   </div>);
 };
@@ -206,7 +207,8 @@ const mapStateToProps = (state, ownProps)=> {
     teams       : state.teams.teams,
     playgrounds : state.builds.playgrounds,
     playground  : state.builds.playground,
-    profile     : state.user.profile
+    profile     : state.user.profile,
+    doneFilter  : state.comments.filters.done
   });
 };
 
