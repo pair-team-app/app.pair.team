@@ -208,9 +208,8 @@
 	width: 100%;
 }
 
-.comment-body .base-comment-content .reply-form  > div input.comment-txt {
-	position: absolute;
-	padding-right: 230px;
+.comment-body .base-comment-content .reply-form  > div input {
+	padding-right: 220px;
 	filter: none;
 }
 
