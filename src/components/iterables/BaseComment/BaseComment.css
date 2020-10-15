@@ -152,6 +152,15 @@
 	opacity: 0.875;
 }
 
+.comment-body .base-comment-content .content a {
+	color: rgba(var(--site-selected-color), 1.0);
+}
+
+.comment-body .base-comment-content .content a:hover {
+	color: rgba(var(--site-selected-color), 1.0);
+  text-decoration: underline;
+}
+
 .comment-body .base-comment-content .link {
 	word-break: break-all;
 }
@@ -167,6 +176,10 @@
   filter: var(--orthodox-drop-shadow);
 }
 
+.base-comment .image > img:hover {
+	cursor: pointer;
+}
+
 .base-comment .link {
 	word-break: break-all;
 }
@@ -175,9 +188,9 @@
   color: rgba(var(--site-selected-color), 1.0);
 }
 
-.base-comment .link {
+/* .base-comment .link {
 	margin-right: 10px;
-}
+} */
 
 .base-comment .link a:hover {
   color: rgba(var(--site-selected-color), 1.0);

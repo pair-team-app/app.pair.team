@@ -302,15 +302,11 @@ class TeamPage extends Component {
     const { teamComment } = this.state;
     const { format, text, image, url, code } = teamComment;
 
-    console.log('%s.handleSubmitComment()', this.constructor.name, { image, code, format,
-      link     : (url || null),
-			content  : (url !== null && text.replace(url, '').length === 0) ? null : text.replace(url, '')
-    });
-
+    const inlineURL = text.replace(url, `<a href="${url}" target="_blank">${url}</a>`);
 
     this.props.makeComment({ image, code, format,
-      link     : (url || null),
-			content  : (url !== null && text.replace(url, '').length === 0) ? null : text.replace(url, ''),
+      link    : null,
+			content : inlineURL
     });
 
     this.setState({

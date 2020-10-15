@@ -138,9 +138,10 @@ class BaseComment extends Component {
 		const urls = (LinkifyIt().match(replyContent) || []).map(({ url })=> (url));
     const url = (urls.length > 0) ? [ ...urls].shift() : null;
 
-		this.props.makeComment({ code, format, image,
-			content  : (url !== null && replyContent.replace(url, '').length === 0) ? null : replyContent.replace(url, ''),
-			link     : url,
+		const content = replyContent.replace(url, `<a href="${url}" target="_blank">${url}</a>`);
+
+		this.props.makeComment({ code, format, image, content,
+			link     : null,
 			position : comment.position
 		});
 
@@ -236,9 +237,9 @@ const BaseCommentContent = (props)=> {
 	const { types, code, content, image, link, state } = comment;
 
 	return (<div className="base-comment-content" data-format={format} data-resolved={(state === 'resolved')}>
-		{(content) && (<div className="content" data-code={code}>{content}</div>)}
+		{(content) && (<div className="content" data-code={code}><span dangerouslySetInnerHTML={{ __html : content }}></span></div>)}
 		{(image) && (<div className="image" onClick={props.onImageClick}><img src={image} alt={URIs.lastComponent(image)} /></div>)}
-		{(link) && (<div className="link" dangerouslySetInnerHTML={{ __html : `<a href="${link}" target="_blank">${link}</a>`}}></div>)}
+
 		{(comment.state !== 'resolved' && comment.state !== 'closed' && types.includes('team') && types.includes('op')) && (<div className="reply-form">
 			<div>
 				<KeyboardEventHandler handleKeys={['enter', `esc`]} isDisabled={(preComment !== null)} onKeyEvent={(key, event)=> props.onReplyKeyPress(event, key)}>
