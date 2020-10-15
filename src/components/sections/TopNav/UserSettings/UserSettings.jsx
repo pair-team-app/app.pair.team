@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import './UserSettings.css';
 
 import { push } from 'connected-react-router';
+import cookie from 'react-cookies';
 import { connect } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 import { TWITTER_SUPPORT, NPM_DE_PLAYGROUND, Modals, Pages, Popovers } from '../../../../consts/uris';
@@ -62,6 +63,7 @@ class UserSettings extends Component {
 			const { itemType } = this.state;
 			if (itemType) {
 				if (itemType === SettingsMenuItemTypes.LOGOUT) {
+					cookie.save('user_id', '0', { path : '/', sameSite : false });
 					this.props.onLogout();
 
 				} else if (itemType !== SettingsMenuItemTypes.DOCS && itemType !== SettingsMenuItemTypes.INSTALL) {

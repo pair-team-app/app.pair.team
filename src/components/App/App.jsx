@@ -144,7 +144,9 @@ class App extends Component {
 
       // post invite fetch
       if (!prevProps.invite && this.props.invite) {
-        const { invite } = this.props;
+        if ((cookie.load('user_id') << 0) !== 0) {
+          cookie.remove('user_id');
+        }
 
         if (invite.state === 1 || invite.state === 2) {
           axios.post(API_ENDPT_URL, {

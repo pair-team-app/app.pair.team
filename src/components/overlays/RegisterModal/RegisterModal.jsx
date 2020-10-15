@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import './RegisterModal.css';
 
 import { goBack } from 'connected-react-router';
+import cookie from 'react-cookies';
 import { connect } from 'react-redux';
 
 import BaseOverlay from '../BaseOverlay';
@@ -33,9 +34,14 @@ class RegisterModal extends Component {
 	componentDidUpdate(prevProps, prevState, snapshot) {
 		// console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : this.props, prevState, state : this.state });
 
-		const { profile } = this.props;
+		const { invite, profile } = this.props;
+
 		if (!prevProps.profile && profile) {
 			this.setState({ outro : true });
+		}
+
+		if (invite && (cookie.load('user_id') << 0) !== 0) {
+			cookie.remove('user_id');
 		}
 	}
 

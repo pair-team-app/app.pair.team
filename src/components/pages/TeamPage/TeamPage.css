@@ -312,15 +312,15 @@
 	margin-bottom: 50px;
 }
 
-.team-page-comments-panel[data-empty="true"] .emoji-footer {
-	display: none;
-}
-
-.team-page-comments-panel[data-empty="false"] .emoji-footer {
+.team-page-comments-panel .emoji-footer {
 	width: 100%;
 	margin: 100px 0;
-	font-size: 64px;
+	font-size: 40px;
 	text-align: center;
+}
+
+.team-page-comments-panel[data-empty="true"] .emoji-footer {
+	display: none;
 }
 
 .team-page-rule {

@@ -221,7 +221,7 @@ const BaseCommentHeader = (props)=> {
 			<div className="avatar-ico" data-id={author.id}>{author.email.split('').shift().toUpperCase()}</div>
 		</div>
 		<div className="info-wrapper">
-			<div className="timestamp">Commented @ {timestamp.format(COMMENT_TIMESTAMP)}</div>
+			<div className="timestamp">{(format === CommentFilterTypes.BUGS) ? 'Bug' : (format === CommentFilterTypes.ISSUES) ? 'Issue' : (format === CommentFilterTypes.REQUESTS) ? 'Request' : 'Comment'} @ {timestamp.format(COMMENT_TIMESTAMP)}</div>
 			{(state === 'resolved') && (<div className="link" onClick={handleResolve}>Reopen</div>)}
 			{(format !== CommentFilterTypes.NONE && state === 'open' && (types.includes('op') || types.includes('project'))) && (<div className="link" onClick={handleResolve}>Resolve</div>)}
 			{(profile.id === author.id) && (<div className="link" onClick={handleDelete}>Delete</div>)}
