@@ -239,7 +239,7 @@ const BaseCommentContent = (props)=> {
 	return (<div className="base-comment-content" data-format={format} data-resolved={(state === 'resolved')}>
 		{(content) && (<div className="content" data-code={code}><span dangerouslySetInnerHTML={{ __html : content }}></span></div>)}
 		{(image) && (<div className="image" onClick={props.onImageClick}><img src={image} alt={URIs.lastComponent(image)} /></div>)}
-
+		{(link) && (<div className="link" dangerouslySetInnerHTML={{ __html : `<a href="${link}" target="_blank">${link}</a>`}}></div>)}
 		{(comment.state !== 'resolved' && comment.state !== 'closed' && types.includes('team') && types.includes('op')) && (<div className="reply-form">
 			<div>
 				<KeyboardEventHandler handleKeys={['enter', `esc`]} isDisabled={(preComment !== null)} onKeyEvent={(key, event)=> props.onReplyKeyPress(event, key)}>
