@@ -7,6 +7,7 @@ import { Strings } from 'lang-js-utils';
 import FontAwesome from 'react-fontawesome';
 import { connect } from 'react-redux';
 
+import { CommentFilterTypes } from '../TopNav';
 import ContentExpander from '../../iterables/ContentExpander';
 import { NPM_DE_PLAYGROUND, Pages } from '../../../consts/uris';
 import { fetchBuildPlaygrounds, setComponent, setPlayground, setTeam, removeTeam } from '../../../redux/actions';
@@ -111,7 +112,7 @@ class LeftNav extends Component {
   render() {
     console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
 
-    const { teams, profile, doneFilter } = this.props;
+    const { teams, profile, formatFilter } = this.props;
     const { builds } = this.state;
 
     return (<div className="left-nav">
@@ -127,7 +128,7 @@ class LeftNav extends Component {
               <LeftNavTeam
                 key={i}
                 team={team}
-                done={doneFilter}
+                done={(formatFilter === CommentFilterTypes.DONE)}
                 onClick={this.handleTeamClick}
                 onDelete={this.handleDeleteTeam}
               />
@@ -189,7 +190,7 @@ const LeftNavTeam = (props)=> {
 	const { team, done } = props;
 	const { id, title, selected } = team;
 	return (<div className="left-nav-team" data-id={id} data-selected={selected}>
-    <div className="title" onClick={()=> props.onClick(team)}># {Strings.capitalize(title, true)} ({(done && selected) ? team.comments.length : team.comments.filter(({ state })=> (state !== 'resolved')).length})</div>
+    <div className="title" onClick={()=> props.onClick(team)}># {Strings.capitalize(title, true)} ({(done && selected) ? team.comments.length : team.comments.filter(({ state })=> (state !== CommentFilterTypes.DONE )).length})</div>
     <FontAwesome name="minus-circle" className="delete" onClick={()=> props.onDelete(team)} />
   </div>);
 };
@@ -197,12 +198,12 @@ const LeftNavTeam = (props)=> {
 
 const mapStateToProps = (state, ownProps)=> {
   return ({
-    team        : state.teams.team,
-    teams       : state.teams.teams,
-    playgrounds : state.builds.playgrounds,
-    playground  : state.builds.playground,
-    profile     : state.user.profile,
-    doneFilter  : state.comments.filters.done
+    team         : state.teams.team,
+    teams        : state.teams.teams,
+    playgrounds  : state.builds.playgrounds,
+    playground   : state.builds.playground,
+    profile      : state.user.profile,
+    formatFilter : state.comments.filters.format
   });
 };
 

@@ -28,10 +28,13 @@ const formatFilterComments = (comments, filter)=> {
   console.log('TeamPage.formatFilterComments()', { comments, filter });
 
   if (filter === CommentFilterTypes.NONE) {
-    return (comments);
+    return (comments.filter(({ state })=> ((state !== CommentFilterTypes.DONE))));
+
+  } else if (filter === CommentFilterTypes.DONE) {
+    return (comments)
 
   } else {
-    return (comments.filter(({ format })=> ((format === filter))));
+    return (comments.filter(({ format, state })=> ((format === filter && state !== CommentFilterTypes.DONE))));
   }
 };
 
@@ -367,10 +370,10 @@ class TeamPage extends Component {
 
   render() {
     console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
-    const { profile, team, member, sort, formatFilter, doneFilter } = this.props;
+    const { profile, team, member, sort, formatFilter } = this.props;
     const { teamDescription, ruleContent, ruleInput, teamComment, fetching, loading, dragging } = this.state;
 
-    const comments = formatFilterComments((team) ? (sort === CommentSortTypes.DATE) ? team.comments.sort((i, ii)=> ((i.epoch > ii.epoch) ? -1 : (i.epoch < ii.epoch) ? 1 : 0)) : team.comments.sort((i, ii)=> ((i.score > ii.score) ? -1 : (i.score < ii.score) ? 1 : 0)).filter((comment)=> (comment !== null)) : [], formatFilter);
+    const comments = formatFilterComments((team) ? team.comments.filter((comment)=> (comment !== null)) : [], formatFilter);
 
     const infoLoading = Boolean(((loading << 0) & 0x001) === 0x001);
     const rulesLoading = Boolean(((loading << 0) & 0x010) === 0x010);
@@ -387,7 +390,7 @@ class TeamPage extends Component {
             <div className="comments-wrapper" data-fetching={Boolean((fetching & 0x010) === 0x010)} data-loading={commentsLoading} data-empty={team && team.comments.length === 0}>
               <TeamPageCommentsPanel
                 profile={profile}
-                comments={(doneFilter) ? comments : comments.filter(({ state })=> (state !== CommentFilterTypes.DONE))}
+                comments={comments.sort((i, ii)=> ((sort === CommentSortTypes.DATE) ? ((i.epoch > ii.epoch) ? -1 : (i.epoch < ii.epoch) ? 1 : 0) : ((i.score > ii.score) ? -1 : (i.score < ii.score) ? 1 : 0)))}
                 fetching={Boolean((fetching & 0x010) === 0x010)}
                 loading={commentsLoading}
                 sort={sort}
