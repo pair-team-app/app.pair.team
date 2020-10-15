@@ -14,7 +14,7 @@ class RecoverForm extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			email      : '',
+			email      : 'mth.363615033@gmail.com',
 			emailValid : true,
 			validated  : false
 		};
@@ -22,22 +22,26 @@ class RecoverForm extends Component {
 
 	componentDidUpdate(prevProps, prevState, snapshot) {
 // console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : this.props, prevState, state : this.state });
+
+		const { submitted } = this.props;
+		const { email } = this.state;
+
+		if (submitted && (email !== prevState.email)) {
+			this.props.onResend();
+		}
 	}
 
 	handleSubmit = (event)=> {
-		console.log('%s.handleSubmit()', this.constructor.name, event.target, this.state);
+		// console.log('%s.handleSubmit()', this.constructor.name, event.target, this.state);
 
 		event.preventDefault();
 
 		trackEvent('button', 'recover');
 
 		const { email } = this.state;
-		const emailValid = (email.includes('@')) ? Strings.isEmail(email) : (email.length > 0);
+		const emailValid = Strings.isEmail(email);
 
-		this.setState({
-			email      : (emailValid) ? email : 'Email Address Invalid',
-			emailValid : emailValid,
-		});
+		console.log('%s.handleSubmit()', this.constructor.name, { email, emailValid });
 
 		if (emailValid) {
 			const username = email;
@@ -47,33 +51,36 @@ class RecoverForm extends Component {
 				payload : { email, username }
 			}).then((response)=> {
 				console.log('RECOVER', response.data);
+				this.props.onSubmitted();
 
-        this.props.onSubmitted();
-			}).catch((error)=> {
-			});
+			}).catch((error)=> {});
 
 		} else {
-			this.setState({ validated : true });
+			this.setState({
+				email     : 'Email Address Invalid',
+				validated : true
+			});
+
 		}
 	};
 
 
 	render() {
-// console.log('%s.render()', this.constructor.name, this.props, this.state);
+console.log('%s.render()', this.constructor.name, this.props, this.state);
 
-		const { email } = this.state;
-		const { emailValid, validated } = this.state;
+		const { submitted } = this.props;
+		const { email, emailValid, validated } = this.state;
 
 		return (<div className="recover-form">
 			<form onSubmit={this.handleSubmit}>
 				<DummyForm />
 				{(validated)
-					? (<input type="email" placeholder="Enter Work Email Address" value={email} onFocus={()=> this.setState({ email : (emailValid) ? email : '', emailValid : true, passMsg : null, validated : false })} onChange={(event)=> this.setState({ email : event.target.value })} autoComplete="new-password" autoFocus />)
-					: (<input type="text" placeholder="Enter Work Email Address" value={email} onFocus={()=> this.setState({ email : (emailValid) ? email : '', emailValid : true, passMsg : null, validated : false })} onChange={(event)=> this.setState({ email : event.target.value })} autoComplete="new-password" />)
+					? (<input type="email" placeholder="Enter Work Email Address" value={email} onFocus={()=> this.setState({ email : '', emailValid : true, validated : false })} onChange={(event)=> this.setState({ email : event.target.value })} autoComplete="new-password" autoFocus />)
+					: (<input type="text" placeholder="Enter Work Email Address" value={email} onChange={(event)=> this.setState({ email : event.target.value })} autoComplete="new-password" />)
 				}
 
         <div className="button-wrapper button-wrapper-row">
-          <button type="submit" disabled={(email.length === 0 || !emailValid)} onClick={this.handleSubmit}>Submit</button>
+          <button type="submit" disabled={(email.length === 0 || !emailValid)} onClick={this.handleSubmit}>{(submitted) ? 'Resend' : 'Submit'}</button>
           <button type="button" className="cancel-button" onClick={this.props.onCancel}>Cancel</button>
         </div>
 				{/* <button disabled={(email.length === 0 || !emailValid)} type="submit" onClick={(event)=> this.handleSubmit(event)}>Submit</button> */}

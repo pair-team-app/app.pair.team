@@ -16,13 +16,14 @@ class RecoverModal extends Component {
 		super(props);
 
 		this.state = {
-			outro    : false,
-			outroURI : Modals.LOGIN
+			outro     : false,
+			outroURI  : Modals.LOGIN,
+			submitted : false
 		};
 	}
 
 	componentDidUpdate(prevProps, prevState, snapshot) {
-// console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : this.props, prevState, state : this.state });
+		console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : this.props, prevState, state : this.state });
   }
 
 	handleComplete = ()=> {
@@ -46,11 +47,23 @@ class RecoverModal extends Component {
 		});
 	};
 
+	handleSubmitted = (event)=> {
+		console.log('%s.handleSubmitted()', this.constructor.name);
+
+		// event.preventDefault();
+		this.setState({ submitted : true });
+	};
+
+	handleResend = (event)=> {
+		console.log('%s.handleResend()', this.constructor.name);
+
+		this.setState({ submitted : false });
+	}
 
 	render() {
-// console.log('%s.render()', this.constructor.name, this.props, this.state);
+		console.log('%s.render()', this.constructor.name, this.props, this.state);
 
-		const { outro } = this.state;
+		const { outro, submitted } = this.state;
 		return (
 			<BaseOverlay
 				tracking={Modals.RECOVER}
@@ -60,19 +73,19 @@ class RecoverModal extends Component {
 				title="Forgot Password"
 				delay={125}
 				onComplete={this.handleComplete}>
+					<div className="recover-modal">
+						<div className="link-wrapper">
+							<span>Looking for <PageNavLink to={Modals.REGISTER} onClick={this.handleModal}>Sign Up</PageNavLink> or <PageNavLink to={Modals.LOGIN} onClick={this.handleModal}>Login</PageNavLink>?</span>
+						</div>
 
-				<div className="recover-modal">
-          <div className="link-wrapper">
-						<span>Looking for <PageNavLink to={Modals.REGISTER} onClick={this.handleModal}>Sign Up</PageNavLink> or <PageNavLink to={Modals.LOGIN} onClick={this.handleModal}>Login</PageNavLink>?</span>
+						<div className="form-wrapper">
+							<RecoverForm submitted={submitted} onCancel={this.props.goBack} onSubmitted={this.handleSubmitted} onResend={this.handleResend} />
+						</div>
+						<div className="footer-wrapper form-disclaimer">
+							<PageNavLink to={TERMS_PAGE} target="_blank">Terms of Service</PageNavLink>
+							<div className="status" data-submitted={submitted}>Email sent.</div>
+						</div>
 					</div>
-
-					<div className="form-wrapper">
-						<RecoverForm onCancel={this.props.goBack} onSubmitted={(event)=> { event.preventDefault(); this.handleComplete(); }} />
-					</div>
-					<div className="footer-wrapper form-disclaimer">
-						<PageNavLink to={TERMS_PAGE} target="_blank">Terms of Service</PageNavLink>
-					</div>
-				</div>
 			</BaseOverlay>);
 	}
 }

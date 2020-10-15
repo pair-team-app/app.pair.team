@@ -1,0 +1,9 @@
+
+.recover-modal .footer-wrapper .status {
+  text-align: left;
+  opacity: 0;
+}
+
+.recover-modal .footer-wrapper .status[data-submitted="true"] {
+  opacity: 1;
+}
