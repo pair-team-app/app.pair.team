@@ -23,7 +23,8 @@ class TopNav extends Component {
 			matchPaths : {
 				team    : null,
 				create  : null,
-				project : null
+				project : null,
+				recover : null
 			}
 		};
 	}
@@ -31,26 +32,7 @@ class TopNav extends Component {
 	componentDidMount() {
 		console.log('%s.componentDidMount()', this.constructor.name, { props : this.props, state : this.state });
 
-		// const { hash } = window.location;
-		// if (hash === '#share' && !this.state.popover) {
-		// 	this.setState({ popover : true });
-		// }
-	}
-
-	componentDidUpdate(prevProps, prevState, snapshot) {
-		// console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : this.props, prevState, state : this.state });
-// console.log('%s.componentDidUpdate()', this.constructor.name, { left : shareLink.offsetLeft, top : shareLink.offsetTop });
-
 		const { pathname } = this.props;
-		// const { pathname, hash } = this.props;
-		// if ((hash === '#share') && !this.state.popover) {
-		// 	this.setState({ popover : true });
-		// }
-
-		// if (hash !== '#share' && this.state.popover) {
-		// 	this.setState({ popover : false });
-		// }
-
 		const matchPaths = {
 			team    : matchPath(pathname, {
 				path   : RoutePaths.TEAM,
@@ -69,6 +51,46 @@ class TopNav extends Component {
 			}),
 			profile : matchPath(pathname, {
 				path   : RoutePaths.PROFILE,
+				exact  : false,
+				strict : false
+			}),
+			recover : matchPath(pathname, {
+				path   : RoutePaths.RECOVER,
+				exact  : false,
+				strict : false
+			})
+		};
+
+		this.setState({ matchPaths });
+	}
+
+	componentDidUpdate(prevProps, prevState, snapshot) {
+		console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : this.props, prevState, state : this.state });
+
+		const { pathname } = this.props;
+		const matchPaths = {
+			team    : matchPath(pathname, {
+				path   : RoutePaths.TEAM,
+				exact  : false,
+				strict : false
+			}),
+			create  : matchPath(pathname, {
+				path   : RoutePaths.CREATE,
+				exact  : false,
+				strict : false
+			}),
+			project : matchPath(pathname, {
+				path   : RoutePaths.PROJECT,
+				exact  : false,
+				strict : false
+			}),
+			profile : matchPath(pathname, {
+				path   : RoutePaths.PROFILE,
+				exact  : false,
+				strict : false
+			}),
+			recover : matchPath(pathname, {
+				path   : RoutePaths.RECOVER,
 				exact  : false,
 				strict : false
 			})
@@ -137,7 +159,7 @@ class TopNav extends Component {
 	};
 
 	render() {
-		// console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
+		console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
 
 		const { darkThemed, profile, invite, team, sort, formatFilter, doneFilter } = this.props;
 		const { popover, matchPaths } = this.state;
@@ -149,6 +171,7 @@ class TopNav extends Component {
 				{(matchPaths.create) && (<TopNavPageTitle title="Create Channel" />)}
 				{(matchPaths.project) && (<TopNavPageTitle title="Project" />)}
 				{(matchPaths.profile) && (<TopNavPageTitle title="Profile" />)}
+				{(matchPaths.recover) && (<TopNavPageTitle title="Reset Password" />)}
 			</div></div>
 			<div className="col col-mid">
         <input type="checkbox" checked={darkThemed} value={darkThemed} onChange={this.props.toggleTheme} />
