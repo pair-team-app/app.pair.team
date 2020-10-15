@@ -222,9 +222,9 @@ const BaseCommentHeader = (props)=> {
 		</div>
 		<div className="info-wrapper">
 			<div className="timestamp">Commented @ {timestamp.format(COMMENT_TIMESTAMP)}</div>
-			{(profile.id === author.id) && (<div className="link" onClick={handleDelete}>Delete</div>)}
-			{(format !== CommentFilterTypes.NONE && state === 'open' && (types.includes('op') || types.includes('project'))) && (<div className="link" onClick={handleResolve}>Resolve</div>)}
 			{(state === 'resolved') && (<div className="link" onClick={handleResolve}>Reopen</div>)}
+			{(format !== CommentFilterTypes.NONE && state === 'open' && (types.includes('op') || types.includes('project'))) && (<div className="link" onClick={handleResolve}>Resolve</div>)}
+			{(profile.id === author.id) && (<div className="link" onClick={handleDelete}>Delete</div>)}
 		</div>
 	</div>);
 };

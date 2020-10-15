@@ -61,6 +61,10 @@
 	transition: color var(--transition-duration-short) ease-out;
 }
 
+.base-comment-header .info-wrapper .link:not(:last-child) {
+	margin-right: 10px;
+}
+
 .base-comment-header .info-wrapper .link:hover {
 	color: rgba(var(--link-alt-color), 1.0);
 	text-decoration: underline;
@@ -159,10 +163,6 @@
 .comment-body .base-comment-content .content a:hover {
 	color: rgba(var(--site-selected-color), 1.0);
   text-decoration: underline;
-}
-
-.comment-body .base-comment-content .link {
-	word-break: break-all;
 }
 
 .base-comment .image {
