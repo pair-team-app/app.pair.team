@@ -14,7 +14,7 @@ class RecoverForm extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			email      : 'mth.363615033@gmail.com',
+			email      : '',
 			emailValid : true,
 			validated  : false
 		};
