@@ -24,6 +24,8 @@ class ProfileForm extends Component {
 			changed       : false,
 			validated     : false
 		};
+
+		this.passRef = React.createRef();
 	}
 
 	componentDidUpdate(prevProps, prevState, snapshot) {
@@ -93,6 +95,7 @@ class ProfileForm extends Component {
         const { id } = profile;
         const avatar = (!Strings.compare(Strings.firstChar(email), Strings.firstChar(profile.email), false)) ? makeAvatar(email) : profile.avatar;
 
+				this.passRef.clear();
 				this.setState({
 					password      : '',
 					newPassword   : '',
@@ -107,7 +110,6 @@ class ProfileForm extends Component {
 						password : newPassword
 					});
 				});
-
 
       } else {
         this.setState({
@@ -148,20 +150,20 @@ class ProfileForm extends Component {
 							this.setState({
 								newPassword : password,
 								passMsg     : null,
-								passScore  : score
+								passScore   : score
 							});
 						}}
-						value={newPassword}
 						inputProps={{
-							placeholder  : 'New Password',
+							placeholder  : 'Enter New Password',
 							autoComplete : 'new-password'
 						}}
+						ref={(el)=> this.passRef = el}
 					/>
 
 					<input type="password" placeholder="Confirm New Password" value={newPassword2} onChange={(event)=> this.setState({ newPassword2 : event.target.value, passMsg : null })} onClick={this.handlePasswordClick} autoComplete="new-password" />
 
 					<div className="button-wrapper button-wrapper-row">
-            <button type="submit" disabled={!changed || email.length === 0 || !emailValid || (CryptoJS.MD5(password).toString() !== profile.password) || newPassword !== newPassword2} onClick={(event)=> this.handleSubmit(event)}>Submit</button>
+            <button type="submit" disabled={!changed || email.length === 0 || !emailValid || (CryptoJS.MD5(password).toString() !== profile.password) || newPassword !== newPassword2} onClick={(event)=> this.handleSubmit(event)}>Confirm</button>
 						<button className="cancel-button" onClick={this.props.onCancel}>Cancel</button>
 					</div>
 				</form>

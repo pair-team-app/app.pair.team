@@ -6,6 +6,7 @@ import { goBack } from 'connected-react-router';
 import { connect } from 'react-redux';
 
 import BasePage from '../BasePage';
+import { POPUP_TYPE_OK } from '../../overlays/PopupNotification';
 import ProfileForm from '../../forms/ProfileForm';
 import PageNavLink from '../../iterables/PageNavLink';
 
@@ -37,6 +38,13 @@ class ProfilePage extends Component {
     console.log('%s.handleSubmit()', this.constructor.name, { id, username, email, password, avatar });
 
     trackEvent('button', 'update-profile');
+
+    this.props.onPopup({
+      type    : POPUP_TYPE_OK,
+      content : 'Profile updated.',
+      delay   : 333
+    });
+
     this.props.updateUserProfile({
       profile : { id, username : email, email, password, avatar },
       remote  : true
