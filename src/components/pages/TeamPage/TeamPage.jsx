@@ -32,7 +32,7 @@ const formatFilterComments = (comments, filter)=> {
     return (comments.filter(({ state })=> ((state !== CommentFilterTypes.DONE))));
 
   } else if (filter === CommentFilterTypes.DONE) {
-    return (comments)
+    return (comments.filter(({ state })=> ((state === CommentFilterTypes.DONE))))
 
   } else {
     return (comments.filter(({ format, state })=> ((format === filter && state !== CommentFilterTypes.DONE))));
