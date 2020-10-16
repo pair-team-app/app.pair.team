@@ -6,6 +6,7 @@ import { Redirect, Route, Switch } from 'react-router-dom';
 
 import BasePage from '../../pages/BasePage';
 import CreateTeamPage from '../../pages/CreateTeamPage';
+import InvitePage from '../../pages/InvitePage';
 import ProfilePage from '../../pages/ProfilePage';
 import ProjectPage from '../../pages/ProjectPage';
 import RecoverPage from '../../pages/RecoverPage';
@@ -38,12 +39,20 @@ class Routes extends Component {
       <Route exact path={Pages.HOME}><Redirect to={Pages.TEAM} /></Route>
 
       <Route
-        path={RoutePaths.INVITE}
+        path={RoutePaths.RECOVER}
+        render={({ props })=> <RecoverPage
+          onModal={(uri, payload)=> this.props.onModal(uri, true, payload)}
+          onPopup={this.props.onPopup} { ...props}
+        />
+      } />
+
+      <Route
+        path={RoutePaths.INVITED}
         render={({ props })=> <BasePage
           onLogout={this.props.onLogout}
           onModal={(uri, payload)=> this.props.onModal(uri, true, payload)}
           onPopup={this.props.onPopup} { ...props}
-          />
+        />
       } />
 
       <Route
@@ -52,7 +61,7 @@ class Routes extends Component {
           onLogout={this.props.onLogout}
           onModal={(uri, payload)=> this.props.onModal(uri, true, payload)}
           onPopup={this.props.onPopup} { ...props}
-          />
+        />
       } />
 
       <Route
@@ -60,7 +69,7 @@ class Routes extends Component {
         render={({ props })=> <BasePage
           onModal={(uri, payload)=> this.props.onModal(uri, true, payload)}
           onPopup={this.props.onPopup} { ...props}
-          />
+        />
       } />
 
       <Route
@@ -69,15 +78,15 @@ class Routes extends Component {
           onLogout={this.props.onLogout}
           onModal={(uri, payload)=> this.props.onModal(uri, true, payload)}
           onPopup={this.props.onPopup} { ...props}
-          />
+        />
       } />
 
       <Route
-        path={RoutePaths.RECOVER}
-        render={({ props })=> <RecoverPage
+        path={RoutePaths.INVITE}
+        render={({ props })=> <InvitePage
           onModal={(uri, payload)=> this.props.onModal(uri, true, payload)}
           onPopup={this.props.onPopup} { ...props}
-          />
+        />
       } />
 
       <Route
@@ -85,7 +94,7 @@ class Routes extends Component {
         render={({ props })=> <ProfilePage
           onModal={(uri, payload)=> this.props.onModal(uri, true, payload)}
           onPopup={this.props.onPopup} { ...props}
-          />
+        />
       } />
 
       <Route
@@ -94,7 +103,7 @@ class Routes extends Component {
           onLogout={this.props.onLogout}
           onModal={(uri, payload)=> this.props.onModal(uri, true, payload)}
           onPopup={this.props.onPopup} { ...props}
-          />
+        />
       } />
 
       <Route
@@ -103,7 +112,7 @@ class Routes extends Component {
           onLogout={this.props.onLogout}
           onModal={(uri, payload)=> this.props.onModal(uri, true, payload)}
           onPopup={this.props.onPopup} { ...props}
-          />
+        />
       } />
 
       {/* <Route path={Pages.WILDCARD}><Redirect to={Pages.TEAM} /></Route> */}

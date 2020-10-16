@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import './TopNav.css';
 
 import { push } from 'connected-react-router';
+import { Strings } from 'lang-js-utils';
 import FontAwesome from 'react-fontawesome';
 import { connect } from 'react-redux';
 import { matchPath } from 'react-router-dom';
@@ -58,6 +59,11 @@ class TopNav extends Component {
 				path   : RoutePaths.RECOVER,
 				exact  : false,
 				strict : false
+			}),
+			invite  : matchPath(pathname, {
+				path   : RoutePaths.INVITE,
+				exact  : false,
+				strict : false
 			})
 		};
 
@@ -91,6 +97,11 @@ class TopNav extends Component {
 			}),
 			recover : matchPath(pathname, {
 				path   : RoutePaths.RECOVER,
+				exact  : false,
+				strict : false
+			}),
+			invite  : matchPath(pathname, {
+				path   : RoutePaths.INVITE,
 				exact  : false,
 				strict : false
 			})
@@ -168,10 +179,11 @@ class TopNav extends Component {
 			{/* <div className="col breadcrumb-wrapper">{this.buildBreadcrumbs().map((breadcrumb)=> (breadcrumb))}</div> */}
 			<div className="col col-left"><div className="page-header-wrapper">
 				{(matchPaths.team && !matchPaths.project) && (<TeamPageHeader team={team} sort={sort} formatFilter={formatFilter} doneFilter={doneFilter} onSortClick={this.handleTeamCommentsSort} onFilterClick={this.handleTeamCommentsFilter} />)}
-				{(matchPaths.create) && (<TopNavPageTitle title="Create Channel" />)}
-				{(matchPaths.project) && (<TopNavPageTitle title="Project" />)}
-				{(matchPaths.profile) && (<TopNavPageTitle title="Profile" />)}
-				{(matchPaths.recover) && (<TopNavPageTitle title="Reset Password" />)}
+				{(matchPaths.create) && (<TopNavPageTitle>Create Channel</TopNavPageTitle>)}
+				{(matchPaths.project) && (<TopNavPageTitle>Project</TopNavPageTitle>)}
+				{(matchPaths.profile) && (<TopNavPageTitle>Profile</TopNavPageTitle>)}
+				{(matchPaths.recover) && (<TopNavPageTitle>Reset Password</TopNavPageTitle>)}
+				{(matchPaths.invite && team) && (<TopNavPageTitle>Invite to # {Strings.capitalize(team.title)}</TopNavPageTitle>)}
 			</div></div>
 			<div className="col col-mid">
         <input type="checkbox" checked={darkThemed} value={darkThemed} onChange={this.props.toggleTheme} />
@@ -189,8 +201,8 @@ class TopNav extends Component {
 const TopNavPageTitle = (props)=> {
 	console.log('TopNavPageTitle()', { props });
 
-	const { title } = props;
-	return (<div className="top-nav-page-title">{title}</div>);
+	const { children } = props;
+	return (<div className="top-nav-page-title">{children}</div>);
 };
 
 

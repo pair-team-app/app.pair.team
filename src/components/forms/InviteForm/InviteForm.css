@@ -2,6 +2,20 @@
 .invite-form {
 }
 
-.invite-form form > *:not(:last-child) {
-	margin-bottom: var(--spacing-20);
+.invite-form form {
+	width: 348px;
+}
+
+.invite-form form > *:not(.dummy-form):not(:last-child) {
+  margin-bottom: 20px;
+}
+
+.invite-form form .invites-wrapper > *:not(last-child) {
+  margin-bottom: 20px;
+}
+
+.invite-form .button-wrapper > button {
+  min-width: unset;
+  max-width: unset;
+  width: 100%;
 }

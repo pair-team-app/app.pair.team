@@ -1,0 +1,9 @@
+
+.invite-page {
+  padding-top: 70px;
+}
+
+.invite-page > div {
+  display: flex;
+  flex-flow: column nowrap;
+}

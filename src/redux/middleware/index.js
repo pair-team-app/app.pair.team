@@ -147,6 +147,12 @@ export function onMiddleware(store) {
         strict : true
       });
 
+      const inviteMatch = matchPath(pathname, {
+        path   : RoutePaths.INVITE,
+        exact  : true,
+        strict : true
+      });
+
       const teamMatch = matchPath(pathname, {
         path   : RoutePaths.TEAM,
         exact  : true,
@@ -165,17 +171,14 @@ export function onMiddleware(store) {
         const member = team.members.find(({ id })=> (id === profile.id));
         payload.member = member;
 
-        if (!params || (params.teamID << 0) !== team.id || params.teamSlug !== team.slug) {
+        if (!inviteMatch && (!params || (params.teamID << 0) !== team.id || params.teamSlug !== team.slug)) {
           dispatch(replace(`${Pages.TEAM}/${team.id}--${team.slug}${hash}`));
         }
 
-        if (payload.team) {
+        if (payload.team && !inviteMatch) {
           const buildID = 0;
           const deviceSlug = '';
           dispatch(fetchTeamBuilds({ team : payload.team, buildID, deviceSlug }));
-        }
-
-        if (AUTHORIZED_MODALS.includes(hash)) {
         }
       }
 
@@ -544,6 +547,12 @@ export function onMiddleware(store) {
         strict : true
       });
 
+      const inviteMatch = matchPath(pathname, {
+        path   : RoutePaths.INVITE,
+        exact  : true,
+        strict : true
+      });
+
       const buildID = (projectMatch) ? projectMatch.params.buildID << 0 : 0;
       const deviceSlug = (projectMatch) ? projectMatch.params.deviceSlug : '';
 
@@ -569,7 +578,7 @@ export function onMiddleware(store) {
       //  dispatch (next(action));
       }
 
-      console.log('[|:|]=-=-=-=-=-=@@router/LOCATION_CHANGE=-=-=-=-=-=-=[%s]=-=(%d)', action, (cookie.load('user_id') << 0), { isFirstRendering, urlHistory, pathname, hash, profile, createMatch, teamMatch, projectMatch, recoverMatch, profileMatch });
+      console.log('[|:|]=-=-=-=-=-=@@router/LOCATION_CHANGE=-=-=-=-=-=-=[%s]=-=(%d)', action, (cookie.load('user_id') << 0), { isFirstRendering, urlHistory, pathname, hash, profile, createMatch, teamMatch, projectMatch, recoverMatch, profileMatch, inviteMatch });
 
       if (isFirstRendering) {
         console.log('\\\\\\\\\\\\\\\\\\\\', 'FIRST LOCATION RENDER', { pathname, hash, cookie : (cookie.load('user_id') << 0) }, '\\\\\\\\\\\\\\\\\\\\');
