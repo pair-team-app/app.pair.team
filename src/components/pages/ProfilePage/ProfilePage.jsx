@@ -41,8 +41,7 @@ class ProfilePage extends Component {
 
     this.props.onPopup({
       type    : POPUP_TYPE_OK,
-      content : 'Profile updated.',
-      delay   : 333
+      content : 'Profile updated.'
     });
 
     this.props.updateUserProfile({
