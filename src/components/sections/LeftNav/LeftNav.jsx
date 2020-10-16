@@ -152,7 +152,6 @@ class LeftNav extends Component {
         </div>)}
 
         {(profile && !profile.validated) && (<div className="verify-wrapper">Verify your email first</div>)}
-        <button onClick={this.handleInstallClick}>Download NPM</button>
       </div>
     </div>);
   }
