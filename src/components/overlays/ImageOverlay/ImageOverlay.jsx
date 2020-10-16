@@ -166,10 +166,10 @@ class ImageOverlay extends Component {
       {(!cursor) && (<CommentPinCursor x={mousePosition.x} y={mousePosition.y} onPinClick={this.handleCommentMenu} />)}
 
       <div className="cursor-wrapper">
-        <button onClick={(event)=> this.setState({ cursor : !this.state.cursor })}>Marker</button>
+        <button onClick={(event)=> this.setState({ cursor : !this.state.cursor })}>Comment</button>
       </div>
 
-      <button className="close-button" onClick={this.onClose}>x</button>
+      <button className="cancel-button close-button" onClick={this.onClose}>Close</button>
     </div>);
   }
 }
@@ -240,11 +240,10 @@ const AddCommentBubble = (props)=> {
 
   return (<div className="add-comment-bubble" style={style}>
     <div className="form-wrapper">
-      <input type="text" className="comment-txt" placeholder="Add Comment" value={comment.text} onChange={props.onTextChange} autoFocus />
+      <input type="text" className="comment-txt" placeholder="Enter Comment" value={comment.text} onChange={props.onTextChange} autoFocus />
     </div>
     <div className="button-wrapper button-wrapper-row">
-      <button disabled={(comment.text.length === 0)} onClick={props.onSubmit}>Submit</button>
-      <button className="cancel-button" onClick={props.onCancel}>Cancel</button>
+      <button disabled={(comment.text.length === 0)} onClick={props.onSubmit}>Reply</button>
     </div>
   </div>);
 };

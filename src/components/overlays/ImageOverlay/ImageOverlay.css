@@ -122,3 +122,11 @@
   font-size: 16px;
   text-align: left;
 }
+
+.image-overlay .base-comment .base-comment-vote {
+  margin-top: 10px;
+}
+
+.image-overlay .base-comment .base-comment-header {
+  margin-bottom: 10px;
+}
