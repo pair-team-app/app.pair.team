@@ -215,7 +215,7 @@ a:focus {
 
 
 button {
-	padding: 14px;
+	padding: 8px;
 	border-radius: var(--border-radius);
   border: 1px solid rgba(var(--btn-bg-color), 1.0);
   background-color: rgba(var(--btn-bg-color), 1.0);
@@ -325,7 +325,7 @@ form .input-acc-wrapper > input {
 
 input[type="email"], input[type="password"], input[type="text"], select, textarea {
 	width: 100%;
-	padding: 16px;
+	padding: 10px;
 	background-color: rgba(var(--txtfield-bg-color), 1.0);
 	border: 1px solid rgba(var(--txtfield-border-color), 1.0);
 	border-radius: var(--border-radius);

@@ -135,8 +135,9 @@
 	text-transform: uppercase;
 }
 
-.team-page .content-wrapper .scroll-wrapper .team-wrapper .member-count button {
-	margin-left: 10px;
+.team-page .content-wrapper .scroll-wrapper .team-wrapper button {
+	width: 100%;
+	margin-bottom: 10px;
 }
 
 .team-page .content-wrapper .scroll-wrapper .team-wrapper .timestamp {
@@ -259,8 +260,8 @@
 }
 
 .team-page-comment-header > img {
-	width: 53px;
-	height: 53px;
+	width: 38px;
+	height: 38px;
 	margin-left: 10px;
 	border-radius: var(--border-radius);
 	background-color: #999999;
