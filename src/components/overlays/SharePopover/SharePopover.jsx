@@ -15,8 +15,8 @@ import { trackEvent } from '../../../utils/tracking';
 const PAYLOAD_POSITION = {
   fixed    : false,
   position : {
-    x : -245,
-    y : -3
+    x : -235,
+    y : 5
   }
 };
 

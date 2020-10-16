@@ -9,7 +9,7 @@
 }
 
 .share-popover .url {
-	padding: var(--spacing-10);
+	padding: 0 var(--spacing-10) 10px 10px;
 	color: rgba(var(--link-lite-color), 1.0);
 	word-break: break-all;
 	transition: color var(--transition-duration-short) ease-out;
