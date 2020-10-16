@@ -16,7 +16,7 @@ const POPOVER_PAYLOAD = {
   fixed    : false,
   position : {
     x : -238,
-    y : 0
+    y : 10
   }
 };
 

@@ -245,7 +245,6 @@
 .team-page-comment-header > div input.comment-txt {
 	position: absolute;
 	padding-right: 230px;
-	filter: none;
 }
 
 .team-page-comment-header > div .format-wrapper {

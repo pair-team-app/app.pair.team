@@ -409,7 +409,6 @@ textarea, textarea:hover, textarea:active, textarea:focus:hover, textarea:focus,
 	font-size: 16px;
 	font-weight: 500;
 	border: none;
-	filter: none;
 }
 
 /* ul {
@@ -490,7 +489,6 @@ div#root {
 
 .site-wrapper[data-devin-matty="true"] {
 	background-color: rgba(0, 0, 0, 0.125);
-	/*filter: none;*/
 }
 
 

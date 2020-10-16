@@ -99,11 +99,6 @@
 }
 
 
-.add-comment-bubble .form-wrapper .comment-txt:focus {
-  box-shadow: none;
-  filter: none;
-}
-
 .add-comment-bubble .button-wrapper > *:not(:last-child) {
   margin-bottom: 10px;
 }

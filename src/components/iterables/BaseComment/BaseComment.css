@@ -207,10 +207,6 @@
 	width: 100%;
 }
 
-.comment-body .base-comment-content .reply-form .input-wrapper input {
-	filter: none;
-}
-
 .comment-body .base-comment-content .reply-form .input-wrapper .format-wrapper {
 	position: absolute;
 	top: 50%;

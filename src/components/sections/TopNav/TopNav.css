@@ -113,11 +113,6 @@
 	cursor: pointer;
 }
 
-.team-page-header .nav-link[data-selected="true"] .filter-check {
-	color: rgba(var(--link-selected-color), 1.0);
-}
-
-
 .top-nav-share-link {
   position: relative;
 	font-size: 14px;
