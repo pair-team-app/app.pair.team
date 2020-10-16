@@ -17,6 +17,7 @@ import TeamPageFileDrop from './TeamPageFileDrop';
 import { CommentSortTypes, CommentFilterTypes } from '../../sections/TopNav';
 import { TEAM_TIMESTAMP } from '../../../consts/formats';
 import { ENTER_KEY } from '../../../consts/key-codes';
+import { Pages } from '../../../consts/uris';
 import { fetchTeamComments, createComment, makeComment, makeTeamRule, modifyTeam, modifyTeamRule, setComment, setPlayground, setTypeGroup, setCommentImage } from '../../../redux/actions';
 import { trackEvent } from '../../../utils/tracking';
 
@@ -75,8 +76,8 @@ class TeamPage extends Component {
       this.props.setPlayground(null);
     }
 
-    window.ondragenter = this.handleDragEnter;
-    window.ondragleave = this.handleDragLeave;
+    // window.ondragenter = this.handleDragEnter;
+    // window.ondragleave = this.handleDragLeave;
 
     window.addEventListener('paste', this.handleClipboardPaste);
   }
@@ -204,50 +205,12 @@ class TeamPage extends Component {
     }
   };
 
-  handleDragEnter = (event)=> {
-    console.log('%s.handleDragEnter()', this.constructor.name, { event, dragging : this.state.dragging });
+  handleInviteClick = (event)=> {
+    console.log('%s.handleInviteClick()', this.constructor.name, { event });
     event.preventDefault();
 
-    const { dragging } = this.state;
-    if (!dragging) {
-      this.setState({ dragging : true }, ()=> {
-        // if (window.location.hash !== Modals.FILE_DROP) {
-        //  this.props.push(`${window.location.pathname}${Modals.FILE_DROP}`);
-        // }
-      });
-    }
-
-    // if (!window.location.href.includes(Modals.FILE_DROP)) {
-    //   this.props.push(`${window.location.pathname}${Modals.FILE_DROP}`);
-    // }
-  };
-
-  handleDragLeave = (event)=> {
-    console.log('%s.handleDragLeave()', this.constructor.name, { event, client : { x : event.clientX, y : event.clientY }, dragging : this.state.dragging});
-    event.preventDefault();
-
-    const { dragging } = this.state;
-    const { clientX, clientY } = event;
-
-    if (dragging && (clientX + clientY === 0)) {
-    // if (dragging) {
-      this.setState({ dragging : false });
-    }
-  };
-
-  handleFileDropClose = ()=> {
-    console.log('%s.handleFileDropClose()', this.constructor.name);
-    this.setState({ dragging : false });
-  };
-
-  handlePageKeyPress = (event, key)=> {
-    console.log('%s.handlePageKeyPress()', this.constructor.name, { event, target : event.target, attribs : { elementID : event.target.id, className : event.target.className, attribs : event.target.getAttributeNames(), hasOverride : (event.target.getAttributeNames().findIndex((attrib)=> (attrib === 'data-keypress-override')) !== -1) }, key });
-
-    const { target } = event;
-    const { preComment } = this.props;
-    if (target.getAttributeNames().findIndex((attrib)=> (attrib === 'data-keypress-override')) === -1 && !preComment) {
-      this.props.createComment(key);
-    }
+    const { team } = this.props;
+    this.props.push(`${Pages.TEAM}/${team.id}--${team.slug}/invite`);
   };
 
   handleCommentKeyPress = (event, key)=> {
@@ -408,7 +371,7 @@ class TeamPage extends Component {
                 <div className="footer">
                   <div className="member-count">
                     {team.userCount} {Strings.pluralize('member', team.userCount)}
-                    <button className="small-button">Invite</button>
+                    <button className="small-button" onClick={this.handleInviteClick}>Invite</button>
                   </div>
                   <div className="timestamp">CREATED {team.added.format(TEAM_TIMESTAMP)}</div>
                 </div>

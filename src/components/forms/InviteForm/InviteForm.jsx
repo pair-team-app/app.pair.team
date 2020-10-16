@@ -97,7 +97,7 @@ class InviteForm extends Component {
 				</div>
 				<div className="button-wrapper button-wrapper-row">
 					<button type="submit" disabled={(invites.reduce((prev, curr)=> (`${prev}${curr}`), '').length > 0 && invitesValid.length === invitesValid.filter((valid)=> (!valid)).length)} onClick={this.handleSubmit}>Submit</button>
-					<button type="button" className="cancel-button" onClick={this.handleCancel}>Cancel</button>
+					<button type="button" className="cancel-button" onClick={this.props.onCancel}>Cancel</button>
 				</div>
 			</form>
 		</div>);
