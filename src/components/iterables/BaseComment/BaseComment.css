@@ -152,7 +152,8 @@
 	width: 100%;
 	font-size: 20px;
 	font-weight: 500;
-	word-break: break-all;
+	word-wrap: break-word;
+	line-break: loose;
 }
 
 .comment-body .base-comment-content[data-resolved="true"] .content, .comment-body .base-comment-content[data-resolved="true"] .link {

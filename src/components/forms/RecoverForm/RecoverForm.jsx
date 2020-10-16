@@ -66,7 +66,7 @@ class RecoverForm extends Component {
 
 
 	render() {
-console.log('%s.render()', this.constructor.name, this.props, this.state);
+		console.log('%s.render()', this.constructor.name, this.props, this.state);
 
 		const { submitted } = this.props;
 		const { email, emailValid, validated } = this.state;
