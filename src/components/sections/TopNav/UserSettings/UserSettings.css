@@ -27,7 +27,7 @@
 .user-settings-popover > * {
 	width: 100%;
 	padding-bottom: var(--spacing-20);
-	color: rgba(var(--link-lite-color), 1.0);
+	/* color: rgba(var(--link-lite-color), 1.0); */
 	transition: color var(--transition-duration-short) ease-in;
 }
 
@@ -44,7 +44,7 @@
 .user-settings-popover .settings-item  a.user-settings-link {
 	/*width: 100%;*/
 	display: flex;
-	color: rgba(var(--link-lite-color), 1.0);
+	/* color: rgba(var(--link-lite-color), 1.0); */
 }
 
 .user-settings-popover .settings-item  a.user-settings-link:hover {
