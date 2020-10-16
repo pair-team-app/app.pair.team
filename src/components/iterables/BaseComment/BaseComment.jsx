@@ -170,11 +170,13 @@ class BaseComment extends Component {
 		const contentProps = { ...this.props, replyContent, codeType, format, image, filename };
 
 		return (<div className="base-comment" data-id={comment.id} data-type={comment.type} data-author={comment.author.id === profile.id} data-votable={comment.votable} data-selected={comment.selected}>
-			<BaseCommentHeader { ...this.props} onResolve={this.handleResolveComment} onDelete={this.handleDeleteComment} />
-			<div className="comment-body">
-				{(comment.votable) && (<BaseCommentVote { ...this.props } onVote={this.handleVote} />)}
-				<BaseCommentContent { ...contentProps } onImageClick={this.handleImageClick} onReplyFocus={this.handleReplyFocus} onReplyBlur={this.handleReplyBlur} onReplyFormatClick={this.handleReplyFormat} onReplyKeyPress={this.handleReplyKeyPress} onReplySubmit={this.handleReplySubmit} onTextChange={this.handleTextChange} onDeleteReply={this.handleDeleteComment} onCodeToggle={this.handleCodeToggle} onImageData={this.handleReplyImage} />
-				{/* <Picker set="apple" onSelect={this.handleEmoji} onClick={this.handleEmoji} perline={9} emojiSize={24} native={true} sheetSize={16} showPreview={false} showSkinTones={false} title="Pick your emoji…" emoji="point_up" style={{ position : 'relative', bottom : '20px', right : '20px' }} /> */}
+			{(comment.votable) && (<BaseCommentVote { ...this.props } onVote={this.handleVote} />)}
+			<div>
+				<BaseCommentHeader { ...this.props} onResolve={this.handleResolveComment} onDelete={this.handleDeleteComment} />
+				<div className="comment-body">
+					<BaseCommentContent { ...contentProps } onImageClick={this.handleImageClick} onReplyFocus={this.handleReplyFocus} onReplyBlur={this.handleReplyBlur} onReplyFormatClick={this.handleReplyFormat} onReplyKeyPress={this.handleReplyKeyPress} onReplySubmit={this.handleReplySubmit} onTextChange={this.handleTextChange} onDeleteReply={this.handleDeleteComment} onCodeToggle={this.handleCodeToggle} onImageData={this.handleReplyImage} />
+					{/* <Picker set="apple" onSelect={this.handleEmoji} onClick={this.handleEmoji} perline={9} emojiSize={24} native={true} sheetSize={16} showPreview={false} showSkinTones={false} title="Pick your emoji…" emoji="point_up" style={{ position : 'relative', bottom : '20px', right : '20px' }} /> */}
+				</div>
 			</div>
 		</div>);
 	}
@@ -222,9 +224,9 @@ const BaseCommentHeader = (props)=> {
 		</div>
 		<div className="info-wrapper">
 			<div className="timestamp">{(format === CommentFilterTypes.BUGS) ? 'Bug' : (format === CommentFilterTypes.ISSUES) ? 'Issue' : (format === CommentFilterTypes.REQUESTS) ? 'Request' : 'Comment'} @ {timestamp.format(COMMENT_TIMESTAMP)}</div>
+			{(profile.id === author.id) && (<div className="link link-delete" onClick={handleDelete}>Delete</div>)}
 			{(state === 'resolved') && (<div className="link" onClick={handleResolve}>Reopen</div>)}
 			{(format !== CommentFilterTypes.NONE && state === 'open' && (types.includes('op') || types.includes('project'))) && (<div className="link" onClick={handleResolve}>Resolve</div>)}
-			{(profile.id === author.id) && (<div className="link" onClick={handleDelete}>Delete</div>)}
 		</div>
 	</div>);
 };
@@ -241,7 +243,7 @@ const BaseCommentContent = (props)=> {
 		{(image) && (<div className="image" onClick={props.onImageClick}><img src={image} alt={URIs.lastComponent(image)} /></div>)}
 		{(link) && (<div className="link" dangerouslySetInnerHTML={{ __html : `<a href="${link}" target="_blank">${link}</a>`}}></div>)}
 		{(comment.state !== 'resolved' && comment.state !== 'closed' && types.includes('team') && types.includes('op')) && (<div className="reply-form">
-			<div>
+			<div className="input-wrapper">
 				<KeyboardEventHandler handleKeys={['enter', `esc`]} isDisabled={(preComment !== null)} onKeyEvent={(key, event)=> props.onReplyKeyPress(event, key)}>
 					<input type="text" placeholder="Reply…" value={replyContent} onFocus={props.onReplyFocus} onBlur={props.onReplyBlur} onChange={props.onTextChange} data-code={codeType} autoComplete="new-password" />
 					<div className="format-wrapper">
@@ -251,12 +253,14 @@ const BaseCommentContent = (props)=> {
 					</div>
 				</KeyboardEventHandler>
 			</div>
-			{(replyImage)
-      	? (<img src={replyImage} alt={filename} data-upload={replyImage !== null} />)
-				: (<TeamPageFileDrop onContent={props.onContent} onImageData={props.onImageData} />)
-			}
-			<button disabled={replyContent.length === 0 && replyImage === null} onClick={props.onReplySubmit}>Reply</button>
-			{/* <img src={btnCode} className="code-button" onClick={props.onCodeToggle} alt="Code" /> */}
+			<div className="controls-wrapper">
+				{(replyImage)
+					? (<img src={replyImage} alt={filename} data-upload={replyImage !== null} />)
+					: (<TeamPageFileDrop onContent={props.onContent} onImageData={props.onImageData} />)
+				}
+				<button disabled={replyContent.length === 0 && replyImage === null} onClick={props.onReplySubmit}>Reply</button>
+				{/* <img src={btnCode} className="code-button" onClick={props.onCodeToggle} alt="Code" /> */}
+			</div>
 
 		</div>)}
 
@@ -275,8 +279,8 @@ const BaseCommentReplies = (props)=> {
 			const replyProps = { ...props, comment : reply }
 
 			return (<div key={i} className="base-comment base-comment-reply" data-id={reply.id} data-type={comment.type} data-author={comment.author.id === profile.id} data-votable={comment.votable} data-selected={comment.selected}>
-				<BaseCommentHeader { ...replyProps } onDelete={props.onDelete} />
-				<div className="comment-body">
+				<div>
+					<BaseCommentHeader { ...replyProps } onDelete={props.onDelete} />
 					<BaseCommentContent { ...replyProps } onTextChange={props.handleTextChange} onDeleteReply={props.handleDeleteComment} />
 					{/* <Picker set="apple" onSelect={this.handleEmoji} onClick={this.handleEmoji} perline={9} emojiSize={24} native={true} sheetSize={16} showPreview={false} showSkinTones={false} title="Pick your emoji…" emoji="point_up" style={{ position : 'relative', bottom : '20px', right : '20px' }} /> */}
 				</div>

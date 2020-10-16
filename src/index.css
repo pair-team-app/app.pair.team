@@ -32,7 +32,7 @@
 
 :root {
 	--orthodox-font-family: 'SF Pro Display', system-ui, -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Ubuntu, 'Segoe UI', Roboto, Arial, sans-serif;
-	--base-font-size: 16px;
+	--base-font-size: 14px;
 	--base-font-weight: 600;
 	--font-weight-bold: 700;
 	--border-radius: 6px;
@@ -331,8 +331,8 @@ input[type="email"], input[type="password"], input[type="text"], select, textare
 	border-radius: var(--border-radius);
 	color: rgba(var(--txtfield-fg-color), 1.0);
 	font-family: var(--orthodox-font-family);
-	font-size: 16px;
-	font-weight: var(--base-font-weight);
+	font-size: 14px;
+	font-weight: 600;
 	cursor: text;
 	-webkit-appearance: none;
 	transition: all var(--transition-duration-short) ease-out;
@@ -388,8 +388,9 @@ input[type="email"]:focus, input[type="password"]:focus, input[type="text"]:focu
 	border: 1px solid rgba(var(--txtfield-border-color), 1.0);
 } */
 
-input[type="radio"] {
+input[type="radio"], label {
 	color: #a4a4a4;
+	font-size: 14px;
 }
 
 

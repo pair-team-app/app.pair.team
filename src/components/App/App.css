@@ -135,7 +135,7 @@
 	border-radius: 50%;
 	/* font-size: 12px; */
 	/* font-weight: 500; */
-	background-color: rgba(var(--site-selected-color), 1.0);
+	background-color: rgba(var(--site-fg-color), 1.0);
 }
 
 .avatar-wrapper .avatar-ico {
@@ -145,7 +145,7 @@
   transform: translate(-50%, -50%);
 	clip-path: circle(calc(var(--orthodox-ico-size) * 0.5) at center);
 	font-size: 12px;
-	font-weight: 600;
+	font-weight: 700;
 	color: rgba(var(--site-bg-color), 1.0);
 	transition: opacity var(--transition-duration-short) ease-out;
 }

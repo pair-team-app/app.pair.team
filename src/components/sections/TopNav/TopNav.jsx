@@ -234,17 +234,16 @@ const TeamPageHeader = (props)=> {
 		done     : (team) ? team.comments.filter(({ format, state })=> (state === DONE)).length : 0
 	};
 
-	const sortTotal = (team) ? ((formatFilter === ISSUES) ? formatTotals.issues : (formatFilter === BUGS) ? formatTotals.bugs : (formatFilter === REQUESTS) ? formatTotals.requests : (formatFilter === DONE) ? formatTotals.none + formatTotals.done : formatTotals.none) : 0;
+	const sortTotal = (team) ? ((formatFilter === ISSUES) ? formatTotals.issues : (formatFilter === BUGS) ? formatTotals.bugs : (formatFilter === REQUESTS) ? formatTotals.requests : (formatFilter === DONE) ? formatTotals.done : formatTotals.none) : 0;
 
 	console.log('TeamPageHeader()', { formatTotals, sortTotal });
 
 	return (<div className="team-page-header page-header">
-		<div className="col col-left">
+		<div className="col">
 			<div className="nav-link nav-link-sort" data-selected={sort === DATE} onClick={()=> props.onSortClick(DATE)}>New ({sortTotal})</div>
 			<div className="nav-link nav-link-sort" data-selected={sort === SCORE} onClick={()=> props.onSortClick(SCORE)}>Top ({sortTotal})</div>
 		</div>
-		<div className="col col-mid"></div>
-		<div className="col col-right">
+		<div className="col">
 			{/* <div className="nav-link nav-link-filter" data-selected={formatFilter === NONE} onClick={()=> props.onFilterClick(NONE)}><FontAwesome name="check" className="filter-check" />All ({formatTotals.none})</div> */}
 			<div className="nav-link nav-link-filter" data-selected={formatFilter === NONE} onClick={()=> props.onFilterClick(NONE)}>All ({formatTotals.none})</div>
 			<div className="nav-link nav-link-filter" data-selected={formatFilter === ISSUES} onClick={()=> props.onFilterClick(ISSUES)}>Issues</div>
