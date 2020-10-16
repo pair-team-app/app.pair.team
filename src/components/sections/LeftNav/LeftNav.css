@@ -77,6 +77,10 @@
   margin-bottom: var(--spacing-05);
 }
 
+.left-nav .left-nav-team .title {
+	font-size: 14px;
+}
+
 .left-nav .left-nav-team .title:hover {
 	text-decoration: underline;
   cursor: pointer;
