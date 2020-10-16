@@ -15,7 +15,7 @@ import { SettingsMenuItemTypes } from './';
 const POPOVER_PAYLOAD = {
   fixed    : false,
   position : {
-    x : -238,
+    x : -228,
     y : 10
   }
 };
