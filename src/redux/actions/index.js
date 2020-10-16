@@ -390,21 +390,21 @@ export function makeTeamInvites(payload) {
     const { team } = getState().teams;
     const { invites } = payload;
 
-    // axios.post(API_ENDPT_URL, {
-    //   action  : 'INVITE_TEAM',
-    //   payload : { invites,
-    //     user_id : profile.id,
-    //     team_id : team.id
-    //   }
-    // }).then((response)=> {
-    //   console.log(API_RESPONSE_PREFIX, 'INVITE_TEAM', response.data, response.data.rules);
-    //   const { team } = response.data;
+    axios.post(API_ENDPT_URL, {
+      action  : 'INVITE_TEAM',
+      payload : { invites,
+        user_id : profile.id,
+        team_id : team.id
+      }
+    }).then((response)=> {
+      console.log(API_RESPONSE_PREFIX, 'INVITE_TEAM', response.data, response.data.rules);
+      const { team } = response.data;
 
-    //   dispatch({
-    //     type    : TEAM_INVITES_SENT,
-    //     payload : { team }
-    //   });
-    // }).catch((error)=> {});
+      dispatch({
+        type    : TEAM_INVITES_SENT,
+        payload : { team }
+      });
+    }).catch((error)=> {});
   });
 }
 
