@@ -74,7 +74,6 @@
 .base-overlay .content-wrapper[data-auto-size="true"] {
 	/* width: fit-content; */
 	transform-style: flat;
-	box-shadow: none;
 }
 
 .base-overlay .content-wrapper[data-auto-scroll="true"] {

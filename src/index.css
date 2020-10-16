@@ -41,9 +41,7 @@
 	--site-fg-color: 35, 35, 35; /* #232323 */
 	--site-lite-fg-color: 153, 153, 153; /* #999999 */
 	--site-selected-color: 47, 88, 255; /* 2f58ff */
-	--orthodox-shadow: 0px 0px var(--spacing-10) rgba(0, 0, 0, 0.1);
-	--orthodox-drop-shadow: drop-shadow(var(--orthodox-shadow));
-
+	
 	--disabled-bg-color: 204, 204, 204; /* #cccccc */
 	--disabled-fg-color: 153, 153, 153; /* #999999 */
 
@@ -83,7 +81,7 @@
   --link-alt-color:  var(--site-selected-color); /* #2f58ff */
 	--link-selected-color: var(--site-selected-color); /* #2f58ff */
 
-	--txtfield-shadow: var(--orthodox-drop-shadow);
+
 	--txtfield-bg-color: 255, 255, 255; /* #ffffff */
 	--txtfield-fg-color: 153, 153, 153; /* #999999 */
 	--txtfield-hover-bg-color: var(-txtfield-bg-color); /* #ffffff */
@@ -98,8 +96,6 @@
 	--txtfield-invalid-border-color: var(--invalid-fg-color); /* #ff6f6f */
 
 	--border-color: 112, 112, 112; /* 707070 */
-	--overlay-shadow: 2px 2px 6px rgba(var(--border-color), 0.125);
-	--playground-component-shadow: 2px 2px 3px rgba(var(--border-color), 0.75);
 	--playground-panel-bg-color: 252, 252, 252; /* #fbfbfb */
 	--playground-content-bg-color: 255, 255, 255; /* #ffffff */
 	--playground-component-bg-color: 252, 252, 252; /* #fbfbfb */
