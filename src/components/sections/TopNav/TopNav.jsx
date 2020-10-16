@@ -4,7 +4,7 @@ import './TopNav.css';
 import { push } from 'connected-react-router';
 import { Strings } from 'lang-js-utils';
 import { connect } from 'react-redux';
-import { NavLink, matchPath } from 'react-router-dom';
+import { matchPath } from 'react-router-dom';
 
 import { CommentSortTypes, CommentFilterTypes } from './';
 import UserSettings, { SettingsMenuItemTypes} from './UserSettings';
@@ -159,7 +159,7 @@ class TopNav extends Component {
 	handleTeamCommentsFilter = (filter)=> {
 		console.log('%s.handleTeamCommentsFilter()', this.constructor.name, { filter });
 
-		const { formatFilter, doneFilter } = this.props;
+		const { formatFilter } = this.props;
 
 		// if (filter === CommentFilterTypes.DONE) {
 		// 	this.props.setCommentsDoneFilter({ filter : !doneFilter });
@@ -220,7 +220,7 @@ const TopNavShareLink = (props)=> {
 
 
 const TeamPageHeader = (props)=> {
-	const { team, sort, formatFilter, doneFilter } = props;
+	const { team, sort, formatFilter } = props;
 	const { DATE, SCORE } = CommentSortTypes;
 	const { NONE, ISSUES, BUGS, REQUESTS, DONE } = CommentFilterTypes;
 
@@ -274,7 +274,6 @@ const mapStateToProps = (state, ownProps)=> {
 		profile      : state.user.profile,
 		sort         : state.comments.sort,
 		formatFilter : state.comments.filters.format,
-		doneFilter   : state.comments.filters.done,
 		hash         : state.router.location.hash,
 		pathname     : state.router.location.pathname
 	});

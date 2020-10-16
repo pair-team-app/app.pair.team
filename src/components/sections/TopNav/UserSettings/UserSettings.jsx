@@ -6,7 +6,7 @@ import { push } from 'connected-react-router';
 import cookie from 'react-cookies';
 import { connect } from 'react-redux';
 import { NavLink } from 'react-router-dom';
-import { TWITTER_SUPPORT, NPM_DE_PLAYGROUND, Modals, Pages, Popovers } from '../../../../consts/uris';
+import { TWITTER_SUPPORT, NPM_DE_PLAYGROUND, Popovers } from '../../../../consts/uris';
 import { trackOutbound } from '../../../../utils/tracking';
 import BasePopover from '../../../overlays/BasePopover';
 import { SettingsMenuItemTypes } from './';

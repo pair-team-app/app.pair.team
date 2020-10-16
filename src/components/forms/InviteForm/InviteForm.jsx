@@ -77,7 +77,7 @@ class InviteForm extends Component {
 	render() {
 		console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
 
-		const { invites, invitesValid, validations } = this.state;
+		const { invites, validations } = this.state;
 
 		return (<div className="invite-form">
 			<form onSubmit={this.handleSubmit}>
