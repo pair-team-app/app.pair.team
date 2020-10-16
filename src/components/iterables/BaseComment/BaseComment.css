@@ -269,7 +269,11 @@
 }
 
 
-.base-comment-reply .comment-body .base-comment-content .content {
+.base-comment-reply .base-comment-content .content {
 	font-size: 18px;
 }
 
+
+.base-comment-reply .base-comment-content .image > img {
+	max-width: 508px;
+}

@@ -153,9 +153,9 @@ class ProjectViewOverlay extends Component {
       {(!cursor) && (<CommentPinCursor x={mousePosition.x} y={mousePosition.y} onPinClick={this.handleCommentMenu} />)}
 
       <div className="cursor-wrapper">
-        <button onClick={(event)=> this.setState({ cursor : !this.state.cursor })}>Marker</button>
+        <button onClick={(event)=> this.setState({ cursor : !this.state.cursor })}>Comment</button>
       </div>
-      <button className="close-button" onClick={this.onClose}>x</button>
+      <button className="cancel-button close-button" onClick={this.onClose}>Close</button>
     </div>);
   }
 }

@@ -109,7 +109,15 @@
   width: 317px;
 }
 
-.project-overlay .base-comment .content {
+.project-view-overlay .base-comment .content {
   font-size: 16px;
   text-align: left;
+}
+
+.project-view-overlay .base-comment .base-comment-vote {
+  margin-top: 10px;
+}
+
+.project-view-overlay .base-comment .base-comment-header {
+  margin-bottom: 10px;
 }
