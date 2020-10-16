@@ -3,12 +3,12 @@ import './TopNav.css';
 
 import { push } from 'connected-react-router';
 import { Strings } from 'lang-js-utils';
-import FontAwesome from 'react-fontawesome';
 import { connect } from 'react-redux';
-import { matchPath } from 'react-router-dom';
+import { NavLink, matchPath } from 'react-router-dom';
 
 import { CommentSortTypes, CommentFilterTypes } from './';
 import UserSettings, { SettingsMenuItemTypes} from './UserSettings';
+import PageNavLink from '../../iterables/PageNavLink';
 import { RoutePaths } from '../../helpers/Routes';
 import SharePopover from '../../overlays/SharePopover';
 import { Modals, Pages } from '../../../consts/uris';
@@ -177,14 +177,16 @@ class TopNav extends Component {
 
 		return (<div className="top-nav">
 			{/* <div className="col breadcrumb-wrapper">{this.buildBreadcrumbs().map((breadcrumb)=> (breadcrumb))}</div> */}
-			<div className="col col-left"><div className="page-header-wrapper">
-				{(matchPaths.team && !matchPaths.project) && (<TeamPageHeader team={team} sort={sort} formatFilter={formatFilter} doneFilter={doneFilter} onSortClick={this.handleTeamCommentsSort} onFilterClick={this.handleTeamCommentsFilter} />)}
-				{(matchPaths.create) && (<TopNavPageTitle>Create Channel</TopNavPageTitle>)}
-				{(matchPaths.project) && (<TopNavPageTitle>Project</TopNavPageTitle>)}
-				{(matchPaths.profile) && (<TopNavPageTitle>Profile</TopNavPageTitle>)}
-				{(matchPaths.recover) && (<TopNavPageTitle>Reset Password</TopNavPageTitle>)}
-				{(matchPaths.invite && team) && (<TopNavPageTitle>Invite to # {Strings.capitalize(team.title)}</TopNavPageTitle>)}
-			</div></div>
+			<div className="col col-left">
+				<div className="page-header-wrapper">
+					{(matchPaths.team && !matchPaths.project && !matchPaths.invite) && (<TeamPageHeader team={team} sort={sort} formatFilter={formatFilter} doneFilter={doneFilter} onSortClick={this.handleTeamCommentsSort} onFilterClick={this.handleTeamCommentsFilter} />)}
+					{(matchPaths.create) && (<TopNavPageTitle>Create Channel</TopNavPageTitle>)}
+					{(matchPaths.project) && (<TopNavPageTitle>Project</TopNavPageTitle>)}
+					{(matchPaths.profile) && (<TopNavPageTitle>Profile</TopNavPageTitle>)}
+					{(matchPaths.recover) && (<TopNavPageTitle>Reset Password</TopNavPageTitle>)}
+					{(matchPaths.invite && team) && (<TopNavPageTitle>Invite to <PageNavLink to={`${Pages.TEAM}/${team.id}--${team.slug}`}># {Strings.capitalize(team.title)}</PageNavLink></TopNavPageTitle>)}
+				</div>
+			</div>
 			<div className="col col-mid">
         <input type="checkbox" checked={darkThemed} value={darkThemed} onChange={this.props.toggleTheme} />
 			</div>

@@ -2,7 +2,6 @@
 import React, { Component } from 'react';
 import './InviteForm.css'
 
-import axios from 'axios';
 import { Strings } from 'lang-js-utils';
 
 import DummyForm from '../../forms/DummyForm';
@@ -63,7 +62,7 @@ class InviteForm extends Component {
 		const invitesValid = (invites.length === 0) ? [] : invites.map((invite)=> (Strings.isEmail(invite)));
 
     if (invitesValid.filter((valid)=> (valid)).length === invites.length) {
-			this.props.onSubmitted({ invites });
+			this.props.onSubmit({ invites });
 			this.setState({
 				invites      : [''],
 				invitesValid : [true]
@@ -96,7 +95,7 @@ class InviteForm extends Component {
 					</div>
 				</div>
 				<div className="button-wrapper button-wrapper-row">
-					<button type="submit" disabled={(invites.reduce((prev, curr)=> (`${prev}${curr}`), '').length > 0 && invitesValid.length === invitesValid.filter((valid)=> (!valid)).length)} onClick={this.handleSubmit}>Submit</button>
+					<button type="submit" disabled={invites.reduce((prev, curr)=> (`${prev}${curr}`), '').length === 0} onClick={this.handleSubmit}>Submit</button>
 					<button type="button" className="cancel-button" onClick={this.props.onCancel}>Cancel</button>
 				</div>
 			</form>

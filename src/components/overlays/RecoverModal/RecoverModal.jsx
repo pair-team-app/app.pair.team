@@ -56,7 +56,6 @@ class RecoverModal extends Component {
 
 	handleResend = (event)=> {
 		console.log('%s.handleResend()', this.constructor.name);
-
 		this.setState({ submitted : false });
 	}
 
@@ -77,7 +76,6 @@ class RecoverModal extends Component {
 						<div className="link-wrapper">
 							<span>Looking for <PageNavLink to={Modals.REGISTER} onClick={this.handleModal}>Sign Up</PageNavLink> or <PageNavLink to={Modals.LOGIN} onClick={this.handleModal}>Login</PageNavLink>?</span>
 						</div>
-
 						<div className="form-wrapper">
 							<RecoverForm submitted={submitted} onCancel={this.props.goBack} onSubmitted={this.handleSubmitted} onResend={this.handleResend} />
 						</div>

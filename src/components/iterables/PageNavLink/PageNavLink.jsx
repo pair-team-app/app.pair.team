@@ -32,7 +32,7 @@ function PageNavLink(props) {
 		target={(extURL) ? '_blank' : '_self'}
 		className="page-nav-link"
 		activeClassName="page-nav-link-selected"
-		onClick={(event)=> (extURL) ? handleExternalURL(event, to) : props.onClick(event, to) }
+		onClick={(event)=> (extURL) ? handleExternalURL(event, to) : (props.onClick) ? props.onClick(event, to) : null }
 		tabIndex="0"
     data-selected={false}>
 		{children}
