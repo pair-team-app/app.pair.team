@@ -330,6 +330,7 @@
 	color: rgba(var(--site-fg-color), 1.0);
 	/* border: 1px solid rgba(var(--txtfield-border-color), 1.0); */
 	border-radius: var(--border-radius);
+	font-weight: 500;
 	transition: color var(--transition-duration-short) ease-out;
 	word-break: break-all;
 }
