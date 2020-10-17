@@ -66,7 +66,7 @@ export const reformComponent = (component, uri, componentTypes=null, overwrite={
 
 
 export const reformInvite = (invite, overwrite={})=> {
-  // console.log('reformInvite()', { team, overwrite });
+  console.log('reformInvite()', { invite, overwrite });
 
   const { id, email, user_id, state, updated, added } = invite;
   const reformed = { ...invite, email,
@@ -134,7 +134,7 @@ export const reformRule = (rule, members, overwrite={})=> {
 
 
 export const reformTeam = (team, overwrite={})=> {
-  // console.log('reformTeam()', { team, overwrite });
+  console.log('reformTeam()', { team, overwrite });
 
   const { description, slug, image, updated, added } = team;
   const members = team.members.map((member)=> ({ ...member,

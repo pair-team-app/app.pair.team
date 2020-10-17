@@ -102,7 +102,7 @@ class RegisterModal extends Component {
 			onComplete={this.handleComplete}>
 
 			<div className="register-modal">
-				{(invite) && (<div className="title-wrapper">{invite.team_title}</div>)}
+				{/* {(invite) && (<div className="title-wrapper">{invite.team_title}</div>)} */}
         <div className="link-wrapper">
           <span>Already have an account? <PageNavLink to={Modals.LOGIN} onClick={this.handleModal}>Login</PageNavLink></span>
         </div>

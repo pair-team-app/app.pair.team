@@ -255,7 +255,7 @@ export function onMiddleware(store) {
 
     } else if (type === INVITE_LOADED) {
       payload.invite = reformInvite(payload.invite);
-      payload.team = reformTeam(payload.invite.team);
+      payload.team = reformTeam(payload.team);
 
     } else if (type === TEAM_COMMENTS_LOADED) {
       const { team } = prevState.teams;

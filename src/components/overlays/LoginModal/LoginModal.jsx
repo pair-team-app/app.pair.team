@@ -20,7 +20,6 @@ class LoginModal extends Component {
 
 		this.state = {
 			outro    : false,
-			email    : null,
 			outroURI : null
 		};
 	}

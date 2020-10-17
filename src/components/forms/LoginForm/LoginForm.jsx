@@ -24,10 +24,10 @@ class LoginForm extends Component {
 	}
 
 	componentDidUpdate(prevProps, prevState, snapshot) {
-		// console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : this.props, prevState, state : this.state });
+		console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : this.props, prevState, state : this.state });
 
-		if (prevProps.email !== this.props.email) {
-			const { email } = this.props;
+		if (prevProps.invite !== this.props.invite) {
+			const { email } = this.props.invite;
 			this.setState({ email });
 		}
 	}
