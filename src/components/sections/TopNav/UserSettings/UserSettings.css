@@ -22,6 +22,7 @@
 	width: 250px;
 	margin: 0 -10px;
 	background-color: #ffffff;
+	border: 1px solid #e4e4e4;
 	border-radius: var(--border-radius);
 }
 

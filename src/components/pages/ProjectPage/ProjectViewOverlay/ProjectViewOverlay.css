@@ -34,6 +34,11 @@
   /* padding-top: 110px; */
 }
 
+.image-overlay .content-wrapper .comments-wrapper .comment-bubble {
+  border: 1px solid #bbbbbb;
+  border-radius: var(--border-radius);
+}
+
 .project-view-overlay > .cursor-wrapper {
   position: absolute;
   bottom: 0;
@@ -90,6 +95,7 @@
   width: 268px;
   padding: 10px;
   background-color: rgba(var(--site-bg-color), 1.0);
+  border: 1px solid #bbbbbb;
   border-radius: var(--border-radius);
 }
 

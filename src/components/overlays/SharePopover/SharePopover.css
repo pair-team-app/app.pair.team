@@ -2,6 +2,8 @@
 .share-popover {
 	width: 268px;
 	margin-top: 0;
+	border-radius: var(--border-radius);
+  border: 1px solid #bbbbbb;
 }
 
 .share-popover .copy-wrapper > * {

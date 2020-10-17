@@ -73,10 +73,9 @@ class BaseComment extends Component {
 		console.log('%s.handleEmoji()', this.constructor.name, { emoji, event });
 	};
 
-	handleImageClick = (event)=> {
-		console.log('%s.handleImageClick()', this.constructor.name, { event, comment : this.props.comment });
+	handleImageClick = (comment)=> {
+		console.log('%s.handleImageClick()', this.constructor.name, { comment });
 
-		const { comment } = this.props;
 		this.props.setComment(comment);
 		this.props.setCommentImage(true);
 	};
@@ -245,7 +244,7 @@ const BaseCommentContent = (props)=> {
 
 	return (<div className="base-comment-content" data-format={format} data-resolved={(state === 'resolved')}>
 		{(content) && (<div className="content" data-code={code}><span dangerouslySetInnerHTML={{ __html : content }}></span></div>)}
-		{(image) && (<div className="image" onClick={props.onImageClick}><img src={image} alt={URIs.lastComponent(image)} /></div>)}
+		{(image) && (<div className="image" onClick={()=> props.onImageClick(comment)}><img src={image} alt={URIs.lastComponent(image)} /></div>)}
 		{(comment.state !== 'resolved' && comment.state !== 'closed' && types.includes('team') && types.includes('op')) && (<div className="reply-form">
 			<div className="input-wrapper">
 				<KeyboardEventHandler handleKeys={['enter', `esc`]} isDisabled={(preComment !== null)} onKeyEvent={(key, event)=> props.onReplyKeyPress(event, key)}>
