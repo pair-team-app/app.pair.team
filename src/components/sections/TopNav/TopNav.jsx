@@ -224,8 +224,6 @@ const TeamPageHeader = (props)=> {
 	const { DATE, SCORE } = CommentSortTypes;
 	const { NONE, ISSUES, BUGS, REQUESTS, DONE } = CommentFilterTypes;
 
-
-
 	const formatTotals = {
 		none     : (team) ? team.comments.filter(({ format, state })=> (state !== DONE)).length : 0,
 		issues   : (team) ? team.comments.filter(({ format, state })=> (format === ISSUES && state !== DONE)).length : 0,
@@ -246,10 +244,10 @@ const TeamPageHeader = (props)=> {
 		<div className="col">
 			{/* <div className="nav-link nav-link-filter" data-selected={formatFilter === NONE} onClick={()=> props.onFilterClick(NONE)}><FontAwesome name="check" className="filter-check" />All ({formatTotals.none})</div> */}
 			<div className="nav-link nav-link-filter" data-selected={formatFilter === NONE} onClick={()=> props.onFilterClick(NONE)}>All ({formatTotals.none})</div>
-			<div className="nav-link nav-link-filter" data-selected={formatFilter === ISSUES} onClick={()=> props.onFilterClick(ISSUES)}>Issues</div>
-			<div className="nav-link nav-link-filter" data-selected={formatFilter === BUGS} onClick={()=> props.onFilterClick(BUGS)}>Bugs</div>
-			<div className="nav-link nav-link-filter" data-selected={formatFilter === REQUESTS} onClick={()=> props.onFilterClick(REQUESTS)}>Requests</div>
-			<div className="nav-link nav-link-filter" data-selected={formatFilter === DONE} onClick={()=> props.onFilterClick(DONE)}>Done</div>
+			<div className="nav-link nav-link-filter" data-selected={formatFilter === ISSUES} onClick={()=> props.onFilterClick(ISSUES)}>Issues ({formatTotals.issues})</div>
+			<div className="nav-link nav-link-filter" data-selected={formatFilter === BUGS} onClick={()=> props.onFilterClick(BUGS)}>Bugs ({formatTotals.bugs})</div>
+			<div className="nav-link nav-link-filter" data-selected={formatFilter === REQUESTS} onClick={()=> props.onFilterClick(REQUESTS)}>Requests ({formatTotals.requests})</div>
+			<div className="nav-link nav-link-filter" data-selected={formatFilter === DONE} onClick={()=> props.onFilterClick(DONE)}>Done ({formatTotals.done})</div>
 		</div>
 	</div>);
 };
