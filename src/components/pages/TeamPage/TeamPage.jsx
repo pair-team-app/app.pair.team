@@ -53,7 +53,8 @@ class TeamPage extends Component {
         text     : '',
         url      : null,
         filename : null,
-        image    : null,
+        imageURL : null,
+        dataURI  : null,
         code     : false
       },
       ruleInput       : false,
@@ -229,7 +230,8 @@ class TeamPage extends Component {
         teamComment : {
           text     : '',
           url      : null,
-          image    : null,
+          imageURL : null,
+          dataURI  : null,
           filename : null,
           code     : false
         }
@@ -266,22 +268,24 @@ class TeamPage extends Component {
     console.log('%s.handleSubmitComment()', this.constructor.name, { event });
 
     const { teamComment } = this.state;
-    const { format, text, image, url, code } = teamComment;
+    const { format, text, imageURL, url, code } = teamComment;
 
     const inlineURL = text.replace(url, `<a href="${url}" target="_blank">${url}</a>`);
 
-    this.props.makeComment({ image, code, format,
+    this.props.makeComment({ code, format,
+      image   : imageURL,
       link    : null,
 			content : inlineURL
     });
 
     this.setState({
       teamComment : {
-        text   : '',
-        url    : null,
-        image  : null,
-        code   : false,
-        format : 'text'
+        text     : '',
+        url      : null,
+        imageURL : null,
+        dataURI  : null,
+        code     : false,
+        format   : 'text'
       }
     });
   };
@@ -347,7 +351,7 @@ class TeamPage extends Component {
     return (<BasePage { ...this.props } className="team-page" data-dragging={dragging}>
       {(profile && team && member)
       ? (<div className="content-wrapper">
-          <TeamPageCommentHeader teamComment={teamComment} onChange={this.handleCommentChange} onKeyPress={this.handleCommentKeyPress} onFormatClick={(format)=> this.setState({ teamComment : { ...teamComment, format }})} onSubmit={this.handleSubmitComment} onFocus={()=> this.props.setComment(null)} onImageData={(filename, image)=> this.setState({ teamComment : { ...teamComment, filename, image }})} />
+          <TeamPageCommentHeader teamComment={teamComment} onChange={this.handleCommentChange} onKeyPress={this.handleCommentKeyPress} onFormatClick={(format)=> this.setState({ teamComment : { ...teamComment, format }})} onSubmit={this.handleSubmitComment} onFocus={()=> this.props.setComment(null)} onImageData={({ filename, cdn, dataURI })=> this.setState({ teamComment : { ...teamComment, filename, imageURL : cdn, dataURI }})} />
 
           <div className="scroll-wrapper">
             <div className="comments-wrapper" data-fetching={Boolean((fetching & 0x010) === 0x010)} data-loading={commentsLoading} data-empty={team && team.comments.length === 0}>
@@ -392,9 +396,8 @@ class TeamPage extends Component {
             </div>
           </div>
         </div>)
-
-      : (<div className="content-loading">Loading…</div>)}
-      {/* <TeamPageFileDrop dragging={(dragging)} onContent={(image)=> this.setState({ dragging : false })} onImageData={(filename, image)=> this.setState({ teamComment : { ...teamComment, filename, image }})} onClose={this.handleFileDropClose} onPopup={this.props.onPopup} /> */}
+      : (<div className="content-loading">Loading…</div>)
+    }
     </BasePage>);
   }
 }
@@ -404,7 +407,7 @@ const TeamPageCommentHeader = (props)=> {
   // console.log('TeamPageCommentHeader()', { ...props });
 
   const { teamComment } = props;
-  const { text, image, filename, format } = teamComment;
+  const { text, dataURI, filename, format } = teamComment;
 
   return (<div className="team-page-comment-header">
     <div>
@@ -417,12 +420,11 @@ const TeamPageCommentHeader = (props)=> {
         </div>
       </KeyboardEventHandler>
     </div>
-    {(image)
-      ? (<img src={image} alt={filename} data-upload={image !== null} />)
+    {(dataURI)
+      ? (<img src={dataURI} alt={filename} data-upload={dataURI !== null} />)
       : (<TeamPageFileDrop onContent={props.onContent} onImageData={props.onImageData} />)
     }
-    <button disabled={text.length === 0 && image === null} onClick={props.onSubmit}>Comment</button>
-    {/* : (<TeamPageFileDrop onContent={props.onContent} onImageData={props.onImageData} />) */}
+    <button disabled={text.length === 0 && dataURI === null} onClick={props.onSubmit}>Comment</button>
   </div>);
 };
 

@@ -23,7 +23,8 @@ class BaseComment extends Component {
     this.state = {
 			replyContent : '',
 			filename     : null,
-      image        : null,
+      imageURL     : null,
+			dataURI      : null,
 			codeType     : false,
 			format       : CommentFilterTypes.NONE
 		};
@@ -74,6 +75,7 @@ class BaseComment extends Component {
 
 	handleImageClick = (event)=> {
 		console.log('%s.handleImageClick()', this.constructor.name, { event, comment : this.props.comment });
+
 		const { comment } = this.props;
 		this.props.setComment(comment);
 		this.props.setCommentImage(true);
@@ -114,10 +116,12 @@ class BaseComment extends Component {
 		this.setState({ format : (this.state.format === format) ? CommentFilterTypes.NONE : format });
 	}
 
-	handleReplyImage = (filename, image)=> {
-		console.log('%s.handleReplyImage()', this.constructor.name, { filename, image });
+	handleReplyImage = ({ filename, cdn, dataURI })=> {
+		console.log('%s.handleReplyImage()', this.constructor.name, { filename, cdn, dataURI });
 
-		this.setState({ filename, image }, ()=> {
+		this.setState({ filename, dataURI,
+			imageURL : cdn
+		}, ()=> {
 			const { comment } = this.props;
 			this.props.setComment(comment);
 		})
@@ -127,7 +131,7 @@ class BaseComment extends Component {
     console.log('%s.handleReplySubmit()', this.constructor.name, { event, comment : this.props.comment, state : this.state });
 
 		const { comment } = this.props;
-		const { format, replyContent, codeType : code, image } = this.state;
+		const { format, replyContent, codeType : code, imageURL : image } = this.state;
 
 		trackEvent('button', 'reply-comment', comment.id);
 
@@ -149,7 +153,8 @@ class BaseComment extends Component {
 			replyContent : '' ,
 			codeType     : false,
 			format       : CommentFilterTypes.NONE,
-			image        : null,
+			imageURL     : null,
+			dataURI      : null,
 			filename     : null
 		});
   };
@@ -166,8 +171,8 @@ class BaseComment extends Component {
     // console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
 
 		const { profile, comment } = this.props;
-		const { replyContent, codeType, format, image, filename } = this.state;
-		const contentProps = { ...this.props, replyContent, codeType, format, image, filename };
+		const { replyContent, codeType, format, dataURI, filename } = this.state;
+		const contentProps = { ...this.props, replyContent, codeType, format, dataURI, filename };
 
 		return (<div className="base-comment" data-id={comment.id} data-type={comment.type} data-author={comment.author.id === profile.id} data-votable={comment.votable} data-selected={comment.selected}>
 			{(comment.votable) && (<BaseCommentVote { ...this.props } onVote={this.handleVote} />)}
@@ -235,8 +240,8 @@ const BaseCommentHeader = (props)=> {
 const BaseCommentContent = (props)=> {
 	// console.log('BaseComment.BaseCommentContent()', { props });
 
-	const { comment, replyContent, codeType, preComment, format, image : replyImage, filename } = props;
-	const { types, code, content, image, link, state } = comment;
+	const { comment, replyContent, codeType, preComment, format, dataURI : replyImage, filename } = props;
+	const { types, code, content, image, state } = comment;
 
 	return (<div className="base-comment-content" data-format={format} data-resolved={(state === 'resolved')}>
 		{(content) && (<div className="content" data-code={code}><span dangerouslySetInnerHTML={{ __html : content }}></span></div>)}

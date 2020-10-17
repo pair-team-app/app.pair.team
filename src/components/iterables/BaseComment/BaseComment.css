@@ -224,7 +224,7 @@
 	font-family: Consolas, Monaco, "Courier New", Courier, monospace;
 }
 
-.comment-body .base-comment-content .reply-form .input-wrapper img {
+.comment-body .base-comment-content .reply-form .controls-wrapper img {
 	width: 38px;
 	height: 38px;
 	/* margin-left: 10px; */

@@ -108,7 +108,7 @@ class TeamPageFileDrop extends Component {
       const { cdn } = response.data;
       console.log('ADD_FILE', { data : response.data });
       this.setState({ image : cdn }, ()=> {
-        this.props.onImageData(filename, cdn);
+        this.props.onImageData({ filename, dataURI, cdn });
       });
     });
   };
