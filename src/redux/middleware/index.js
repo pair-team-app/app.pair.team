@@ -93,7 +93,7 @@ export function onMiddleware(store) {
           id        : id << 0,
           username  : (Bits.contains(status, 0x01)) ? 'Username Already in Use' : username,
           email     : (Bits.contains(status, 0x10)) ? 'Email Already in Use' : email,
-          password  : CryptoJS.MD5(payload.password).toString(),
+          // password  : CryptoJS.MD5(payload.password).toString(),
           validated : ((state << 0) === 2)
         };
         payload.teams = prevState.teams.teams;
