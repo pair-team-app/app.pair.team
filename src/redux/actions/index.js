@@ -275,12 +275,22 @@ export function createComment(payload) {
 
 export function makeComment(payload) {
   return ((dispatch, getState)=> {
-    logFormat('makeComment()', { store : (typeof getState === 'function') ? getState() : getState, typeof : typeof getState }, payload);
+    // logFormat('makeComment()', { store : (typeof getState === 'function') ? getState() : getState, typeof : typeof getState }, payload);
 
     const { profile } = getState().user;
     const { team, comment } = getState().teams;
     const { component } = getState().builds;
     const { content, format, position, link, image, code } = payload;
+
+    logFormat('makeComment()', { store : (typeof getState === 'function') ? getState() : getState, typeof : typeof getState }, { payload : { content, format, code,
+        link         : (link || null),
+        image_url    : (image || null),
+        position     : (position || ((comment) ? comment.position : { x : 0, y : 0})),
+        user_id      : profile.id,
+        team_id      : (component) ? 0 : team.id,
+        component_id : (component) ? component.id : 0,
+        comment_id   : (comment) ? comment.id : 0
+      } });
 
     axios.post(API_ENDPT_URL, {
       action  : 'ADD_COMMENT',

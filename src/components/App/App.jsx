@@ -145,7 +145,7 @@ class App extends Component {
       // post invite fetch
       if (!prevProps.invite && this.props.invite) {
         if ((cookie.load('user_id') << 0) !== 0) {
-          cookie.remove('user_id');
+          this.handleLogout();
         }
 
         if (invite.state === 1 || invite.state === 2) {
