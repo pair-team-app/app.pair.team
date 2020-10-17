@@ -71,7 +71,7 @@ export const USER_DEFAULT_AVATAR = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUg
 
 export const GITHUB_FIGMA_PLUGIN = 'https://github.com/de-ai/designengine-figma';
 export const GITHUB_XD_PLUGIN = 'https://github.com/de-ai/designengine-xd';
-export const NPM_DE_PLAYGROUND = 'https://www.npmjs.com/package/design-engine-playground';
+export const NPM_DE_PLAYGROUND = 'https://www.npmjs.com/package/pair-team';
 
 export const TWITTER_SUPPORT = 'https://twitter.com/Pairteamapp';
 export const TERMS_PAGE = 'https://pair.team/terms';
