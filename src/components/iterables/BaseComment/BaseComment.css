@@ -177,6 +177,7 @@
 
 .base-comment .image > img {
 	max-width: 558px;
+	background-color: #999999;
 	border: 1px solid #e5e5e5;
 }
 
@@ -233,7 +234,7 @@
 	object-fit: scale-down;
 }
 
-.comment-body .base-comment-content .reply-form .input-wrapper img[data-upload="true"] {
+.comment-body .base-comment-content .reply-form .controls-wrapper img[data-upload="true"] {
 	background-color: rgba(var(--site-bg-color), 1.0);
 }
 
@@ -277,4 +278,5 @@
 
 .base-comment-reply .base-comment-content .image > img {
 	max-width: 508px;
+	background-color: #999999;
 }
