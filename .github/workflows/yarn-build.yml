@@ -1,5 +1,11 @@
 name: yarn-build
-on: [push]
+
+on:
+  push:
+    branches: [ dev/runner-01, develop ]
+  pull_request:
+    branches: [ dev/runner-01, develop ]
+
 jobs:
   build:
     runs-on: ubuntu-latest
