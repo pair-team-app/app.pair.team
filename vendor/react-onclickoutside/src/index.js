@@ -46,6 +46,7 @@ export default function onClickOutsideHOC(WrappedComponent, config) {
       stopPropagation: false,
     };
 
+    //-- static getClass = () => (WrappedComponent.getClass ? WrappedComponent.getClass() : WrappedComponent);
     static getClass = ()=> (WrappedComponent.getClass ? WrappedComponent.getClass() : WrappedComponent);
 
     constructor(props) {
@@ -229,6 +230,7 @@ export default function onClickOutsideHOC(WrappedComponent, config) {
       props.disableOnClickOutside = this.disableOnClickOutside;
       props.enableOnClickOutside = this.enableOnClickOutside;
 
+      //-- return createElement(WrappedComponent, props);
       return createElement(WrappedComponent, { props });
     }
   };
