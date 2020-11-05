@@ -138,7 +138,7 @@ class ProfileForm extends Component {
 				<form onSubmit={this.handleSubmit}>
           <DummyForm />
 					<input type={(validated) ? 'email' : 'text'} placeholder="Change Email Address" value={email} onFocus={()=> this.setState({ email : (emailValid) ? email : '', emailValid : true, validated : false })} onChange={this.handleEmailChange} autoComplete="new-password" required={(validated)} />
-					<input type={(passMsg) ? 'email' : 'password'} placeholder="Current Password" value={(passMsg || password)} onChange={(event)=> this.setState({ password : event.target.value, passMsg : null })} onClick={this.handlePasswordClick} autoComplete="current-password" />
+					<input type={(passMsg) ? 'email' : 'password'} placeholder="Current Password" value={(passMsg || password)} onChange={(event)=> this.setState({ password : event.target.value, passMsg : null })} onClick={this.handlePasswordClick} autoComplete="new-password" />
 
 
 					<ReactPasswordStrength
