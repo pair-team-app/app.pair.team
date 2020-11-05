@@ -2,9 +2,11 @@ name: yarn-build
 
 on:
   push:
-    branches: [ dev/runner-01, develop ]
+    # branches: [ dev/runner-01, develop ]
+    branches: [ master ]
   pull_request:
-    branches: [ dev/runner-01, develop ]
+    # branches: [ dev/runner-01, develop ]
+    branches: [ master ]
 
 jobs:
   build:
