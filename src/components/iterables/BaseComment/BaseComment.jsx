@@ -149,7 +149,7 @@ class BaseComment extends Component {
 		});
 
 		this.setState({
-			replyContent : '' ,
+			replyContent : '',
 			codeType     : false,
 			format       : CommentFilterTypes.NONE,
 			imageURL     : null,
@@ -247,7 +247,7 @@ const BaseCommentContent = (props)=> {
 		{(image) && (<div className="image" onClick={()=> props.onImageClick(comment)}><img src={image} alt={URIs.lastComponent(image)} /></div>)}
 		{(comment.state !== 'resolved' && comment.state !== 'closed' && types.includes('team') && types.includes('op')) && (<div className="reply-form">
 			<div className="input-wrapper">
-				<KeyboardEventHandler handleKeys={['enter', `esc`]} isDisabled={(preComment !== null)} onKeyEvent={(key, event)=> props.onReplyKeyPress(event, key)}>
+				<KeyboardEventHandler handleKeys={['enter', 'esc']} isDisabled={(preComment !== null)} onKeyEvent={(key, event)=> props.onReplyKeyPress(event, key)}>
 					<input type="text" placeholder="Reply…" value={replyContent} onFocus={props.onReplyFocus} onBlur={props.onReplyBlur} onChange={props.onTextChange} data-code={codeType} autoComplete="new-password" />
 					<div className="format-wrapper">
 						<label><input type="radio" name={`${comment.id}_format`} value={CommentFilterTypes.ISSUES} checked={(format === CommentFilterTypes.ISSUES)} onChange={()=> props.onReplyFormatClick(CommentFilterTypes.ISSUES)} onClick={(event)=> (event.target.checked && props.onReplyFormatClick(CommentFilterTypes.NONE))} />Issue</label>

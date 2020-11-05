@@ -26,7 +26,7 @@ import ProjectViewOverlay from '../pages/ProjectPage/ProjectViewOverlay';
 
 import { API_ENDPT_URL, Modals, Pages } from '../../consts/uris';
 import { fetchUserTeams, fetchUserProfile, fetchInvite, setPlayground, modifyInvite, paidStripeSession, updateUserProfile, createComment } from '../../redux/actions';
-// import { makeAvatar } from '../../utils/funcs';
+import { makeAvatar } from '../../utils/funcs';
 import { initTracker, trackEvent, trackPageview } from '../../utils/tracking';
 
 

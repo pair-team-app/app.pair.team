@@ -15,12 +15,7 @@ import { trackEvent, trackOutbound } from '../../../utils/tracking';
 import stripeCreds from '../../../assets/json/configs/stripe-creds';
 
 
-const STRIPE_PUBLIC_TOKEN = stripeCreds.test.publish;
-// const STRIPE_PUBLIC_TOKEN = stripeCreds.live.publish;
-
-
-const stripePromise = loadStripe(STRIPE_PUBLIC_TOKEN);
-
+const stripePromise = loadStripe((process.env.NODE_ENV === 'development') ? stripeCreds.test.publish : stripeCreds.live.publish);
 
 
 class StripeModal extends Component {

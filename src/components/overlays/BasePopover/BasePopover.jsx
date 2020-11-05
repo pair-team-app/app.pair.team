@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import './BasePopover.css';
 
-import { TimelineMax, Back, Circ } from 'gsap/TweenMax';
+import { TimelineMax, Back, Circ } from 'gsap';
 import KeyboardEventHandler from 'react-keyboard-event-handler';
 import onClickOutside from 'react-onclickoutside';
 

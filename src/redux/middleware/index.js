@@ -1,7 +1,7 @@
 
 
 import { push, replace } from 'connected-react-router';
-import CryptoJS from 'crypto-js';
+// import CryptoJS from 'crypto-js';
 import { Bits } from 'lang-js-utils';
 import moment from 'moment';
 import cookie from 'react-cookies';

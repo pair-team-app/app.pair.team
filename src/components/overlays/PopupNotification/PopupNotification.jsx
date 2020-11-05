@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import './PopupNotification.css'
 
-import { TimelineMax, Back, Circ, Expo } from 'gsap/TweenMax';
+import { TimelineMax, Back, Circ, Expo } from 'gsap';
 
 import { POPUP_TYPE_ERROR, POPUP_TYPE_OK, POPUP_TYPE_STATUS } from './';
 import { POPUP_POSITION_EMBEDDED, POPUP_POSITION_TOPMOST } from './';
@@ -45,7 +45,7 @@ class PopupNotification extends Component {
       opacity : ((position === POPUP_POSITION_TOPMOST) << 0) * 0.75,
 // 			y          : (position === POPUP_POSITION_TOPMOST) ? `${top - 38}px` : `${top + 7}px`,
       y       : '+=38px',
-			height  : (position === POPUP_POSITION_TOPMOST) ? `38px` : '22px',
+			height  : (position === POPUP_POSITION_TOPMOST) ? '38px' : '22px',
       ease    : (position === POPUP_POSITION_TOPMOST) ? Back.easeOut : Circ.easeOut,
       delay   : (delay * 0.001)
 

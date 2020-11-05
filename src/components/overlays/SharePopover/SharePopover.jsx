@@ -43,7 +43,7 @@ class SharePopover extends Component {
   handleClipboardCopy = (text=null)=> {
     console.log('%s.handleClipboardCopy()', this.constructor.name, { props : this.props, text });
 
-    trackEvent('button', `copy-share-url`);
+    trackEvent('button', 'copy-share-url');
     this.setState({ outro : true }, ()=> {
       this.props.onPopup({
         type     : POPUP_TYPE_OK,
@@ -68,7 +68,7 @@ class SharePopover extends Component {
 
     const { email, emailValid } = this.state;
     if (email.length > 0 && emailValid) {
-      trackEvent('button', `send-invite`);
+      trackEvent('button', 'send-invite');
       const { profile, team, playground, component } = this.props;
 
       axios.post(API_ENDPT_URL, {
