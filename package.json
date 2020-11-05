@@ -27,6 +27,7 @@
     "filepond-plugin-image-exif-orientation": "^1.0.9",
     "gsap": "^3.5.1",
     "json-size": "^1.0.0",
+    "lang-js-utils": "^0.7.0",
     "linkify-it": "^3.0.2",
     "moment": "^2.24.0",
     "npm": "^6.10.2",
