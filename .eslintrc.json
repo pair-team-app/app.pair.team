@@ -1,0 +1,41 @@
+{
+    "env": {
+        "browser": true,
+        "es2021": true
+    },
+    "extends": [
+        "eslint:recommended",
+        "plugin:react/recommended"
+    ],
+    "globals": {
+        "assert": true,
+        "process": true,
+        "React": true,
+        "ReactDOM": true,
+        "Atomics": "readonly",
+        "SharedArrayBuffer": "readonly"
+    },
+    "parserOptions": {
+        "ecmaFeatures": {
+            "impliedStrict ": true,
+            "jsx": true
+        },
+        "ecmaVersion": 12,
+        "sourceType": "module"
+    },
+    "plugins": [
+        "react"
+    ],
+    "rules": {
+        "indent": [ "warn", 2 ],
+        "no-dupe-else-if": "warn",
+        "no-empty": "warn",
+        "no-extra-semi": "warn",
+        "no-mixed-spaces-and-tabs": "warn",
+        "no-unused-vars": "warn",
+        "quotes": [ "warn", "single" ],
+        "react/no-unescaped-entities": "warn",
+        "react/prop-types": "off",
+        "semi": "warn"
+    }
+}

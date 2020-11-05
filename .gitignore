@@ -24,7 +24,7 @@ yarn-error.log
 
 #-- lint / test --#
 /coverage
-/.eslintrc.json
+#/.eslintrc.json
 
 
 #-- production --#
