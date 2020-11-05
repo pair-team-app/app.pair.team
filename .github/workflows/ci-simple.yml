@@ -52,7 +52,7 @@ jobs:
 
       - name: Install dependancies
         # run: yarn install --frozen-lockfile
-        run: npm ci
+        run: npm install
 
       - name: Create production build
         # run: yarn build
