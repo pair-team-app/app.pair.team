@@ -5,8 +5,17 @@ import { BUILD_PLAYGROUNDS_LOADED, INVITE_LOADED, INVITE_MODIFIED, COMMENT_CREAT
 import { API_RESPONSE_PREFIX, LOG_ACTION_POSTFIX, LOG_ACTION_PREFIX } from '../../consts/log-ascii';
 import { API_ENDPT_URL } from '../../consts/uris';
 
+
 const logFormat = (action, state, payload=null, meta='')=> {
+  return;
+
   console.log(LOG_ACTION_PREFIX, `ACTION >> ${action}`, { payload : payload || {}, meta, state }, LOG_ACTION_POSTFIX);
+};
+
+const logAPI = (action, response, payload=null)=> {
+  return;
+
+  console.log(API_RESPONSE_PREFIX, action, { response : response.data, payload });
 };
 
 
@@ -22,7 +31,7 @@ export function fetchBuildPlaygrounds(payload=null) {
         verbose  : true
       }
     }).then(async (response)=> {
-      console.log(API_RESPONSE_PREFIX, 'BUILD_PLAYGROUNDS', response.data);
+      logAPI('BUILD_PLAYGROUNDS', response.data);
       const { playgrounds } = response.data;
 
       dispatch({
@@ -41,7 +50,7 @@ export function fetchComponentTypes(payload=null) {
       action: 'COMPONENT_TYPES',
       payload: null
     }).then((response)=> {
-      console.log(API_RESPONSE_PREFIX, 'COMPONENT_TYPES', response.data);
+      logAPI('COMPONENT_TYPES', response.data);
       dispatch({
         type    : COMPONENT_TYPES_LOADED,
         payload : { componentTypes : response.data.component_types }
@@ -58,7 +67,7 @@ export function fetchDevices(payload=null) {
       action  : 'DEVICES',
       payload : null
     }).then((response)=> {
-      console.log(API_RESPONSE_PREFIX, 'DEVICES', response.data);
+      logAPI('DEVICES', response.data);
       const {devices } = response.data;
 
       dispatch({
@@ -122,7 +131,7 @@ export function fetchProducts(payload=null) {
       action  : 'PRODUCTS',
       payload : null
     }).then((response)=> {
-      console.log(API_RESPONSE_PREFIX, 'PRODUCTS', response.data);
+      logAPI('PRODUCTS', response.data);
       const { products } = response.data;
 
       dispatch({
@@ -155,7 +164,7 @@ export function fetchTeamBuilds(payload=null) {
         device   : deviceSlug
       }
     }).then((response)=> {
-      console.log(API_RESPONSE_PREFIX, 'TEAM_BUILDS', response.data);
+      logAPI('TEAM_BUILDS', response.data);
       const { playgrounds } = response.data;
 
       // console.log('⟨⎝⎛:⎞⎠⟩', 'TEAM_BUILDS', { builds : [ ...playgrounds].map(({ build_id : buildID, id :  playgroundID, device_id : deviceID, team_id : teamID })=> ({ buildID, playgroundID, deviceID, teamID }))});
@@ -181,7 +190,7 @@ export function fetchTeamComments(payload=null) {
         verbose : (verbose || false)
       }
     }).then((response)=> {
-      console.log(API_RESPONSE_PREFIX, 'TEAM_COMMENTS', response.data);
+      logAPI('TEAM_COMMENTS', response.data);
       const { comments } = response.data;
 
       dispatch({
@@ -203,7 +212,7 @@ export function fetchTeamLogo(payload=null) {
         team_id : team.id
       }
     }).then((response)=> {
-      console.log(API_RESPONSE_PREFIX, 'TEAM_LOGO', response.data);
+      logAPI('TEAM_LOGO', response.data);
       const { logo } = response.data;
 
       dispatch({
@@ -227,7 +236,7 @@ export function fetchUserTeams(payload=null) {
         verbose : false
       }
     }).then((response)=> {
-      console.log(API_RESPONSE_PREFIX, 'USER_TEAMS', response.data);
+      logAPI('USER_TEAMS', response.data);
       const { teams } = response.data;
 
       dispatch({
@@ -247,7 +256,7 @@ export function fetchUserProfile(payload=null) {
       action  : 'USER_PROFILE',
       payload : { user_id : cookie.load('user_id') << 0 || 0 }
     }).then((response)=> {
-      console.log(API_RESPONSE_PREFIX, 'USER_PROFILE', response.data);
+      logAPI('USER_PROFILE', response.data);
 
       const { user : profile } = response.data;
       dispatch({
@@ -340,7 +349,7 @@ export function makeStripeSession(payload) {
         quantity   : team.members.length
       }
     }).then((response)=> {
-      console.log(API_RESPONSE_PREFIX, 'STRIPE_SESSION', response.data);
+      logAPI('STRIPE_SESSION', response.data);
       const { session } = response.data;
 
       dispatch({
@@ -461,7 +470,7 @@ export function makeVote(payload) {
         comment_id : comment.id
       }
     }).then((response)=> {
-      console.log(API_RESPONSE_PREFIX, 'VOTE_COMMENT', response.data);
+      logAPI('VOTE_COMMENT', response.data);
 
       dispatch({
         type    : COMMENT_VOTED,
@@ -483,7 +492,7 @@ export function modifyComment(payload) {
         state      : action
       }
     }).then((response)=> {
-      console.log(API_RESPONSE_PREFIX, 'UPDATE_COMMENT', response.data);
+      logAPI('UPDATE_COMMENT', response.data);
 
       dispatch({
         type    : COMMENT_UPDATED,
@@ -505,7 +514,7 @@ export function modifyInvite(payload) {
         invite_id : invite.id
       }
     }).then((response)=> {
-      console.log(API_RESPONSE_PREFIX, 'UPDATE_INVITE_STATE', response.data);
+      logAPI('UPDATE_INVITE_STATE', response.data);
 
       dispatch({
         type    : INVITE_MODIFIED,
@@ -529,7 +538,7 @@ export function modifyTeamRule(payload) {
         rule_id : rule.id
       }
     }).then((response)=> {
-      console.log(API_RESPONSE_PREFIX, 'DELETE_RULE', response.data);
+      logAPI('DELETE_RULE', response.data);
       const { rules } = response.data;
 
       dispatch({
@@ -554,7 +563,7 @@ export function paidStripeSession(payload) {
         session_id  : sessionID
       }
     }).then((response)=> {
-      console.log(API_RESPONSE_PREFIX, 'PAID_STRIPE_SESSION', response.data);
+      logAPI('PAID_STRIPE_SESSION', response.data);
       const { purchase, team } = response.data;
 
       dispatch({
@@ -582,7 +591,7 @@ export function modifyTeam(payload) {
         image       : (image === null) ? false : (image === true)
       }
     }).then((response)=> {
-      console.log(API_RESPONSE_PREFIX, 'UPDATE_TEAM', response.data);
+      logAPI('UPDATE_TEAM', response.data);
 
       dispatch({
         type    : TEAM_UPDATED,
@@ -604,7 +613,7 @@ export function removeTeam(payload) {
         team_id : team.id
       }
     }).then((response)=> {
-      console.log(API_RESPONSE_PREFIX, 'REMOVE_TEAM', response.data);
+      logAPI('REMOVE_TEAM', response.data);
 
       dispatch({
         type    : TEAM_DELETED,
@@ -754,7 +763,7 @@ export function updateUserProfile(payload) {
           action  : 'UPDATE_USER_PROFILE',
           payload : { ...profile, user_id, state, filename }
         }).then((response)=> {
-          console.log(API_RESPONSE_PREFIX, 'UPDATE_USER_PROFILE', response.data);
+          logAPI('UPDATE_USER_PROFILE', response.data);
 
           const status = parseInt(response.data.status, 16);
           const { user : profile } = response.data;

@@ -17,6 +17,8 @@ const initialState = {
 
 
 const logFormat = (state, action, meta='')=> {
+  return;
+  
   const { type, payload } = action;
   console.log(LOG_REDUCER_PREFIX, `REDUCER[comments] >> “${type}”`, { state, payload, meta }, LOG_REDUCER_POSTFIX);
 };

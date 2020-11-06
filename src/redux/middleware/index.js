@@ -19,6 +19,8 @@ import { reformComment, reformPlayground, reformRule, reformTeam, reformInvite }
 
 
 const logFormat = ({ store, action, next, event })=> {
+  return;
+
   if (action && typeof action !== 'function' && action.type !== UPDATE_MOUSE_COORDS) {
     const { type, payload } = action;
 
