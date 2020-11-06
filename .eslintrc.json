@@ -33,6 +33,7 @@
         "no-empty": "warn",
         "no-extra-semi": "warn",
         "no-mixed-spaces-and-tabs": "warn",
+        "no-unreachable": "warn",
         "no-unused-vars": "warn",
         "quotes": [ "warn", "single" ],
         "react/no-unescaped-entities": "warn",
