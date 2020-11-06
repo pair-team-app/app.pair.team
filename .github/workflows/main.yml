@@ -3,7 +3,8 @@ name: Main
 
 on:
   push:
-    branches: [ master, develop, dev/runner-* ]
+    #branches: [ master, develop, dev/runner-* ]
+    branches: [ master, develop ]
   pull_request:
     branches: [ master, develop, dev/runner-* ]
 

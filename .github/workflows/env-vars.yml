@@ -24,4 +24,16 @@ jobs:
 
       # displays contents of all env vars
       - name: ENV vars
-        run: env
+        run:  |
+          env
+          printf "\n\n[=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=]\n\n""
+
+
+      # displays networking info
+      - name: Network Stats
+        run: |
+          echo "ifconfig :"
+          ifconfig
+          printf "\n\n[=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=]\n\n""
+          echo "ip-api :"
+          curl "http://ip-api.com/json" --silent --location
