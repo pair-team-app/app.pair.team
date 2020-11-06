@@ -1,7 +1,8 @@
 
 import React from 'react';
+import { shallow, mount, render } from 'enzyme';
+
 import cookie from 'react-cookies';
-import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { Route } from 'react-router';
 import { ConnectedRouter } from 'connected-react-router'
@@ -10,41 +11,59 @@ import App from './App';
 import store, { history } from '../../redux/store';
 
 
-const resolver = (data)=> {
+test('stores login cookie', (done)=> {
+  if (typeof cookie.load('cookies') === 'undefined') {
+  	cookie.save('cookies', '0', { path : '/', sameSite : false });
+  }
+
   try {
-    expect(data).eql(!null);
+    const cookies = (cookie.load('cookies') << 0);
+    expect(cookies).toBeDefined();
+    console.log('stores login cookie', { cookies });
     done();
 
   } catch (error) {
     done(error);
   }
-};
-
-
-
-test('stores login cookie', async(done)=> {
-  if (typeof cookie.load('cookies') === 'undefined') {
-  	await cookie.save('cookies', '0', { path : '/', sameSite : false });
-    resolver(true);
-  }
-
-  expect(true)
 });
 
 
-it('renders without crashing', async(done)=> {
-  // const div = document.getElementById('root');
-  const div = document.createElement('div');
 
-  ReactDOM.render(
-    <Provider store={store}>
+it('renders App w/o crashing', (done)=> {
+  try {
+    shallow(<Provider store={store}>
       <ConnectedRouter history={history}>
         <Route path="/" render={(routeProps)=> <App { ...routeProps } />} />
       </ConnectedRouter>
-    </Provider>,
-	  div
-  );
-  ReactDOM.unmountComponentAtNode(div);
+    </Provider>);
 
-  done();
+    console.log('renders App w/o crashing', { component : true });
+    done();
+
+  } catch (error) {
+  done(error);
+}
+});
+
+
+
+
+test('renders App fully w/o crashing', (done)=> {
+  try {
+    const component = mount(
+      <Provider store={store}>
+        <ConnectedRouter history={history}>
+          <Route path="/" render={(routeProps)=> <App { ...routeProps } />} />
+        </ConnectedRouter>
+      </Provider>
+    );
+
+    const testElement = <div className={`test-element test-element-app is-hidden`}></div>;
+    expect(component.contains(testElement)).toBe(true);
+    console.log('renders App fully w/o crashing', { props : { ...component.props() }});
+    done();
+
+  } catch (error) {
+    done(error);
+  }
 });

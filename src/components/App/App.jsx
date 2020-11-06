@@ -548,6 +548,8 @@ class App extends Component {
 				  <span dangerouslySetInnerHTML={{ __html : popup.content }} />
 			  </PopupNotification>)}
 		  </div>
+
+      <div className={`test-element test-element-${this.constructor.name.toLowerCase()} is-hidden`}></div>
 	  </div>);
   }
 }
