@@ -1,11 +1,4 @@
 
-#-- os misc --#
-# .env.local
-.env.development.local
-.env.test.local
-.env.production.local
-
-
 #-- ide meta --#
 /.idea
 *.iml
@@ -24,32 +17,32 @@ yarn-error.log
 
 #-- lint / test --#
 /coverage
-#/.eslintrc.json
+/.eslintrc.json
 
 
 #-- production --#
 /build
 
 
-#-- debugger profiles --#
-/etc/profiles
+#-- user add'l --#
+/etc
+/tmp
+.env*.local
+
 
 #-- temp --#
 /.cache
 /.node-persist
-/tmp
-/tmp/**/*
+
 
 #-- php files --#
 /public/php
 
 
 #-- creds --#
-/src/assets/json/configs/stripe-creds.json
+/src/assets/json/configs/*-creds.json
 
 
-#-- user --#
-/opt
 
 /.history
 .tours

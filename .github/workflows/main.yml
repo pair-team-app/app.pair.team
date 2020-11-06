@@ -1,0 +1,65 @@
+
+name: Main
+
+on:
+  push:
+    branches: [ master, develop, dev/runner-* ]
+  pull_request:
+    branches: [ master, develop, dev/runner-* ]
+
+jobs:
+
+  # installs node_modules / writes configs
+  prep-src:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Init Node.js v12.x
+        uses: actions/setup-node@v1
+        with:
+          node-version: '12.x'
+
+      - name: Generate JSON cred files
+        env:
+          STRIPE_CREDS: ${{ secrets.STRIPE_CREDS }}
+        run: echo "$STRIPE_CREDS" > $GITHUB_WORKSPACE/src/assets/json/configs/stripe-creds.json
+
+      - name: Install dependancies
+        run: yarn install --frozen-lockfile --ignore-engines
+
+
+  # runs linter / tests
+  lint-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Run super-linter
+        uses: github/super-linter@v3
+        env:
+          DEFAULT_BRANCH: develop
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Run defined tests
+        run: yarn test
+
+
+  # creates a production build
+  build-prod:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Create production build
+        run: yarn build
+
+
+  # deploys production code to web server
+  deploy-www:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy to webserver
+        run: |
+          echo "Deploying these files to server..."
+          ls -1 $GITHUB_WORKSPACE/build

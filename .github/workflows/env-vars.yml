@@ -1,0 +1,27 @@
+
+name: ENV Vars
+
+on: push
+
+jobs:
+
+  # show some vars / test output
+  echo-env:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      # displays the GitHub workspace's path
+      - name: GitHub workspace path
+        run: printf "GITHUB_WORKSPACE [ %s ]\n\n[=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=]\n\n" "$GITHUB_WORKSPACE"
+
+      # displays contents of STRIPE_CREDS secret
+      - name: STRIPE_CREDS contents
+        env:
+          STRIPE_CREDS: ${{ secrets.STRIPE_CREDS }}
+        run: printf "STRIPE_CREDS [ %s ]\n\n[=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=]\n\n" "$STRIPE_CREDS"
+
+      # displays contents of all env vars
+      - name: ENV vars
+        run: env

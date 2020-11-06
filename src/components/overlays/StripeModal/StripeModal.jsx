@@ -15,18 +15,15 @@ import { trackEvent, trackOutbound } from '../../../utils/tracking';
 import stripeCreds from '../../../assets/json/configs/stripe-creds';
 
 
-const stripePromise = loadStripe((process.env.NODE_ENV === 'development') ? stripeCreds.test.publish : stripeCreds.live.publish);
-
-
 class StripeModal extends Component {
 	constructor(props) {
-		// console.log('%s.CONSTRUCTOR()', 'StripeModal', { props });
+		console.log('%s.CONSTRUCTOR()', 'StripeModal', { props });
 
 		super(props);
 
 		this.state = {
 			payment : null,
-			outro   : false,
+			outro   : false
 		};
 	}
 
@@ -70,8 +67,10 @@ class StripeModal extends Component {
 
 		const { stripeSession } = this.props;
 
-		const stripe = await stripePromise;
-		const { error } = await stripe.redirectToCheckout({ sessionId : stripeSession.id });
+		// const stripe = await loadStripe((process.env.NODE_ENV === 'development') ? stripeCreds.test.publish : stripeCreds.live.publish);
+		// const { error } = await stripe.redirectToCheckout({ sessionId : stripeSession.id });
+
+		const { error } = await (await loadStripe(stripeCreds[process.env.NODE_ENV].publish)).redirectToCheckout({ sessionId : stripeSession.id });
 
 		if (error) {
 			this.props.onPopup({
