@@ -72,7 +72,8 @@
     "rebuild": "yarn reinstall && yarn build",
     "branch": "./bin/branch $1 $2",
     "branch:daily": "./bin/branch daily $2",
-    "branch:dev": "./bin/branch dev $2"
+    "branch:dev": "./bin/branch dev $2",
+    "install:ignore": "yarn install --ignore-engines"
   },
   "devDependencies": {
     "babel-plugin-syntax-decorators": "^6.13.0",
