@@ -43,9 +43,9 @@ if (process.env.NODE_ENV === 'development') {
 	// const CDN_VER = 'v1';
 
 	endpts = {
-//		API_ENDPT_URL    : 'http://192.168.1.50:1215/current/gateway.php',
+		API_ENDPT_URL    : 'http://localhost:1215/current/gateway.php',
 		// API_ENDPT_URL    : 'http://192.168.1.64/api.pair.team/current/gateway.php',
-		API_ENDPT_URL    : 'http://valhalla.local/api.pair.team/current/gateway.php',
+		// API_ENDPT_URL    : 'http://valhalla.local/api.pair.team/current/gateway.php',
 		// CDN_FILEPOND_URL : 'http://192.168.1.50:1453/vendor/filepond-php/',
 
 		// API_ENDPT_URL    : 'http://api.pairurl.devlocal/current/gateway.php',
