@@ -52,7 +52,7 @@ test('renders App fully w/o crashing', (done)=> {
   try {
     const component = mount(
       <Provider store={store}>
-        <ConnectedRouter history={history}>
+          <ConnectedRouter history={history}>
           <Route path="/" render={(routeProps)=> <App { ...routeProps } />} />
         </ConnectedRouter>
       </Provider>
