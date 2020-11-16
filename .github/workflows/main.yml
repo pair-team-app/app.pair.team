@@ -30,6 +30,8 @@ jobs:
         run: yarn install --frozen-lockfile --ignore-engines
 
       - name: Create production build
+        env:
+          CI: ""
         run: yarn build
 
 
