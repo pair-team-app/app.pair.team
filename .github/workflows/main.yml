@@ -11,7 +11,7 @@ on: [push]
 jobs:
 
   # installs node_modules / writes configs
-  prep-src:
+  build-src:
     runs-on: ubuntu-latest
 
     steps:
@@ -21,13 +21,6 @@ jobs:
           STRIPE_CREDS: ${{ secrets.STRIPE_CREDS }}
         run: echo "$STRIPE_CREDS" > $GITHUB_WORKSPACE/src/assets/json/configs/stripe-creds.json
 
-
-  # creates a production build
-  build-prod:
-    runs-on: ubuntu-latest
-    needs: prep-src
-
-    steps:
       - name: Init Node.js v12.x
         uses: actions/setup-node@v1
         with:
@@ -59,7 +52,7 @@ jobs:
   # deploys production code to web server
   deploy-www:
     runs-on: ubuntu-latest
-    needs: build-prod
+    needs: build-src
 
     steps:
       - name: Deploy to webserver
