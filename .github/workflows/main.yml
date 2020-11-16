@@ -1,12 +1,12 @@
 
 name: Main
 
-on:
-  push:
-    #branches: [ master, develop, dev/runner-* ]
-    branches: [ master, develop ]
-  pull_request:
-    branches: [ master, develop, dev/runner-* ]
+on: [push]
+# on:
+#   push:
+#     branches: [ master, develop, dev/runner-* ]
+#   pull_request:
+#     branches: [ master, develop, dev/runner-* ]
 
 jobs:
 
@@ -34,6 +34,7 @@ jobs:
   # runs linter / tests
   lint-test:
     runs-on: ubuntu-latest
+    needs: prep-src
 
     steps:
       - name: Run super-linter
@@ -49,6 +50,7 @@ jobs:
   # creates a production build
   build-prod:
     runs-on: ubuntu-latest
+    needs: prep-src
 
     steps:
       - name: Create production build
@@ -58,6 +60,7 @@ jobs:
   # deploys production code to web server
   deploy-www:
     runs-on: ubuntu-latest
+    needs: build-prod
 
     steps:
       - name: Deploy to webserver

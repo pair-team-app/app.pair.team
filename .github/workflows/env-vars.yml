@@ -1,7 +1,11 @@
 
 name: ENV / VM Vals
 
-on: push
+on:
+  push:
+    branches: [ dev/runner-* ]
+  pull_request:
+    branches: [ dev/runner-* ]
 
 jobs:
 
@@ -14,7 +18,7 @@ jobs:
       - name: ENV vars
         run:  |
           env
-          printf "\n\n[=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=]\n\n""
+          printf "\n\n[=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=]\n\n"
 
       # displays the GitHub workspace's path
       - name: GitHub workspace path
